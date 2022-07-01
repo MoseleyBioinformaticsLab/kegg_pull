@@ -102,6 +102,7 @@ class GenericKEGGurl:
         if self._entry_ids is None:
             raise ValueError('Only URLs for a KEGG get operation have entry IDs that can be split')
 
+        # TODO: You could return a single entry id and log a warning
         if self.can_only_pull_one_entry(pull_format=self._pull_format):
             raise ValueError('Cannot split the entry IDs of a URL with only one entry ID')
 

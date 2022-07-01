@@ -1,6 +1,6 @@
 from pytest import raises, mark, ExceptionInfo
 
-from src.kegg_pull.generic_kegg_url import GenericKEGGurl
+from src.kegg_pull.generic_kegg_url import GenericKEGGurl, BASE_URL
 
 
 test_raise_invalid_values_error_data: list = [
@@ -37,6 +37,16 @@ entry_ids_unspecified_message: str = 'Cannot create URL - Entry IDs must be spec
 
 test_validate_data: list = [
     ({'kegg_api_operation': 'list'}, 'Cannot create URL - A database must be specified for the KEGG list operation'),
+    (
+        {'kegg_api_operation': 'list', 'pull_format': 'kgml'},
+        'Cannot create URL - Entry IDs and entry field types are for the KEGG get operation and are not supported by '
+        'the KEGG list operation'
+    ),
+    (
+        {'kegg_api_operation': 'list', 'entry_ids': ['x', 'y']},
+        'Cannot create URL - Entry IDs and entry field types are for the KEGG get operation and are not supported by '
+        'the KEGG list operation'
+    ),
     ({'kegg_api_operation': 'get'}, entry_ids_unspecified_message),
     ({'kegg_api_operation': 'get', 'entry_ids': []}, entry_ids_unspecified_message),
     (
@@ -69,15 +79,46 @@ test_create_url_data: list = [
 @mark.parametrize('kwargs,expected_url', test_create_url_data)
 def test_create_url(kwargs: dict, expected_url: str):
     generic_kegg_url: GenericKEGGurl = GenericKEGGurl(**kwargs)
-
-    if 'entry_ids' in kwargs:
-        actual_entry_ids_url_option: str = generic_kegg_url.url.split('/')[4]
-        expected_entry_ids_url_option: str = '+'.join(generic_kegg_url.entry_ids)
-
-        assert actual_entry_ids_url_option == expected_entry_ids_url_option
-
-    base_url: str = 'https://rest.kegg.jp'
-    expected_url: str = base_url + expected_url
+    expected_url: str = BASE_URL + expected_url
 
     assert str(generic_kegg_url) == expected_url
     assert generic_kegg_url.url == expected_url
+
+
+test_split_urls_error_messages_data = [
+    (
+        {'kegg_api_operation': 'list', 'database_type': 'enzyme'},
+        'Only URLs for a KEGG get operation have entry IDs that can be split'
+    ),
+    (
+        {'kegg_api_operation': 'get', 'entry_ids': ['x'], 'pull_format': 'conf'},
+        'Cannot split the entry IDs of a URL with only one entry ID'
+    )
+]
+
+
+@mark.parametrize('kwargs,expected_message', test_split_urls_error_messages_data)
+def test_split_urls_error_messages(kwargs: dict, expected_message):
+    with raises(ValueError) as e:
+        generic_kegg_url: GenericKEGGurl = GenericKEGGurl(**kwargs)
+
+        for _ in generic_kegg_url.split_entries():  # pragma: no cover
+            pass  # pragma: no cover
+
+    assert_expected_error_message(expected_message=expected_message, e=e)
+
+
+test_split_urls_data: list = [
+    ({'entry_ids': ['x', 'y', 'z']}, ['/get/x', '/get/y', '/get/z']),
+    ({'entry_ids': ['x', 'y'], 'pull_format': 'kcf'}, ['/get/x/kcf', '/get/y/kcf'])
+]
+
+
+@mark.parametrize('kwargs,expected_urls', test_split_urls_data)
+def test_split_entries(kwargs: dict, expected_urls: list):
+    url_to_split: GenericKEGGurl = GenericKEGGurl('get', **kwargs)
+
+    for split_url, expected_url in zip(url_to_split.split_entries(), expected_urls):
+        expected_url: str = BASE_URL + expected_url
+
+        assert split_url.url == expected_url
