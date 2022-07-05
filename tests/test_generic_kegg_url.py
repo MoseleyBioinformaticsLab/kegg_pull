@@ -1,6 +1,7 @@
-from pytest import raises, mark, ExceptionInfo
+from pytest import raises, mark
 
 from src.kegg_pull.generic_kegg_url import GenericKEGGurl, BASE_URL
+from tests.utils import assert_expected_error_message, assert_warning
 
 
 test_raise_invalid_values_error_data: list = [
@@ -25,12 +26,6 @@ def test_raise_invalid_values_error(kwargs: dict, value_name: str, value: str, v
     expected_message: str = f'Cannot create URL - Invalid {value_name}: "{value}". Valid values are: {valid_values}'
 
     assert_expected_error_message(expected_message=expected_message, e=e)
-
-
-def assert_expected_error_message(expected_message: str, e: ExceptionInfo):
-    actual_message: str = str(e.value)
-
-    assert actual_message == expected_message
 
 
 entry_ids_unspecified_message: str = 'Cannot create URL - Entry IDs must be specified for the KEGG get operation'
@@ -85,27 +80,32 @@ def test_create_url(kwargs: dict, expected_url: str):
     assert generic_kegg_url.url == expected_url
 
 
-test_split_urls_error_messages_data = [
-    (
-        {'kegg_api_operation': 'list', 'database_type': 'enzyme'},
-        'Only URLs for a KEGG get operation have entry IDs that can be split'
-    ),
-    (
-        {'kegg_api_operation': 'get', 'entry_ids': ['x'], 'pull_format': 'conf'},
-        'Cannot split the entry IDs of a URL with only one entry ID'
-    )
-]
-
-
-@mark.parametrize('kwargs,expected_message', test_split_urls_error_messages_data)
-def test_split_urls_error_messages(kwargs: dict, expected_message):
+def test_split_urls_error():
     with raises(ValueError) as e:
-        generic_kegg_url: GenericKEGGurl = GenericKEGGurl(**kwargs)
+        generic_kegg_url: GenericKEGGurl = GenericKEGGurl(kegg_api_operation='list', database_type='enzyme')
 
         for _ in generic_kegg_url.split_entries():  # pragma: no cover
             pass  # pragma: no cover
 
-    assert_expected_error_message(expected_message=expected_message, e=e)
+    assert_expected_error_message(
+        expected_message='Only URLs for a KEGG get operation have entry IDs that can be split', e=e
+    )
+
+
+def test_split_urls_warning(caplog):
+    original_url: GenericKEGGurl = GenericKEGGurl(kegg_api_operation='get', entry_ids=['x'], pull_format='conf')
+
+    # Ensure there is only one url returned
+    returned_urls: list = list(original_url.split_entries())
+    [returned_url] = returned_urls
+
+    # Ensure the returned url is the same object reference as the original
+    assert original_url == returned_url
+
+    assert_warning(
+        file_name='generic_kegg_url.py', func_name='split_entries',
+        message='Cannot split the entry IDs of a URL with only one entry ID. Returning the same URL...', caplog=caplog
+    )
 
 
 test_split_urls_data: list = [
