@@ -1,3 +1,5 @@
+import logging
+
 BASE_URL: str = 'https://rest.kegg.jp'
 
 
@@ -13,6 +15,7 @@ class GenericKEGGurl:
         }
     }
 
+    # TODO: entry_ids could be a union of str (for single entries) and list (for multiple)
     def __init__(
         self, kegg_api_operation: str, pull_format: str = None, database_type: str = None, entry_ids: list = None,
         base_url=BASE_URL
@@ -102,13 +105,14 @@ class GenericKEGGurl:
         if self._entry_ids is None:
             raise ValueError('Only URLs for a KEGG get operation have entry IDs that can be split')
 
-        # TODO: You could return a single entry id and log a warning
         if self.can_only_pull_one_entry(pull_format=self._pull_format):
-            raise ValueError('Cannot split the entry IDs of a URL with only one entry ID')
+            logging.warning('Cannot split the entry IDs of a URL with only one entry ID. Returning the same URL...')
 
-        for entry_id in self._entry_ids:
-            split_url: GenericKEGGurl = GenericKEGGurl(
-                kegg_api_operation='get', pull_format=self._pull_format, entry_ids=[entry_id]
-            )
+            yield self
+        else:
+            for entry_id in self._entry_ids:
+                split_url: GenericKEGGurl = GenericKEGGurl(
+                    kegg_api_operation='get', pull_format=self._pull_format, entry_ids=[entry_id]
+                )
 
-            yield split_url
+                yield split_url
