@@ -15,10 +15,17 @@ class AbstractKEGGurl(ABC):
 
     @abstractmethod
     def _validate(self, **kwargs):
+        """ Ensures the arguments passed into the constructor result in a valid KEGG URL.
+        :param kwargs: The arguments to validate
+        :raises ValueError:
+        """
         pass  # pragma: no cover
 
     @abstractmethod
     def _create_url_options(self, **kwargs) -> str:
+        """ Creates the options string that's for the end part of a KEGG URL.
+        :param kwargs: The arguments used to create the options
+        """
         pass  # pragma: no cover
 
     @property
@@ -91,7 +98,11 @@ class GetKEGGurl(AbstractKEGGurl):
                 )
 
     @staticmethod
-    def can_only_pull_one_entry(entry_field: str):
+    def can_only_pull_one_entry(entry_field: str) -> bool:
+        """ Determines whether a KEGG entry field can only be pulled in one entry at a time for the KEGG get API
+        operation
+        :param entry_field: The KEGG entry field to check
+        """
         return entry_field is not None and not GetKEGGurl._valid_url_options[entry_field]
 
     def _create_url_options(self, entry_ids: list, entry_field: str) -> str:
@@ -103,6 +114,9 @@ class GetKEGGurl(AbstractKEGGurl):
             return entry_ids_url_option
 
     def split_entries(self):
+        """ Converts a KEGG get URL with multiple entry IDs into separate URLs each with one entry ID. Logs a warning if
+        the initial URL only has one entry ID.
+        """
         if self.can_only_pull_one_entry(entry_field=self._entry_field):
             logging.warning('Cannot split the entry IDs of a URL with only one entry ID. Returning the same URL...')
 
