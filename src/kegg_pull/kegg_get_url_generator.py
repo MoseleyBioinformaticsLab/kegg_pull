@@ -1,24 +1,26 @@
 import logging
 
-from src.kegg_pull.generic_kegg_url import GenericKEGGurl
+from src.kegg_pull.kegg_url import GetKEGGurl
 from src.kegg_pull.pull_single_from_kegg import pull_single_from_kegg
 
 MAX_KEGG_ENTRY_IDS_PER_GET_URL: int = 10
 
 
 class KEGGgetURLgenerator:
-    def __init__(self, database_type: str = None, entry_id_list_path: str = None, pull_format: str = None):
+    def __init__(self, database_type: str = None, entry_id_list_path: str = None, entry_field: str = None):
         self._validate(database_type=database_type, entry_id_list_path=entry_id_list_path)
 
-        if pull_format is not None and GenericKEGGurl.can_only_pull_one_entry(pull_format=pull_format):
-            self._n_entries_per_url: int = MAX_KEGG_ENTRY_IDS_PER_GET_URL
+        if entry_field is not None and GetKEGGurl.can_only_pull_one_entry(entry_field=entry_field):
+            self._n_entries_per_url = 1
         else:
-            self._n_entries_per_url: int = 1
+            self._n_entries_per_url = MAX_KEGG_ENTRY_IDS_PER_GET_URL
 
-        self._pull_format: str = pull_format
+        self._entry_field = entry_field
+
+        # TODO: Complete implementation
 
     @staticmethod
-    def _validate(database_type: str, entry_id_list_path: str, ):
+    def _validate(database_type: str, entry_id_list_path: str):
         if database_type is not None and entry_id_list_path is not None:
             logging.warning(
                 'Both a database type and file path to an entry ID list are specified. Ignoring the entry ID list '
