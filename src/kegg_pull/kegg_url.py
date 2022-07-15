@@ -58,7 +58,7 @@ class AbstractKEGGurl(ABC):
 class ListKEGGurl(AbstractKEGGurl):
     _valid_url_options = {
         'pathway', 'brite', 'module', 'ko', 'genome', 'vg', 'vp', 'ag', 'compound', 'glycan', 'reaction', 'rclass',
-        'enzyme', 'network', 'variant', 'disease', 'drug', 'dgroup', 'organism'
+        'enzyme', 'network', 'variant', 'disease', 'drug', 'dgroup'
     }
 
     def __init__(self, database_type: str):
@@ -81,6 +81,14 @@ class GetKEGGurl(AbstractKEGGurl):
         super().__init__(api_operation='get', entry_ids=entry_ids, entry_field=entry_field)
         self._entry_ids = entry_ids
         self._entry_field = entry_field
+
+    @property
+    def entry_ids(self) -> list:
+        return self._entry_ids
+
+    @property
+    def multiple_entry_ids(self) -> bool:
+        return len(self.entry_ids) > 1
 
     def _validate(self, entry_ids: list, entry_field: str):
         n_entry_ids: int = len(entry_ids)
