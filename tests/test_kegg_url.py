@@ -11,7 +11,7 @@ def test_list_kegg_url_validate():
     assert_expected_error_message(
         expected_message='Cannot create URL - Invalid database type: "invalid-database-type". Valid values are: ag, '
                          'brite, compound, dgroup, disease, drug, enzyme, genome, glycan, ko, module, network, '
-                         'organism, pathway, rclass, reaction, variant, vg, vp', e=e
+                         'pathway, rclass, reaction, variant, vg, vp', e=e
     )
 
 

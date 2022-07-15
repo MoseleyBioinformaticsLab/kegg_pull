@@ -1,5 +1,5 @@
 from src.kegg_pull.kegg_url import AbstractKEGGurl
-from requests import get, Response  # TODO: raises Timeout
+from requests import get, Response
 
 
 def pull_single_from_kegg(kegg_url: AbstractKEGGurl, timeout: int = 60, n_tries: int = 3) -> Response:
