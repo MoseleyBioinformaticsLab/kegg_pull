@@ -57,7 +57,7 @@ def test_make_urls_from_entry_id_list(mocker):
     database_type = 'compound'
 
     mock_single_pull = _get_mock_single_pull(
-        mocker=mocker, caller_file='make_urls_from_entry_id_list', expected_url=f'{BASE_URL}/list/{database_type}'
+        mocker=mocker, expected_url=f'{BASE_URL}/list/{database_type}'
     )
 
     get_urls: list = make_urls_from_entry_id_list(database_type=database_type)
@@ -67,7 +67,7 @@ def test_make_urls_from_entry_id_list(mocker):
         assert get_kegg_url.url == expected_url
 
 
-def _get_mock_single_pull(mocker, caller_file: str, expected_url: str):
+def _get_mock_single_pull(mocker, expected_url: str):
     mock_response_body = '''
     cpd:C22501	alpha-D-Xylulofuranose
     cpd:C22502	alpha-D-Fructofuranose; alpha-D-Fructose
@@ -91,7 +91,7 @@ def _get_mock_single_pull(mocker, caller_file: str, expected_url: str):
         return mock_response
 
     mock_single_pull = mocker.patch(
-        f'src.kegg_pull.{caller_file}.pull_single_from_kegg',
+        f'src.kegg_pull.make_urls_from_entry_id_list.single_pull',
         wraps=mock_single_pull
     )
 

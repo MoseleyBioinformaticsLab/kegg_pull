@@ -5,11 +5,11 @@ import typing as t
 
 from requests.exceptions import Timeout
 from src.kegg_pull.make_urls_from_entry_id_list import make_urls_from_entry_id_list, GetKEGGurl
-from src.kegg_pull.pull_single_from_kegg import pull_single_from_kegg
+from src.kegg_pull.single_pull import single_pull
 from src.kegg_pull.separate_entries import separate_entries
 
 
-def pull_multiple_from_kegg(
+def multiple_pull(
     output_dir: str, database_type: str = None, entry_id_list_path: str = None, entry_field: str = None,
     n_workers: int = cpu_count()
 ):
@@ -60,7 +60,7 @@ class _MultiThreadedKEGGpuller:
 
     def _pull_and_save(self, get_url: GetKEGGurl):
         try:
-            res: Response = pull_single_from_kegg(kegg_url=get_url)
+            res: Response = single_pull(kegg_url=get_url)
         except Timeout:
             self._timed_out_urls.append(get_url)
 
