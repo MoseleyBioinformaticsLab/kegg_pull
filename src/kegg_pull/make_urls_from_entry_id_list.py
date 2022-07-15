@@ -2,7 +2,7 @@ import logging
 from requests import Response
 
 from src.kegg_pull.kegg_url import ListKEGGurl, GetKEGGurl
-from src.kegg_pull.pull_single_from_kegg import pull_single_from_kegg
+from src.kegg_pull.single_pull import single_pull
 
 MAX_KEGG_ENTRY_IDS_PER_GET_URL: int = 10
 
@@ -48,7 +48,7 @@ def _get_entry_id_list(database_type: str, entry_id_list_path: str) -> list:
 
 def _get_entry_id_list_from_kegg_list_api_operation(database_type: str) -> list:
     list_url = ListKEGGurl(database_type=database_type)
-    res: Response = pull_single_from_kegg(kegg_url=list_url)
+    res: Response = single_pull(kegg_url=list_url)
     entry_ids: list = _parse_entry_ids_string(entry_ids_string=res.text)
 
     # We empirically determined that each line consists of the entry ID followed by more info separated by a tab

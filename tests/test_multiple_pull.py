@@ -1,5 +1,5 @@
 from src.kegg_pull.kegg_url import BASE_URL, GetKEGGurl, AbstractKEGGurl
-from src.kegg_pull.pull_multiple_from_kegg import pull_multiple_from_kegg
+from src.kegg_pull.multiple_pull import multiple_pull
 
 import pytest
 from pickle import load, dump
@@ -23,13 +23,13 @@ def setup_and_teardown():
 
 # TODO: Test with timeout
 # TODO: Test with failures
-def test_pull_multiple_from_kegg(mocker, setup_and_teardown):
+def test_multiple_pull(mocker, setup_and_teardown):
     actual_urls_dir, mock_output_dir = setup_and_teardown
     mock_get_urls, expected_successful_entry_ids = _mock_input_output()
     expected_urls = {url.url for url in mock_get_urls}
 
     mock_make_urls_from_entry_id_list = mocker.patch(
-        'src.kegg_pull.pull_multiple_from_kegg.make_urls_from_entry_id_list', return_value=mock_get_urls
+        'src.kegg_pull.multiple_pull.make_urls_from_entry_id_list', return_value=mock_get_urls
     )
 
     def mock_single_pull(kegg_url: AbstractKEGGurl):
@@ -41,12 +41,12 @@ def test_pull_multiple_from_kegg(mocker, setup_and_teardown):
         return res
 
     mocker.patch(
-        'src.kegg_pull.pull_multiple_from_kegg.pull_single_from_kegg', wraps=mock_single_pull
+        'src.kegg_pull.multiple_pull.single_pull', wraps=mock_single_pull
     )
 
     mock_database_type = 'mock-database-type'
 
-    successful_entry_ids, failed_entry_ids = pull_multiple_from_kegg(
+    successful_entry_ids, failed_entry_ids = multiple_pull(
         output_dir=mock_output_dir, database_type=mock_database_type, n_workers=len(mock_get_urls)
     )
 
