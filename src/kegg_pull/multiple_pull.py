@@ -11,10 +11,11 @@ import src.kegg_pull.separate_entries as se
 
 def multiple_pull(
     output_dir: str, database_type: str = None, entry_id_list_path: str = None, entry_field: str = None,
-    n_workers: int = os.cpu_count()
+    n_workers: int = os.cpu_count(), force_single_entry: bool = False
 ):
     get_urls: list = mu.make_urls_from_entry_id_list(
-        database_type=database_type, entry_id_list_path=entry_id_list_path, entry_field=entry_field
+        force_single_entry=force_single_entry, database_type=database_type, entry_id_list_path=entry_id_list_path,
+        entry_field=entry_field
     )
 
     kegg_puller = _MultiThreadedKEGGpuller(
@@ -72,15 +73,19 @@ class _MultiThreadedKEGGpuller:
             if get_url.multiple_entry_ids:
                 entries: list = se.separate_entries(res=res.text, entry_field=self._entry_field)
 
-                for entry_id, entry in zip(get_url.entry_ids, entries):
-                    self._save_entry(entry_id=entry_id, entry=entry)
+                if len(entries) < len(get_url.entry_ids):
+                    # If we did not get all the entries requested, process each entry one at a time
+                    self._handle_failed_url(get_url=get_url)
+                else:
+                    for entry_id, entry in zip(get_url.entry_ids, entries):
+                        self._save_entry(entry_id=entry_id, entry=entry)
             else:
                 [entry_id] = get_url.entry_ids
                 entry: t.Union[str, bytes] = res.content if self._is_binary() else res.text
                 self._save_entry(entry_id=entry_id, entry=entry)
 
-        # Multiprocessing pickles this class such that it's deep-copied
-        # This means that the successful and failed entry IDs won't be in the original class
+        # Multiprocessing deep copies class objects into separate processes
+        # This means that the successful and failed entry IDs won't be added to the original object
         # So we return the successes and failures from this copy and add it to the result of the multiprocessing
         return self._successful_entry_ids, self._failed_entry_ids
 

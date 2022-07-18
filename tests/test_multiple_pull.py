@@ -19,6 +19,7 @@ def setup_and_teardown():
     sh.rmtree(mock_output_dir, ignore_errors=True)
     sh.rmtree(actual_urls_dir, ignore_errors=True)
 
+# TODO: Test not getting all the requested entries
 # TODO: Test with timeout
 # TODO: Test with failures
 def test_multiple_pull(mocker, setup_and_teardown):
@@ -67,7 +68,7 @@ def test_multiple_pull(mocker, setup_and_teardown):
             assert actual_file_content == expected_file_content
 
     mock_make_urls_from_entry_id_list.assert_called_once_with(
-        database_type=mock_database_type, entry_id_list_path=None, entry_field=None
+        force_single_entry=False, database_type=mock_database_type, entry_id_list_path=None, entry_field=None
     )
 
     # Since mock_single_pull is deep-copied by the multiprocessing, it's not counted in the code coverage
