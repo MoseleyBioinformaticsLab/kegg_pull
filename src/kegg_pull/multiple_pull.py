@@ -1,19 +1,19 @@
-from multiprocessing import Pool
-from os import cpu_count, mkdir
-from os.path import join, isdir
+import multiprocessing as mp
+import os
 import typing as t
+import requests as rq
 
-from requests.exceptions import Timeout
-from src.kegg_pull.make_urls_from_entry_id_list import make_urls_from_entry_id_list, GetKEGGurl
-from src.kegg_pull.single_pull import single_pull
-from src.kegg_pull.separate_entries import separate_entries
+import src.kegg_pull.kegg_url as ku
+import src.kegg_pull.make_urls_from_entry_id_list as mu
+import src.kegg_pull.single_pull as sp
+import src.kegg_pull.separate_entries as se
 
 
 def multiple_pull(
     output_dir: str, database_type: str = None, entry_id_list_path: str = None, entry_field: str = None,
-    n_workers: int = cpu_count()
+    n_workers: int = os.cpu_count()
 ):
-    get_urls: list = make_urls_from_entry_id_list(
+    get_urls: list = mu.make_urls_from_entry_id_list(
         database_type=database_type, entry_id_list_path=entry_id_list_path, entry_field=entry_field
     )
 
@@ -35,8 +35,8 @@ class _MultiThreadedKEGGpuller:
         self._timed_out_urls = []
 
     def pull(self) -> tuple:
-        if not isdir(self._output_dir):
-            mkdir(self._output_dir)
+        if not os.path.isdir(self._output_dir):
+            os.mkdir(self._output_dir)
 
         all_successful_entry_ids = []
         all_failed_entry_ids = []
@@ -47,7 +47,7 @@ class _MultiThreadedKEGGpuller:
             if chunk_size == 0:
                 chunk_size = 1
 
-            with Pool(self._n_workers) as p:
+            with mp.Pool(self._n_workers) as p:
                 results: list = p.map(self._pull_and_save, self._urls_remaining, chunksize=chunk_size)
 
             for successful_entry_ids, failed_entry_ids in results:
@@ -58,10 +58,10 @@ class _MultiThreadedKEGGpuller:
 
         return all_successful_entry_ids, all_failed_entry_ids
 
-    def _pull_and_save(self, get_url: GetKEGGurl):
+    def _pull_and_save(self, get_url: ku.GetKEGGurl):
         try:
-            res: Response = single_pull(kegg_url=get_url)
-        except Timeout:
+            res: Response = sp.single_pull(kegg_url=get_url)
+        except rq.exceptions.Timeout:
             self._timed_out_urls.append(get_url)
 
             return
@@ -70,7 +70,7 @@ class _MultiThreadedKEGGpuller:
             self._handle_failed_url(get_url=get_url)
         else:
             if get_url.multiple_entry_ids:
-                entries: list = separate_entries(res=res.text, entry_field=self._entry_field)
+                entries: list = se.separate_entries(res=res.text, entry_field=self._entry_field)
 
                 for entry_id, entry in zip(get_url.entry_ids, entries):
                     self._save_entry(entry_id=entry_id, entry=entry)
@@ -84,7 +84,7 @@ class _MultiThreadedKEGGpuller:
         # So we return the successes and failures from this copy and add it to the result of the multiprocessing
         return self._successful_entry_ids, self._failed_entry_ids
 
-    def _handle_failed_url(self, get_url: GetKEGGurl):
+    def _handle_failed_url(self, get_url: ku.GetKEGGurl):
         if get_url.multiple_entry_ids:
             for split_url in get_url.split_entries():
                 self._pull_and_save(get_url=split_url)
@@ -95,7 +95,7 @@ class _MultiThreadedKEGGpuller:
 
     def _save_entry(self, entry_id: str, entry: t.Union[str, bytes]):
         file_extension = 'txt' if self._entry_field is None else self._entry_field
-        file_path = join(self._output_dir, f'{entry_id}.{file_extension}')
+        file_path = os.path.join(self._output_dir, f'{entry_id}.{file_extension}')
         save_type = 'wb' if self._is_binary() else 'w'
 
         with open(file_path, save_type) as f:

@@ -1,8 +1,8 @@
-from pytest import raises
+import pytest as pt
 
-from src.kegg_pull.kegg_url import BASE_URL, AbstractKEGGurl
-from src.kegg_pull.make_urls_from_entry_id_list import make_urls_from_entry_id_list, MAX_KEGG_ENTRY_IDS_PER_GET_URL
-from tests.utils import assert_expected_error_message, assert_warning
+import src.kegg_pull.kegg_url as ku
+import src.kegg_pull.make_urls_from_entry_id_list as mu
+import tests.utils as u
 
 
 def test_validate(caplog, mocker):
@@ -22,24 +22,24 @@ def test_validate(caplog, mocker):
     )
 
     database_type = 'vg'
-    make_urls_from_entry_id_list(database_type=database_type, entry_id_list_path='')
+    mu.make_urls_from_entry_id_list(database_type=database_type, entry_id_list_path='')
     mock_get_entry_id_list_from_kegg_list_api_operation.assert_called_once_with(database_type=database_type)
     mock_get_entry_id_list_from_file.assert_not_called()
 
     mock_make_urls_from_entry_id_list.assert_called_once_with(
-        entry_id_list=mock_entry_id_list, n_entries_per_url=MAX_KEGG_ENTRY_IDS_PER_GET_URL, entry_field=None
+        entry_id_list=mock_entry_id_list, n_entries_per_url=mu.MAX_KEGG_ENTRY_IDS_PER_GET_URL, entry_field=None
     )
 
-    assert_warning(
+    u.assert_warning(
         file_name='make_urls_from_entry_id_list.py', func_name='_validate',
         message='Both a database type and file path to an entry ID list are specified. Ignoring the entry ID list '
                 'path... ', caplog=caplog
     )
 
-    with raises(ValueError) as e:
-        make_urls_from_entry_id_list()
+    with pt.raises(ValueError) as e:
+        mu.make_urls_from_entry_id_list()
 
-    assert_expected_error_message(
+    u.assert_expected_error_message(
         expected_message='Required: Either a file containing a list of KEGG entry IDs or the name of a KEGG database '
                          'from which the entry IDs can be pulled. Neither are provided', e=e
     )
@@ -50,17 +50,17 @@ def test_validate(caplog, mocker):
 # TODO: Test getting from file (mock open)
 def test_make_urls_from_entry_id_list(mocker):
     expected_urls = [
-        f'{BASE_URL}/get/cpd:C22501+cpd:C22502+cpd:C22500+cpd:C22504+cpd:C22506+cpd:C22507+cpd:C22509+cpd:C22510+cpd:C22511+cpd:C22512',
-        f'{BASE_URL}/get/cpd:C22513+cpd:C22514'
+        f'{ku.BASE_URL}/get/cpd:C22501+cpd:C22502+cpd:C22500+cpd:C22504+cpd:C22506+cpd:C22507+cpd:C22509+cpd:C22510+cpd:C22511+cpd:C22512',
+        f'{ku.BASE_URL}/get/cpd:C22513+cpd:C22514'
     ]
 
     database_type = 'compound'
 
     mock_single_pull = _get_mock_single_pull(
-        mocker=mocker, expected_url=f'{BASE_URL}/list/{database_type}'
+        mocker=mocker, expected_url=f'{ku.BASE_URL}/list/{database_type}'
     )
 
-    get_urls: list = make_urls_from_entry_id_list(database_type=database_type)
+    get_urls: list = mu.make_urls_from_entry_id_list(database_type=database_type)
     mock_single_pull.assert_called_once()
 
     for get_kegg_url, expected_url in zip(get_urls, expected_urls):
@@ -85,13 +85,13 @@ def _get_mock_single_pull(mocker, expected_url: str):
 
     mock_response = mocker.MagicMock(text=mock_response_body)
 
-    def mock_single_pull(kegg_url: AbstractKEGGurl):
+    def mock_single_pull(kegg_url: ku.AbstractKEGGurl):
         assert kegg_url.url == expected_url
 
         return mock_response
 
     mock_single_pull = mocker.patch(
-        f'src.kegg_pull.make_urls_from_entry_id_list.single_pull',
+        f'src.kegg_pull.make_urls_from_entry_id_list.sp.single_pull',
         wraps=mock_single_pull
     )
 
