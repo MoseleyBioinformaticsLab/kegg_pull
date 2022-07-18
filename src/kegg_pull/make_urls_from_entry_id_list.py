@@ -4,14 +4,19 @@ import requests as rq
 import src.kegg_pull.kegg_url as ku
 import src.kegg_pull.single_pull as sp
 
+SINGLE_ENTRY_DATABASES = {'brite'}
 MAX_KEGG_ENTRY_IDS_PER_GET_URL: int = 10
 
 
 def make_urls_from_entry_id_list(
-    database_type: str = None, entry_id_list_path: str = None, entry_field: str = None
+    force_single_entry: bool, database_type: str = None, entry_id_list_path: str = None, entry_field: str = None
 ) -> list:
     _validate(database_type=database_type, entry_id_list_path=entry_id_list_path)
-    n_entries_per_url: int = _get_n_entries_per_url(entry_field=entry_field)
+
+    if database_type is not None and database_type in SINGLE_ENTRY_DATABASES:
+        force_single_entry = True
+
+    n_entries_per_url: int = _get_n_entries_per_url(force_single_entry=force_single_entry, entry_field=entry_field)
     entry_id_list: list = _get_entry_id_list(database_type=database_type, entry_id_list_path=entry_id_list_path)
 
     return _make_urls_from_entry_id_list(
@@ -32,8 +37,10 @@ def _validate(database_type: str, entry_id_list_path: str):
         )
 
 
-def _get_n_entries_per_url(entry_field: str) -> int:
-    if ku.GetKEGGurl.can_only_pull_one_entry(entry_field=entry_field):
+def _get_n_entries_per_url(force_single_entry: bool, entry_field: str) -> int:
+    if force_single_entry:
+        return 1
+    elif ku.GetKEGGurl.can_only_pull_one_entry(entry_field=entry_field):
         return 1
     else:
         return MAX_KEGG_ENTRY_IDS_PER_GET_URL

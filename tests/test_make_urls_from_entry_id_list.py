@@ -22,7 +22,7 @@ def test_validate(caplog, mocker):
     )
 
     database_type = 'vg'
-    mu.make_urls_from_entry_id_list(database_type=database_type, entry_id_list_path='')
+    mu.make_urls_from_entry_id_list(force_single_entry=False, database_type=database_type, entry_id_list_path='')
     mock_get_entry_id_list_from_kegg_list_api_operation.assert_called_once_with(database_type=database_type)
     mock_get_entry_id_list_from_file.assert_not_called()
 
@@ -37,7 +37,7 @@ def test_validate(caplog, mocker):
     )
 
     with pt.raises(ValueError) as e:
-        mu.make_urls_from_entry_id_list()
+        mu.make_urls_from_entry_id_list(force_single_entry=False)
 
     u.assert_expected_error_message(
         expected_message='Required: Either a file containing a list of KEGG entry IDs or the name of a KEGG database '
@@ -45,6 +45,7 @@ def test_validate(caplog, mocker):
     )
 
 
+# TODO: Test force_single_entry
 # TODO: Test with and without entry field
 # TODO: Test with entry field that can pull multiple and entry field that only pulls single
 # TODO: Test getting from file (mock open)
@@ -60,7 +61,7 @@ def test_make_urls_from_entry_id_list(mocker):
         mocker=mocker, expected_url=f'{ku.BASE_URL}/list/{database_type}'
     )
 
-    get_urls: list = mu.make_urls_from_entry_id_list(database_type=database_type)
+    get_urls: list = mu.make_urls_from_entry_id_list(force_single_entry=False, database_type=database_type)
     mock_single_pull.assert_called_once()
 
     for get_kegg_url, expected_url in zip(get_urls, expected_urls):
