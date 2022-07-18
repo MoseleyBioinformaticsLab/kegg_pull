@@ -1,7 +1,6 @@
-from pytest import ExceptionInfo
+import pytest as pt
 
-
-def assert_expected_error_message(expected_message: str, e: ExceptionInfo):
+def assert_expected_error_message(expected_message: str, e: pt.ExceptionInfo):
     actual_message: str = str(e.value)
 
     assert actual_message == expected_message

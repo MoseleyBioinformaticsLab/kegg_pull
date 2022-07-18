@@ -1,8 +1,8 @@
 import logging
-from requests import Response
+import requests as rq
 
-from src.kegg_pull.kegg_url import ListKEGGurl, GetKEGGurl
-from src.kegg_pull.single_pull import single_pull
+import src.kegg_pull.kegg_url as ku
+import src.kegg_pull.single_pull as sp
 
 MAX_KEGG_ENTRY_IDS_PER_GET_URL: int = 10
 
@@ -33,7 +33,7 @@ def _validate(database_type: str, entry_id_list_path: str):
 
 
 def _get_n_entries_per_url(entry_field: str) -> int:
-    if GetKEGGurl.can_only_pull_one_entry(entry_field=entry_field):
+    if ku.GetKEGGurl.can_only_pull_one_entry(entry_field=entry_field):
         return 1
     else:
         return MAX_KEGG_ENTRY_IDS_PER_GET_URL
@@ -47,8 +47,8 @@ def _get_entry_id_list(database_type: str, entry_id_list_path: str) -> list:
 
 
 def _get_entry_id_list_from_kegg_list_api_operation(database_type: str) -> list:
-    list_url = ListKEGGurl(database_type=database_type)
-    res: Response = single_pull(kegg_url=list_url)
+    list_url = ku.ListKEGGurl(database_type=database_type)
+    res: rq.Response = sp.single_pull(kegg_url=list_url)
     entry_ids: list = _parse_entry_ids_string(entry_ids_string=res.text)
 
     # We empirically determined that each line consists of the entry ID followed by more info separated by a tab
@@ -77,7 +77,7 @@ def _make_urls_from_entry_id_list(entry_id_list: list, n_entries_per_url: int, e
 
     for i in range(0, len(entry_id_list), n_entries_per_url):
         entry_ids: list = entry_id_list[i:i+n_entries_per_url]
-        get_kegg_url = GetKEGGurl(entry_ids=entry_ids, entry_field=entry_field)
+        get_kegg_url = ku.GetKEGGurl(entry_ids=entry_ids, entry_field=entry_field)
         get_urls.append(get_kegg_url)
 
     return get_urls

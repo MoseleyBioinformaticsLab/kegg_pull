@@ -2,18 +2,18 @@
 Classes for creating KEGG API URLs for both the list and get API operations
 """
 import logging
-from abc import ABC, abstractmethod
+import abc
 
 BASE_URL: str = 'https://rest.kegg.jp'
 
 
-class AbstractKEGGurl(ABC):
+class AbstractKEGGurl(abc.ABC):
     def __init__(self, api_operation: str, base_url: str = BASE_URL, **kwargs):
         self._validate(**kwargs)
         url_options: str = self._create_url_options(**kwargs)
         self._url = f'{base_url}/{api_operation}/{url_options}'
 
-    @abstractmethod
+    @abc.abstractmethod
     def _validate(self, **kwargs):
         """ Ensures the arguments passed into the constructor result in a valid KEGG URL.
         :param kwargs: The arguments to validate
@@ -21,7 +21,7 @@ class AbstractKEGGurl(ABC):
         """
         pass  # pragma: no cover
 
-    @abstractmethod
+    @abc.abstractmethod
     def _create_url_options(self, **kwargs) -> str:
         """ Creates the options string that's for the end part of a KEGG URL.
         :param kwargs: The arguments used to create the options
