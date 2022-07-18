@@ -8,7 +8,16 @@ BASE_URL: str = 'https://rest.kegg.jp'
 
 
 class AbstractKEGGurl(abc.ABC):
+    """
+    Abstract class containing the base data and functionality for all KEGG url classes which validate and construct URLs
+    for accessing the KEGG web API
+    """
     def __init__(self, api_operation: str, base_url: str = BASE_URL, **kwargs):
+        """ Validates the arguments and constructs the KEGG API URL from them
+        :param api_operation: The KEGG API operation in the URL
+        :param base_url: The base URL for accessing the KEGG web API
+        :param kwargs: The arguments used to construct the URL options after they are validated
+        """
         self._validate(**kwargs)
         url_options: str = self._create_url_options(**kwargs)
         self._url = f'{base_url}/{api_operation}/{url_options}'
@@ -25,6 +34,7 @@ class AbstractKEGGurl(abc.ABC):
     def _create_url_options(self, **kwargs) -> str:
         """ Creates the options string that's for the end part of a KEGG URL.
         :param kwargs: The arguments used to create the options
+        :return: The URL options
         """
         pass  # pragma: no cover
 
@@ -56,28 +66,44 @@ class AbstractKEGGurl(abc.ABC):
 
 
 class ListKEGGurl(AbstractKEGGurl):
+    """Contains the validation implementation and construction of the KEGG API list operation"""
     _valid_url_options = {
         'pathway', 'brite', 'module', 'ko', 'genome', 'vg', 'vp', 'ag', 'compound', 'glycan', 'reaction', 'rclass',
         'enzyme', 'network', 'variant', 'disease', 'drug', 'dgroup'
     }
 
     def __init__(self, database_type: str):
+        """ Validates and constructs a KEGG url for the list API operation
+        :param database_type: The database option for the KEGG list URL
+        """
         super().__init__(api_operation='list', database_type=database_type)
 
     def _validate(self, database_type: str):
+        """ Ensures the database provided is a valid KEGG database
+        :param database_type: The database to validate
+        """
         self._validate_url_option(option_name='database type', option_value=database_type)
 
     def _create_url_options(self, database_type: str) -> str:
+        """ Implements the KEGG options creation by returning the provided database since that's the only option
+        :param database_type: The database option
+        :return: The database option
+        """
         return database_type
 
 
 class GetKEGGurl(AbstractKEGGurl):
+    """Contains validation and URL construction as well as a helpful interface for the KEGG API get operation"""
     _valid_url_options = {
         'aaseq': True, 'ntseq': True, 'mol': True, 'kcf': True, 'image': False, 'conf': False, 'kgml': False,
         'json': False
     }
 
     def __init__(self, entry_ids: list, entry_field: str = None):
+        """ Validates and constructs the entry IDs and entry field options
+        :param entry_ids: Specifies which entry IDs go in the first option of the URL
+        :param entry_field: Specifies which entry field goes in the second option
+        """
         super().__init__(api_operation='get', entry_ids=entry_ids, entry_field=entry_field)
         self._entry_ids = entry_ids
         self._entry_field = entry_field
@@ -91,6 +117,10 @@ class GetKEGGurl(AbstractKEGGurl):
         return len(self.entry_ids) > 1
 
     def _validate(self, entry_ids: list, entry_field: str):
+        """ Ensures valid Entry IDs and a valid entry field are provided
+        :param entry_ids: The entry IDs to validate
+        :param entry_field: The entry field to validate
+        """
         n_entry_ids: int = len(entry_ids)
 
         if n_entry_ids == 0:
@@ -114,6 +144,11 @@ class GetKEGGurl(AbstractKEGGurl):
         return entry_field is not None and not GetKEGGurl._valid_url_options[entry_field]
 
     def _create_url_options(self, entry_ids: list, entry_field: str) -> str:
+        """ Constructs the URL options for the KEGG API get operation
+        :param entry_ids: The entry IDs for the first URL option
+        :param entry_field: The entry field for the second URL option
+        :return: The constructed options
+        """
         entry_ids_url_option = '+'.join(entry_ids)
 
         if entry_field is not None:
