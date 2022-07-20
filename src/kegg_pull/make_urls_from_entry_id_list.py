@@ -40,7 +40,7 @@ def _validate(database_type: str, entry_id_list_path: str):
 def _get_n_entries_per_url(force_single_entry: bool, entry_field: str) -> int:
     if force_single_entry:
         return 1
-    elif ku.GetKEGGurl.can_only_pull_one_entry(entry_field=entry_field):
+    elif ku.GetKEGGurl.only_one_entry(entry_field=entry_field):
         return 1
     else:
         return MAX_KEGG_ENTRY_IDS_PER_GET_URL
