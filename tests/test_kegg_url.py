@@ -1,6 +1,6 @@
 import pytest as pt
 
-import src.kegg_pull.kegg_url as ku
+import kegg_pull.kegg_url as ku
 import tests.utils as u
 
 
