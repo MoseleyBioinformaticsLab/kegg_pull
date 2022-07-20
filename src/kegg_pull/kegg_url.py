@@ -101,6 +101,7 @@ class ListKEGGurl(AbstractKEGGurl):
         """
         return database_type
 
+    @property
     def _valid_rest_options(self) -> t.Iterable:
         """Returns the collection of valid databases for the list operation."""
         return {
@@ -154,6 +155,7 @@ class GetKEGGurl(AbstractKEGGurl):
                            f'at a time but {n_entry_ids} entry IDs are provided'
                 )
 
+    @property
     def _valid_rest_options(self) -> t.Iterable:
         """Returns the collection of valid entry fields for the get API operation."""
         return self._entry_fields
