@@ -31,9 +31,6 @@ class _MultiThreadedKEGGpuller:
         self._output_dir = output_dir
         self._n_workers = n_workers
         self._entry_field = entry_field
-        self._failed_entry_ids = []
-        self._successful_entry_ids = []
-        self._timed_out_urls = []
 
     def pull(self) -> tuple:
         if not os.path.isdir(self._output_dir):
@@ -43,6 +40,7 @@ class _MultiThreadedKEGGpuller:
         all_failed_entry_ids = []
 
         while len(self._urls_remaining) > 0:
+            all_timed_out_urls = []
             chunk_size: int = len(self._urls_remaining) // self._n_workers
 
             if chunk_size == 0:
@@ -51,54 +49,76 @@ class _MultiThreadedKEGGpuller:
             with mp.Pool(self._n_workers) as p:
                 results: list = p.map(self._pull_and_save, self._urls_remaining, chunksize=chunk_size)
 
-            for successful_entry_ids, failed_entry_ids in results:
+            for successful_entry_ids, failed_entry_ids, timed_out_urls in results:
                 all_successful_entry_ids.extend(successful_entry_ids)
                 all_failed_entry_ids.extend(all_failed_entry_ids)
+                all_timed_out_urls.extend(timed_out_urls)
 
-            self._urls_remaining = self._timed_out_urls
+            self._urls_remaining = all_timed_out_urls
 
         return all_successful_entry_ids, all_failed_entry_ids
 
     def _pull_and_save(self, get_url: ku.GetKEGGurl):
+        successful_entry_ids = []
+        failed_entry_ids = []
+        timed_out_urls = []
+
         try:
             res: Response = sp.single_pull(kegg_url=get_url)
-        except rq.exceptions.Timeout:
-            self._timed_out_urls.append(get_url)
 
-            return
-
-        if res is None:
-            self._handle_failed_url(get_url=get_url)
-        else:
-            if get_url.multiple_entry_ids:
-                entries: list = se.separate_entries(res=res.text, entry_field=self._entry_field)
-
-                if len(entries) < len(get_url.entry_ids):
-                    # If we did not get all the entries requested, process each entry one at a time
-                    self._handle_failed_url(get_url=get_url)
-                else:
-                    for entry_id, entry in zip(get_url.entry_ids, entries):
-                        self._save_entry(entry_id=entry_id, entry=entry)
+            if res is None:
+                self._handle_failed_url(
+                    get_url=get_url, successful_entry_ids=successful_entry_ids, failed_entry_ids=failed_entry_ids,
+                    timed_out_urls=timed_out_urls
+                )
             else:
-                [entry_id] = get_url.entry_ids
-                entry: t.Union[str, bytes] = res.content if self._is_binary() else res.text
-                self._save_entry(entry_id=entry_id, entry=entry)
+                if get_url.multiple_entry_ids:
+                    self._save_multi_entry_response(
+                        res=res, get_url=get_url, successful_entry_ids=successful_entry_ids,
+                        failed_entry_ids=failed_entry_ids, timed_out_urls=timed_out_urls
+                    )
+                else:
+                    self._save_single_entry_response(
+                        res=res, get_url=get_url, successful_entry_ids=successful_entry_ids
+                    )
+        except rq.exceptions.Timeout:
+            timed_out_urls.append(get_url)
 
-        # Multiprocessing deep copies class objects into separate processes
-        # This means that the successful and failed entry IDs won't be added to the original object
-        # So we return the successes and failures from this copy and add it to the result of the multiprocessing
-        return self._successful_entry_ids, self._failed_entry_ids
+        # TODO: reduce output size by converting to strings and then parsing later
+        # TODO: have a _compress_output() and _decompress_output()
+        return successful_entry_ids, failed_entry_ids, timed_out_urls
 
-    def _handle_failed_url(self, get_url: ku.GetKEGGurl):
+    def _handle_failed_url(
+        self, get_url: ku.GetKEGGurl, successful_entry_ids: list, failed_entry_ids: list, timed_out_urls: list
+    ):
         if get_url.multiple_entry_ids:
             for split_url in get_url.split_entries():
-                self._pull_and_save(get_url=split_url)
+                try:
+                    res: Response = sp.single_pull(kegg_url=get_url)
+
+                    if res is None:
+                        self._add_failed_entry_id(get_url=get_url, failed_entry_ids=failed_entry_ids)
+                    else:
+                        self._save_single_entry_response(
+                            res=res, get_url=get_url, successful_entry_ids=successful_entry_ids
+                        )
+                except rq.exceptions.Timeout:
+                    timed_out_urls.append(split_url)
         else:
-            [entry_id] = get_url.entry_ids
-            self._failed_entry_ids.append(entry_id)
+            self._add_failed_entry_id(get_url=get_url, failed_entry_ids=failed_entry_ids)
 
 
-    def _save_entry(self, entry_id: str, entry: t.Union[str, bytes]):
+    @staticmethod
+    def _add_failed_entry_id(get_url: ku.GetKEGGurl, failed_entry_ids: list):
+        [entry_id] = get_url.entry_ids
+        failed_entry_ids.append(entry_id)
+
+    def _save_single_entry_response(self, res: rq.Response, get_url: ku.GetKEGGurl, successful_entry_ids: list):
+        [entry_id] = get_url.entry_ids
+        entry: t.Union[str, bytes] = res.content if self._is_binary() else res.text
+        self._save_entry(entry_id=entry_id, entry=entry, successful_entry_ids=successful_entry_ids)
+
+    def _save_entry(self, entry_id: str, entry: t.Union[str, bytes], successful_entry_ids: list):
         file_extension = 'txt' if self._entry_field is None else self._entry_field
         file_path = os.path.join(self._output_dir, f'{entry_id}.{file_extension}')
         save_type = 'wb' if self._is_binary() else 'w'
@@ -106,7 +126,23 @@ class _MultiThreadedKEGGpuller:
         with open(file_path, save_type) as f:
             f.write(entry)
 
-        self._successful_entry_ids.append(entry_id)
+        successful_entry_ids.append(entry_id)
 
     def _is_binary(self) -> bool:
         return self._entry_field == 'image'
+
+    def _save_multi_entry_response(
+        self, res: rq.Response, get_url: ku.GetKEGGurl, successful_entry_ids: list, failed_entry_ids: list,
+        timed_out_urls: list
+    ):
+        entries: list = se.separate_entries(res=res.text, entry_field=self._entry_field)
+
+        if len(entries) < len(get_url.entry_ids):
+            # If we did not get all the entries requested, process each entry one at a time
+            self._handle_failed_url(
+                get_url=get_url, successful_entry_ids=successful_entry_ids, failed_entry_ids=failed_entry_ids,
+                timed_out_urls=timed_out_urls
+            )
+        else:
+            for entry_id, entry in zip(get_url.entry_ids, entries):
+                self._save_entry(entry_id=entry_id, entry=entry, successful_entry_ids=successful_entry_ids)
