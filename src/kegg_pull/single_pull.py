@@ -1,5 +1,6 @@
-import src.kegg_pull.kegg_url as ku
 import requests as rq
+
+from . import kegg_url as ku
 
 
 def single_pull(kegg_url: ku.AbstractKEGGurl, timeout: int = 60, n_tries: int = 3) -> rq.Response:

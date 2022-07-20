@@ -2,8 +2,8 @@ import pytest as pt
 import os
 import shutil as sh
 
-import src.kegg_pull.kegg_url as ku
-import src.kegg_pull.multiple_pull as mp
+import kegg_pull.kegg_url as ku
+import kegg_pull.multiple_pull as mp
 
 
 @pt.fixture
@@ -28,10 +28,10 @@ def test_multiple_pull(mocker, setup_and_teardown: tuple):
     expected_urls = {url.url for url in mock_get_urls}
 
     mock_make_urls_from_entry_id_list = mocker.patch(
-        'src.kegg_pull.multiple_pull.mu.make_urls_from_entry_id_list', return_value=mock_get_urls
+        'kegg_pull.multiple_pull.mu.make_urls_from_entry_id_list', return_value=mock_get_urls
     )
 
-    def mock_single_pull(kegg_url: ku.AbstractKEGGurl):
+    def mock_single_pull(kegg_url: ku.GetKEGGurl):
         suffix = ' content\n///'
         res = f'{suffix}\n'.join(kegg_url.entry_ids) + suffix
         res = mocker.MagicMock(text=res)
@@ -40,7 +40,7 @@ def test_multiple_pull(mocker, setup_and_teardown: tuple):
         return res
 
     mocker.patch(
-        'src.kegg_pull.multiple_pull.sp.single_pull', wraps=mock_single_pull
+        'kegg_pull.multiple_pull.sp.single_pull', wraps=mock_single_pull
     )
 
     mock_database_type = 'mock-database-type'

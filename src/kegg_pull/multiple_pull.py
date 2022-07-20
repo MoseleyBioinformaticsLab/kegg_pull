@@ -3,10 +3,10 @@ import os
 import typing as t
 import requests as rq
 
-import src.kegg_pull.kegg_url as ku
-import src.kegg_pull.make_urls_from_entry_id_list as mu
-import src.kegg_pull.single_pull as sp
-import src.kegg_pull.separate_entries as se
+from . import kegg_url as ku
+from . import make_urls_from_entry_id_list as mu
+from . import single_pull as sp
+from . import separate_entries as se
 
 
 def multiple_pull(

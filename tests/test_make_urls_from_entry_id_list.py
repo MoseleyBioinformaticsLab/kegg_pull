@@ -1,7 +1,7 @@
 import pytest as pt
 
-import src.kegg_pull.kegg_url as ku
-import src.kegg_pull.make_urls_from_entry_id_list as mu
+import kegg_pull.kegg_url as ku
+import kegg_pull.make_urls_from_entry_id_list as mu
 import tests.utils as u
 
 
@@ -9,16 +9,16 @@ def test_validate(caplog, mocker):
     mock_entry_id_list = []
 
     mock_get_entry_id_list_from_kegg_list_api_operation = mocker.patch(
-        'src.kegg_pull.make_urls_from_entry_id_list._get_entry_id_list_from_kegg_list_api_operation',
+        'kegg_pull.make_urls_from_entry_id_list._get_entry_id_list_from_kegg_list_api_operation',
         return_value=mock_entry_id_list
     )
 
     mock_get_entry_id_list_from_file = mocker.patch(
-        'src.kegg_pull.make_urls_from_entry_id_list._get_entry_id_list_from_file'
+        'kegg_pull.make_urls_from_entry_id_list._get_entry_id_list_from_file'
     )
 
     mock_make_urls_from_entry_id_list = mocker.patch(
-        'src.kegg_pull.make_urls_from_entry_id_list._make_urls_from_entry_id_list'
+        'kegg_pull.make_urls_from_entry_id_list._make_urls_from_entry_id_list'
     )
 
     database_type = 'vg'
@@ -92,7 +92,7 @@ def _get_mock_single_pull(mocker, expected_url: str):
         return mock_response
 
     mock_single_pull = mocker.patch(
-        f'src.kegg_pull.make_urls_from_entry_id_list.sp.single_pull',
+        f'kegg_pull.make_urls_from_entry_id_list.sp.single_pull',
         wraps=mock_single_pull
     )
 

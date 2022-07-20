@@ -1,8 +1,8 @@
 import logging
 import requests as rq
 
-import src.kegg_pull.kegg_url as ku
-import src.kegg_pull.single_pull as sp
+from . import kegg_url as ku
+from . import single_pull as sp
 
 SINGLE_ENTRY_DATABASES = {'brite'}
 MAX_KEGG_ENTRY_IDS_PER_GET_URL: int = 10
