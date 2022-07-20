@@ -22,7 +22,7 @@ def setup_and_teardown():
 # TODO: Test not getting all the requested entries
 # TODO: Test with timeout
 # TODO: Test with failures
-def test_multiple_pull(mocker, setup_and_teardown):
+def test_multiple_pull(mocker, setup_and_teardown: tuple):
     actual_urls_dir, mock_output_dir = setup_and_teardown
     mock_get_urls, expected_successful_entry_ids = _mock_input_output()
     expected_urls = {url.url for url in mock_get_urls}
@@ -46,7 +46,7 @@ def test_multiple_pull(mocker, setup_and_teardown):
     mock_database_type = 'mock-database-type'
 
     successful_entry_ids, failed_entry_ids = mp.multiple_pull(
-        output_dir=mock_output_dir, database_type=mock_database_type, n_workers=len(mock_get_urls)
+        output_dir=mock_output_dir, database_type=mock_database_type, n_workers=2
     )
 
     _test_actual_urls(actual_urls_dir=actual_urls_dir, expected_urls=expected_urls)
@@ -81,7 +81,8 @@ def _mock_input_output() -> tuple:
     mock_entry_ids = [
         ['A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9'],
         ['B0', 'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9'],
-        ['C1', 'C2']
+        ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9'],
+        ['D0', 'D1']
     ]
 
     mock_get_urls = [ku.GetKEGGurl(entry_ids=entry_ids) for entry_ids in mock_entry_ids]
