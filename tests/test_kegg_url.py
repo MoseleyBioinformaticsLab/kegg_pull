@@ -6,23 +6,23 @@ import tests.utils as u
 
 def test_list_kegg_url_validate():
     with pt.raises(ValueError) as e:
-        ku.ListKEGGurl(database_type='invalid-database-type')
+        ku.ListKEGGurl(database_name='invalid-database-name')
 
     u.assert_expected_error_message(
-        expected_message='Cannot create URL - Invalid database type: "invalid-database-type". Valid values are: ag, '
+        expected_message='Cannot create URL - Invalid database name: "invalid-database-name". Valid values are: ag, '
                          'brite, compound, dgroup, disease, drug, enzyme, genome, glycan, ko, module, network, '
                          'pathway, rclass, reaction, variant, vg, vp', e=e
     )
 
 
 def test_list_kegg_url_create_url_options():
-    list_kegg_url = ku.ListKEGGurl(database_type='vg')
+    list_kegg_url = ku.ListKEGGurl(database_name='vg')
     expected_url = f'{ku.BASE_URL}/list/vg'
 
     assert str(list_kegg_url) == list_kegg_url.url == expected_url
 
 
-test_get_kegg_url_validate_data: list = [
+test_get_kegg_url_validate_data = [
     ([], None, 'Cannot create URL - Entry IDs must be specified for the KEGG get operation'),
     (
         ['x'], 'invalid-entry-field', 'Cannot create URL - Invalid KEGG entry field: "invalid-entry-field". Valid '
