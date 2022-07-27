@@ -1,148 +1,90 @@
 import multiprocessing as mp
 import os
+import abc
 import typing as t
-import requests as rq
+import pickle as p
 
-from . import kegg_url as ku
-from . import make_urls_from_entry_id_list as mu
 from . import single_pull as sp
-from . import separate_entries as se
+from . import kegg_url as ku
+from . import pull_result as pr
 
 
-def multiple_pull(
-    output_dir: str, database_type: str = None, entry_id_list_path: str = None, entry_field: str = None,
-    n_workers: int = os.cpu_count(), force_single_entry: bool = False
-):
-    get_urls: list = mu.make_urls_from_entry_id_list(
-        force_single_entry=force_single_entry, database_type=database_type, entry_id_list_path=entry_id_list_path,
-        entry_field=entry_field
-    )
+class MultiplePull(abc.ABC):
+    def __init__(self, single_pull: sp.SinglePull, force_single_entry: bool = False):
+        self._single_pull = single_pull
+        self._force_single_entry = force_single_entry
 
-    kegg_puller = _MultiThreadedKEGGpuller(
-        urls_to_pull=get_urls, output_dir=output_dir, n_workers=n_workers, entry_field=entry_field
-    )
+    def pull(
+        self, entry_ids: list, entry_field: t.Optional[str] = '', force_single_entry: t.Optional[bool] = None
+    ) -> pr.PullResult:
+        force_single_entry = force_single_entry if force_single_entry is not None else self._force_single_entry
 
-    return kegg_puller.pull()
+        # If a new entry field is provided, update it
+        if entry_field != '':
+            self._single_pull.entry_field = entry_field
 
+        entry_ids: list = self._group_entry_ids(
+            entry_ids_to_group=entry_ids, force_single_entry=force_single_entry
+        )
 
-class _MultiThreadedKEGGpuller:
-    def __init__(self, urls_to_pull: list, output_dir: str, n_workers: int, entry_field: str):
-        self._urls_remaining = urls_to_pull
-        self._output_dir = output_dir
-        self._n_workers = n_workers
-        self._entry_field = entry_field
+        return self._pull(grouped_entry_ids=entry_ids)
 
-    def pull(self) -> tuple:
-        if not os.path.isdir(self._output_dir):
-            os.mkdir(self._output_dir)
+    def _group_entry_ids(self, entry_ids_to_group: list, force_single_entry: bool) -> list:
+        group_size: int = MultiplePull._get_n_entries_per_url(
+            force_single_entry=force_single_entry, entry_field=self._single_pull.entry_field
+        )
 
-        all_successful_entry_ids = []
-        all_failed_entry_ids = []
+        grouped_entry_ids = []
 
-        while len(self._urls_remaining) > 0:
-            all_timed_out_urls = []
-            chunk_size: int = len(self._urls_remaining) // self._n_workers
+        for i in range(0, len(entry_ids_to_group), group_size):
+            entry_id_group: list = entry_ids_to_group[i:i + group_size]
+            grouped_entry_ids.append(entry_id_group)
 
-            if chunk_size == 0:
-                chunk_size = 1
-
-            with mp.Pool(self._n_workers) as p:
-                results: list = p.map(self._pull_and_save, self._urls_remaining, chunksize=chunk_size)
-
-            for successful_entry_ids, failed_entry_ids, timed_out_urls in results:
-                all_successful_entry_ids.extend(successful_entry_ids)
-                all_failed_entry_ids.extend(all_failed_entry_ids)
-                all_timed_out_urls.extend(timed_out_urls)
-
-            self._urls_remaining = all_timed_out_urls
-
-        return all_successful_entry_ids, all_failed_entry_ids
-
-    def _pull_and_save(self, get_url: ku.GetKEGGurl):
-        successful_entry_ids = []
-        failed_entry_ids = []
-        timed_out_urls = []
-
-        try:
-            res: Response = sp.single_pull(kegg_url=get_url)
-
-            if res is None:
-                self._handle_failed_url(
-                    get_url=get_url, successful_entry_ids=successful_entry_ids, failed_entry_ids=failed_entry_ids,
-                    timed_out_urls=timed_out_urls
-                )
-            else:
-                if get_url.multiple_entry_ids:
-                    self._save_multi_entry_response(
-                        res=res, get_url=get_url, successful_entry_ids=successful_entry_ids,
-                        failed_entry_ids=failed_entry_ids, timed_out_urls=timed_out_urls
-                    )
-                else:
-                    self._save_single_entry_response(
-                        res=res, get_url=get_url, successful_entry_ids=successful_entry_ids
-                    )
-        except rq.exceptions.Timeout:
-            timed_out_urls.append(get_url)
-
-        # TODO: reduce output size by converting to strings and then parsing later
-        # TODO: have a _compress_output() and _decompress_output()
-        return successful_entry_ids, failed_entry_ids, timed_out_urls
-
-    def _handle_failed_url(
-        self, get_url: ku.GetKEGGurl, successful_entry_ids: list, failed_entry_ids: list, timed_out_urls: list
-    ):
-        if get_url.multiple_entry_ids:
-            for split_url in get_url.split_entries():
-                try:
-                    res: Response = sp.single_pull(kegg_url=get_url)
-
-                    if res is None:
-                        self._add_failed_entry_id(get_url=get_url, failed_entry_ids=failed_entry_ids)
-                    else:
-                        self._save_single_entry_response(
-                            res=res, get_url=get_url, successful_entry_ids=successful_entry_ids
-                        )
-                except rq.exceptions.Timeout:
-                    timed_out_urls.append(split_url)
-        else:
-            self._add_failed_entry_id(get_url=get_url, failed_entry_ids=failed_entry_ids)
-
+        return grouped_entry_ids
 
     @staticmethod
-    def _add_failed_entry_id(get_url: ku.GetKEGGurl, failed_entry_ids: list):
-        [entry_id] = get_url.entry_ids
-        failed_entry_ids.append(entry_id)
-
-    def _save_single_entry_response(self, res: rq.Response, get_url: ku.GetKEGGurl, successful_entry_ids: list):
-        [entry_id] = get_url.entry_ids
-        entry: t.Union[str, bytes] = res.content if self._is_binary() else res.text
-        self._save_entry(entry_id=entry_id, entry=entry, successful_entry_ids=successful_entry_ids)
-
-    def _save_entry(self, entry_id: str, entry: t.Union[str, bytes], successful_entry_ids: list):
-        file_extension = 'txt' if self._entry_field is None else self._entry_field
-        file_path = os.path.join(self._output_dir, f'{entry_id}.{file_extension}')
-        save_type = 'wb' if self._is_binary() else 'w'
-
-        with open(file_path, save_type) as f:
-            f.write(entry)
-
-        successful_entry_ids.append(entry_id)
-
-    def _is_binary(self) -> bool:
-        return self._entry_field == 'image'
-
-    def _save_multi_entry_response(
-        self, res: rq.Response, get_url: ku.GetKEGGurl, successful_entry_ids: list, failed_entry_ids: list,
-        timed_out_urls: list
-    ):
-        entries: list = se.separate_entries(res=res.text, entry_field=self._entry_field)
-
-        if len(entries) < len(get_url.entry_ids):
-            # If we did not get all the entries requested, process each entry one at a time
-            self._handle_failed_url(
-                get_url=get_url, successful_entry_ids=successful_entry_ids, failed_entry_ids=failed_entry_ids,
-                timed_out_urls=timed_out_urls
-            )
+    def _get_n_entries_per_url(force_single_entry: bool, entry_field: str) -> int:
+        if force_single_entry:
+            return 1
+        elif ku.GetKEGGurl.only_one_entry(entry_field=entry_field):
+            return 1
         else:
-            for entry_id, entry in zip(get_url.entry_ids, entries):
-                self._save_entry(entry_id=entry_id, entry=entry, successful_entry_ids=successful_entry_ids)
+            return ku.GetKEGGurl.MAX_ENTRY_IDS_PER_URL
+
+    @abc.abstractmethod
+    def _pull(self, grouped_entry_ids: list):
+        pass
+
+class SingleProcessMultiplePull(MultiplePull):
+    def _pull(self, grouped_entry_ids: list):
+        multiple_pull_result = pr.PullResult()
+
+        for entry_id_group in grouped_entry_ids:
+            single_pull_result: pr.PullResult = self._single_pull.pull(entry_ids=entry_id_group)
+            multiple_pull_result.merge_pull_results(other=single_pull_result)
+
+        return multiple_pull_result
+
+class MultiProcessMultiplePull(MultiplePull):
+    def __init__(self, single_pull: sp.SinglePull, force_single_entry: bool = False, n_workers: int = os.cpu_count()):
+        super(MultiProcessMultiplePull, self).__init__(single_pull=single_pull, force_single_entry=force_single_entry)
+        self._n_workers = n_workers
+
+    def _pull(self, grouped_entry_ids: list):
+        multiple_pull_result = pr.PullResult()
+        args = [(entry_ids, self._single_pull) for entry_ids in grouped_entry_ids]
+        chunk_size: int = len(grouped_entry_ids) // self._n_workers
+
+        with mp.Pool(self._n_workers) as pool:
+            results: list = pool.starmap(_get_single_pull_result, args, chunksize=chunk_size)
+
+        for result in results:
+            single_pull_result: pr.PullResult = p.loads(result)
+            multiple_pull_result.merge_pull_results(other=single_pull_result)
+
+        return multiple_pull_result
+
+def _get_single_pull_result(entry_ids: list, single_pull: sp.SinglePull) -> bytes:
+    single_pull_result: pr.PullResult = single_pull.pull(entry_ids=entry_ids)
+
+    return p.dumps(single_pull_result)

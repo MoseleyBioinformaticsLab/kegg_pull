@@ -78,28 +78,28 @@ class AbstractKEGGurl(abc.ABC):
 
 class ListKEGGurl(AbstractKEGGurl):
     """Contains the validation implementation and construction of the KEGG API list operation."""
-    def __init__(self, database_type: str):
+    def __init__(self, database_name: str):
         """ Validates and constructs a KEGG URL for the list API operation.
 
-        :param database_type: The database option for the KEGG list URL
+        :param database_name: The database option for the KEGG list URL
         """
-        super().__init__(api_operation='list', database_type=database_type)
+        super().__init__(api_operation='list', database_name=database_name)
 
-    def _validate(self, database_type: str):
+    def _validate(self, database_name: str):
         """ Ensures the database provided is a valid KEGG database.
 
-        :param database_type: The name of the database to validate
+        :param database_name: The name of the database to validate
         """
-        self._validate_rest_option(option_name='database type', option_value=database_type)
+        self._validate_rest_option(option_name='database name', option_value=database_name)
 
-    def _create_rest_options(self, database_type: str) -> str:
+    def _create_rest_options(self, database_name: str) -> str:
         """ Implements the KEGG REST API options creation by returning the provided database. That's the only option for
         the list operation.
 
-        :param database_type: The database option
+        :param database_name: The database option
         :return: The database option
         """
-        return database_type
+        return database_name
 
     @property
     def _valid_rest_options(self) -> t.Iterable:
@@ -116,6 +116,8 @@ class GetKEGGurl(AbstractKEGGurl):
         'aaseq': True, 'ntseq': True, 'mol': True, 'kcf': True, 'image': False, 'conf': False, 'kgml': False,
         'json': False
     }
+
+    MAX_ENTRY_IDS_PER_URL = 10
 
     def __init__(self, entry_ids: list, entry_field: str = None):
         """ Validates and constructs the entry IDs and entry field options.
@@ -145,6 +147,13 @@ class GetKEGGurl(AbstractKEGGurl):
 
         if n_entry_ids == 0:
             self._raise_error(reason='Entry IDs must be specified for the KEGG get operation')
+
+        max_entry_ids: int = GetKEGGurl.MAX_ENTRY_IDS_PER_URL
+
+        if n_entry_ids > max_entry_ids:
+            self._raise_error(
+                reason=f'The maximum number of entry IDs is {max_entry_ids} but {n_entry_ids} were provided'
+            )
 
         if entry_field is not None:
             self._validate_rest_option(option_name='KEGG entry field', option_value=entry_field)
