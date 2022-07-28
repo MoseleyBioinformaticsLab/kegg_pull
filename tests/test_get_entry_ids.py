@@ -1,4 +1,4 @@
-import kegg_pull.web_request as wr
+import kegg_pull.kegg_request as kr
 import kegg_pull.get_entry_ids as ge
 import kegg_pull.kegg_url as ku
 
@@ -22,13 +22,13 @@ def test_get_entry_ids(mocker):
     cpd:C22514	2,3-Bis-O-(geranylfarnesyl)-sn-glycerol 1-phosphate
     '''
 
-    mock_web_response = mocker.MagicMock(text_body=mock_text_body, status=wr.WebResponse.Status.SUCCESS)
-    mock_get = mocker.MagicMock(return_value=mock_web_response)
-    mock_web_request = mocker.MagicMock(get=mock_get)
-    MockWebRequest = mocker.patch('kegg_pull.get_entry_ids.wr.WebRequest', return_value=mock_web_request)
+    mock_kegg_response = mocker.MagicMock(text_body=mock_text_body, status=kr.KEGGresponse.Status.SUCCESS)
+    mock_get = mocker.MagicMock(return_value=mock_kegg_response)
+    mock_kegg_request = mocker.MagicMock(get=mock_get)
+    MockKEGGrequest = mocker.patch('kegg_pull.get_entry_ids.kr.KEGGrequest', return_value=mock_kegg_request)
     mock_database_name = 'compound'
     actual_entry_ids: list = ge.from_database(database_name=mock_database_name)
-    MockWebRequest.assert_called_once_with()
+    MockKEGGrequest.assert_called_once_with()
     expected_list_url = f'{ku.BASE_URL}/list/{mock_database_name}'
     mock_get.assert_called_once_with(url=expected_list_url)
 
