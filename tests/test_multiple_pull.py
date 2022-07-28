@@ -1,8 +1,7 @@
 import pytest as pt
 import itertools as i
 
-import kegg_pull.pull_result as pr
-import kegg_pull.multiple_pull as mp
+import kegg_pull.pull as p
 
 
 expected_pull_calls = [
@@ -21,7 +20,7 @@ expected_successful_entry_ids = (
 
 expected_failed_entry_ids = ('A9', 'B9', 'C9', 'D1')
 expected_timed_out_entry_ids = ()
-test_multiple_pull_data = [(mp.SingleProcessMultiplePull, {}), (mp.MultiProcessMultiplePull, {'n_workers': 2})]
+test_multiple_pull_data = [(p.SingleProcessMultiplePull, {}), (p.MultiProcessMultiplePull, {'n_workers': 2})]
 
 # TODO: Test with force_single_pull with an entry field that can have multiple entries
 # TODO: Test with an entry field that can only have one entry without force_single_pull
@@ -29,17 +28,17 @@ test_multiple_pull_data = [(mp.SingleProcessMultiplePull, {}), (mp.MultiProcessM
 def test_multiple_pull(mocker, MultiplePull: type, kwargs: dict):
     mock_single_pull = MockSinglePull()
 
-    if MultiplePull is mp.SingleProcessMultiplePull:
+    if MultiplePull is p.SingleProcessMultiplePull:
         mock_single_pull.pull = mocker.MagicMock(wraps=MockSinglePull.pull)
 
     multiple_pull = MultiplePull(single_pull=mock_single_pull, **kwargs)
-    multiple_pull_result: pr.PullResult = multiple_pull.pull(entry_ids=mock_entry_ids)
+    multiple_pull_result: p.PullResult = multiple_pull.pull(entry_ids=mock_entry_ids)
 
     assert multiple_pull_result.successful_entry_ids == expected_successful_entry_ids
     assert multiple_pull_result.failed_entry_ids == expected_failed_entry_ids
     assert multiple_pull_result.timed_out_entry_ids == expected_timed_out_entry_ids
 
-    if MultiplePull is mp.SingleProcessMultiplePull:
+    if MultiplePull is p.SingleProcessMultiplePull:
         actual_pull_calls = getattr(mock_single_pull.pull, 'call_args_list')
 
         for actual_calls, expected_calls in zip(actual_pull_calls, expected_pull_calls):
@@ -54,7 +53,7 @@ class MockSinglePull:
     def pull(entry_ids: list):
         successful_entry_ids: list = tuple(entry_ids[:-1])
         failed_entry_ids: list = tuple(entry_ids[-1:])
-        single_pull_result = pr.PullResult()
+        single_pull_result = p.PullResult()
         setattr(single_pull_result, '_successful_entry_ids', successful_entry_ids)
         setattr(single_pull_result, '_failed_entry_ids', failed_entry_ids)
         setattr(single_pull_result, '_timed_out_entry_ids', ())

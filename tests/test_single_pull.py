@@ -3,8 +3,7 @@ import os
 import shutil as sh
 
 import kegg_pull.kegg_request as kr
-import kegg_pull.single_pull as sp
-import kegg_pull.pull_result as pr
+import kegg_pull.pull as p
 import kegg_pull.kegg_url as ku
 
 
@@ -31,8 +30,8 @@ def test_single_pull(mocker, mock_output_dir):
     mock_response = mocker.MagicMock(text_body=mock_text_body, status=kr.KEGGresponse.Status.SUCCESS)
     mock_get = mocker.MagicMock(return_value=mock_response)
     kegg_request = mocker.MagicMock(get=mock_get)
-    single_pull = sp.SinglePull(output_dir=mock_output_dir, kegg_request=kegg_request, entry_field=None)
-    pull_result: pr.PullResult = single_pull.pull(entry_ids=mock_entry_ids)
+    single_pull = p.SinglePull(output_dir=mock_output_dir, kegg_request=kegg_request, entry_field=None)
+    pull_result: p.PullResult = single_pull.pull(entry_ids=mock_entry_ids)
     expected_get_url = f'{ku.BASE_URL}/get/{"+".join(mock_entry_ids)}'
     mock_get.assert_called_once_with(url=expected_get_url)
 

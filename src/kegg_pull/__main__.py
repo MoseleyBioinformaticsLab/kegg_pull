@@ -22,10 +22,8 @@ Options:
 import docopt as d
 
 from . import kegg_request as kr
-from . import single_pull as sp
-from . import pull_result as pr
+from . import pull as p
 from . import get_entry_ids as ge
-from . import multiple_pull as mp
 
 
 def main():
@@ -36,7 +34,7 @@ def main():
     kegg_request = kr.KEGGrequest(n_tries=n_tries, time_out=time_out, sleep_time=sleep_time)
     output_dir: str = args['--output-dir'] if args['--output-dir'] is not None else '.'
     entry_field: str = args['--entry-field']
-    puller = sp.SinglePull(output_dir=output_dir, kegg_request=kegg_request, entry_field=entry_field)
+    puller = p.SinglePull(output_dir=output_dir, kegg_request=kegg_request, entry_field=entry_field)
     database_name: str = args['--database-name']
     force_single_entry: bool = args['--force-single-entry']
 
@@ -56,13 +54,13 @@ def main():
         if args['--multi-process']:
             n_workers = int(args['--n-workers']) if args['--n-workers'] is not None else None
 
-            puller = mp.MultiProcessMultiplePull(
+            puller = p.MultiProcessMultiplePull(
                 single_pull=puller, force_single_entry=force_single_entry, n_workers=n_workers
             )
         else:
-            puller = mp.SingleProcessMultiplePull(single_pull=puller, force_single_entry=force_single_entry)
+            puller = p.SingleProcessMultiplePull(single_pull=puller, force_single_entry=force_single_entry)
 
-    pull_result: pr.PullResult = puller.pull(entry_ids=entry_ids)
+    pull_result: p.PullResult = puller.pull(entry_ids=entry_ids)
 
     with open('pull-results.txt', 'w') as f:
         _write_entry_ids(f=f, entry_id_type='Successful', entry_ids=pull_result.successful_entry_ids)
