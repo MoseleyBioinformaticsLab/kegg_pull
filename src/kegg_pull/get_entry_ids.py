@@ -1,25 +1,22 @@
 import logging as l
 
-from . import web_request as wr
+from . import kegg_request as kr
 from . import kegg_url as ku
 
 
 def from_database(database_name: str) -> list:
     list_url = ku.ListKEGGurl(database_name=database_name)
-    web_request = wr.WebRequest()
-    res: wr.WebResponse = web_request.get(url=list_url.url)
+    kegg_request = kr.KEGGrequest()
+    response: kr.KEGGresponse = kegg_request.get(url=list_url.url)
 
-    if res.status == wr.WebResponse.Status.FAILED:
-        raise RuntimeError(f'The web request failed to get the entry IDs of the {database_name} database')
-    elif res.status == wr.WebResponse.Status.TIMEOUT:
+    if response.status == kr.KEGGresponse.Status.FAILED:
+        raise RuntimeError(f'The KEGG request failed to get the entry IDs of the {database_name} database')
+    elif response.status == kr.KEGGresponse.Status.TIMEOUT:
         raise RuntimeError(
-            f'The web request timed out while trying to get the entry IDs of the {database_name} database'
+            f'The KEGG request timed out while trying to get the entry IDs of the {database_name} database'
         )
 
-    entry_ids: list = _parse_entry_ids_string(entry_ids_string=res.text_body)
-
-    # We empirically determined that each line consists of the entry ID followed by more info separated by a tab
-    entry_ids = [entry_id.split('\t')[0] for entry_id in entry_ids]
+    entry_ids: list = _parse_entry_ids_string(entry_ids_string=response.text_body)
 
     return entry_ids
 
@@ -38,7 +35,7 @@ def from_file(file_path: str) -> list:
 
 def _parse_entry_ids_string(entry_ids_string: str) -> list:
     entry_ids: list = entry_ids_string.strip().split('\n')
-    entry_ids = [entry_id.strip() for entry_id in entry_ids]
+    entry_ids = [entry_id.split('\t')[0].strip() for entry_id in entry_ids]
 
     return entry_ids
 

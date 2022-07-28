@@ -15,8 +15,8 @@ def teardown():
 def test_main(mocker):
     mock_database = 'brite'
     mocker.patch('sys.argv', ['kegg_pull', 'multiple', f'--database-name={mock_database}'])
-    mock_web_request = mocker.MagicMock()
-    MockWebRequest = mocker.patch('kegg_pull.__main__.wr.WebRequest', return_value=mock_web_request)
+    mock_kegg_request = mocker.MagicMock()
+    MockKEGGrequest = mocker.patch('kegg_pull.__main__.kr.KEGGrequest', return_value=mock_kegg_request)
     mock_single_pull = mocker.MagicMock()
     MockSinglePull = mocker.patch('kegg_pull.__main__.sp.SinglePull', return_value=mock_single_pull)
     mock_entry_ids = ['1', '2', '3']
@@ -34,8 +34,8 @@ def test_main(mocker):
     )
 
     m.main()
-    MockWebRequest.assert_called_once_with(n_tries=None, time_out=None, sleep_time=None)
-    MockSinglePull.assert_called_once_with(output_dir='.', web_request=mock_web_request, entry_field=None)
+    MockKEGGrequest.assert_called_once_with(n_tries=None, time_out=None, sleep_time=None)
+    MockSinglePull.assert_called_once_with(output_dir='.', kegg_request=mock_kegg_request, entry_field=None)
     MockSingleProcessMultiplePull.assert_called_once_with(single_pull=mock_single_pull, force_single_entry=True)
     mock_from_database.assert_called_once_with(database_name=mock_database)
     mock_pull.assert_called_once_with(entry_ids=mock_entry_ids)

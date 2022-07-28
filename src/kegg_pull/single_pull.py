@@ -2,49 +2,49 @@ import typing as t
 import os
 
 from . import kegg_url as ku
-from . import web_request as wr
+from . import kegg_request as kr
 from . import pull_result as pr
 
 
 class SinglePull:
-    def __init__(self, output_dir: str, web_request: wr.WebRequest = None, entry_field: str = None):
+    def __init__(self, output_dir: str, kegg_request: kr.KEGGrequest = None, entry_field: str = None):
         if not os.path.isdir(output_dir):
             os.mkdir(output_dir)
 
         self._output_dir = output_dir
 
-        if web_request is None:
-            web_request = wr.WebRequest()
+        if kegg_request is None:
+            kegg_request = kr.KEGGrequest()
 
-        self._web_request = web_request
+        self._kegg_request = kegg_request
         self.entry_field = entry_field
 
 
     def pull(self, entry_ids: list) -> pr.PullResult:
         get_url = ku.GetKEGGurl(entry_ids=entry_ids, entry_field=self.entry_field)
-        web_response: wr.WebResponse = self._web_request.get(url=get_url.url)
+        kegg_response: kr.KEGGresponse = self._kegg_request.get(url=get_url.url)
         pull_result = pr.PullResult()
 
-        if web_response.status == wr.WebResponse.Status.SUCCESS:
+        if kegg_response.status == kr.KEGGresponse.Status.SUCCESS:
             if get_url.multiple_entry_ids:
-                self._save_multi_entry_response(web_response=web_response, get_url=get_url, pull_result=pull_result)
+                self._save_multi_entry_response(kegg_response=kegg_response, get_url=get_url, pull_result=pull_result)
             else:
-                self._save_single_entry_response(web_response=web_response, get_url=get_url, pull_result=pull_result)
+                self._save_single_entry_response(kegg_response=kegg_response, get_url=get_url, pull_result=pull_result)
         else:
-            self._handle_unsuccessful_url(get_url=get_url, pull_result=pull_result, status=web_response.status)
+            self._handle_unsuccessful_url(get_url=get_url, pull_result=pull_result, status=kegg_response.status)
 
         return pull_result
 
     def _save_multi_entry_response(
-        self, web_response: wr.WebResponse, get_url: ku.GetKEGGurl, pull_result: pr.PullResult
+        self, kegg_response: kr.KEGGresponse, get_url: ku.GetKEGGurl, pull_result: pr.PullResult
     ):
-        entries: list = self._separate_entries(concatenated_entries=web_response.text_body)
+        entries: list = self._separate_entries(concatenated_entries=kegg_response.text_body)
 
         if len(entries) < len(get_url.entry_ids):
             # If we did not get all the entries requested, process each entry one at a time
             self._pull_separate_entries(get_url=get_url, pull_result=pull_result)
         else:
-            pull_result.add_entry_ids(*get_url.entry_ids, status=wr.WebResponse.Status.SUCCESS)
+            pull_result.add_entry_ids(*get_url.entry_ids, status=kr.KEGGresponse.Status.SUCCESS)
 
             for entry_id, entry in zip(get_url.entry_ids, entries):
                 self._save_entry(entry_id=entry_id, entry=entry)
@@ -84,19 +84,19 @@ class SinglePull:
     def _pull_separate_entries(self, get_url: ku.GetKEGGurl, pull_result: pr.PullResult):
         for split_url in get_url.split_entries():
             [entry_id] = split_url.entry_ids
-            web_response: wr.WebResponse = self._web_request.get(url=split_url.url)
+            kegg_response: kr.KEGGresponse = self._kegg_request.get(url=split_url.url)
 
-            if web_response.status == wr.WebResponse.Status.SUCCESS:
-                self._save_single_entry_response(web_response=web_response, get_url=get_url, pull_result=pull_result)
+            if kegg_response.status == kr.KEGGresponse.Status.SUCCESS:
+                self._save_single_entry_response(kegg_response=kegg_response, get_url=get_url, pull_result=pull_result)
             else:
-                pull_result.add_entry_ids(entry_id, status=web_response.status)
+                pull_result.add_entry_ids(entry_id, status=kegg_response.status)
 
     def _save_single_entry_response(
-        self, web_response: wr.WebResponse, get_url: ku.GetKEGGurl, pull_result: pr.PullResult
+        self, kegg_response: kr.KEGGresponse, get_url: ku.GetKEGGurl, pull_result: pr.PullResult
     ):
         [entry_id] = get_url.entry_ids
-        pull_result.add_entry_ids(entry_id, status=wr.WebResponse.Status.SUCCESS)
-        entry: t.Union[str, bytes] = web_response.binary_body if self._is_binary() else web_response.text_body
+        pull_result.add_entry_ids(entry_id, status=kr.KEGGresponse.Status.SUCCESS)
+        entry: t.Union[str, bytes] = kegg_response.binary_body if self._is_binary() else kegg_response.text_body
         self._save_entry(entry_id=entry_id, entry=entry)
 
     def _is_binary(self) -> bool:
@@ -111,7 +111,7 @@ class SinglePull:
             f.write(entry)
 
     def _handle_unsuccessful_url(
-            self, get_url: ku.GetKEGGurl, pull_result: pr.PullResult, status: wr.WebResponse.Status
+            self, get_url: ku.GetKEGGurl, pull_result: pr.PullResult, status: kr.KEGGresponse.Status
     ):
         if get_url.multiple_entry_ids:
             self._pull_separate_entries(get_url=get_url, pull_result=pull_result)

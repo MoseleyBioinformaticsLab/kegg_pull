@@ -15,13 +15,13 @@ Options:
     --entry-ids=<entry-ids>                         Comma separated list of entry IDs to pull in a single request (e.g. --entry-ids=id1,id2,id3 etc.).
     --output-dir=<output_dir>                       The directory where the pulled KEGG entries will be stored. Defaults to the current working directory.
     --entry-field=<entry-field>                     Optional field to extract from the entries pulled rather than the standard flat file format (or "htext" in the case of brite entries).
-    --n-tries=<n-tries>                             The number of times to attempt a web request before marking it as timed out or failed.
-    --time-out=<time-out>                           The number of seconds to wait for a web request before marking it as timed out. Defaults to 0.
-    --sleep-time=<sleep-time>                       The amount of time to wait after a web request times out before attempting it again. Defaults to 60.
+    --n-tries=<n-tries>                             The number of times to attempt a KEGG request before marking it as timed out or failed.
+    --time-out=<time-out>                           The number of seconds to wait for a KEGG request before marking it as timed out. Defaults to 0.
+    --sleep-time=<sleep-time>                       The amount of time to wait after a KEGG request times out before attempting it again. Defaults to 60.
 """
 import docopt as d
 
-from . import web_request as wr
+from . import kegg_request as kr
 from . import single_pull as sp
 from . import pull_result as pr
 from . import get_entry_ids as ge
@@ -33,10 +33,10 @@ def main():
     n_tries: str = int(args['--n-tries']) if args['--n-tries'] is not None else None
     time_out: str = int(args['--time-out']) if args['--time-out'] is not None else None
     sleep_time: str = float(args['--sleep-time']) if args['--sleep-time'] is not None else None
-    web_request = wr.WebRequest(n_tries=n_tries, time_out=time_out, sleep_time=sleep_time)
+    kegg_request = kr.KEGGrequest(n_tries=n_tries, time_out=time_out, sleep_time=sleep_time)
     output_dir: str = args['--output-dir'] if args['--output-dir'] is not None else '.'
     entry_field: str = args['--entry-field']
-    puller = sp.SinglePull(output_dir=output_dir, web_request=web_request, entry_field=entry_field)
+    puller = sp.SinglePull(output_dir=output_dir, kegg_request=kegg_request, entry_field=entry_field)
     database_name: str = args['--database-name']
     force_single_entry: bool = args['--force-single-entry']
 
