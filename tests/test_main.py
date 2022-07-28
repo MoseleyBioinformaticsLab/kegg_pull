@@ -18,7 +18,7 @@ def test_main(mocker):
     mock_kegg_request = mocker.MagicMock()
     MockKEGGrequest = mocker.patch('kegg_pull.__main__.kr.KEGGrequest', return_value=mock_kegg_request)
     mock_single_pull = mocker.MagicMock()
-    MockSinglePull = mocker.patch('kegg_pull.__main__.sp.SinglePull', return_value=mock_single_pull)
+    MockSinglePull = mocker.patch('kegg_pull.__main__.p.SinglePull', return_value=mock_single_pull)
     mock_entry_ids = ['1', '2', '3']
     mock_from_database = mocker.patch('kegg_pull.__main__.ge.from_database', return_value=mock_entry_ids)
 
@@ -26,11 +26,11 @@ def test_main(mocker):
         successful_entry_ids=('a', 'b', 'c', 'x'), failed_entry_ids=('y', 'z'), timed_out_entry_ids=()
     )
 
-    mock_pull = mocker.patch('kegg_pull.__main__.mp.SingleProcessMultiplePull.pull', return_value=mock_pull_result)
+    mock_pull = mocker.patch('kegg_pull.__main__.p.SingleProcessMultiplePull.pull', return_value=mock_pull_result)
     mock_multiple_pull = mocker.MagicMock(pull=mock_pull)
 
     MockSingleProcessMultiplePull = mocker.patch(
-        'kegg_pull.__main__.mp.SingleProcessMultiplePull', return_value=mock_multiple_pull
+        'kegg_pull.__main__.p.SingleProcessMultiplePull', return_value=mock_multiple_pull
     )
 
     m.main()
