@@ -1,32 +1,37 @@
-import logging as l
+import typing as t
 
 from . import kegg_request as kr
 from . import kegg_url as ku
 
 
 def from_database(database_name: str) -> list:
-    list_url = ku.ListKEGGurl(database_name=database_name)
-    kegg_request = kr.KEGGrequest()
-    response: kr.KEGGresponse = kegg_request.get(url=list_url.url)
+    return _from_kegg_api_operation(KEGGurl=ku.ListKEGGurl, database_name=database_name)
 
-    if response.status == kr.KEGGresponse.Status.FAILED:
-        raise RuntimeError(f'The KEGG request failed to get the entry IDs of the {database_name} database')
-    elif response.status == kr.KEGGresponse.Status.TIMEOUT:
+def _from_kegg_api_operation(**kwargs) -> list:
+    kegg_request = kr.KEGGrequest()
+    kegg_response: kr.KEGGresponse = kegg_request.execute_api_operation(**kwargs)
+
+    if kegg_response.status == kr.KEGGresponse.Status.FAILED:
         raise RuntimeError(
-            f'The KEGG request timed out while trying to get the entry IDs of the {database_name} database'
+            f'The KEGG request failed to get the entry IDs from the following URL: {kegg_response.kegg_url.url}'
+        )
+    elif kegg_response.status == kr.KEGGresponse.Status.TIMEOUT:
+        raise RuntimeError(
+            f'The KEGG request timed out while trying to get the entry IDs from the following URL: '
+            f'{kegg_response.kegg_url.url}'
         )
 
-    entry_ids: list = _parse_entry_ids_string(entry_ids_string=response.text_body)
+    entry_ids: list = _parse_entry_ids_string(entry_ids_string=kegg_response.text_body)
 
     return entry_ids
 
 
-def from_file(file_path: str) -> list:
-    with open(file_path, 'r') as f:
+def from_file(entry_ids_file_path: str) -> list:
+    with open(entry_ids_file_path, 'r') as f:
         entry_ids: str = f.read()
 
         if entry_ids == '':
-            raise ValueError(f'Attempted to get entry IDs from {file_path}. But the file is empty')
+            raise ValueError(f'Attempted to get entry IDs from {entry_ids_file_path}. But the file is empty')
 
         entry_ids: list = _parse_entry_ids_string(entry_ids_string=entry_ids)
 
@@ -40,11 +45,15 @@ def _parse_entry_ids_string(entry_ids_string: str) -> list:
     return entry_ids
 
 
-def from_string(entry_ids_string: str) -> list:
-    entry_ids: list = entry_ids_string.split(',')
+def from_keywords(database_name: str, keywords: list) -> list:
+    return _from_kegg_api_operation(KEGGurl=ku.KeywordsFindKEGGurl, database_name=database_name, keywords=keywords)
 
-    if '' in entry_ids:
-        l.warning(f'Blank entry IDs detected in the provided list: "{entry_ids_string}". Removing blank entry IDs...')
-        entry_ids = [entry_id for entry_id in entry_ids if entry_id != '']
 
-    return entry_ids
+def from_molecular_attribute(
+    database_name: str, formula: str = None, exact_mass: t.Union[float, tuple] = None,
+    molecular_weight: t.Union[int, tuple] = None
+):
+    return _from_kegg_api_operation(
+        KEGGurl=ku.MolecularFindKEGGurl, database_name=database_name, formula=formula, exact_mass=exact_mass,
+        molecular_weight=molecular_weight
+    )

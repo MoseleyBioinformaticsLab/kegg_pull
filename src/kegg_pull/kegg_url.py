@@ -1,7 +1,7 @@
 """
 Classes for creating KEGG REST API URLs for both the list and get API operations.
 """
-import logging
+import logging as l
 import abc
 import typing as t
 
@@ -13,6 +13,11 @@ class AbstractKEGGurl(abc.ABC):
     Abstract class containing the base data and functionality for all KEGG URL classes which validate and construct URLs
     for accessing the KEGG web API.
     """
+    valid_kegg_databases = {
+        'pathway', 'brite', 'module', 'ko', 'genome', 'vg', 'vp', 'ag', 'compound', 'glycan', 'reaction', 'rclass',
+        'enzyme', 'network', 'variant', 'disease', 'drug', 'dgroup'
+    }
+
     def __init__(self, api_operation: str, base_url: str = BASE_URL, **kwargs):
         """ Validates the arguments and constructs the KEGG API URL from them.
 
@@ -43,12 +48,6 @@ class AbstractKEGGurl(abc.ABC):
         pass  # pragma: no cover
 
     @property
-    @abc.abstractmethod
-    def _valid_rest_options(self) -> t.Iterable:
-        """Property containing the collection of valid KEGG REST API options for a given operation."""
-        pass
-
-    @property
     def url(self) -> str:
         return self._url
 
@@ -64,16 +63,29 @@ class AbstractKEGGurl(abc.ABC):
         """
         raise ValueError(f'Cannot create URL - {reason}')
 
-    def _validate_rest_option(self, option_name: str, option_value: str):
+    @staticmethod
+    def _validate_rest_option(option_name: str, option_value: str, valid_rest_options: t.Iterable):
         """ Raises an exception if a provided REST API option is not valid.
 
         :param option_name: The name of the type of option to check
         :param option_value: The value of the REST API option provided
+        :param valid_rest_options: The collection of valid options to choose from
         :raises ValueError:
         """
-        if option_value not in self._valid_rest_options:
-            valid_options = ', '.join(sorted(self._valid_rest_options))
-            self._raise_error(reason=f'Invalid {option_name}: "{option_value}". Valid values are: {valid_options}')
+        if option_value not in valid_rest_options:
+            valid_options = ', '.join(sorted(valid_rest_options))
+            AbstractKEGGurl._raise_error(reason=f'Invalid {option_name}: "{option_value}". Valid values are: {valid_options}')
+
+    @staticmethod
+    def _validate_database_name(database_name):
+        """ Ensures the database provided is a valid KEGG database.
+
+        :param database_name: The name of the database to validate
+        """
+        AbstractKEGGurl._validate_rest_option(
+            option_name='database name', option_value=database_name,
+            valid_rest_options=AbstractKEGGurl.valid_kegg_databases
+        )
 
 
 class ListKEGGurl(AbstractKEGGurl):
@@ -86,11 +98,7 @@ class ListKEGGurl(AbstractKEGGurl):
         super().__init__(api_operation='list', database_name=database_name)
 
     def _validate(self, database_name: str):
-        """ Ensures the database provided is a valid KEGG database.
-
-        :param database_name: The name of the database to validate
-        """
-        self._validate_rest_option(option_name='database name', option_value=database_name)
+        self._validate_database_name(database_name=database_name)
 
     def _create_rest_options(self, database_name: str) -> str:
         """ Implements the KEGG REST API options creation by returning the provided database. That's the only option for
@@ -100,14 +108,6 @@ class ListKEGGurl(AbstractKEGGurl):
         :return: The database option
         """
         return database_name
-
-    @property
-    def _valid_rest_options(self) -> t.Iterable:
-        """Returns the collection of valid databases for the list operation."""
-        return {
-        'pathway', 'brite', 'module', 'ko', 'genome', 'vg', 'vp', 'ag', 'compound', 'glycan', 'reaction', 'rclass',
-        'enzyme', 'network', 'variant', 'disease', 'drug', 'dgroup'
-    }
 
 
 class GetKEGGurl(AbstractKEGGurl):
@@ -156,18 +156,15 @@ class GetKEGGurl(AbstractKEGGurl):
             )
 
         if entry_field is not None:
-            self._validate_rest_option(option_name='KEGG entry field', option_value=entry_field)
+            AbstractKEGGurl._validate_rest_option(
+                option_name='KEGG entry field', option_value=entry_field, valid_rest_options=GetKEGGurl._entry_fields
+            )
 
             if self.only_one_entry(entry_field=entry_field) and n_entry_ids > 1:
                 self._raise_error(
                     reason=f'The KEGG entry field: "{entry_field}" only supports requests of one KEGG entry '
                            f'at a time but {n_entry_ids} entry IDs are provided'
                 )
-
-    @property
-    def _valid_rest_options(self) -> t.Iterable:
-        """Returns the collection of valid entry fields for the get API operation."""
-        return self._entry_fields
 
     @staticmethod
     def only_one_entry(entry_field: str) -> bool:
@@ -192,18 +189,99 @@ class GetKEGGurl(AbstractKEGGurl):
         else:
             return entry_ids_url_option
 
-    def split_entries(self):
-        """ Converts a KEGG get URL with multiple entry IDs into separate URLs each with one entry ID. Logs a warning if
-        the initial URL only has one entry ID.
-        """
-        if self.only_one_entry(entry_field=self._entry_field):
-            logging.warning('Cannot split the entry IDs of a URL with only one entry ID. Returning the same URL...')
 
-            yield self
-        else:
-            for entry_id in self._entry_ids:
-                split_url = GetKEGGurl(
-                    entry_ids=[entry_id], entry_field=self._entry_field
+class KeywordsFindKEGGurl(AbstractKEGGurl):
+    def __init__(self, database_name: str, keywords: list):
+        super(KeywordsFindKEGGurl, self).__init__(api_operation='find', database_name=database_name, keywords=keywords)
+
+    def _validate(self, database_name: str, keywords: list):
+        if database_name == 'brite':
+            self._raise_error(reason='Key words search not supported for brite entries')
+
+        if len(keywords) == 0:
+            self._raise_error(reason='No search keywords specified')
+
+        AbstractKEGGurl._validate_database_name(database_name=database_name)
+
+    def _create_rest_options(self, keywords: list, database_name: str) -> str:
+        keywords_string = '+'.join(keywords)
+
+        return f'{database_name}/{keywords_string}'
+
+
+class MolecularFindKEGGurl(AbstractKEGGurl):
+    _valid_molecular_databases = {'compound', 'drug'}
+
+    def __init__(self, database_name: str, formula: str = None, exact_mass: t.Union[float, tuple] = None,
+        molecular_weight: t.Union[int, tuple] = None
+    ):
+        super(MolecularFindKEGGurl, self).__init__(
+            api_operation='find', database_name=database_name, formula=formula, exact_mass=exact_mass,
+            molecular_weight=molecular_weight
+        )
+
+    def _validate(
+        self, database_name: str, formula: str = None, exact_mass: t.Union[float, tuple] = None,
+        molecular_weight: t.Union[int, tuple] = None
+    ):
+        AbstractKEGGurl._validate_rest_option(
+            option_name='molecular database name', option_value=database_name,
+            valid_rest_options=MolecularFindKEGGurl._valid_molecular_databases
+        )
+
+        if formula is None and exact_mass is None and molecular_weight is None:
+            AbstractKEGGurl._raise_error(
+                reason='Must provide either a chemical formula, exact mass, or molecular weight option'
+            )
+
+        if formula is not None and (exact_mass is not None or molecular_weight is not None):
+            l.warning(
+                'Only a chemical formula, exact mass, or molecular weight is used to construct the URL. Using formula'
+                '...'
+            )
+
+        if formula is None and exact_mass is not None and molecular_weight is not None:
+            l.warning('Both an exact mass and molecular weight are provided. Using exact mass...')
+
+        MolecularFindKEGGurl._validate_range(range_values=exact_mass, range_name='Exact mass')
+        MolecularFindKEGGurl._validate_range(range_values=molecular_weight, range_name='Molecular weight')
+
+    @staticmethod
+    def _validate_range(range_values: tuple, range_name: str):
+        if range_values is not None and type(range_values) is tuple:
+            if len(range_values) != 2:
+                AbstractKEGGurl._raise_error(
+                    f'{range_name} range can only be constructed from 2 values but {len(range_values)} are provided: '
+                    f'{", ".join(range_values)}'
                 )
 
-                yield split_url
+            min_val, max_val = range_values
+
+            if not min_val < max_val:
+                AbstractKEGGurl._raise_error(
+                    reason=f'The first value in the range must be less than the second. Values provided:'
+                           f' {min_val}-{max_val}'
+                )
+
+    def _create_rest_options(self, database_name: str, formula: str = None, exact_mass: t.Union[float, tuple] = None,
+        molecular_weight: t.Union[int, tuple] = None
+    ) -> str:
+        if formula is not None:
+            options = f'{formula}/formula'
+        elif exact_mass is not None:
+            options = MolecularFindKEGGurl._get_range_options(option_name='exact_mass', option_value=exact_mass)
+        else:
+            options = MolecularFindKEGGurl._get_range_options(option_name='mol_weight', option_value=molecular_weight)
+
+        return f'{database_name}/{options}'
+
+    @staticmethod
+    def _get_range_options(option_name: str, option_value: t.Union[float, int, tuple]) -> str:
+        if type(option_value) is int or type(option_value) is float:
+            options = option_value
+        else:
+            minimum, maximum = option_value
+
+            options = f'{minimum}-{maximum}'
+
+        return f'{options}/{option_name}'

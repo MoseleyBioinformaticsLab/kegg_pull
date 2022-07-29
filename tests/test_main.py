@@ -4,7 +4,7 @@ import os
 import kegg_pull.__main__ as m
 
 
-@pt.fixture(autouse=True)
+@pt.fixture(name='_')
 def teardown():
     yield
 
@@ -12,7 +12,7 @@ def teardown():
 
 
 # TODO: Test from entry ID file and entry ID string
-def test_main(mocker):
+def test_pull(mocker, _):
     mock_database = 'brite'
     mocker.patch('sys.argv', ['kegg_pull', 'multiple', f'--database-name={mock_database}'])
     mock_kegg_request = mocker.MagicMock()
@@ -56,3 +56,27 @@ def test_main(mocker):
         actual_pull_results = f.read()
 
         assert actual_pull_results == expected_pull_results
+
+
+def test_get_entry_ids(mocker):
+    mock_database = 'pathway'
+
+    mocker.patch(
+        'sys.argv',
+        ['kegg_pull', 'entry-ids', 'from-keywords', f'--database-name={mock_database}', '--keywords=k1,k2']
+    )
+
+    mock_entry_ids = ['a', 'b']
+
+    mock_from_keywords: mocker.MagicMock = mocker.patch(
+        'kegg_pull.__main__.ge.from_keywords', return_value=mock_entry_ids
+    )
+
+    mock_print: mocker.MagicMock = mocker.patch('builtins.print')
+    m.main()
+    mock_from_keywords.assert_called_once_with(database_name=mock_database, keywords=['k1', 'k2'])
+
+    for actual_printed_id, expected_printed_id in zip(mock_print.call_args_list, mock_entry_ids):
+        (actual_printed_id,) = actual_printed_id.args
+
+        assert actual_printed_id == expected_printed_id
