@@ -60,33 +60,4 @@ def test_get_kegg_url_create_url_options(entry_ids: list, entry_field: str, expe
     assert get_kegg_url.url == expected_url
 
 
-def test_split_urls_warning(caplog):
-    original_url = ku.GetKEGGurl(entry_ids=['x'], entry_field='conf')
-
-    # Ensure there is only one url returned
-    returned_urls = list(original_url.split_entries())
-    [returned_url] = returned_urls
-
-    # Ensure the returned url is the same object reference as the original
-    assert returned_url == original_url
-
-    u.assert_warning(
-        file_name='kegg_url.py', func_name='split_entries',
-        message='Cannot split the entry IDs of a URL with only one entry ID. Returning the same URL...', caplog=caplog
-    )
-
-
-test_split_urls_data: list = [
-    (['x', 'y', 'z'], None, ['/get/x', '/get/y', '/get/z']),
-    (['x', 'y'], 'kcf', ['/get/x/kcf', '/get/y/kcf'])
-]
-
-
-@pt.mark.parametrize('entry_ids,entry_field,expected_urls', test_split_urls_data)
-def test_split_entries(entry_ids: list, entry_field: str, expected_urls: list):
-    url_to_split = ku.GetKEGGurl(entry_ids=entry_ids, entry_field=entry_field)
-
-    for split_url, expected_url in zip(url_to_split.split_entries(), expected_urls):
-        expected_url = ku.BASE_URL + expected_url
-
-        assert split_url.url == expected_url
+# TODO Test other URLs

@@ -2,6 +2,8 @@ import requests as rq
 import enum as e
 import time as t
 
+from . import kegg_url as ku
+
 
 class KEGGresponse:
     class Status(e.Enum):
@@ -9,9 +11,17 @@ class KEGGresponse:
         FAILED = 2
         TIMEOUT = 3
 
-    def __init__(self, status: Status, text_body: str = None, binary_body: bytes = None):
-        self._validate(status=status, text_body=text_body, binary_body=binary_body)
+    def __init__(self, status: Status, kegg_url: ku.AbstractKEGGurl, text_body: str = None, binary_body: bytes = None):
+        if status is None:
+            raise ValueError('A status must be specified for the KEGG response')
+
+        if status == KEGGresponse.Status.SUCCESS and (
+            text_body is None or binary_body is None or text_body == '' or binary_body == b''
+        ):
+            raise ValueError('A KEGG response cannot be marked as successful if its response body is empty')
+
         self._status = status
+        self._kegg_url = kegg_url
         self._text_body = text_body
         self._binary_body = binary_body
 
@@ -20,22 +30,16 @@ class KEGGresponse:
         return self._status
 
     @property
+    def kegg_url(self):
+        return self._kegg_url
+
+    @property
     def text_body(self):
         return self._text_body
 
     @property
     def binary_body(self):
         return self._binary_body
-
-    @staticmethod
-    def _validate(status: Status, text_body: str, binary_body: bytes):
-        if status is None:
-            raise ValueError('A status must be specified for the KEGG response')
-
-        if status == KEGGresponse.Status.SUCCESS and (
-            text_body is None or binary_body is None or text_body == '' or binary_body == b''
-        ):
-            raise ValueError('A KEGG response cannot be marked as successful if its response body is empty')
 
 
 class KEGGrequest:
@@ -47,22 +51,33 @@ class KEGGrequest:
         if self._n_tries < 1:
             raise ValueError(f'{self._n_tries} is not a valid number of tries to make a KEGG request.')
 
-    def get(self, url: str):
+    def execute_api_operation(self, KEGGurl: type, **kwargs) -> KEGGresponse:
+        valid_kegg_url_classes = {ku.ListKEGGurl, ku.GetKEGGurl, ku.KeywordsFindKEGGurl, ku.MolecularFindKEGGurl}
+
+        if KEGGurl not in valid_kegg_url_classes:
+            raise ValueError(
+                f'Invalid KEGG url class: {KEGGurl}. Valid values are: {", ".join(valid_kegg_url_classes)}'
+            )
+
+        kegg_url: ku.AbstractKEGGurl = KEGGurl(**kwargs)
         status = None
 
         for _ in range(self._n_tries):
             try:
-                response: rq.Response = rq.get(url=url, timeout=self._time_out)
+                response: rq.Response = rq.get(url=kegg_url.url, timeout=self._time_out)
 
                 if response.status_code == 200:
-                    return KEGGresponse(status=KEGGresponse.Status.SUCCESS, text_body=response.text, binary_body=response.content)
+                    return KEGGresponse(
+                        status=KEGGresponse.Status.SUCCESS, kegg_url=kegg_url, text_body=response.text,
+                        binary_body=response.content
+                    )
                 else:
                     status = KEGGresponse.Status.FAILED
             except rq.exceptions.Timeout:
                 status = KEGGresponse.Status.TIMEOUT
                 t.sleep(self._sleep_time)
 
-        return KEGGresponse(status=status)
+        return KEGGresponse(status=status, kegg_url=kegg_url)
 
     def test(self, url: str) -> bool:
         for _ in self._n_tries:

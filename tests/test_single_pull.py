@@ -27,13 +27,15 @@ def test_single_pull(mocker, mock_output_dir):
     mock_entry_ids = ['abc', 'xyz', '123']
     expected_file_contents = [f'{mock_entry_id} content' for mock_entry_id in mock_entry_ids]
     mock_text_body = '///'.join(expected_file_contents) + '///'
-    mock_response = mocker.MagicMock(text_body=mock_text_body, status=kr.KEGGresponse.Status.SUCCESS)
-    mock_get = mocker.MagicMock(return_value=mock_response)
-    kegg_request = mocker.MagicMock(get=mock_get)
-    single_pull = p.SinglePull(output_dir=mock_output_dir, kegg_request=kegg_request, entry_field=None)
+    mock_response = mocker.MagicMock(text_body=mock_text_body, status=kr.KEGGresponse.Status.SUCCESS, kegg_url=mocker.MagicMock(multiple_entry_ids=True, entry_ids=mock_entry_ids))
+    mock_execute_api_operation = mocker.MagicMock(return_value=mock_response)
+    mock_kegg_request = mocker.MagicMock(execute_api_operation=mock_execute_api_operation)
+    single_pull = p.SinglePull(output_dir=mock_output_dir, kegg_request=mock_kegg_request, entry_field=None)
     pull_result: p.PullResult = single_pull.pull(entry_ids=mock_entry_ids)
-    expected_get_url = f'{ku.BASE_URL}/get/{"+".join(mock_entry_ids)}'
-    mock_get.assert_called_once_with(url=expected_get_url)
+
+    mock_execute_api_operation.assert_called_once_with(
+        KEGGurl=ku.GetKEGGurl, entry_ids=mock_entry_ids, entry_field=None
+    )
 
     assert pull_result.successful_entry_ids == tuple(mock_entry_ids)
     assert pull_result.failed_entry_ids == ()

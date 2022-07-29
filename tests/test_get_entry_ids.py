@@ -1,12 +1,22 @@
+import pytest as pt
+
 import kegg_pull.kegg_request as kr
 import kegg_pull.get_entry_ids as ge
 import kegg_pull.kegg_url as ku
 
 
+test_get_entry_ids_from_kegg_api_data = [
+    (ge.from_database, ku.ListKEGGurl, {'database_name': 'compound'}),
+    (ge.from_keywords, ku.KeywordsFindKEGGurl, {'database_name': 'compound', 'keywords': ['kw1', 'kw2']}),
+    (
+        ge.from_molecular_attribute, ku.MolecularFindKEGGurl,
+        {'database_name': 'compound', 'formula': 'M4O3C2K1', 'exact_mass': None, 'molecular_weight': None}
+    )
+]
 # TODO: Test exceptions raised
 # TODO: Test loading from a file
-# TODO: Test from an entry IDs string
-def test_get_entry_ids(mocker):
+@pt.mark.parametrize('get_entry_ids,KEGGurl,kwargs', test_get_entry_ids_from_kegg_api_data)
+def test_get_entry_ids_from_kegg_api(mocker, get_entry_ids: callable, KEGGurl: type, kwargs: dict):
     mock_text_body = '''
     cpd:C22501	alpha-D-Xylulofuranose
     cpd:C22502	alpha-D-Fructofuranose; alpha-D-Fructose
@@ -23,14 +33,12 @@ def test_get_entry_ids(mocker):
     '''
 
     mock_kegg_response = mocker.MagicMock(text_body=mock_text_body, status=kr.KEGGresponse.Status.SUCCESS)
-    mock_get = mocker.MagicMock(return_value=mock_kegg_response)
-    mock_kegg_request = mocker.MagicMock(get=mock_get)
+    mock_execute_api_operation = mocker.MagicMock(return_value=mock_kegg_response)
+    mock_kegg_request = mocker.MagicMock(execute_api_operation=mock_execute_api_operation)
     MockKEGGrequest = mocker.patch('kegg_pull.get_entry_ids.kr.KEGGrequest', return_value=mock_kegg_request)
-    mock_database_name = 'compound'
-    actual_entry_ids: list = ge.from_database(database_name=mock_database_name)
+    actual_entry_ids: list = get_entry_ids(**kwargs)
     MockKEGGrequest.assert_called_once_with()
-    expected_list_url = f'{ku.BASE_URL}/list/{mock_database_name}'
-    mock_get.assert_called_once_with(url=expected_list_url)
+    mock_execute_api_operation.assert_called_once_with(KEGGurl=KEGGurl, **kwargs)
 
     expected_entry_ids = [
         'cpd:C22501', 'cpd:C22502', 'cpd:C22500', 'cpd:C22504', 'cpd:C22506', 'cpd:C22507', 'cpd:C22509', 'cpd:C22510',

@@ -55,24 +55,26 @@ class SinglePull:
 
 
     def pull(self, entry_ids: list) -> PullResult:
-        get_url = ku.GetKEGGurl(entry_ids=entry_ids, entry_field=self.entry_field)
-        kegg_response: kr.KEGGresponse = self._kegg_request.get(url=get_url.url)
+        kegg_response: kr.KEGGresponse = self._kegg_request.execute_api_operation(
+            KEGGurl=ku.GetKEGGurl, entry_ids=entry_ids, entry_field=self.entry_field
+        )
+
+        get_url: ku.GetKEGGurl = kegg_response.kegg_url
         pull_result = PullResult()
 
         if kegg_response.status == kr.KEGGresponse.Status.SUCCESS:
             if get_url.multiple_entry_ids:
-                self._save_multi_entry_response(kegg_response=kegg_response, get_url=get_url, pull_result=pull_result)
+                self._save_multi_entry_response(kegg_response=kegg_response, pull_result=pull_result)
             else:
-                self._save_single_entry_response(kegg_response=kegg_response, get_url=get_url, pull_result=pull_result)
+                self._save_single_entry_response(kegg_response=kegg_response, pull_result=pull_result)
         else:
-            self._handle_unsuccessful_url(get_url=get_url, pull_result=pull_result, status=kegg_response.status)
+            self._handle_unsuccessful_url(kegg_response=kegg_response, pull_result=pull_result)
 
         return pull_result
 
-    def _save_multi_entry_response(
-        self, kegg_response: kr.KEGGresponse, get_url: ku.GetKEGGurl, pull_result: PullResult
-    ):
+    def _save_multi_entry_response(self, kegg_response: kr.KEGGresponse, pull_result: PullResult):
         entries: list = self._separate_entries(concatenated_entries=kegg_response.text_body)
+        get_url: ku.GetKEGGurl = kegg_response.kegg_url
 
         if len(entries) < len(get_url.entry_ids):
             # If we did not get all the entries requested, process each entry one at a time
@@ -116,18 +118,20 @@ class SinglePull:
         return SinglePull._split_and_remove_last(concatenated_entries=concatenated_entries, deliminator='///')
 
     def _pull_separate_entries(self, get_url: ku.GetKEGGurl, pull_result: PullResult):
-        for split_url in get_url.split_entries():
-            [entry_id] = split_url.entry_ids
-            kegg_response: kr.KEGGresponse = self._kegg_request.get(url=split_url.url)
+        for entry_id in get_url.entry_ids:
+            kegg_response: kr.KEGGresponse = self._kegg_request.execute_api_operation(
+                KEGGurl=ku.GetKEGGurl, entry_ids=[entry_id], entry_field=self.entry_field
+            )
 
             if kegg_response.status == kr.KEGGresponse.Status.SUCCESS:
-                self._save_single_entry_response(kegg_response=kegg_response, get_url=get_url, pull_result=pull_result)
+                self._save_single_entry_response(kegg_response=kegg_response, pull_result=pull_result)
             else:
                 pull_result.add_entry_ids(entry_id, status=kegg_response.status)
 
     def _save_single_entry_response(
-        self, kegg_response: kr.KEGGresponse, get_url: ku.GetKEGGurl, pull_result: PullResult
+        self, kegg_response: kr.KEGGresponse, pull_result: PullResult
     ):
+        get_url: ku.GetKEGGurl = kegg_response.kegg_url
         [entry_id] = get_url.entry_ids
         pull_result.add_entry_ids(entry_id, status=kr.KEGGresponse.Status.SUCCESS)
         entry: t.Union[str, bytes] = kegg_response.binary_body if self._is_binary() else kegg_response.text_body
@@ -144,9 +148,10 @@ class SinglePull:
         with open(file_path, save_type) as f:
             f.write(entry)
 
-    def _handle_unsuccessful_url(
-            self, get_url: ku.GetKEGGurl, pull_result: PullResult, status: kr.KEGGresponse.Status
-    ):
+    def _handle_unsuccessful_url(self, kegg_response: kr.KEGGresponse, pull_result: PullResult):
+        get_url: ku.GetKEGGurl = kegg_response.kegg_url
+        status: kr.KEGGresponse.Status = kegg_response.status
+
         if get_url.multiple_entry_ids:
             self._pull_separate_entries(get_url=get_url, pull_result=pull_result)
         else:
@@ -154,7 +159,7 @@ class SinglePull:
             pull_result.add_entry_ids(entry_id, status=status)
 
 
-class MultiplePull(abc.ABC):
+class AbstractMultiplePull(abc.ABC):
     def __init__(self, single_pull: SinglePull, force_single_entry: bool = False):
         self._single_pull = single_pull
         self._force_single_entry = force_single_entry
@@ -175,7 +180,7 @@ class MultiplePull(abc.ABC):
         return self._pull(grouped_entry_ids=entry_ids)
 
     def _group_entry_ids(self, entry_ids_to_group: list, force_single_entry: bool) -> list:
-        group_size: int = MultiplePull._get_n_entries_per_url(
+        group_size: int = AbstractMultiplePull._get_n_entries_per_url(
             force_single_entry=force_single_entry, entry_field=self._single_pull.entry_field
         )
 
@@ -200,7 +205,7 @@ class MultiplePull(abc.ABC):
     def _pull(self, grouped_entry_ids: list):
         pass
 
-class SingleProcessMultiplePull(MultiplePull):
+class SingleProcessMultiplePull(AbstractMultiplePull):
     def _pull(self, grouped_entry_ids: list):
         multiple_pull_result = PullResult()
 
@@ -210,7 +215,7 @@ class SingleProcessMultiplePull(MultiplePull):
 
         return multiple_pull_result
 
-class MultiProcessMultiplePull(MultiplePull):
+class MultiProcessMultiplePull(AbstractMultiplePull):
     def __init__(self, single_pull: SinglePull, force_single_entry: bool = False, n_workers: int = os.cpu_count()):
         super(MultiProcessMultiplePull, self).__init__(single_pull=single_pull, force_single_entry=force_single_entry)
         self._n_workers = n_workers
