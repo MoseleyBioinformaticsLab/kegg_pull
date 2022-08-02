@@ -1,11 +1,36 @@
+"""
+Usage:
+    kegg_pull pull -h | --help
+    kegg_pull pull multiple (--database-name=<database-name>|--file-path=<file-path>) [--force-single-entry] [--multi-process] [--n-workers=<n-workers>] [--output-dir=<output_dir>] [--entry-field=<entry-field>] [--n-tries=<n-tries>] [--time-out=<time-out>] [--sleep-time=<sleep-time>]
+    kegg_pull pull single (--entry-ids=<entry-ids>|--file-path=<file-path>) [--output-dir=<output_dir>] [--entry-field=<entry-field>] [--n-tries=<n-tries>] [--time-out=<time-out>] [--sleep-time=<sleep-time>]
+
+Options:
+    -h --help                           Show this help message.
+    multiple                            Pull, separate, and store as many entries as requested via multiple automated requests to the KEGG web API. Useful when the number of entries requested is well above the maximum that KEGG allows for a single request.
+    --database-name=<database-name>     The KEGG database from which to get a list of entry IDs to pull.
+    --file-path=<file-path>             Path to a file containing a list of entry IDs to pull, with one entry ID on each line.
+    --force-single-entry                Forces pulling only one entry at a time for every request to the KEGG web API. This flag is automatically set if --database-name is "brite".
+    --multi-process                     If set, the entries are pulled across multiple processes to increase speed. Otherwise, the entries are pulled sequentially in a single process.
+    --n-workers=<n-workers>             The number of sub-processes to create when pulling. Defaults to the number of cores available. Ignored if --multi-process is not set.
+    --output-dir=<output_dir>           The directory where the pulled KEGG entries will be stored. Defaults to the current working directory.
+    --entry-field=<entry-field>         Optional field to extract from the entries pulled rather than the standard flat file format (or "htext" in the case of brite entries).
+    --n-tries=<n-tries>                 The number of times to attempt a KEGG request before marking it as timed out or failed. Defaults to 3.
+    --time-out=<time-out>               The number of seconds to wait for a KEGG request before marking it as timed out. Defaults to 60.
+    --sleep-time=<sleep-time>           The amount of time to wait after a KEGG request times out before attempting it again. Defaults to 0.
+    single                              Pull, separate, and store one or more KEGG entries via a single request to the KEGG web API. Useful when the number of entries requested is less than or equal to the maximum that KEGG allows for a single request.
+    --entry-ids=<entry-ids>             Comma separated list of entry IDs to pull in a single request (e.g. --entry-ids=id1,id2,id3 etc.).
+"""
 import multiprocessing as mp
 import os
 import abc
 import typing as t
 import pickle as p
+import docopt as d
 
 from . import kegg_request as kr
 from . import kegg_url as ku
+from . import entry_ids as ei
+from . import utils as u
 
 
 class PullResult:
@@ -205,6 +230,7 @@ class AbstractMultiplePull(abc.ABC):
     def _pull(self, grouped_entry_ids: list):
         pass
 
+
 class SingleProcessMultiplePull(AbstractMultiplePull):
     def _pull(self, grouped_entry_ids: list):
         multiple_pull_result = PullResult()
@@ -214,6 +240,7 @@ class SingleProcessMultiplePull(AbstractMultiplePull):
             multiple_pull_result.merge_pull_results(other=single_pull_result)
 
         return multiple_pull_result
+
 
 class MultiProcessMultiplePull(AbstractMultiplePull):
     def __init__(self, single_pull: SinglePull, force_single_entry: bool = False, n_workers: int = os.cpu_count()):
@@ -234,7 +261,62 @@ class MultiProcessMultiplePull(AbstractMultiplePull):
 
         return multiple_pull_result
 
+
 def _get_single_pull_result(entry_ids: list, single_pull: SinglePull) -> bytes:
     single_pull_result: PullResult = single_pull.pull(entry_ids=entry_ids)
 
     return p.dumps(single_pull_result)
+
+
+def main():
+    args: dict = d.docopt(__doc__)
+
+    if args['--help']:
+        print(__doc__)
+        exit(0)
+
+    n_tries: str = int(args['--n-tries']) if args['--n-tries'] is not None else None
+    time_out: str = int(args['--time-out']) if args['--time-out'] is not None else None
+    sleep_time: str = float(args['--sleep-time']) if args['--sleep-time'] is not None else None
+    kegg_request = kr.KEGGrequest(n_tries=n_tries, time_out=time_out, sleep_time=sleep_time)
+    output_dir: str = args['--output-dir'] if args['--output-dir'] is not None else '.'
+    entry_field: str = args['--entry-field']
+    puller = SinglePull(output_dir=output_dir, kegg_request=kegg_request, entry_field=entry_field)
+    database_name: str = args['--database-name']
+    force_single_entry: bool = args['--force-single-entry']
+
+    if database_name is not None:
+        if database_name == 'brite':
+            force_single_entry = True
+
+        entry_ids: list = ei.from_database(database_name=database_name)
+    elif args['--file-path'] is not None:
+        file_path: str = args['--file-path']
+        entry_ids: list = ei.from_file(file_path=file_path)
+    else:
+        entry_ids_string: str = args['--entry-ids']
+        entry_ids: list = u.split_comma_separated_list(list_string=entry_ids_string)
+
+    if args['multiple']:
+        if args['--multi-process']:
+            n_workers = int(args['--n-workers']) if args['--n-workers'] is not None else None
+
+            puller = MultiProcessMultiplePull(
+                single_pull=puller, force_single_entry=force_single_entry, n_workers=n_workers
+            )
+        else:
+            puller = SingleProcessMultiplePull(single_pull=puller, force_single_entry=force_single_entry)
+
+    pull_result: PullResult = puller.pull(entry_ids=entry_ids)
+
+    with open('pull-results.txt', 'w') as f:
+        _write_entry_ids(f=f, entry_id_type='Successful', entry_ids=pull_result.successful_entry_ids)
+        _write_entry_ids(f=f, entry_id_type='Failed', entry_ids=pull_result.failed_entry_ids)
+        _write_entry_ids(f=f, entry_id_type='Timed Out', entry_ids=pull_result.timed_out_entry_ids)
+
+
+def _write_entry_ids(f, entry_id_type: str, entry_ids: list):
+    f.write(f'### {entry_id_type} Entry IDs ###\n')
+
+    for entry_id in entry_ids:
+        f.write(entry_id + '\n')

@@ -1,82 +1,20 @@
-import pytest as pt
-import os
-
 import kegg_pull.__main__ as m
+import kegg_pull.entry_ids as ei
+import kegg_pull.pull as p
 
 
-@pt.fixture(name='_')
-def teardown():
-    yield
-
-    os.remove('pull-results.txt')
-
-
-# TODO: Test from entry ID file and entry ID string
-def test_pull(mocker, _):
-    mock_database = 'brite'
-    mocker.patch('sys.argv', ['kegg_pull', 'multiple', f'--database-name={mock_database}'])
-    mock_kegg_request = mocker.MagicMock()
-    MockKEGGrequest = mocker.patch('kegg_pull.__main__.kr.KEGGrequest', return_value=mock_kegg_request)
-    mock_single_pull = mocker.MagicMock()
-    MockSinglePull = mocker.patch('kegg_pull.__main__.p.SinglePull', return_value=mock_single_pull)
-    mock_entry_ids = ['1', '2', '3']
-    mock_from_database = mocker.patch('kegg_pull.__main__.ge.from_database', return_value=mock_entry_ids)
-
-    mock_pull_result = mocker.MagicMock(
-        successful_entry_ids=('a', 'b', 'c', 'x'), failed_entry_ids=('y', 'z'), timed_out_entry_ids=()
-    )
-
-    mock_pull = mocker.patch('kegg_pull.__main__.p.SingleProcessMultiplePull.pull', return_value=mock_pull_result)
-    mock_multiple_pull = mocker.MagicMock(pull=mock_pull)
-
-    MockSingleProcessMultiplePull = mocker.patch(
-        'kegg_pull.__main__.p.SingleProcessMultiplePull', return_value=mock_multiple_pull
-    )
-
-    m.main()
-    MockKEGGrequest.assert_called_once_with(n_tries=None, time_out=None, sleep_time=None)
-    MockSinglePull.assert_called_once_with(output_dir='.', kegg_request=mock_kegg_request, entry_field=None)
-    MockSingleProcessMultiplePull.assert_called_once_with(single_pull=mock_single_pull, force_single_entry=True)
-    mock_from_database.assert_called_once_with(database_name=mock_database)
-    mock_pull.assert_called_once_with(entry_ids=mock_entry_ids)
-
-    expected_pull_results = '\n'.join([
-        '### Successful Entry IDs ###',
-        'a',
-        'b',
-        'c',
-        'x',
-        '### Failed Entry IDs ###',
-        'y',
-        'z',
-        '### Timed Out Entry IDs ###\n'
-     ])
-
-    with open('pull-results.txt', 'r') as f:
-        actual_pull_results = f.read()
-
-        assert actual_pull_results == expected_pull_results
-
-
-def test_get_entry_ids(mocker):
-    mock_database = 'pathway'
-
-    mocker.patch(
-        'sys.argv',
-        ['kegg_pull', 'entry-ids', 'from-keywords', f'--database-name={mock_database}', '--keywords=k1,k2']
-    )
-
-    mock_entry_ids = ['a', 'b']
-
-    mock_from_keywords: mocker.MagicMock = mocker.patch(
-        'kegg_pull.__main__.ge.from_keywords', return_value=mock_entry_ids
-    )
-
+# TODO: Test subcommand calls
+def test_main(mocker):
+    mocker.patch('sys.argv', ['kegg_pull', '--full-help'])
     mock_print: mocker.MagicMock = mocker.patch('builtins.print')
     m.main()
-    mock_from_keywords.assert_called_once_with(database_name=mock_database, keywords=['k1', 'k2'])
-
-    for actual_printed_id, expected_printed_id in zip(mock_print.call_args_list, mock_entry_ids):
-        (actual_printed_id,) = actual_printed_id.args
-
-        assert actual_printed_id == expected_printed_id
+    mock_print.assert_any_call(ei.__doc__)
+    mock_print.assert_any_call(p.__doc__)
+    mocker.patch('sys.argv', ['kegg_pull', '--help'])
+    mock_print.reset_mock()
+    m.main()
+    mock_print.assert_called_once_with(m.__doc__)
+    mock_print.reset_mock()
+    mocker.patch('sys.argv', ['kegg_pull'])
+    m.main()
+    mock_print.assert_called_once_with(m.__doc__)
