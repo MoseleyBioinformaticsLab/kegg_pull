@@ -4,7 +4,6 @@ import os
 
 import kegg_pull.kegg_request as kr
 import kegg_pull.pull as p
-import kegg_pull.kegg_url as ku
 import itertools as i
 
 
@@ -28,15 +27,18 @@ def test_single_pull(mocker, mock_output_dir):
     mock_entry_ids = ['abc', 'xyz', '123']
     expected_file_contents = [f'{mock_entry_id} content' for mock_entry_id in mock_entry_ids]
     mock_text_body = '///'.join(expected_file_contents) + '///'
-    mock_response = mocker.MagicMock(text_body=mock_text_body, status=kr.KEGGresponse.Status.SUCCESS, kegg_url=mocker.MagicMock(multiple_entry_ids=True, entry_ids=mock_entry_ids))
-    mock_execute_api_operation = mocker.MagicMock(return_value=mock_response)
-    mock_kegg_request = mocker.MagicMock(execute_api_operation=mock_execute_api_operation)
-    single_pull = p.SinglePull(output_dir=mock_output_dir, kegg_request=mock_kegg_request, entry_field=None)
-    pull_result: p.PullResult = single_pull.pull(entry_ids=mock_entry_ids)
 
-    mock_execute_api_operation.assert_called_once_with(
-        KEGGurl=ku.GetKEGGurl, entry_ids=mock_entry_ids, entry_field=None
+    mock_response = mocker.MagicMock(
+        text_body=mock_text_body, status=kr.KEGGresponse.Status.SUCCESS,
+        kegg_url=mocker.MagicMock(multiple_entry_ids=True, entry_ids=mock_entry_ids)
     )
+
+    mock_kegg_rest_api = mocker.MagicMock(get=mocker.MagicMock(return_value=mock_response))
+    MockKEGGrestAPI = mocker.patch('kegg_pull.pull.r.KEGGrestAPI', return_value=mock_kegg_rest_api)
+    single_pull = p.SinglePull(output_dir=mock_output_dir)
+    MockKEGGrestAPI.assert_called_once_with(kegg_request=None)
+    pull_result: p.PullResult = single_pull.pull(entry_ids=mock_entry_ids)
+    mock_kegg_rest_api.get.assert_called_once_with(entry_ids=mock_entry_ids, entry_field=None)
 
     assert pull_result.successful_entry_ids == tuple(mock_entry_ids)
     assert pull_result.failed_entry_ids == ()
@@ -126,7 +128,8 @@ def test_main(mocker, _):
     mock_single_pull = mocker.MagicMock()
     MockSinglePull = mocker.patch('kegg_pull.pull.SinglePull', return_value=mock_single_pull)
     mock_entry_ids = ['1', '2', '3']
-    mock_from_database = mocker.patch('kegg_pull.pull.ei.from_database', return_value=mock_entry_ids)
+    mock_entry_ids_getter = mocker.MagicMock(from_database=mocker.MagicMock(return_value=mock_entry_ids))
+    MockEntryIdsGetter = mocker.patch('kegg_pull.pull.ei.EntryIdsGetter', return_value=mock_entry_ids_getter)
 
     mock_pull_result = mocker.MagicMock(
         successful_entry_ids=('a', 'b', 'c', 'x'), failed_entry_ids=('y', 'z'), timed_out_entry_ids=()
@@ -142,7 +145,8 @@ def test_main(mocker, _):
     p.main()
     MockKEGGrequest.assert_called_once_with(n_tries=None, time_out=None, sleep_time=None)
     MockSinglePull.assert_called_once_with(output_dir='.', kegg_request=mock_kegg_request, entry_field=None)
-    mock_from_database.assert_called_once_with(database_name=mock_database)
+    MockEntryIdsGetter.assert_called_once_with(kegg_request=mock_kegg_request)
+    mock_entry_ids_getter.from_database.assert_called_once_with(database_name=mock_database)
     MockSingleProcessMultiplePull.assert_called_once_with(single_pull=mock_single_pull, force_single_entry=True)
     mock_pull.assert_called_once_with(entry_ids=mock_entry_ids)
 

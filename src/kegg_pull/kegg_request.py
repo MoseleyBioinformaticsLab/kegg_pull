@@ -51,15 +51,7 @@ class KEGGrequest:
         if self._n_tries < 1:
             raise ValueError(f'{self._n_tries} is not a valid number of tries to make a KEGG request.')
 
-    def execute_api_operation(self, KEGGurl: type, **kwargs) -> KEGGresponse:
-        valid_kegg_url_classes = {ku.ListKEGGurl, ku.GetKEGGurl, ku.KeywordsFindKEGGurl, ku.MolecularFindKEGGurl}
-
-        if KEGGurl not in valid_kegg_url_classes:
-            raise ValueError(
-                f'Invalid KEGG url class: {KEGGurl}. Valid values are: {", ".join(valid_kegg_url_classes)}'
-            )
-
-        kegg_url: ku.AbstractKEGGurl = KEGGurl(**kwargs)
+    def execute_api_operation(self, kegg_url: ku.AbstractKEGGurl) -> KEGGresponse:
         status = None
 
         for _ in range(self._n_tries):

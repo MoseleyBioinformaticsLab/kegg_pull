@@ -3,22 +3,21 @@ import typing as t
 
 import kegg_pull.kegg_request as kr
 import kegg_pull.entry_ids as ei
-import kegg_pull.kegg_url as ku
 
 
 test_entry_ids_from_kegg_api_data = [
-    (ei.from_database, ku.ListKEGGurl, {'database_name': 'compound'}),
-    (ei.from_keywords, ku.KeywordsFindKEGGurl, {'database_name': 'compound', 'keywords': ['kw1', 'kw2']}),
+    (ei.EntryIdsGetter().from_database, 'list', {'database_name': 'compound'}),
+    (ei.EntryIdsGetter().from_keywords, 'keywords_find', {'database_name': 'compound', 'keywords': ['kw1', 'kw2']}),
     (
-        ei.from_molecular_attribute, ku.MolecularFindKEGGurl,
+        ei.EntryIdsGetter().from_molecular_attribute, 'molecular_find',
         {'database_name': 'compound', 'formula': 'M4O3C2K1', 'exact_mass': None, 'molecular_weight': None}
     )
 ]
 
 # TODO: Test exceptions raised
 # TODO: Test loading from a file
-@pt.mark.parametrize('entry_ids,KEGGurl,kwargs', test_entry_ids_from_kegg_api_data)
-def test_entry_ids_from_kegg_api(mocker, entry_ids: t.Callable, KEGGurl: type, kwargs: dict):
+@pt.mark.parametrize('get_entry_ids,rest_method,kwargs', test_entry_ids_from_kegg_api_data)
+def test_entry_ids_from_kegg_api(mocker, get_entry_ids: t.Callable, rest_method: str, kwargs: dict):
     mock_text_body = '''
     cpd:C22501	alpha-D-Xylulofuranose
     cpd:C22502	alpha-D-Fructofuranose; alpha-D-Fructose
@@ -35,12 +34,9 @@ def test_entry_ids_from_kegg_api(mocker, entry_ids: t.Callable, KEGGurl: type, k
     '''
 
     mock_kegg_response = mocker.MagicMock(text_body=mock_text_body, status=kr.KEGGresponse.Status.SUCCESS)
-    mock_execute_api_operation = mocker.MagicMock(return_value=mock_kegg_response)
-    mock_kegg_request = mocker.MagicMock(execute_api_operation=mock_execute_api_operation)
-    MockKEGGrequest = mocker.patch('kegg_pull.entry_ids.kr.KEGGrequest', return_value=mock_kegg_request)
-    actual_entry_ids: list = entry_ids(**kwargs)
-    MockKEGGrequest.assert_called_once_with()
-    mock_execute_api_operation.assert_called_once_with(KEGGurl=KEGGurl, **kwargs)
+    mock_rest_method = mocker.patch(f'kegg_pull.entry_ids.r.KEGGrestAPI.{rest_method}', return_value=mock_kegg_response)
+    actual_entry_ids: list = get_entry_ids(**kwargs)
+    mock_rest_method.assert_called_once_with(**kwargs)
 
     expected_entry_ids = [
         'cpd:C22501', 'cpd:C22502', 'cpd:C22500', 'cpd:C22504', 'cpd:C22506', 'cpd:C22507', 'cpd:C22509', 'cpd:C22510',
@@ -62,7 +58,7 @@ def test_main(mocker):
     mock_entry_ids = ['a', 'b']
 
     mock_from_keywords: mocker.MagicMock = mocker.patch(
-        'kegg_pull.entry_ids.from_keywords', return_value=mock_entry_ids
+        'kegg_pull.entry_ids.EntryIdsGetter.from_keywords', return_value=mock_entry_ids
     )
 
     mock_print: mocker.MagicMock = mocker.patch('builtins.print')
