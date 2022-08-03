@@ -9,12 +9,15 @@ Usage:
 import sys
 
 from . import entry_ids as ei
+from . import rest as r
 from . import pull as p
 
 
 def main():
     if len(sys.argv) > 1 and sys.argv[1] == 'entry-ids':
         ei.main()
+    elif len(sys.argv) > 1 and sys.argv[1] == 'rest':
+        r.main()
     elif len(sys.argv) > 1 and sys.argv[1] == 'pull':
         p.main()
     elif len(sys.argv) > 1 and sys.argv[1] == '--full-help':

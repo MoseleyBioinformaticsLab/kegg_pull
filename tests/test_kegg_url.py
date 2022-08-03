@@ -15,6 +15,8 @@ def test_list_kegg_url_validate():
     )
 
 
+# TODO test with database_name="organism"
+# TODO test with database_name=<org>
 def test_list_kegg_url_create_url_options():
     list_kegg_url = ku.ListKEGGurl(database_name='vg')
     expected_url = f'{ku.BASE_URL}/list/vg'
@@ -59,5 +61,24 @@ def test_get_kegg_url_create_url_options(entry_ids: list, entry_field: str, expe
 
     assert get_kegg_url.url == expected_url
 
+
+# TODO test with fail and timeout
+@pt.mark.disable_mock_get_organism_set
+def test_get_organism_list(mocker):
+    mock_text = """
+        T06555	psyt	Candidatus Prometheoarchaeum syntrophicum	Prokaryotes;Archaea;Lokiarchaeota;Prometheoarchaeum
+        T03835	agw	Archaeon GW2011_AR10	Prokaryotes;Archaea;unclassified Archaea
+        T03843	arg	Archaeon GW2011_AR20	Prokaryotes;Archaea;unclassified Archaea
+    """
+
+    mock_response = mocker.MagicMock(status_code=200, text=mock_text)
+    mock_get: mocker.MagicMock = mocker.patch('kegg_pull.kegg_url.rq.get', return_value=mock_response)
+
+    # noinspection PyUnresolvedReferences
+    actual_organism_set = ku.AbstractKEGGurl._AbstractKEGGurl__get_organism_set()
+    mock_get.assert_called_once_with(url=f'{ku.BASE_URL}/list/organism', timeout=60)
+    expected_organism_set = {'agw', 'T03835', 'T06555', 'T03843', 'psyt', 'arg'}
+
+    assert actual_organism_set == expected_organism_set
 
 # TODO Test other URLs
