@@ -175,6 +175,14 @@ class GetKEGGurl(AbstractKEGGurl):
         """
         return entry_field is not None and not GetKEGGurl._entry_fields[entry_field]
 
+    @staticmethod
+    def is_binary(entry_field: str) -> bool:
+        """ Determines if the entry field is a binary response or not.
+
+        :param entry_field: The KEGG entry field to check
+        """
+        return entry_field == 'image'
+
     def _create_rest_options(self, entry_ids: list, entry_field: str) -> str:
         """ Constructs the URL options for the KEGG API get operation.
 

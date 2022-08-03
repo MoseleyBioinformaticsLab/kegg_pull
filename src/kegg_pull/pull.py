@@ -29,6 +29,7 @@ import docopt as d
 
 from . import kegg_request as kr
 from . import kegg_url as ku
+from . import rest as r
 from . import entry_ids as ei
 from . import utils as u
 
@@ -71,19 +72,12 @@ class SinglePull:
             os.mkdir(output_dir)
 
         self._output_dir = output_dir
-
-        if kegg_request is None:
-            kegg_request = kr.KEGGrequest()
-
-        self._kegg_request = kegg_request
+        self._kegg_rest_api = r.KEGGrestAPI(kegg_request=kegg_request)
         self.entry_field = entry_field
 
 
     def pull(self, entry_ids: list) -> PullResult:
-        kegg_response: kr.KEGGresponse = self._kegg_request.execute_api_operation(
-            KEGGurl=ku.GetKEGGurl, entry_ids=entry_ids, entry_field=self.entry_field
-        )
-
+        kegg_response: kr.KEGGresponse = self._kegg_rest_api.get(entry_ids=entry_ids, entry_field=self.entry_field)
         get_url: ku.GetKEGGurl = kegg_response.kegg_url
         pull_result = PullResult()
 
@@ -144,18 +138,14 @@ class SinglePull:
 
     def _pull_separate_entries(self, get_url: ku.GetKEGGurl, pull_result: PullResult):
         for entry_id in get_url.entry_ids:
-            kegg_response: kr.KEGGresponse = self._kegg_request.execute_api_operation(
-                KEGGurl=ku.GetKEGGurl, entry_ids=[entry_id], entry_field=self.entry_field
-            )
+            kegg_response: kr.KEGGresponse = self._kegg_rest_api.get(entry_ids=[entry_id], entry_field=self.entry_field)
 
             if kegg_response.status == kr.KEGGresponse.Status.SUCCESS:
                 self._save_single_entry_response(kegg_response=kegg_response, pull_result=pull_result)
             else:
                 pull_result.add_entry_ids(entry_id, status=kegg_response.status)
 
-    def _save_single_entry_response(
-        self, kegg_response: kr.KEGGresponse, pull_result: PullResult
-    ):
+    def _save_single_entry_response(self, kegg_response: kr.KEGGresponse, pull_result: PullResult):
         get_url: ku.GetKEGGurl = kegg_response.kegg_url
         [entry_id] = get_url.entry_ids
         pull_result.add_entry_ids(entry_id, status=kr.KEGGresponse.Status.SUCCESS)
@@ -163,7 +153,7 @@ class SinglePull:
         self._save_entry(entry_id=entry_id, entry=entry)
 
     def _is_binary(self) -> bool:
-        return self.entry_field == 'image'
+        return ku.GetKEGGurl.is_binary(entry_field=self.entry_field)
 
     def _save_entry(self, entry_id: str, entry: t.Union[str, bytes]):
         file_extension = 'txt' if self.entry_field is None else self.entry_field
@@ -289,10 +279,11 @@ def main():
         if database_name == 'brite':
             force_single_entry = True
 
-        entry_ids: list = ei.from_database(database_name=database_name)
+        entry_ids_getter = ei.EntryIdsGetter(kegg_request=kegg_request)
+        entry_ids: list = entry_ids_getter.from_database(database_name=database_name)
     elif args['--file-path'] is not None:
         file_path: str = args['--file-path']
-        entry_ids: list = ei.from_file(file_path=file_path)
+        entry_ids: list = ei.EntryIdsGetter.from_file(file_path=file_path)
     else:
         entry_ids_string: str = args['--entry-ids']
         entry_ids: list = u.split_comma_separated_list(list_string=entry_ids_string)
