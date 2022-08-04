@@ -75,7 +75,7 @@ def test_get_organism_list(mocker):
     mock_get: mocker.MagicMock = mocker.patch('kegg_pull.kegg_url.rq.get', return_value=mock_response)
 
     # noinspection PyUnresolvedReferences
-    actual_organism_set = ku.AbstractKEGGurl._AbstractKEGGurl__get_organism_set()
+    actual_organism_set = ku.AbstractKEGGurl._get_organism_set()
     mock_get.assert_called_once_with(url=f'{ku.BASE_URL}/list/organism', timeout=60)
     expected_organism_set = {'agw', 'T03835', 'T06555', 'T03843', 'psyt', 'arg'}
 

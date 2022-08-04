@@ -33,7 +33,7 @@ class AbstractKEGGurl(abc.ABC):
         self._url = f'{base_url}/{rest_operation}/{url_options}'
 
     @staticmethod
-    def __get_organism_set() -> set:
+    def _get_organism_set() -> set:
         if AbstractKEGGurl.__organism_set is None:
             url = f'{BASE_URL}/list/organism'
             error_message = 'The request to the KEGG web API {} while fetching the organism list using the URL: {}'
@@ -116,7 +116,7 @@ class AbstractKEGGurl(abc.ABC):
 
         :param database_name: The name of the database to validate
         """
-        if database_name not in AbstractKEGGurl.__get_organism_set():
+        if database_name not in AbstractKEGGurl._get_organism_set():
             AbstractKEGGurl._validate_rest_option(
                 option_name='database name', option_value=database_name,
                 valid_rest_options=AbstractKEGGurl.__valid_kegg_databases
@@ -351,3 +351,72 @@ class MolecularFindKEGGurl(AbstractKEGGurl):
             options = f'{minimum}-{maximum}'
 
         return f'{options}/{option_name}'
+
+
+class ConvKEGGurl(AbstractKEGGurl):
+    _valid_outside_gene_databases = {'ncbi-geneid', 'ncbi-proteinid', 'uniprot'}
+    _valid_kegg_molecule_databases = {'compound', 'glycan', 'drug'}
+    _valid_outside_molecule_databases = {'pubchem', 'chebi'}
+
+    def __init__(self, **kwargs):
+        super(ConvKEGGurl, self).__init__(rest_operation='conv', **kwargs)
+
+    @abc.abstractmethod
+    def _validate(self, **kwargs):
+        pass
+
+    @abc.abstractmethod
+    def _create_rest_options(self, **kwargs) -> str:
+        pass
+
+
+class DatabaseConvKEGGurl(ConvKEGGurl):
+    def __init__(self, kegg_database_name: str, outside_database_name: str):
+        super(DatabaseConvKEGGurl, self).__init__(
+            kegg_database_name=kegg_database_name, outside_database_name=outside_database_name
+        )
+
+    def _validate(self, kegg_database_name: str, outside_database_name: str):
+        valid_kegg_databases: set = ConvKEGGurl._valid_kegg_molecule_databases.union(
+            AbstractKEGGurl._get_organism_set()
+        )
+
+        AbstractKEGGurl._validate_rest_option(
+            option_name='KEGG database', option_value=kegg_database_name, valid_rest_options=valid_kegg_databases
+        )
+
+        valid_outside_databases: set = ConvKEGGurl._valid_outside_molecule_databases.union(
+            ConvKEGGurl._valid_outside_gene_databases
+        )
+
+        AbstractKEGGurl._validate_rest_option(
+            option_name='outside database', option_value=outside_database_name,
+            valid_rest_options=valid_outside_databases
+        )
+
+    def _create_rest_options(self, kegg_database_name: str, outside_database_name: str) -> str:
+        return f'{kegg_database_name}/{outside_database_name}'
+
+
+class EntriesConvKEGGurl(ConvKEGGurl):
+    def __init__(self, target_database_name: str, entry_ids: list):
+        super(EntriesConvKEGGurl, self).__init__(
+            target_database_name=target_database_name, entry_ids=entry_ids
+        )
+
+    def _validate(self, target_database_name: str, entry_ids: list):
+        valid_databases = AbstractKEGGurl._get_organism_set().union(ConvKEGGurl._valid_kegg_molecule_databases)
+
+        valid_databases = valid_databases.union(ConvKEGGurl._valid_outside_gene_databases).union(
+            ConvKEGGurl._valid_outside_molecule_databases
+        )
+
+        AbstractKEGGurl._validate_rest_option(
+            option_name='target database', option_value=target_database_name, valid_rest_options=valid_databases
+        )
+
+        if len(entry_ids) == 0:
+            self._raise_error(reason='Entry IDs must be specified for this KEGG "conv" operation')
+
+    def _create_rest_options(self, target_database_name: str, entry_ids: list) -> str:
+        return f'{target_database_name}/{"+".join(entry_ids)}'
