@@ -1,8 +1,8 @@
 """
 Usage:
     kegg_pull pull -h | --help
-    kegg_pull pull multiple (--database-name=<database-name>|--file-path=<file-path>) [--force-single-entry] [--multi-process] [--n-workers=<n-workers>] [--output-dir=<output_dir>] [--entry-field=<entry-field>] [--n-tries=<n-tries>] [--time-out=<time-out>] [--sleep-time=<sleep-time>]
-    kegg_pull pull single (--entry-ids=<entry-ids>|--file-path=<file-path>) [--output-dir=<output_dir>] [--entry-field=<entry-field>] [--n-tries=<n-tries>] [--time-out=<time-out>] [--sleep-time=<sleep-time>]
+    kegg_pull pull multiple (--database-name=<database-name>|--file-path=<file-path>) [--force-single-entry] [--multi-process] [--n-workers=<n-workers>] [--output-dir=<output_dir>] [--entry-field=<entry-field>] [--n-tries=<n-tries>] [--time-out=<time-out>] [--sleep-time=<sleep-time>] [--zip]
+    kegg_pull pull single (--entry-ids=<entry-ids>|--file-path=<file-path>) [--output-dir=<output_dir>] [--entry-field=<entry-field>] [--n-tries=<n-tries>] [--time-out=<time-out>] [--sleep-time=<sleep-time>] [--zip]
 
 Options:
     -h --help                           Show this help message.
@@ -12,7 +12,7 @@ Options:
     --force-single-entry                Forces pulling only one entry at a time for every request to the KEGG web API. This flag is automatically set if --database-name is "brite".
     --multi-process                     If set, the entries are pulled across multiple processes to increase speed. Otherwise, the entries are pulled sequentially in a single process.
     --n-workers=<n-workers>             The number of sub-processes to create when pulling. Defaults to the number of cores available. Ignored if --multi-process is not set.
-    --output-dir=<output_dir>           The directory where the pulled KEGG entries will be stored. Defaults to the current working directory.
+    --output-dir=<output_dir>           The directory where the pulled KEGG entries will be stored. Defaults to the current working directory. If ends in .zip, entries are saved to a zip archive instead of a directory.
     --entry-field=<entry-field>         Optional field to extract from the entries pulled rather than the standard flat file format (or "htext" in the case of brite entries).
     --n-tries=<n-tries>                 The number of times to attempt a KEGG request before marking it as timed out or failed. Defaults to 3.
     --time-out=<time-out>               The number of seconds to wait for a KEGG request before marking it as timed out. Defaults to 60.
@@ -26,6 +26,7 @@ import abc
 import typing as t
 import pickle as p
 import docopt as d
+import zipfile as zf
 
 from . import kegg_request as kr
 from . import kegg_url as ku
@@ -67,11 +68,44 @@ class PullResult:
 
 
 class SinglePull:
-    def __init__(self, output_dir: str, kegg_request: kr.KEGGrequest = None, entry_field: str = None):
-        if not os.path.isdir(output_dir):
-            os.mkdir(output_dir)
+    class _AbstractEntrySaver(abc.ABC):
+        def save(self, entry_id: str, entry: t.Union[str, bytes], entry_field: str):
+            file_extension = 'txt' if entry_field is None else entry_field
+            file_name = f'{entry_id}.{file_extension}'
+            self._save(file_name=file_name, entry=entry)
 
-        self._output_dir = output_dir
+        @abc.abstractmethod
+        def _save(self, file_name: str, entry: t.Union[str, bytes]):
+            pass
+
+    class _DirectoryEntrySaver(_AbstractEntrySaver):
+        def __init__(self, output_dir: str):
+            if not os.path.isdir(output_dir):
+                os.mkdir(output_dir)
+
+            self._output_dir = output_dir
+
+        def _save(self, file_name: str, entry: t.Union[str, bytes]):
+            file_path = os.path.join(self._output_dir, file_name)
+            save_type = 'wb' if type(entry) is bytes else 'w'
+
+            with open(file_path, save_type) as f:
+                f.write(entry)
+
+    class _ZipEntrySaver(_AbstractEntrySaver):
+        def __init__(self, zip_file: str):
+            self._zip_file = zip_file
+
+        def _save(self, file_name: str, entry: t.Union[str, bytes]):
+            with zf.ZipFile(self._zip_file, 'a') as zip_file:
+                zip_file.writestr(file_name, entry)
+
+    def __init__(self, output_dir: str, kegg_request: kr.KEGGrequest = None, entry_field: str = None):
+        if output_dir.endswith('.zip'):
+            self._entry_saver = SinglePull._ZipEntrySaver(zip_file=output_dir)
+        else:
+            self._entry_saver = SinglePull._DirectoryEntrySaver(output_dir=output_dir)
+
         self._kegg_rest_api = r.KEGGrestAPI(kegg_request=kegg_request)
         self.entry_field = entry_field
 
@@ -102,7 +136,7 @@ class SinglePull:
             pull_result.add_entry_ids(*get_url.entry_ids, status=kr.KEGGresponse.Status.SUCCESS)
 
             for entry_id, entry in zip(get_url.entry_ids, entries):
-                self._save_entry(entry_id=entry_id, entry=entry)
+                self._entry_saver.save(entry_id=entry_id, entry=entry, entry_field=self.entry_field)
 
     def _separate_entries(self, concatenated_entries: str) -> list:
         field_to_separator = {
@@ -149,19 +183,14 @@ class SinglePull:
         get_url: ku.GetKEGGurl = kegg_response.kegg_url
         [entry_id] = get_url.entry_ids
         pull_result.add_entry_ids(entry_id, status=kr.KEGGresponse.Status.SUCCESS)
-        entry: t.Union[str, bytes] = kegg_response.binary_body if self._is_binary() else kegg_response.text_body
-        self._save_entry(entry_id=entry_id, entry=entry)
 
-    def _is_binary(self) -> bool:
-        return ku.GetKEGGurl.is_binary(entry_field=self.entry_field)
+        if ku.GetKEGGurl.is_binary(entry_field=self.entry_field):
+            entry: bytes = kegg_response.binary_body
+        else:
+            entry: str = kegg_response.text_body
 
-    def _save_entry(self, entry_id: str, entry: t.Union[str, bytes]):
-        file_extension = 'txt' if self.entry_field is None else self.entry_field
-        file_path = os.path.join(self._output_dir, f'{entry_id}.{file_extension}')
-        save_type = 'wb' if self._is_binary() else 'w'
+        self._entry_saver.save(entry_id=entry_id, entry=entry, entry_field=self.entry_field)
 
-        with open(file_path, save_type) as f:
-            f.write(entry)
 
     def _handle_unsuccessful_url(self, kegg_response: kr.KEGGresponse, pull_result: PullResult):
         get_url: ku.GetKEGGurl = kegg_response.kegg_url
