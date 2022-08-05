@@ -12,7 +12,7 @@ import kegg_pull.rest as r
 test_main_data = [
     ('list', ['list', 'module'], {'database_name': 'module'}),
     (
-        'entries_conv', ['conv', '--target=genes', 'eid1,eid2'],
+        'entries_conv', ['conv', '--conv-target=genes', 'eid1,eid2'],
         {'target_database_name': 'genes', 'entry_ids': ['eid1', 'eid2']}
     )
 ]
