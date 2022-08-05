@@ -1,21 +1,25 @@
 import pytest as pt
 import shutil as sh
 import os
+import zipfile as zf
 
 import kegg_pull.kegg_request as kr
 import kegg_pull.pull as p
 import itertools as i
 
 
-@pt.fixture(name='mock_output_dir')
-def setup_and_teardown():
+@pt.fixture(name='mock_output_dir', params=['mock-dir/', 'mock.zip'])
+def setup_and_teardown(request):
     # Setup
-    mock_output_dir = 'mock-dir/'
+    mock_output_dir = request.param
 
     yield mock_output_dir
 
     # Tear down
-    sh.rmtree(mock_output_dir, ignore_errors=True)
+    if mock_output_dir.endswith('.zip') and os.path.isfile(mock_output_dir):
+        os.remove(mock_output_dir)
+    else:
+        sh.rmtree(mock_output_dir, ignore_errors=True)
 
 # TODO: Test with non-None entry field
 # TODO: Test with binary response and another single entry response
@@ -23,6 +27,7 @@ def setup_and_teardown():
 # TODO: Test not getting all the requested entries
 # TODO: Test with timeout
 # TODO: Test with failures (complete failure and partial failure)
+pt.mark.parametrize('mock_output_dir', ['mock-dir/', 'mock.zip'], indirect='setup_and_teardown')
 def test_single_pull(mocker, mock_output_dir):
     mock_entry_ids = ['abc', 'xyz', '123']
     expected_file_contents = [f'{mock_entry_id} content' for mock_entry_id in mock_entry_ids]
@@ -45,12 +50,18 @@ def test_single_pull(mocker, mock_output_dir):
     assert pull_result.timed_out_entry_ids == ()
 
     for mock_entry_id, expected_file_content in zip(mock_entry_ids, expected_file_contents):
-        expected_file: str = os.path.join(mock_output_dir, f'{mock_entry_id}.txt')
+        expected_file = f'{mock_entry_id}.txt'
 
-        with open(expected_file, 'r') as f:
-            actual_file_content: str = f.read()
+        if mock_output_dir.endswith('.zip'):
+            with zf.ZipFile(mock_output_dir, 'r') as zip_file:
+                actual_file_content: str = zip_file.read(expected_file).decode()
+        else:
+            expected_file: str = os.path.join(mock_output_dir, expected_file)
 
-            assert actual_file_content == expected_file_content
+            with open(expected_file, 'r') as f:
+                actual_file_content: str = f.read()
+
+        assert actual_file_content == expected_file_content
 
 
 test_multiple_pull_data = [(p.SingleProcessMultiplePull, {}), (p.MultiProcessMultiplePull, {'n_workers': 2})]

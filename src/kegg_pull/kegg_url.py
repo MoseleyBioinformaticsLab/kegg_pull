@@ -359,13 +359,13 @@ class MolecularFindKEGGurl(AbstractKEGGurl):
         return f'{options}/{option_name}'
 
 
-class ConvKEGGurl(AbstractKEGGurl):
+class AbstractConvKEGGurl(AbstractKEGGurl):
     _valid_outside_gene_databases = {'ncbi-geneid', 'ncbi-proteinid', 'uniprot'}
     _valid_kegg_molecule_databases = {'compound', 'glycan', 'drug'}
     _valid_outside_molecule_databases = {'pubchem', 'chebi'}
 
     def __init__(self, **kwargs):
-        super(ConvKEGGurl, self).__init__(rest_operation='conv', **kwargs)
+        super(AbstractConvKEGGurl, self).__init__(rest_operation='conv', **kwargs)
 
     @abc.abstractmethod
     def _validate(self, **kwargs):
@@ -376,14 +376,14 @@ class ConvKEGGurl(AbstractKEGGurl):
         pass
 
 
-class DatabaseConvKEGGurl(ConvKEGGurl):
+class DatabaseConvKEGGurl(AbstractConvKEGGurl):
     def __init__(self, kegg_database_name: str, outside_database_name: str):
         super(DatabaseConvKEGGurl, self).__init__(
             kegg_database_name=kegg_database_name, outside_database_name=outside_database_name
         )
 
     def _validate(self, kegg_database_name: str, outside_database_name: str):
-        valid_kegg_databases: set = ConvKEGGurl._valid_kegg_molecule_databases.union(
+        valid_kegg_databases: set = AbstractConvKEGGurl._valid_kegg_molecule_databases.union(
             AbstractKEGGurl._get_organism_set()
         )
 
@@ -391,8 +391,8 @@ class DatabaseConvKEGGurl(ConvKEGGurl):
             option_name='KEGG database', option_value=kegg_database_name, valid_rest_options=valid_kegg_databases
         )
 
-        valid_outside_databases: set = ConvKEGGurl._valid_outside_molecule_databases.union(
-            ConvKEGGurl._valid_outside_gene_databases
+        valid_outside_databases: set = AbstractConvKEGGurl._valid_outside_molecule_databases.union(
+            AbstractConvKEGGurl._valid_outside_gene_databases
         )
 
         AbstractKEGGurl._validate_rest_option(
@@ -404,17 +404,17 @@ class DatabaseConvKEGGurl(ConvKEGGurl):
         return f'{kegg_database_name}/{outside_database_name}'
 
 
-class EntriesConvKEGGurl(ConvKEGGurl):
+class EntriesConvKEGGurl(AbstractConvKEGGurl):
     def __init__(self, target_database_name: str, entry_ids: list):
         super(EntriesConvKEGGurl, self).__init__(
             target_database_name=target_database_name, entry_ids=entry_ids
         )
 
     def _validate(self, target_database_name: str, entry_ids: list):
-        valid_databases = AbstractKEGGurl._get_organism_set().union(ConvKEGGurl._valid_kegg_molecule_databases)
+        valid_databases = AbstractKEGGurl._get_organism_set().union(AbstractConvKEGGurl._valid_kegg_molecule_databases)
 
-        valid_databases = valid_databases.union(ConvKEGGurl._valid_outside_gene_databases).union(
-            ConvKEGGurl._valid_outside_molecule_databases
+        valid_databases = valid_databases.union(AbstractConvKEGGurl._valid_outside_gene_databases).union(
+            AbstractConvKEGGurl._valid_outside_molecule_databases
         )
 
         AbstractKEGGurl._validate_rest_option(
@@ -428,11 +428,11 @@ class EntriesConvKEGGurl(ConvKEGGurl):
         return f'{target_database_name}/{"+".join(entry_ids)}'
 
 
-class LinkKEGGurl(AbstractKEGGurl):
+class AbstractLinkKEGGurl(AbstractKEGGurl):
     _extra_database_names = {'atc', 'jtc', 'ndc', 'yj', 'pubmed'}
 
     def __init__(self, **kwargs):
-        super(LinkKEGGurl, self).__init__(rest_operation='link', **kwargs)
+        super(AbstractLinkKEGGurl, self).__init__(rest_operation='link', **kwargs)
 
     @abc.abstractmethod
     def _validate(self, **kwargs):
@@ -443,7 +443,7 @@ class LinkKEGGurl(AbstractKEGGurl):
         pass
 
 
-class DatabaseLinkKEGGurl(LinkKEGGurl):
+class DatabaseLinkKEGGurl(AbstractLinkKEGGurl):
     def __init__(self, target_database_name: str, source_database_name: str):
         super(DatabaseLinkKEGGurl, self).__init__(
             target_database_name=target_database_name, source_database_name=source_database_name
@@ -451,23 +451,23 @@ class DatabaseLinkKEGGurl(LinkKEGGurl):
 
     def _validate(self, target_database_name: str, source_database_name: str):
         AbstractKEGGurl._validate_database_name(
-            database_name=target_database_name, extra_databases=LinkKEGGurl._extra_database_names
+            database_name=target_database_name, extra_databases=AbstractLinkKEGGurl._extra_database_names
         )
 
         AbstractKEGGurl._validate_database_name(
-            database_name=source_database_name, extra_databases=LinkKEGGurl._extra_database_names
+            database_name=source_database_name, extra_databases=AbstractLinkKEGGurl._extra_database_names
         )
 
     def _create_rest_options(self, target_database_name: str, source_database_name: str) -> str:
         return f'{target_database_name}/{source_database_name}'
 
 
-class EntriesLinkKEGGurl(LinkKEGGurl):
+class EntriesLinkKEGGurl(AbstractLinkKEGGurl):
     def __init__(self, target_database_name: str, entry_ids: list):
         super(EntriesLinkKEGGurl, self).__init__(target_database_name=target_database_name, entry_ids=entry_ids)
 
     def _validate(self, target_database_name: str, entry_ids: list):
-        extra_databases = LinkKEGGurl._extra_database_names
+        extra_databases = AbstractLinkKEGGurl._extra_database_names
         extra_databases.add('genes')
         AbstractKEGGurl._validate_database_name(database_name=target_database_name, extra_databases=extra_databases)
 
