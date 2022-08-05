@@ -6,7 +6,10 @@ Usage:
     kegg_pull rest find <database-name> <keywords> [--output=<output>]
     kegg_pull rest find <database-name> (--formula=<formula>|--exact-mass=<exact-mass>...|--molecular-weight=<molecular-weight>...) [--output=<output>]
     kegg_pull rest conv <kegg-database-name> <outside-database-name>
-    kegg_pull rest conv --target=<target-database-name> <entry-ids>
+    kegg_pull rest conv --conv-target=<target-database-name> <entry-ids>
+    kegg_pull rest link <target-database-name> <source-database-name>
+    kegg_pull rest link --link-target=<target-database-name> <entry-ids>
+    kegg_pull rest ddi <drug-entry-ids>
 
 Options:
     list                                    Executes the "list" KEGG API operation, getting the entry IDs of the provided database.
@@ -23,7 +26,13 @@ Options:
     conv                                    Executes the "conv" KEGG API operation, converting entry IDs from an outside database to those of a KEGG database and vice versa.
     <kegg-database-name>                    The name of the KEGG database from which to view equivalent outside database entry IDs.
     <outside-database-name>                 The name of the non-KEGG database from which to view equivalent KEGG database entry IDs.
-    --target=<target-database-name>         The outside or KEGG database from which to view equivalent versions of the provided entry IDs. If a KEGG database, the provided entry IDs must be from an outside database and vice versa.
+    --conv-target=<target-database-name>    The outside or KEGG database from which to view equivalent versions of the provided entry IDs. If a KEGG database, the provided entry IDs must be from an outside database and vice versa.
+    link                                    Executes the "link" KEGG API operation, showing the IDs of entries that are connected/related to entries of other databases.
+    <target-database-name>                  The name of the database to find cross-references in the source database.
+    <source-database-name>                  The name of the database from which cross-references are found in the target database.
+    --link-target-<target-database-name>    The name of the database to find cross-references in the provided entry IDs.
+    ddi                                     Executes the "ddi" KEGG API operation, searching for drug to drug interactions. Providing one entry ID reports all known interactions, while providing multiple checks if any drug pair in a given set of drugs is CI or P. If providing multiple, all entries must belong to the same database.
+    <drug-entry-ids>                        Comma separated list of drug entry IDs from the following databases: drug, ndc, or yj
 """
 import docopt as d
 import logging as l
@@ -73,6 +82,25 @@ class KEGGrestAPI:
 
         return self._kegg_request.execute_api_operation(kegg_url=conv_url)
 
+    def database_link(self, target_database_name: str, source_database_name: str) -> kr.KEGGresponse:
+        link_url = ku.DatabaseLinkKEGGurl(
+            target_database_name=target_database_name, source_database_name=source_database_name
+        )
+
+        return self._kegg_request.execute_api_operation(kegg_url=link_url)
+
+    def entries_link(self, target_database_name: str, entry_ids: list) -> kr.KEGGresponse:
+        link_url = ku.EntriesLinkKEGGurl(
+            target_database_name=target_database_name, entry_ids=entry_ids
+        )
+
+        return self._kegg_request.execute_api_operation(kegg_url=link_url)
+
+    def ddi(self, drug_entry_ids: list) -> kr.KEGGresponse:
+        ddi_url = ku.DdiKEGGurl(drug_entry_ids=drug_entry_ids)
+
+        return self._kegg_request.execute_api_operation(kegg_url=ddi_url)
+
 
 def main():
     args: dict = d.docopt(__doc__)
@@ -108,8 +136,8 @@ def main():
                 database_name=database_name, formula=formula, exact_mass=exact_mass, molecular_weight=molecular_weight
             )
     elif args['conv']:
-        if args['--target']:
-            target_database_name: str = args['--target']
+        if args['--conv-target']:
+            target_database_name: str = args['--conv-target']
             entry_ids: list = u.split_comma_separated_list(list_string=entry_ids)
 
             kegg_response: kr.KEGGresponse = kegg_rest_api.entries_conv(
@@ -122,8 +150,25 @@ def main():
             kegg_response: kr.KEGGresponse = kegg_rest_api.database_conv(
                 kegg_database_name=kegg_database_name, outside_database_name=outside_database_name
             )
-    # TODO: finish the rest of the operations
+    elif args['link']:
+        if args['--link-target']:
+            target_database_name: str = args['--link-target']
+            entry_ids: list = u.split_comma_separated_list(list_string=entry_ids)
 
+            kegg_response: kr.KEGGresponse = kegg_rest_api.entries_link(
+                target_database_name=target_database_name, entry_ids=entry_ids
+            )
+        else:
+            target_database_name: str = args['<target-database-name>']
+            source_database_name: str = args['<source-database-name>']
+
+            kegg_response: kr.KEGGresponse = kegg_rest_api.database_link(
+                target_database_name=target_database_name, source_database_name=source_database_name
+            )
+    else:
+        drug_entry_ids: str = args['<drug-entry-ids']
+        drug_entry_ids: list = u.split_comma_separated_list(list_string=drug_entry_ids)
+        kegg_response: kr.KEGGresponse = kegg_rest_api.ddi(drug_entry_ids=drug_entry_ids)
 
     if kegg_response.status == kr.KEGGresponse.Status.FAILED:
         raise RuntimeError(

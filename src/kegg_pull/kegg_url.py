@@ -111,12 +111,18 @@ class AbstractKEGGurl(abc.ABC):
             )
 
     @staticmethod
-    def _validate_database_name(database_name):
+    def _validate_database_name(database_name: str, extra_databases: set = None):
         """ Ensures the database provided is a valid KEGG database.
 
-        :param database_name: The name of the database to validate
+        :param database_name: The name of the database to validate.
+        :param extra_databases: Additional optional database names to add to the core KEGG databases for the validation.
         """
         if database_name not in AbstractKEGGurl._get_organism_set():
+            valid_databases = AbstractKEGGurl.__valid_kegg_databases
+
+            if extra_databases is not None:
+                valid_databases: set = valid_databases.union(extra_databases)
+
             AbstractKEGGurl._validate_rest_option(
                 option_name='database name', option_value=database_name,
                 valid_rest_options=AbstractKEGGurl.__valid_kegg_databases
@@ -420,3 +426,65 @@ class EntriesConvKEGGurl(ConvKEGGurl):
 
     def _create_rest_options(self, target_database_name: str, entry_ids: list) -> str:
         return f'{target_database_name}/{"+".join(entry_ids)}'
+
+
+class LinkKEGGurl(AbstractKEGGurl):
+    _extra_database_names = {'atc', 'jtc', 'ndc', 'yj', 'pubmed'}
+
+    def __init__(self, **kwargs):
+        super(LinkKEGGurl, self).__init__(rest_operation='link', **kwargs)
+
+    @abc.abstractmethod
+    def _validate(self, **kwargs):
+        pass
+
+    @abc.abstractmethod
+    def _create_rest_options(self, **kwargs) -> str:
+        pass
+
+
+class DatabaseLinkKEGGurl(LinkKEGGurl):
+    def __init__(self, target_database_name: str, source_database_name: str):
+        super(DatabaseLinkKEGGurl, self).__init__(
+            target_database_name=target_database_name, source_database_name=source_database_name
+        )
+
+    def _validate(self, target_database_name: str, source_database_name: str):
+        AbstractKEGGurl._validate_database_name(
+            database_name=target_database_name, extra_databases=LinkKEGGurl._extra_database_names
+        )
+
+        AbstractKEGGurl._validate_database_name(
+            database_name=source_database_name, extra_databases=LinkKEGGurl._extra_database_names
+        )
+
+    def _create_rest_options(self, target_database_name: str, source_database_name: str) -> str:
+        return f'{target_database_name}/{source_database_name}'
+
+
+class EntriesLinkKEGGurl(LinkKEGGurl):
+    def __init__(self, target_database_name: str, entry_ids: list):
+        super(EntriesLinkKEGGurl, self).__init__(target_database_name=target_database_name, entry_ids=entry_ids)
+
+    def _validate(self, target_database_name: str, entry_ids: list):
+        extra_databases = LinkKEGGurl._extra_database_names
+        extra_databases.add('genes')
+        AbstractKEGGurl._validate_database_name(database_name=target_database_name, extra_databases=extra_databases)
+
+        if len(entry_ids) == 0:
+            AbstractKEGGurl._raise_error(reason='At least one entry ID must be specified to perform the link operation')
+
+    def _create_rest_options(self, target_database_name: str, entry_ids: list) -> str:
+        return f'{target_database_name}/{"+".join(entry_ids)}'
+
+
+class DdiKEGGurl(AbstractKEGGurl):
+    def __init__(self, drug_entry_ids: list):
+        super(DdiKEGGurl, self).__init__(rest_operation='ddi', drug_entry_ids=drug_entry_ids)
+
+    def _validate(self, drug_entry_ids: list):
+        if len(drug_entry_ids) == 0:
+            AbstractKEGGurl._raise_error(reason='At least one drug entry ID must be specified for the DDI operation')
+
+    def _create_rest_options(self, drug_entry_ids: list) -> str:
+        return "+".join(drug_entry_ids)
