@@ -63,8 +63,8 @@ def test_get_kegg_url_create_url_options(entry_ids: list, entry_field: str, expe
 
 
 # TODO test with fail and timeout
-@pt.mark.disable_mock_get_organism_set
-def test_get_organism_list(mocker):
+@pt.mark.disable_mock_organism_set
+def test_organism_set(mocker):
     mock_text = """
         T06555	psyt	Candidatus Prometheoarchaeum syntrophicum	Prokaryotes;Archaea;Lokiarchaeota;Prometheoarchaeum
         T03835	agw	Archaeon GW2011_AR10	Prokaryotes;Archaea;unclassified Archaea
@@ -73,12 +73,26 @@ def test_get_organism_list(mocker):
 
     mock_response = mocker.MagicMock(status_code=200, text=mock_text)
     mock_get: mocker.MagicMock = mocker.patch('kegg_pull.kegg_url.rq.get', return_value=mock_response)
-
-    # noinspection PyUnresolvedReferences
-    actual_organism_set = ku.AbstractKEGGurl._get_organism_set()
+    actual_organism_set = ku.AbstractKEGGurl.organism_set
     mock_get.assert_called_once_with(url=f'{ku.BASE_URL}/list/organism', timeout=60)
     expected_organism_set = {'agw', 'T03835', 'T06555', 'T03843', 'psyt', 'arg'}
 
     assert actual_organism_set == expected_organism_set
 
 # TODO Test other URLs
+
+test_create_url_data = [
+    ('ListKEGGurl', ku.UrlType.LIST),
+    ('InfoKEGGurl', ku.UrlType.INFO)
+]
+@pt.mark.parametrize('class_name,url_type', test_create_url_data)
+def test_create_url(mocker, class_name: str, url_type: ku.UrlType):
+    kegg_url_mock = mocker.MagicMock()
+    KEGGurlMock = mocker.patch(f'kegg_pull.kegg_url.{class_name}', return_value=kegg_url_mock)
+    kwargs_mock = {'param': 'arg'}
+    kegg_url = ku.create_url(url_type=url_type, **kwargs_mock)
+    KEGGurlMock.assert_called_once_with(**kwargs_mock)
+
+    assert kegg_url == kegg_url_mock
+
+# TODO Test creat_url for the remaining url types

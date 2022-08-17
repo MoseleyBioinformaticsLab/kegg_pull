@@ -38,12 +38,12 @@ def test_single_pull(mocker, mock_output_dir):
         kegg_url=mocker.MagicMock(multiple_entry_ids=True, entry_ids=mock_entry_ids)
     )
 
-    mock_kegg_rest_api = mocker.MagicMock(get=mocker.MagicMock(return_value=mock_response))
-    MockKEGGrestAPI = mocker.patch('kegg_pull.pull.r.KEGGrestAPI', return_value=mock_kegg_rest_api)
+    mock_kegg_rest = mocker.MagicMock(get=mocker.MagicMock(return_value=mock_response))
+    MockKEGGrestAPI = mocker.patch('kegg_pull.pull.r.KEGGrest', return_value=mock_kegg_rest)
     single_pull = p.SinglePull(output_dir=mock_output_dir)
     MockKEGGrestAPI.assert_called_once_with(kegg_request=None)
     pull_result: p.PullResult = single_pull.pull(entry_ids=mock_entry_ids)
-    mock_kegg_rest_api.get.assert_called_once_with(entry_ids=mock_entry_ids, entry_field=None)
+    mock_kegg_rest.get.assert_called_once_with(entry_ids=mock_entry_ids, entry_field=None)
 
     assert pull_result.successful_entry_ids == tuple(mock_entry_ids)
     assert pull_result.failed_entry_ids == ()

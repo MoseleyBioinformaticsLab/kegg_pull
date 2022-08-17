@@ -42,64 +42,55 @@ from . import kegg_url as ku
 from . import utils as u
 
 
-class KEGGrestAPI:
+class KEGGrest:
     def __init__(self, kegg_request: kr.KEGGrequest = None):
         self._kegg_request = kegg_request if kegg_request is not None else kr.KEGGrequest()
 
-    def list(self, database_name: str) -> kr.KEGGresponse:
-        list_url = ku.ListKEGGurl(database_name=database_name)
+    def request(self, url_type: ku.UrlType, **kwargs) -> kr.KEGGresponse:
+        kegg_url: ku.AbstractKEGGurl = ku.create_url(url_type=url_type, **kwargs)
 
-        return self._kegg_request.execute_api_operation(kegg_url=list_url)
+        return self._kegg_request.execute_api_operation(kegg_url=kegg_url)
+
+    def list(self, database_name: str) -> kr.KEGGresponse:
+        return self.request(url_type=ku.UrlType.LIST, database_name=database_name)
 
     def get(self, entry_ids: list, entry_field: str = None) -> kr.KEGGresponse:
-        get_url = ku.GetKEGGurl(entry_ids=entry_ids, entry_field=entry_field)
+        return self.request(url_type=ku.UrlType.GET, entry_ids=entry_ids, entry_field=entry_field)
 
-        return self._kegg_request.execute_api_operation(kegg_url=get_url)
+    def info(self, database_name: str) -> kr.KEGGresponse:
+        return self.request(url_type=ku.UrlType.INFO, database_name=database_name)
 
     def keywords_find(self, database_name: str, keywords: list) -> kr.KEGGresponse:
-        find_url = ku.KeywordsFindKEGGurl(database_name=database_name, keywords=keywords)
-
-        return self._kegg_request.execute_api_operation(kegg_url=find_url)
+        return self.request(url_type=ku.UrlType.KEYWORDS_FIND, database_name=database_name, keywords=keywords)
 
     def molecular_find(
         self, database_name: str, formula: str = None, exact_mass: float = None, molecular_weight: int = None
     ) -> kr.KEGGresponse:
-        find_url = ku.MolecularFindKEGGurl(
-            database_name=database_name, formula=formula, exact_mass=exact_mass, molecular_weight=molecular_weight
+        return self.request(
+            url_type=ku.UrlType.MOLECULAR_FIND, database_name=database_name, formula=formula, exact_mass=exact_mass,
+            molecular_weight=molecular_weight
         )
-
-        return self._kegg_request.execute_api_operation(kegg_url=find_url)
 
     def database_conv(self, kegg_database_name: str, outside_database_name: str) -> kr.KEGGresponse:
-        conv_url = ku.DatabaseConvKEGGurl(
-            kegg_database_name=kegg_database_name, outside_database_name=outside_database_name
+        return self.request(
+            url_type=ku.UrlType.DATABASE_CONV, kegg_database_name=kegg_database_name,
+            outside_database_name=outside_database_name
         )
-
-        return self._kegg_request.execute_api_operation(kegg_url=conv_url)
 
     def entries_conv(self, target_database_name: str, entry_ids: list) -> kr.KEGGresponse:
-        conv_url = ku.EntriesConvKEGGurl(target_database_name=target_database_name, entry_ids=entry_ids)
-
-        return self._kegg_request.execute_api_operation(kegg_url=conv_url)
+        return self.request(url_type=ku.UrlType.ENTRIES_CONV, target_database_name=target_database_name, entry_ids=entry_ids)
 
     def database_link(self, target_database_name: str, source_database_name: str) -> kr.KEGGresponse:
-        link_url = ku.DatabaseLinkKEGGurl(
-            target_database_name=target_database_name, source_database_name=source_database_name
+        return self.request(
+            url_type=ku.UrlType.DATABASE_LINK, target_database_name=target_database_name,
+            source_database_name=source_database_name
         )
-
-        return self._kegg_request.execute_api_operation(kegg_url=link_url)
 
     def entries_link(self, target_database_name: str, entry_ids: list) -> kr.KEGGresponse:
-        link_url = ku.EntriesLinkKEGGurl(
-            target_database_name=target_database_name, entry_ids=entry_ids
-        )
-
-        return self._kegg_request.execute_api_operation(kegg_url=link_url)
+        return self.request(url_type=ku.UrlType.ENTRIES_LINK, target_database_name=target_database_name, entry_ids=entry_ids)
 
     def ddi(self, drug_entry_ids: list) -> kr.KEGGresponse:
-        ddi_url = ku.DdiKEGGurl(drug_entry_ids=drug_entry_ids)
-
-        return self._kegg_request.execute_api_operation(kegg_url=ddi_url)
+        return self.request(url_type=ku.UrlType.DDI, drug_entry_ids=drug_entry_ids)
 
 
 def main():
@@ -113,10 +104,10 @@ def main():
     entry_ids: str = args['<entry-ids>']
     output: str = args['--output']
     is_binary = False
-    kegg_rest_api = KEGGrestAPI()
+    kegg_rest = KEGGrest()
 
     if args['list']:
-        kegg_response: kr.KEGGresponse = kegg_rest_api.list(database_name=database_name)
+        kegg_response: kr.KEGGresponse = kegg_rest.list(database_name=database_name)
     elif args['get']:
         entry_ids: list = u.split_comma_separated_list(list_string=entry_ids)
         entry_field: str = args['--entry-field']
@@ -124,15 +115,15 @@ def main():
         if ku.GetKEGGurl.is_binary(entry_field=entry_field):
             is_binary = True
 
-        kegg_response: kr.KEGGresponse = kegg_rest_api.get(entry_ids=entry_ids, entry_field=entry_field)
+        kegg_response: kr.KEGGresponse = kegg_rest.get(entry_ids=entry_ids, entry_field=entry_field)
     elif args['find']:
         if args['<keywords>']:
             keywords: list = u.split_comma_separated_list(list_string=args['<keywords>'])
-            kegg_response: kr.KEGGresponse = kegg_rest_api.keywords_find(database_name=database_name, keywords=keywords)
+            kegg_response: kr.KEGGresponse = kegg_rest.keywords_find(database_name=database_name, keywords=keywords)
         else:
             formula, exact_mass, molecular_weight = u.get_molecular_attribute_args(args=args)
 
-            kegg_response: kr.KEGGresponse = kegg_rest_api.molecular_find(
+            kegg_response: kr.KEGGresponse = kegg_rest.molecular_find(
                 database_name=database_name, formula=formula, exact_mass=exact_mass, molecular_weight=molecular_weight
             )
     elif args['conv']:
@@ -140,14 +131,14 @@ def main():
             target_database_name: str = args['--conv-target']
             entry_ids: list = u.split_comma_separated_list(list_string=entry_ids)
 
-            kegg_response: kr.KEGGresponse = kegg_rest_api.entries_conv(
+            kegg_response: kr.KEGGresponse = kegg_rest.entries_conv(
                 target_database_name=target_database_name, entry_ids=entry_ids
             )
         else:
             kegg_database_name = args['<kegg-database-name>']
             outside_database_name = args['<outside-database-name>']
 
-            kegg_response: kr.KEGGresponse = kegg_rest_api.database_conv(
+            kegg_response: kr.KEGGresponse = kegg_rest.database_conv(
                 kegg_database_name=kegg_database_name, outside_database_name=outside_database_name
             )
     elif args['link']:
@@ -155,20 +146,20 @@ def main():
             target_database_name: str = args['--link-target']
             entry_ids: list = u.split_comma_separated_list(list_string=entry_ids)
 
-            kegg_response: kr.KEGGresponse = kegg_rest_api.entries_link(
+            kegg_response: kr.KEGGresponse = kegg_rest.entries_link(
                 target_database_name=target_database_name, entry_ids=entry_ids
             )
         else:
             target_database_name: str = args['<target-database-name>']
             source_database_name: str = args['<source-database-name>']
 
-            kegg_response: kr.KEGGresponse = kegg_rest_api.database_link(
+            kegg_response: kr.KEGGresponse = kegg_rest.database_link(
                 target_database_name=target_database_name, source_database_name=source_database_name
             )
     else:
         drug_entry_ids: str = args['<drug-entry-ids']
         drug_entry_ids: list = u.split_comma_separated_list(list_string=drug_entry_ids)
-        kegg_response: kr.KEGGresponse = kegg_rest_api.ddi(drug_entry_ids=drug_entry_ids)
+        kegg_response: kr.KEGGresponse = kegg_rest.ddi(drug_entry_ids=drug_entry_ids)
 
     if kegg_response.status == kr.KEGGresponse.Status.FAILED:
         raise RuntimeError(

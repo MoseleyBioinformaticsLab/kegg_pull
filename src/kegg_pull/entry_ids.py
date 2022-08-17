@@ -30,10 +30,10 @@ from . import utils as u
 
 class EntryIdsGetter:
     def __init__(self, kegg_request: kr.KEGGrequest = None):
-        self._kegg_rest_api = r.KEGGrestAPI(kegg_request=kegg_request)
+        self._kegg_rest = r.KEGGrest(kegg_request=kegg_request)
 
     def from_database(self, database_name: str) -> list:
-        kegg_response: kr.KEGGresponse = self._kegg_rest_api.list(database_name=database_name)
+        kegg_response: kr.KEGGresponse = self._kegg_rest.list(database_name=database_name)
 
         return EntryIdsGetter._process_response(kegg_response=kegg_response)
 
@@ -77,7 +77,7 @@ class EntryIdsGetter:
 
 
     def from_keywords(self, database_name: str, keywords: list) -> list:
-        kegg_response: kr.KEGGresponse = self._kegg_rest_api.keywords_find(database_name=database_name, keywords=keywords)
+        kegg_response: kr.KEGGresponse = self._kegg_rest.keywords_find(database_name=database_name, keywords=keywords)
 
         return EntryIdsGetter._process_response(kegg_response=kegg_response)
 
@@ -86,7 +86,7 @@ class EntryIdsGetter:
         self, database_name: str, formula: str = None, exact_mass: t.Union[float, tuple] = None,
         molecular_weight: t.Union[int, tuple] = None
     ) -> list:
-        kegg_response: kr.KEGGresponse = self._kegg_rest_api.molecular_find(
+        kegg_response: kr.KEGGresponse = self._kegg_rest.molecular_find(
             database_name=database_name, formula=formula, exact_mass=exact_mass, molecular_weight=molecular_weight
         )
 
