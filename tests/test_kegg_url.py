@@ -8,14 +8,15 @@ import tests.utils as u
 # TODO Test other URL _validate methods
 test_validate_data = [
     (
-        ku.ListKEGGurl, {'database_name': 'invalid-database-name'},
-        'Invalid database name: "invalid-database-name". Valid values are: <org>, ag, brite, compound, dgroup, disease,'
-        ' drug, enzyme, genome, glycan, ko, module, network, organism, pathway, rclass, reaction, variant, vg, vp'
+        ku.ListKEGGurl, {'database_name': 'ligand'},
+        'Invalid database name: "ligand". Valid values are: <org>, ag, atc, brite, brite_ja, compound, compound_ja, '
+        'dgroup, dgroup_ja, disease, disease_ja, drug, drug_ja, enzyme, genome, glycan, jtc, ko, module, ndc, network, '
+        'organism, pathway, rclass, reaction, variant, vg, vp, yj'
     ),
     (
         ku.InfoKEGGurl, {'database_name': 'organism'},
         'Invalid database name: "organism". Valid values are: <org>, ag, brite, compound, dgroup, disease, drug, '
-        'enzyme, genome, glycan, ko, module, network, pathway, rclass, reaction, variant, vg, vp'
+        'enzyme, genes, genome, glycan, kegg, ko, ligand, module, network, pathway, rclass, reaction, variant, vg, vp'
     ),
     (
         ku.GetKEGGurl, {'entry_ids': [], 'entry_field': None}, 'Entry IDs must be specified for the KEGG get operation'
@@ -33,15 +34,12 @@ test_validate_data = [
         ku.GetKEGGurl, {'entry_ids': ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']},
         f'The maximum number of entry IDs is {ku.GetKEGGurl.MAX_ENTRY_IDS_PER_URL} but 11 were provided'
     ),
-    (
-        ku.KeywordsFindKEGGurl, {'database_name': 'brite', 'keywords': []},
-        'Key words search not supported for brite entries'
-    ),
     (ku.KeywordsFindKEGGurl, {'database_name': 'not-brite', 'keywords': []}, 'No search keywords specified'),
     (
-        ku.KeywordsFindKEGGurl, {'database_name': '<org>', 'keywords': ['x']},
-     'Invalid database name: "<org>". Valid values are: <org>, ag, brite, compound, dgroup, disease, drug, enzyme, '
-     'genome, glycan, ko, module, network, pathway, rclass, reaction, variant, vg, vp'
+        ku.KeywordsFindKEGGurl, {'database_name': 'brite', 'keywords': ['x']},
+        'Invalid database name: "brite". Valid values are: <org>, ag, atc, brite_ja, compound, compound_ja, dgroup, '
+        'dgroup_ja, disease, disease_ja, drug, drug_ja, enzyme, genes, genome, glycan, jtc, ko, ligand, module, ndc, '
+        'network, pathway, rclass, reaction, variant, vg, vp, yj'
     )
 ]
 @pt.mark.parametrize('KEGGurl,kwargs,expected_message', test_validate_data)

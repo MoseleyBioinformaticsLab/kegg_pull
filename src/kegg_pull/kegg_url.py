@@ -128,7 +128,7 @@ class AbstractKEGGurl(abc.ABC):
             )
 
     @staticmethod
-    def _validate_database_name(database_name: str, extra_databases: set = None, excluded_databases: set = None):
+    def _validate_database_name(database_name: str, extra_databases: set = set(), excluded_databases: set = set()):
         """ Ensures the database provided is a valid KEGG database.
 
         :param database_name: The name of the database to validate.
@@ -137,13 +137,8 @@ class AbstractKEGGurl(abc.ABC):
         """
         if database_name not in AbstractKEGGurl.organism_set:
             valid_databases = AbstractKEGGurl._valid_kegg_databases.union(AbstractKEGGurl._valid_medicus_databases)
-
-            if excluded_databases is not None:
-                for excluded_database_name in excluded_databases:
-                    valid_databases.remove(excluded_database_name)
-
-            if extra_databases is not None:
-                valid_databases: set = valid_databases.union(extra_databases)
+            valid_databases: set = valid_databases - excluded_databases
+            valid_databases: set = valid_databases.union(extra_databases)
 
             AbstractKEGGurl._validate_rest_option(
                 option_name='database name', option_value=database_name, valid_rest_options=valid_databases,
@@ -183,25 +178,7 @@ def create_url(url_type: UrlType, **kwargs) -> AbstractKEGGurl:
     return KEGGurl(**kwargs)
 
 
-class DatabaseOnlyKEGGurl(AbstractKEGGurl):
-    """Contains the URL construction of KEGG URL classes with only a database option"""
-    @abc.abstractmethod
-    def _validate(self, database_name: str):
-        """ Ensures the database option is a valid KEGG database.
-
-        :param database_name: The name of the database to check.
-        """
-        pass  # pragma: no cover
-
-    def _create_rest_options(self, database_name: str) -> str:
-        """ Implements the KEGG REST API options creation by returning the provided database name (the only option).
-
-        :param database_name: The database option to return.
-        """
-        return database_name
-
-
-class ListKEGGurl(DatabaseOnlyKEGGurl):
+class ListKEGGurl(AbstractKEGGurl):
     """Contains the validation implementation and URL construction of the KEGG API list operation."""
     def __init__(self, database_name: str):
         """ Validates and constructs a KEGG URL for the list API operation.
@@ -211,16 +188,23 @@ class ListKEGGurl(DatabaseOnlyKEGGurl):
         super().__init__(rest_operation='list', database_name=database_name)
 
     def _validate(self, database_name: str):
-        """ Ensures the database name is a KEGG database supported by the list operation.
+        """ Ensures the database option is a KEGG database supported by the list operation.
 
         :param database_name: The name of the database to check.
         """
-        super(ListKEGGurl, self)._validate_database_name(
+        AbstractKEGGurl._validate_database_name(
             database_name=database_name, extra_databases={'organism'}, excluded_databases={'genes', 'ligand', 'kegg'}
         )
 
+    def _create_rest_options(self, database_name: str) -> str:
+        """ Implements the KEGG REST API options creation by returning the provided database name (the only option).
 
-class InfoKEGGurl(DatabaseOnlyKEGGurl):
+        :param database_name: The database option to return.
+        """
+        return database_name
+
+
+class InfoKEGGurl(AbstractKEGGurl):
     """Contains the validation implementation and URL construction of the KEGG API info operation."""
     def __init__(self, database_name: str):
         """ Validates and constructs a KEGG URL for the info API operation.
@@ -234,9 +218,16 @@ class InfoKEGGurl(DatabaseOnlyKEGGurl):
 
         :param database_name: The name of the database to check.
         """
-        self._validate_database_name(
+        AbstractKEGGurl._validate_database_name(
             database_name=database_name, excluded_databases=AbstractKEGGurl._valid_medicus_databases
         )
+
+    def _create_rest_options(self, database_name: str) -> str:
+        """ Implements the KEGG REST API options creation by returning the provided database name (the only option).
+
+        :param database_name: The database option to return.
+        """
+        return database_name
 
 
 class GetKEGGurl(AbstractKEGGurl):
