@@ -89,8 +89,8 @@ class SinglePull:
             file_path = os.path.join(self._output_dir, file_name)
             save_type = 'wb' if type(entry) is bytes else 'w'
 
-            with open(file_path, save_type) as f:
-                f.write(entry)
+            with open(file_path, save_type) as file:
+                file.write(entry)
 
     class _ZipEntrySaver(_AbstractEntrySaver):
         def __init__(self, zip_file: str):
@@ -329,14 +329,14 @@ def main():
 
     pull_result: PullResult = puller.pull(entry_ids=entry_ids)
 
-    with open('pull-results.txt', 'w') as f:
-        _write_entry_ids(f=f, entry_id_type='Successful', entry_ids=pull_result.successful_entry_ids)
-        _write_entry_ids(f=f, entry_id_type='Failed', entry_ids=pull_result.failed_entry_ids)
-        _write_entry_ids(f=f, entry_id_type='Timed Out', entry_ids=pull_result.timed_out_entry_ids)
+    with open('pull-results.txt', 'w') as file:
+        _write_entry_ids(file=file, entry_id_type='Successful', entry_ids=pull_result.successful_entry_ids)
+        _write_entry_ids(file=file, entry_id_type='Failed', entry_ids=pull_result.failed_entry_ids)
+        _write_entry_ids(file=file, entry_id_type='Timed Out', entry_ids=pull_result.timed_out_entry_ids)
 
 
-def _write_entry_ids(f, entry_id_type: str, entry_ids: list):
-    f.write(f'### {entry_id_type} Entry IDs ###\n')
+def _write_entry_ids(file: t.TextIO, entry_id_type: str, entry_ids: list):
+    file.write(f'### {entry_id_type} Entry IDs ###\n')
 
     for entry_id in entry_ids:
-        f.write(entry_id + '\n')
+        file.write(entry_id + '\n')

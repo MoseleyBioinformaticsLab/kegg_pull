@@ -2,8 +2,8 @@ import setuptools as st
 
 
 def _get_requirements() -> list:
-    with open('requirements.txt', 'r') as f:
-        requirements: str = f.read()
+    with open('requirements.txt', 'r') as file:
+        requirements: str = file.read()
 
     requirements: list = requirements.split('\n')
     requirements = [requirement.strip() for requirement in requirements if requirement != '']

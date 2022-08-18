@@ -58,8 +58,8 @@ def test_single_pull(mocker, mock_output_dir):
         else:
             expected_file: str = os.path.join(mock_output_dir, expected_file)
 
-            with open(expected_file, 'r') as f:
-                actual_file_content: str = f.read()
+            with open(expected_file, 'r') as file:
+                actual_file_content: str = file.read()
 
         assert actual_file_content == expected_file_content
 
@@ -173,7 +173,7 @@ def test_main(mocker, _):
         '### Timed Out Entry IDs ###\n'
      ])
 
-    with open('pull-results.txt', 'r') as f:
-        actual_pull_results = f.read()
+    with open('pull-results.txt', 'r') as file:
+        actual_pull_results = file.read()
 
         assert actual_pull_results == expected_pull_results
