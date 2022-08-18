@@ -122,7 +122,15 @@ def test_organism_set_unsuccessful(mocker, timeout: bool, _):
 
 test_create_url_data = [
     ('ListKEGGurl', ku.UrlType.LIST),
-    ('InfoKEGGurl', ku.UrlType.INFO)
+    ('InfoKEGGurl', ku.UrlType.INFO),
+    ('GetKEGGurl', ku.UrlType.GET),
+    ('KeywordsFindKEGGurl', ku.UrlType.KEYWORDS_FIND),
+    ('MolecularFindKEGGurl', ku.UrlType.MOLECULAR_FIND),
+    ('DatabaseConvKEGGurl', ku.UrlType.DATABASE_CONV),
+    ('EntriesConvKEGGurl', ku.UrlType.ENTRIES_CONV),
+    ('DatabaseLinkKEGGurl', ku.UrlType.DATABASE_LINK),
+    ('EntriesLinkKEGGurl', ku.UrlType.ENTRIES_LINK),
+    ('DdiKEGGurl', ku.UrlType.DDI)
 ]
 @pt.mark.parametrize('class_name,url_type', test_create_url_data)
 def test_create_url(mocker, class_name: str, url_type: ku.UrlType):
@@ -133,5 +141,3 @@ def test_create_url(mocker, class_name: str, url_type: ku.UrlType):
     KEGGurlMock.assert_called_once_with(**kwargs_mock)
 
     assert kegg_url == kegg_url_mock
-
-# TODO Test create_url for the remaining url types
