@@ -8,6 +8,16 @@ import tests.utils as u
 # TODO Test other URL _validate methods
 test_validate_data = [
     (
+        ku.ListKEGGurl, {'database_name': 'invalid-database-name'},
+        'Invalid database name: "invalid-database-name". Valid values are: <org>, ag, brite, compound, dgroup, disease,'
+        ' drug, enzyme, genome, glycan, ko, module, network, organism, pathway, rclass, reaction, variant, vg, vp'
+    ),
+    (
+        ku.InfoKEGGurl, {'database_name': 'organism'},
+        'Invalid database name: "organism". Valid values are: <org>, ag, brite, compound, dgroup, disease, drug, '
+        'enzyme, genome, glycan, ko, module, network, pathway, rclass, reaction, variant, vg, vp'
+    ),
+    (
         ku.GetKEGGurl, {'entry_ids': [], 'entry_field': None}, 'Entry IDs must be specified for the KEGG get operation'
     ),
     (
@@ -22,11 +32,6 @@ test_validate_data = [
     (
         ku.GetKEGGurl, {'entry_ids': ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']},
         f'The maximum number of entry IDs is {ku.GetKEGGurl.MAX_ENTRY_IDS_PER_URL} but 11 were provided'
-    ),
-    (
-        ku.ListKEGGurl, {'database_name': 'invalid-database-name'},
-        'Invalid database name: "invalid-database-name". Valid values are: ag, brite, compound, dgroup, disease, drug, '
-        'enzyme, genome, glycan, ko, module, network, pathway, rclass, reaction, variant, vg, vp'
     )
 ]
 @pt.mark.parametrize('KEGGurl,kwargs,expected_message', test_validate_data)

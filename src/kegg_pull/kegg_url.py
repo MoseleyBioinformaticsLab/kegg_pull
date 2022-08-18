@@ -101,15 +101,22 @@ class AbstractKEGGurl(abc.ABC):
         raise ValueError(f'Cannot create URL - {reason}')
 
     @staticmethod
-    def _validate_rest_option(option_name: str, option_value: str, valid_rest_options: t.Iterable):
+    def _validate_rest_option(
+        option_name: str, option_value: str, valid_rest_options: t.Iterable, add_org: bool = False
+    ):
         """ Raises an exception if a provided REST API option is not valid.
 
         :param option_name: The name of the type of option to check
         :param option_value: The value of the REST API option provided
         :param valid_rest_options: The collection of valid options to choose from
+        :param add_org: Whether to add the "<org>" option to the valid options in the error message
         :raises ValueError:
         """
         if option_value not in valid_rest_options:
+            if add_org:
+                valid_rest_options: set = set(valid_rest_options)
+                valid_rest_options.add('<org>')
+
             valid_options = ', '.join(sorted(valid_rest_options))
 
             AbstractKEGGurl._raise_error(
@@ -130,7 +137,8 @@ class AbstractKEGGurl(abc.ABC):
                 valid_databases: set = valid_databases.union(extra_databases)
 
             AbstractKEGGurl._validate_rest_option(
-                option_name='database name', option_value=database_name, valid_rest_options=valid_databases
+                option_name='database name', option_value=database_name, valid_rest_options=valid_databases,
+                add_org=True
             )
 
 
@@ -197,8 +205,7 @@ class ListKEGGurl(DatabaseOnlyKEGGurl):
 
         :param database_name: Either a KEGG database or "organism"
         """
-        if database_name != 'organism':
-            super(ListKEGGurl, self)._validate(database_name=database_name)
+        super(ListKEGGurl, self)._validate_database_name(database_name=database_name, extra_databases={'organism'})
 
 
 class InfoKEGGurl(DatabaseOnlyKEGGurl):
@@ -208,7 +215,7 @@ class InfoKEGGurl(DatabaseOnlyKEGGurl):
 
         :param database_name: The database option for the KEGG info URL.
         """
-        super(InfoKEGGurl, self).__init__(kegg_rest_operation='info', database_name=database_name)
+        super(InfoKEGGurl, self).__init__(rest_operation='info', database_name=database_name)
 
 
 class GetKEGGurl(AbstractKEGGurl):
