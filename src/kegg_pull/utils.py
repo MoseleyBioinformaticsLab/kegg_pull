@@ -40,3 +40,8 @@ def _get_range_values(range_values: t.Union[int, float, tuple], value_type: type
             f'Range can only be specified by two values but {len(range_values)} values were provided: '
             f'{", ".join(range_values)}'
         )
+
+
+class staticproperty(staticmethod):
+    def __get__(self, *_):
+        return self.__func__()

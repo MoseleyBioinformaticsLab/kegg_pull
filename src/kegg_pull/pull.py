@@ -106,12 +106,12 @@ class SinglePull:
         else:
             self._entry_saver = SinglePull._DirectoryEntrySaver(output_dir=output_dir)
 
-        self._kegg_rest_api = r.KEGGrestAPI(kegg_request=kegg_request)
+        self._kegg_rest = r.KEGGrest(kegg_request=kegg_request)
         self.entry_field = entry_field
 
 
     def pull(self, entry_ids: list) -> PullResult:
-        kegg_response: kr.KEGGresponse = self._kegg_rest_api.get(entry_ids=entry_ids, entry_field=self.entry_field)
+        kegg_response: kr.KEGGresponse = self._kegg_rest.get(entry_ids=entry_ids, entry_field=self.entry_field)
         get_url: ku.GetKEGGurl = kegg_response.kegg_url
         pull_result = PullResult()
 
@@ -172,7 +172,7 @@ class SinglePull:
 
     def _pull_separate_entries(self, get_url: ku.GetKEGGurl, pull_result: PullResult):
         for entry_id in get_url.entry_ids:
-            kegg_response: kr.KEGGresponse = self._kegg_rest_api.get(entry_ids=[entry_id], entry_field=self.entry_field)
+            kegg_response: kr.KEGGresponse = self._kegg_rest.get(entry_ids=[entry_id], entry_field=self.entry_field)
 
             if kegg_response.status == kr.KEGGresponse.Status.SUCCESS:
                 self._save_single_entry_response(kegg_response=kegg_response, pull_result=pull_result)

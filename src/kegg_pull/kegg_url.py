@@ -5,6 +5,9 @@ import requests as rq
 import logging as l
 import abc
 import typing as t
+import enum as e
+
+from . import utils as u
 
 BASE_URL: str = 'https://rest.kegg.jp'
 
@@ -19,7 +22,7 @@ class AbstractKEGGurl(abc.ABC):
         'enzyme', 'network', 'variant', 'disease', 'drug', 'dgroup'
     }
 
-    __organism_set = None
+    _organism_set = None
 
     def __init__(self, rest_operation: str, base_url: str = BASE_URL, **kwargs):
         """ Validates the arguments and constructs the KEGG API URL from them.
@@ -32,9 +35,10 @@ class AbstractKEGGurl(abc.ABC):
         url_options: str = self._create_rest_options(**kwargs)
         self._url = f'{base_url}/{rest_operation}/{url_options}'
 
-    @staticmethod
-    def _get_organism_set() -> set:
-        if AbstractKEGGurl.__organism_set is None:
+    # noinspection PyMethodParameters
+    @u.staticproperty
+    def organism_set() -> set:
+        if AbstractKEGGurl._organism_set is None:
             url = f'{BASE_URL}/list/organism'
             error_message = 'The request to the KEGG web API {} while fetching the organism list using the URL: {}'
 
@@ -51,14 +55,14 @@ class AbstractKEGGurl(abc.ABC):
                 )
 
             organism_list: list = response.text.strip().split('\n')
-            AbstractKEGGurl.__organism_set = set()
+            AbstractKEGGurl._organism_set = set()
 
             for organism in organism_list:
                 [code, name, _, _] = organism.strip().split('\t')
-                AbstractKEGGurl.__organism_set.add(code)
-                AbstractKEGGurl.__organism_set.add(name)
+                AbstractKEGGurl._organism_set.add(code)
+                AbstractKEGGurl._organism_set.add(name)
 
-        return AbstractKEGGurl.__organism_set
+        return AbstractKEGGurl._organism_set
 
     @abc.abstractmethod
     def _validate(self, **kwargs):
@@ -117,16 +121,47 @@ class AbstractKEGGurl(abc.ABC):
         :param database_name: The name of the database to validate.
         :param extra_databases: Additional optional database names to add to the core KEGG databases for the validation.
         """
-        if database_name not in AbstractKEGGurl._get_organism_set():
+        if database_name not in AbstractKEGGurl.organism_set:
             valid_databases = AbstractKEGGurl.__valid_kegg_databases
 
             if extra_databases is not None:
                 valid_databases: set = valid_databases.union(extra_databases)
 
             AbstractKEGGurl._validate_rest_option(
-                option_name='database name', option_value=database_name,
-                valid_rest_options=AbstractKEGGurl.__valid_kegg_databases
+                option_name='database name', option_value=database_name, valid_rest_options=valid_databases
             )
+
+
+class UrlType(e.Enum):
+    LIST = 'list'
+    INFO = 'info'
+    GET = 'get'
+    KEYWORDS_FIND = 'keywords_find'
+    MOLECULAR_FIND = 'molecular_find'
+    DATABASE_CONV = 'database_conv'
+    ENTRIES_CONV = 'entries_conv'
+    DATABASE_LINK = 'database_link'
+    ENTRIES_LINK = 'entries_link'
+    DDI = 'ddi'
+
+
+def create_url(url_type: UrlType, **kwargs) -> AbstractKEGGurl:
+    type_to_class = {
+        UrlType.LIST: ListKEGGurl,
+        UrlType.INFO: InfoKEGGurl,
+        UrlType.GET: GetKEGGurl,
+        UrlType.KEYWORDS_FIND: KeywordsFindKEGGurl,
+        UrlType.MOLECULAR_FIND: MolecularFindKEGGurl,
+        UrlType.DATABASE_CONV: DatabaseConvKEGGurl,
+        UrlType.ENTRIES_CONV: EntriesConvKEGGurl,
+        UrlType.DATABASE_LINK: DatabaseLinkKEGGurl,
+        UrlType.ENTRIES_LINK: EntriesLinkKEGGurl,
+        UrlType.DDI: DdiKEGGurl
+    }
+
+    KEGGurl: type =  type_to_class[url_type]
+
+    return KEGGurl(**kwargs)
 
 
 class DatabaseOnlyKEGGurl(AbstractKEGGurl):
@@ -181,7 +216,12 @@ class GetKEGGurl(AbstractKEGGurl):
         'json': False
     }
 
-    MAX_ENTRY_IDS_PER_URL = 10
+    _MAX_ENTRY_IDS_PER_URL = 10
+
+    # noinspection PyMethodParameters
+    @u.staticproperty
+    def MAX_ENTRY_IDS_PER_URL():
+        return GetKEGGurl._MAX_ENTRY_IDS_PER_URL
 
     def __init__(self, entry_ids: list, entry_field: str = None):
         """ Validates and constructs the entry IDs and entry field options.
@@ -212,7 +252,7 @@ class GetKEGGurl(AbstractKEGGurl):
         if n_entry_ids == 0:
             self._raise_error(reason='Entry IDs must be specified for the KEGG get operation')
 
-        max_entry_ids: int = GetKEGGurl.MAX_ENTRY_IDS_PER_URL
+        max_entry_ids: int = GetKEGGurl._MAX_ENTRY_IDS_PER_URL
 
         if n_entry_ids > max_entry_ids:
             self._raise_error(
@@ -384,7 +424,7 @@ class DatabaseConvKEGGurl(AbstractConvKEGGurl):
 
     def _validate(self, kegg_database_name: str, outside_database_name: str):
         valid_kegg_databases: set = AbstractConvKEGGurl._valid_kegg_molecule_databases.union(
-            AbstractKEGGurl._get_organism_set()
+            AbstractKEGGurl.organism_set
         )
 
         AbstractKEGGurl._validate_rest_option(
@@ -411,7 +451,8 @@ class EntriesConvKEGGurl(AbstractConvKEGGurl):
         )
 
     def _validate(self, target_database_name: str, entry_ids: list):
-        valid_databases = AbstractKEGGurl._get_organism_set().union(AbstractConvKEGGurl._valid_kegg_molecule_databases)
+        valid_databases: set = AbstractKEGGurl.organism_set
+        valid_databases: set = valid_databases.union(AbstractConvKEGGurl._valid_kegg_molecule_databases)
 
         valid_databases = valid_databases.union(AbstractConvKEGGurl._valid_outside_gene_databases).union(
             AbstractConvKEGGurl._valid_outside_molecule_databases

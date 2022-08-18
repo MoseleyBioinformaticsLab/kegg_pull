@@ -34,7 +34,7 @@ def test_entry_ids_from_kegg_api(mocker, get_entry_ids: t.Callable, rest_method:
     '''
 
     mock_kegg_response = mocker.MagicMock(text_body=mock_text_body, status=kr.KEGGresponse.Status.SUCCESS)
-    mock_rest_method = mocker.patch(f'kegg_pull.entry_ids.r.KEGGrestAPI.{rest_method}', return_value=mock_kegg_response)
+    mock_rest_method = mocker.patch(f'kegg_pull.entry_ids.r.KEGGrest.{rest_method}', return_value=mock_kegg_response)
     actual_entry_ids: list = get_entry_ids(**kwargs)
     mock_rest_method.assert_called_once_with(**kwargs)
 
