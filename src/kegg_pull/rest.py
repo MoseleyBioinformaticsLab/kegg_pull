@@ -183,5 +183,5 @@ def main():
 
         print(response_body)
     else:
-        with open(output, save_type) as f:
-            f.write(response_body)
+        with open(output, save_type) as file:
+            file.write(response_body)

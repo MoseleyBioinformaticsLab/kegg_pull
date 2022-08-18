@@ -57,8 +57,8 @@ class EntryIdsGetter:
 
     @staticmethod
     def from_file(file_path: str) -> list:
-        with open(file_path, 'r') as f:
-            entry_ids: str = f.read()
+        with open(file_path, 'r') as file:
+            entry_ids: str = file.read()
 
             if entry_ids == '':
                 raise ValueError(f'Attempted to get entry IDs from {file_path}. But the file is empty')
@@ -122,9 +122,9 @@ def main():
     output: str = args['--output']
 
     if output is not None:
-        with open(output, 'w') as f:
+        with open(output, 'w') as file:
             for entry_id in entry_ids:
-                f.write(entry_id + '\n')
+                file.write(entry_id + '\n')
     else:
         for entry_id in entry_ids:
             print(entry_id)
