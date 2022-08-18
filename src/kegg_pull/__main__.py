@@ -21,10 +21,13 @@ def main():
     elif len(sys.argv) > 1 and sys.argv[1] == 'pull':
         p.main()
     elif len(sys.argv) > 1 and sys.argv[1] == '--full-help':
+        separator = '-'*80
         print(__doc__)
-        print('-'*80)
+        print(separator)
         print(ei.__doc__)
-        print('-'*80)
+        print(separator)
+        print(r.__doc__)
+        print(separator)
         print(p.__doc__)
     else:
         print(__doc__)
