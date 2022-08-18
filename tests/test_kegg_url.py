@@ -1,17 +1,19 @@
 import pytest as pt
+import typing as t
+import requests as rq
 
 import kegg_pull.kegg_url as ku
 import tests.utils as u
 
 
 def test_list_kegg_url_validate():
-    with pt.raises(ValueError) as e:
+    with pt.raises(ValueError) as error:
         ku.ListKEGGurl(database_name='invalid-database-name')
 
     u.assert_expected_error_message(
         expected_message='Cannot create URL - Invalid database name: "invalid-database-name". Valid values are: ag, '
                          'brite, compound, dgroup, disease, drug, enzyme, genome, glycan, ko, module, network, '
-                         'pathway, rclass, reaction, variant, vg, vp', e=e
+                         'pathway, rclass, reaction, variant, vg, vp', error=error
     )
 
 
@@ -39,10 +41,10 @@ test_get_kegg_url_validate_data = [
 
 @pt.mark.parametrize('entry_ids,entry_field,expected_error_message', test_get_kegg_url_validate_data)
 def test_get_kegg_url_validate(entry_ids: list, entry_field: str, expected_error_message: str):
-    with pt.raises(ValueError) as e:
+    with pt.raises(ValueError) as error:
         ku.GetKEGGurl(entry_ids=entry_ids, entry_field=entry_field)
 
-    u.assert_expected_error_message(expected_message=expected_error_message, e=e)
+    u.assert_expected_error_message(expected_message=expected_error_message, error=error)
 
 
 test_get_kegg_url_create_url_options_data: list = [
@@ -62,9 +64,13 @@ def test_get_kegg_url_create_url_options(entry_ids: list, entry_field: str, expe
     assert get_kegg_url.url == expected_url
 
 
-# TODO test with fail and timeout
+@pt.fixture(name='_')
+def reset_organism_set():
+    ku.AbstractKEGGurl._organism_set = None
+
+
 @pt.mark.disable_mock_organism_set
-def test_organism_set(mocker):
+def test_organism_set(mocker, _):
     mock_text = """
         T06555	psyt	Candidatus Prometheoarchaeum syntrophicum	Prokaryotes;Archaea;Lokiarchaeota;Prometheoarchaeum
         T03835	agw	Archaeon GW2011_AR10	Prokaryotes;Archaea;unclassified Archaea
@@ -78,6 +84,40 @@ def test_organism_set(mocker):
     expected_organism_set = {'agw', 'T03835', 'T06555', 'T03843', 'psyt', 'arg'}
 
     assert actual_organism_set == expected_organism_set
+
+    mock_get.reset_mock()
+    actual_organism_set = ku.AbstractKEGGurl.organism_set
+    mock_get.assert_not_called()
+
+    assert actual_organism_set == expected_organism_set
+
+
+@pt.mark.parametrize('timeout', [True, False])
+@pt.mark.disable_mock_organism_set
+def test_organism_set_unsuccessful(mocker, timeout: bool, _):
+    get_function_patch_path = 'kegg_pull.kegg_url.rq.get'
+    url = f'{ku.BASE_URL}/list/organism'
+    error_message = 'The request to the KEGG web API {} while fetching the organism set using the URL: {}'
+
+    if timeout:
+        get_mock: mocker.MagicMock = mocker.patch(get_function_patch_path, side_effect=rq.exceptions.Timeout())
+        error_message: str = error_message.format('timed out', url)
+    else:
+        failed_status_code = 404
+
+        get_mock: mocker.MagicMock = mocker.patch(
+            get_function_patch_path, return_value=mocker.MagicMock(status_code=failed_status_code)
+        )
+
+        error_message: str = error_message.format(f'failed with status code {failed_status_code}', url)
+
+    with pt.raises(RuntimeError) as error:
+        # noinspection PyStatementEffect
+        ku.AbstractKEGGurl.organism_set
+
+    get_mock.assert_called_once_with(url=url, timeout=60)
+    u.assert_expected_error_message(expected_message=error_message, error=error)
+
 
 # TODO Test other URLs
 
