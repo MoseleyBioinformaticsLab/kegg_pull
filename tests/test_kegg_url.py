@@ -32,6 +32,16 @@ test_validate_data = [
     (
         ku.GetKEGGurl, {'entry_ids': ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']},
         f'The maximum number of entry IDs is {ku.GetKEGGurl.MAX_ENTRY_IDS_PER_URL} but 11 were provided'
+    ),
+    (
+        ku.KeywordsFindKEGGurl, {'database_name': 'brite', 'keywords': []},
+        'Key words search not supported for brite entries'
+    ),
+    (ku.KeywordsFindKEGGurl, {'database_name': 'not-brite', 'keywords': []}, 'No search keywords specified'),
+    (
+        ku.KeywordsFindKEGGurl, {'database_name': '<org>', 'keywords': ['x']},
+     'Invalid database name: "<org>". Valid values are: <org>, ag, brite, compound, dgroup, disease, drug, enzyme, '
+     'genome, glycan, ko, module, network, pathway, rclass, reaction, variant, vg, vp'
     )
 ]
 @pt.mark.parametrize('KEGGurl,kwargs,expected_message', test_validate_data)
@@ -52,7 +62,11 @@ test_create_rest_options_data = [
     (ku.GetKEGGurl, {'entry_ids': ['x'], 'entry_field': 'image'}, 'get', 'x/image'),
     (ku.GetKEGGurl, {'entry_ids': ['x'], 'entry_field': 'aaseq'}, 'get', 'x/aaseq'),
     (ku.GetKEGGurl, {'entry_ids': ['x', 'y'], 'entry_field': None}, 'get', 'x+y'),
-    (ku.GetKEGGurl, {'entry_ids': ['x', 'y', 'z'], 'entry_field': 'ntseq'}, 'get', 'x+y+z/ntseq')
+    (ku.GetKEGGurl, {'entry_ids': ['x', 'y', 'z'], 'entry_field': 'ntseq'}, 'get', 'x+y+z/ntseq'),
+    (
+        ku.KeywordsFindKEGGurl, {'database_name': 'organism-T-number', 'keywords': ['key', 'word']}, 'find',
+        'organism-T-number/key+word'
+    )
 ]
 @pt.mark.parametrize('KEGGurl,kwargs,api_operation,rest_options', test_create_rest_options_data)
 def test_create_rest_options(KEGGurl: type, kwargs: dict, api_operation: str, rest_options: str):
