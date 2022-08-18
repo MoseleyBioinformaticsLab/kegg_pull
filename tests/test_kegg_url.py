@@ -1,67 +1,63 @@
 import pytest as pt
-import typing as t
 import requests as rq
 
 import kegg_pull.kegg_url as ku
 import tests.utils as u
 
 
-def test_list_kegg_url_validate():
-    with pt.raises(ValueError) as error:
-        ku.ListKEGGurl(database_name='invalid-database-name')
-
-    u.assert_expected_error_message(
-        expected_message='Cannot create URL - Invalid database name: "invalid-database-name". Valid values are: ag, '
-                         'brite, compound, dgroup, disease, drug, enzyme, genome, glycan, ko, module, network, '
-                         'pathway, rclass, reaction, variant, vg, vp', error=error
-    )
-
-
-# TODO test with database_name="organism"
-# TODO test with database_name=<org>
-def test_list_kegg_url_create_url_options():
-    list_kegg_url = ku.ListKEGGurl(database_name='vg')
-    expected_url = f'{ku.BASE_URL}/list/vg'
-
-    assert str(list_kegg_url) == list_kegg_url.url == expected_url
-
-
-test_get_kegg_url_validate_data = [
-    ([], None, 'Cannot create URL - Entry IDs must be specified for the KEGG get operation'),
+# TODO Test other URL _validate methods
+test_validate_data = [
     (
-        ['x'], 'invalid-entry-field', 'Cannot create URL - Invalid KEGG entry field: "invalid-entry-field". Valid '
-                                      'values are: aaseq, conf, image, json, kcf, kgml, mol, ntseq'
+        ku.GetKEGGurl, {'entry_ids': [], 'entry_field': None}, 'Entry IDs must be specified for the KEGG get operation'
     ),
     (
-        ['x', 'y'], 'json', 'Cannot create URL - The KEGG entry field: "json" only supports requests of one KEGG entry '
-                            'at a time but 2 entry IDs are provided'
+        ku.GetKEGGurl, {'entry_ids': ['x'], 'entry_field': 'invalid-entry-field'},
+        'Invalid KEGG entry field: "invalid-entry-field". Valid values are: aaseq, conf, image, json, kcf, kgml, mol, '
+        'ntseq'
+    ),
+    (
+        ku.GetKEGGurl, {'entry_ids': ['x', 'y'], 'entry_field': 'json'},
+        'The KEGG entry field: "json" only supports requests of one KEGG entry at a time but 2 entry IDs are provided'
+    ),
+    (
+        ku.GetKEGGurl, {'entry_ids': ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']},
+        f'The maximum number of entry IDs is {ku.GetKEGGurl.MAX_ENTRY_IDS_PER_URL} but 11 were provided'
+    ),
+    (
+        ku.ListKEGGurl, {'database_name': 'invalid-database-name'},
+        'Invalid database name: "invalid-database-name". Valid values are: ag, brite, compound, dgroup, disease, drug, '
+        'enzyme, genome, glycan, ko, module, network, pathway, rclass, reaction, variant, vg, vp'
     )
 ]
-
-
-@pt.mark.parametrize('entry_ids,entry_field,expected_error_message', test_get_kegg_url_validate_data)
-def test_get_kegg_url_validate(entry_ids: list, entry_field: str, expected_error_message: str):
+@pt.mark.parametrize('KEGGurl,kwargs,expected_message', test_validate_data)
+def test_validate(KEGGurl: type, kwargs: dict, expected_message: str):
     with pt.raises(ValueError) as error:
-        ku.GetKEGGurl(entry_ids=entry_ids, entry_field=entry_field)
+        KEGGurl(**kwargs)
 
-    u.assert_expected_error_message(expected_message=expected_error_message, error=error)
+    expected_message = f'Cannot create URL - {expected_message}'
+    u.assert_expected_error_message(expected_message=expected_message, error=error)
 
 
-test_get_kegg_url_create_url_options_data: list = [
-    (['x'], None, 'get/x'),
-    (['x'], 'image', 'get/x/image'),
-    (['x'], 'aaseq', 'get/x/aaseq'),
-    (['x', 'y'], None, 'get/x+y'),
-    (['x', 'y', 'z'], 'ntseq', 'get/x+y+z/ntseq')
+# TODO Test other URL _create_rest_options methods
+test_create_rest_options_data = [
+    (ku.ListKEGGurl, {'database_name': 'vg'}, 'list', 'vg'),
+    (ku.ListKEGGurl, {'database_name': 'organism-code'}, 'list', 'organism-code'),
+    (ku.ListKEGGurl, {'database_name': 'organism'}, 'list', 'organism'),
+    (ku.GetKEGGurl, {'entry_ids': ['x'], 'entry_field': None}, 'get', 'x'),
+    (ku.GetKEGGurl, {'entry_ids': ['x'], 'entry_field': 'image'}, 'get', 'x/image'),
+    (ku.GetKEGGurl, {'entry_ids': ['x'], 'entry_field': 'aaseq'}, 'get', 'x/aaseq'),
+    (ku.GetKEGGurl, {'entry_ids': ['x', 'y'], 'entry_field': None}, 'get', 'x+y'),
+    (ku.GetKEGGurl, {'entry_ids': ['x', 'y', 'z'], 'entry_field': 'ntseq'}, 'get', 'x+y+z/ntseq')
 ]
+@pt.mark.parametrize('KEGGurl,kwargs,api_operation,rest_options', test_create_rest_options_data)
+def test_create_rest_options(KEGGurl: type, kwargs: dict, api_operation: str, rest_options: str):
+    kegg_url: ku.AbstractKEGGurl = KEGGurl(**kwargs)
+    expected_url = f'{ku.BASE_URL}/{api_operation}/{rest_options}'
 
+    assert str(kegg_url) == kegg_url.url == expected_url
 
-@pt.mark.parametrize('entry_ids,entry_field,expected_url', test_get_kegg_url_create_url_options_data)
-def test_get_kegg_url_create_url_options(entry_ids: list, entry_field: str, expected_url: str):
-    get_kegg_url = ku.GetKEGGurl(entry_ids=entry_ids, entry_field=entry_field)
-    expected_url = f'{ku.BASE_URL}/{expected_url}'
-
-    assert get_kegg_url.url == expected_url
+    if KEGGurl == ku.GetKEGGurl:
+        assert kegg_url.__getattribute__('multiple_entry_ids') == (len(kegg_url.__getattribute__('entry_ids')) > 1)
 
 
 @pt.fixture(name='_')
@@ -119,8 +115,6 @@ def test_organism_set_unsuccessful(mocker, timeout: bool, _):
     u.assert_expected_error_message(expected_message=error_message, error=error)
 
 
-# TODO Test other URLs
-
 test_create_url_data = [
     ('ListKEGGurl', ku.UrlType.LIST),
     ('InfoKEGGurl', ku.UrlType.INFO)
@@ -135,4 +129,4 @@ def test_create_url(mocker, class_name: str, url_type: ku.UrlType):
 
     assert kegg_url == kegg_url_mock
 
-# TODO Test creat_url for the remaining url types
+# TODO Test create_url for the remaining url types
