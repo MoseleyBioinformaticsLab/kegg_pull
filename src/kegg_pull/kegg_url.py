@@ -40,7 +40,7 @@ class AbstractKEGGurl(abc.ABC):
     def organism_set() -> set:
         if AbstractKEGGurl._organism_set is None:
             url = f'{BASE_URL}/list/organism'
-            error_message = 'The request to the KEGG web API {} while fetching the organism list using the URL: {}'
+            error_message = 'The request to the KEGG web API {} while fetching the organism set using the URL: {}'
 
             try:
                 response: rq.Response = rq.get(url=url, timeout=60)
@@ -49,9 +49,11 @@ class AbstractKEGGurl(abc.ABC):
                     error_message.format('timed out', url)
                 )
 
-            if response.status_code != 200:
+            status_code: int = response.status_code
+
+            if status_code != 200:
                 raise RuntimeError(
-                    error_message.format('failed', url)
+                    error_message.format(f'failed with status code {status_code}', url)
                 )
 
             organism_list: list = response.text.strip().split('\n')
