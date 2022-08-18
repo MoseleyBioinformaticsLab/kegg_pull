@@ -1,5 +1,6 @@
 import kegg_pull.__main__ as m
 import kegg_pull.entry_ids as ei
+import kegg_pull.rest as r
 import kegg_pull.pull as p
 
 
@@ -8,7 +9,9 @@ def test_main(mocker):
     mocker.patch('sys.argv', ['kegg_pull', '--full-help'])
     mock_print: mocker.MagicMock = mocker.patch('builtins.print')
     m.main()
+    mock_print.assert_any_call(m.__doc__)
     mock_print.assert_any_call(ei.__doc__)
+    mock_print.assert_any_call(r.__doc__)
     mock_print.assert_any_call(p.__doc__)
     mocker.patch('sys.argv', ['kegg_pull', '--help'])
     mock_print.reset_mock()
