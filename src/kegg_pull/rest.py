@@ -51,6 +51,11 @@ class KEGGrest:
 
         return self._kegg_request.execute_api_operation(kegg_url=kegg_url)
 
+    def test(self, url_type: ku.UrlType, **kwargs) -> bool:
+        kegg_url: ku.AbstractKEGGurl = ku.create_url(url_type=url_type, **kwargs)
+
+        return self._kegg_request.test(kegg_url=kegg_url)
+
     def list(self, database_name: str) -> kr.KEGGresponse:
         return self.request(url_type=ku.UrlType.LIST, database_name=database_name)
 

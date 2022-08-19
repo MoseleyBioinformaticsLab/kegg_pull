@@ -71,10 +71,10 @@ class KEGGrequest:
 
         return KEGGresponse(status=status, kegg_url=kegg_url)
 
-    def test(self, url: str) -> bool:
+    def test(self, kegg_url: ku.AbstractKEGGurl) -> bool:
         for _ in self._n_tries:
             try:
-                response: rq.Response = rq.head(url=url, timeout=self._time_out)
+                response: rq.Response = rq.head(url=kegg_url.url, timeout=self._time_out)
 
                 if response.status_code == 200:
                     return True
