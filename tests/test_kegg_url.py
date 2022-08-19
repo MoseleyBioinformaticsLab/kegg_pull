@@ -56,6 +56,7 @@ test_create_rest_options_data = [
     (ku.ListKEGGurl, {'database_name': 'vg'}, 'list', 'vg'),
     (ku.ListKEGGurl, {'database_name': 'organism-code'}, 'list', 'organism-code'),
     (ku.ListKEGGurl, {'database_name': 'organism'}, 'list', 'organism'),
+    (ku.InfoKEGGurl, {'database_name': 'ligand'}, 'info', 'ligand'),
     (ku.GetKEGGurl, {'entry_ids': ['x'], 'entry_field': None}, 'get', 'x'),
     (ku.GetKEGGurl, {'entry_ids': ['x'], 'entry_field': 'image'}, 'get', 'x/image'),
     (ku.GetKEGGurl, {'entry_ids': ['x'], 'entry_field': 'aaseq'}, 'get', 'x/aaseq'),
