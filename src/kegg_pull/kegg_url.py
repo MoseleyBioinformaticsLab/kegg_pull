@@ -369,8 +369,7 @@ class MolecularFindKEGGurl(AbstractKEGGurl):
                 'Only a chemical formula, exact mass, or molecular weight is used to construct the URL. Using formula'
                 '...'
             )
-
-        if formula is None and exact_mass is not None and molecular_weight is not None:
+        elif formula is None and exact_mass is not None and molecular_weight is not None:
             l.warning('Both an exact mass and molecular weight are provided. Using exact mass...')
 
         MolecularFindKEGGurl._validate_range(range_values=exact_mass, range_name='Exact mass')
@@ -380,9 +379,11 @@ class MolecularFindKEGGurl(AbstractKEGGurl):
     def _validate_range(range_values: tuple, range_name: str):
         if range_values is not None and type(range_values) is tuple:
             if len(range_values) != 2:
+                provided_values = ', '.join(str(range_value) for range_value in range_values)
+
                 AbstractKEGGurl._raise_error(
                     f'{range_name} range can only be constructed from 2 values but {len(range_values)} are provided: '
-                    f'{", ".join(range_values)}'
+                    f'{provided_values}'
                 )
 
             min_val, max_val = range_values

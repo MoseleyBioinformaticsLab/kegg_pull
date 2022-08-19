@@ -6,7 +6,7 @@ import tests.utils as u
 
 
 # TODO Test other URL _validate methods
-test_validate_data = [
+test_validate_exception_data = [
     (
         ku.ListKEGGurl, {'database_name': 'ligand'},
         'Invalid database name: "ligand". Valid values are: <org>, ag, atc, brite, brite_ja, compound, compound_ja, '
@@ -40,15 +40,81 @@ test_validate_data = [
         'Invalid database name: "brite". Valid values are: <org>, ag, atc, brite_ja, compound, compound_ja, dgroup, '
         'dgroup_ja, disease, disease_ja, drug, drug_ja, enzyme, genes, genome, glycan, jtc, ko, ligand, module, ndc, '
         'network, pathway, rclass, reaction, variant, vg, vp, yj'
+    ),
+    (
+        ku.MolecularFindKEGGurl, {'database_name': 'glycan'},
+        'Invalid molecular database name: "glycan". Valid values are: compound, drug'
+    ),
+    (
+        ku.MolecularFindKEGGurl, {'database_name': 'drug'},
+        'Must provide either a chemical formula, exact mass, or molecular weight option'
+    ),
+    (
+        ku.MolecularFindKEGGurl, {'database_name': 'compound', 'exact_mass': ()},
+        'Exact mass range can only be constructed from 2 values but 0 are provided: '
+    ),
+    (
+        ku.MolecularFindKEGGurl, {'database_name': 'compound', 'exact_mass': (1.1,2.2,3.3)},
+        'Exact mass range can only be constructed from 2 values but 3 are provided: 1.1, 2.2, 3.3'
+    ),
+    (
+        ku.MolecularFindKEGGurl, {'database_name': 'compound', 'molecular_weight': ()},
+        'Molecular weight range can only be constructed from 2 values but 0 are provided: '
+    ),
+    (
+        ku.MolecularFindKEGGurl, {'database_name': 'compound', 'molecular_weight': (10, 20, 30)},
+        'Molecular weight range can only be constructed from 2 values but 3 are provided: 10, 20, 30'
+    ),
+    (
+        ku.MolecularFindKEGGurl, {'database_name': 'drug', 'exact_mass': (30.3, 20.2)},
+        'The first value in the range must be less than the second. Values provided: 30.3-20.2'
+    ),
+    (
+        ku.MolecularFindKEGGurl, {'database_name': 'drug', 'exact_mass': (10.1, 10.1)},
+        'The first value in the range must be less than the second. Values provided: 10.1-10.1'
+    ),
+    (
+        ku.MolecularFindKEGGurl, {'database_name': 'drug', 'molecular_weight': (303, 202)},
+        'The first value in the range must be less than the second. Values provided: 303-202'
+    ),
+    (
+        ku.MolecularFindKEGGurl, {'database_name': 'drug', 'molecular_weight': (101, 101)},
+        'The first value in the range must be less than the second. Values provided: 101-101'
     )
 ]
-@pt.mark.parametrize('KEGGurl,kwargs,expected_message', test_validate_data)
-def test_validate(KEGGurl: type, kwargs: dict, expected_message: str):
+@pt.mark.parametrize('KEGGurl,kwargs,expected_message', test_validate_exception_data)
+def test_validate_exception(KEGGurl: type, kwargs: dict, expected_message: str):
     with pt.raises(ValueError) as error:
         KEGGurl(**kwargs)
 
     expected_message = f'Cannot create URL - {expected_message}'
     u.assert_expected_error_message(expected_message=expected_message, error=error)
+
+
+test_validate_warning_data = [
+    (
+        ku.MolecularFindKEGGurl, {'database_name': 'compound', 'formula': 'O3', 'exact_mass': 20.2},
+        'Only a chemical formula, exact mass, or molecular weight is used to construct the URL. Using formula...',
+        'find/compound/O3/formula'
+    ),
+    (
+        ku.MolecularFindKEGGurl, {'database_name': 'drug', 'formula': 'O3', 'molecular_weight': 200},
+        'Only a chemical formula, exact mass, or molecular weight is used to construct the URL. Using formula...',
+        'find/drug/O3/formula'
+    ),
+    (
+        ku.MolecularFindKEGGurl, {'database_name': 'compound', 'exact_mass': 20.2, 'molecular_weight': 200},
+        'Both an exact mass and molecular weight are provided. Using exact mass...',
+        'find/compound/20.2/exact_mass'
+    )
+]
+@pt.mark.parametrize('KEGGurl,kwargs,expected_message,url', test_validate_warning_data)
+def test_validate_warning(KEGGurl: type, kwargs: dict, expected_message: str, url: str, caplog):
+    kegg_url: ku.AbstractKEGGurl = KEGGurl(**kwargs)
+    u.assert_warning(message=expected_message, caplog=caplog)
+    expected_url = f'{ku.BASE_URL}/{url}'
+
+    assert kegg_url.url == expected_url
 
 
 # TODO Test other URL _create_rest_options methods
@@ -65,6 +131,17 @@ test_create_rest_options_data = [
     (
         ku.KeywordsFindKEGGurl, {'database_name': 'organism-T-number', 'keywords': ['key', 'word']}, 'find',
         'organism-T-number/key+word'
+    ),
+    (ku.MolecularFindKEGGurl, {'database_name': 'drug', 'formula': 'CH4'}, 'find', 'drug/CH4/formula'),
+    (ku.MolecularFindKEGGurl, {'database_name': 'compound', 'exact_mass': 30.3}, 'find', 'compound/30.3/exact_mass'),
+    (ku.MolecularFindKEGGurl, {'database_name': 'drug', 'molecular_weight': 300}, 'find', 'drug/300/mol_weight'),
+    (
+        ku.MolecularFindKEGGurl, {'database_name': 'drug', 'exact_mass': (20.2, 30.3)}, 'find',
+        'drug/20.2-30.3/exact_mass'
+    ),
+    (
+        ku.MolecularFindKEGGurl, {'database_name': 'drug', 'molecular_weight': (200, 300)}, 'find',
+        'drug/200-300/mol_weight'
     )
 ]
 @pt.mark.parametrize('KEGGurl,kwargs,api_operation,rest_options', test_create_rest_options_data)
