@@ -11,12 +11,13 @@ test_validate_exception_data = [
         ku.ListKEGGurl, {'database_name': 'ligand'},
         'Invalid database name: "ligand". Valid values are: <org>, ag, atc, brite, brite_ja, compound, compound_ja, '
         'dgroup, dgroup_ja, disease, disease_ja, drug, drug_ja, enzyme, genome, glycan, jtc, ko, module, ndc, network, '
-        'organism, pathway, rclass, reaction, variant, vg, vp, yj'
+        'organism, pathway, rclass, reaction, variant, vg, vp, yj. Where <org> is an organism code or T number.'
     ),
     (
         ku.InfoKEGGurl, {'database_name': 'organism'},
         'Invalid database name: "organism". Valid values are: <org>, ag, brite, compound, dgroup, disease, drug, '
-        'enzyme, genes, genome, glycan, kegg, ko, ligand, module, network, pathway, rclass, reaction, variant, vg, vp'
+        'enzyme, genes, genome, glycan, kegg, ko, ligand, module, network, pathway, rclass, reaction, variant, vg, vp.'
+        ' Where <org> is an organism code or T number.'
     ),
     (
         ku.GetKEGGurl, {'entry_ids': [], 'entry_field': None}, 'Entry IDs must be specified for the KEGG get operation'
@@ -24,7 +25,7 @@ test_validate_exception_data = [
     (
         ku.GetKEGGurl, {'entry_ids': ['x'], 'entry_field': 'invalid-entry-field'},
         'Invalid KEGG entry field: "invalid-entry-field". Valid values are: aaseq, conf, image, json, kcf, kgml, mol, '
-        'ntseq'
+        'ntseq.'
     ),
     (
         ku.GetKEGGurl, {'entry_ids': ['x', 'y'], 'entry_field': 'json'},
@@ -39,11 +40,11 @@ test_validate_exception_data = [
         ku.KeywordsFindKEGGurl, {'database_name': 'brite', 'keywords': ['x']},
         'Invalid database name: "brite". Valid values are: <org>, ag, atc, brite_ja, compound, compound_ja, dgroup, '
         'dgroup_ja, disease, disease_ja, drug, drug_ja, enzyme, genes, genome, glycan, jtc, ko, ligand, module, ndc, '
-        'network, pathway, rclass, reaction, variant, vg, vp, yj'
+        'network, pathway, rclass, reaction, variant, vg, vp, yj. Where <org> is an organism code or T number.'
     ),
     (
         ku.MolecularFindKEGGurl, {'database_name': 'glycan'},
-        'Invalid molecular database name: "glycan". Valid values are: compound, drug'
+        'Invalid molecular database name: "glycan". Valid values are: compound, drug.'
     ),
     (
         ku.MolecularFindKEGGurl, {'database_name': 'drug'},
@@ -80,6 +81,32 @@ test_validate_exception_data = [
     (
         ku.MolecularFindKEGGurl, {'database_name': 'drug', 'molecular_weight': (101, 101)},
         'The first value in the range must be less than the second. Values provided: 101-101'
+    ),
+    (
+        ku.DatabaseConvKEGGurl, {'kegg_database_name': 'genes', 'outside_database_name': ''},
+        'Invalid KEGG database: "genes". Valid values are: <org>, compound, drug, glycan. Where <org> is an organism '
+        'code or T number.'
+    ),
+    (
+        ku.DatabaseConvKEGGurl, {'kegg_database_name': 'drug', 'outside_database_name': 'glycan'},
+        'Invalid outside database: "glycan". Valid values are: chebi, ncbi-geneid, ncbi-proteinid, pubchem, uniprot.'
+    ),
+    (
+        ku.DatabaseConvKEGGurl, {'kegg_database_name': 'organism-T-number', 'outside_database_name': 'pubchem'},
+        'KEGG database "organism-T-number" is a gene database but outside database "pubchem" is not.'
+    ),
+    (
+        ku.DatabaseConvKEGGurl, {'kegg_database_name': 'compound', 'outside_database_name': 'ncbi-geneid'},
+        'KEGG database "compound" is a molecule database but outside database "ncbi-geneid" is not.'
+    ),
+    (
+        ku.EntriesConvKEGGurl, {'target_database_name': 'rclass', 'entry_ids': []},
+        'Invalid target database: "rclass". Valid values are: <org>, chebi, compound, drug, genes, glycan, ncbi-geneid,'
+        ' ncbi-proteinid, pubchem, uniprot. Where <org> is an organism code or T number.'
+    ),
+    (
+        ku.EntriesConvKEGGurl, {'target_database_name': 'chebi', 'entry_ids': []},
+        'Entry IDs must be specified for this KEGG "conv" operation'
     )
 ]
 @pt.mark.parametrize('KEGGurl,kwargs,expected_message', test_validate_exception_data)
@@ -142,7 +169,14 @@ test_create_rest_options_data = [
     (
         ku.MolecularFindKEGGurl, {'database_name': 'drug', 'molecular_weight': (200, 300)}, 'find',
         'drug/200-300/mol_weight'
-    )
+    ),
+    (
+        ku.DatabaseConvKEGGurl, {'kegg_database_name': 'organism-code', 'outside_database_name': 'uniprot'}, 'conv',
+        'organism-code/uniprot'
+    ),
+    (ku.DatabaseConvKEGGurl, {'kegg_database_name': 'glycan', 'outside_database_name': 'chebi'}, 'conv', 'glycan/chebi'),
+    (ku.EntriesConvKEGGurl, {'target_database_name': 'genes', 'entry_ids': ['x', 'y', 'z']}, 'conv', 'genes/x+y+z'),
+    (ku.EntriesConvKEGGurl, {'target_database_name': 'ncbi-proteinid', 'entry_ids': ['a']}, 'conv', 'ncbi-proteinid/a')
 ]
 @pt.mark.parametrize('KEGGurl,kwargs,api_operation,rest_options', test_create_rest_options_data)
 def test_create_rest_options(KEGGurl: type, kwargs: dict, api_operation: str, rest_options: str):
