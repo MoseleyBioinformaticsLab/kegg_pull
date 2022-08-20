@@ -107,6 +107,28 @@ test_validate_exception_data = [
     (
         ku.EntriesConvKEGGurl, {'target_database_name': 'chebi', 'entry_ids': []},
         'Entry IDs must be specified for this KEGG "conv" operation'
+    ),
+    (
+        ku.DatabaseLinkKEGGurl, {'target_database_name': 'genes', 'source_database_name': ''},
+        'Invalid database name: "genes". Valid values are: <org>, ag, atc, brite, compound, dgroup, disease, drug, '
+        'enzyme, genome, glycan, jtc, ko, module, ndc, network, pathway, pubmed, rclass, reaction, variant, vg, vp, yj.'
+        ' Where <org> is an organism code or T number.'
+    ),
+    (
+        ku.DatabaseLinkKEGGurl, {'target_database_name': 'ndc', 'source_database_name': 'kegg'},
+        'Invalid database name: "kegg". Valid values are: <org>, ag, atc, brite, compound, dgroup, disease, drug, '
+        'enzyme, genome, glycan, jtc, ko, module, ndc, network, pathway, pubmed, rclass, reaction, variant, vg, vp, yj.'
+        ' Where <org> is an organism code or T number.'
+    ),
+    (
+        ku.EntriesLinkKEGGurl, {'target_database_name': 'ligand', 'entry_ids': []},
+        'Invalid database name: "ligand". Valid values are: <org>, ag, atc, brite, compound, dgroup, disease, drug, '
+        'enzyme, genes, genome, glycan, jtc, ko, module, ndc, network, pathway, pubmed, rclass, reaction, variant, vg, '
+        'vp, yj. Where <org> is an organism code or T number.'
+    ),
+    (
+        ku.EntriesLinkKEGGurl, {'target_database_name': 'yj', 'entry_ids': []},
+        'At least one entry ID must be specified to perform the link operation'
     )
 ]
 @pt.mark.parametrize('KEGGurl,kwargs,expected_message', test_validate_exception_data)
@@ -176,7 +198,10 @@ test_create_rest_options_data = [
     ),
     (ku.DatabaseConvKEGGurl, {'kegg_database_name': 'glycan', 'outside_database_name': 'chebi'}, 'conv', 'glycan/chebi'),
     (ku.EntriesConvKEGGurl, {'target_database_name': 'genes', 'entry_ids': ['x', 'y', 'z']}, 'conv', 'genes/x+y+z'),
-    (ku.EntriesConvKEGGurl, {'target_database_name': 'ncbi-proteinid', 'entry_ids': ['a']}, 'conv', 'ncbi-proteinid/a')
+    (ku.EntriesConvKEGGurl, {'target_database_name': 'ncbi-proteinid', 'entry_ids': ['a']}, 'conv', 'ncbi-proteinid/a'),
+    (ku.DatabaseLinkKEGGurl, {'target_database_name': 'pubmed', 'source_database_name': 'atc'}, 'link', 'pubmed/atc'),
+    (ku.EntriesLinkKEGGurl, {'target_database_name': 'genes', 'entry_ids': ['a', 'b', 'c']}, 'link', 'genes/a+b+c'),
+    (ku.EntriesLinkKEGGurl, {'target_database_name': 'jtc', 'entry_ids': ['x']}, 'link', 'jtc/x')
 ]
 @pt.mark.parametrize('KEGGurl,kwargs,api_operation,rest_options', test_create_rest_options_data)
 def test_create_rest_options(KEGGurl: type, kwargs: dict, api_operation: str, rest_options: str):
