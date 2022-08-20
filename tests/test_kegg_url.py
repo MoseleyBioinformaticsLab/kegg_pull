@@ -129,7 +129,8 @@ test_validate_exception_data = [
     (
         ku.EntriesLinkKEGGurl, {'target_database_name': 'yj', 'entry_ids': []},
         'At least one entry ID must be specified to perform the link operation'
-    )
+    ),
+    (ku.DdiKEGGurl, {'drug_entry_ids': []}, 'At least one drug entry ID must be specified for the DDI operation')
 ]
 @pt.mark.parametrize('KEGGurl,kwargs,expected_message', test_validate_exception_data)
 def test_validate_exception(KEGGurl: type, kwargs: dict, expected_message: str):
@@ -201,7 +202,8 @@ test_create_rest_options_data = [
     (ku.EntriesConvKEGGurl, {'target_database_name': 'ncbi-proteinid', 'entry_ids': ['a']}, 'conv', 'ncbi-proteinid/a'),
     (ku.DatabaseLinkKEGGurl, {'target_database_name': 'pubmed', 'source_database_name': 'atc'}, 'link', 'pubmed/atc'),
     (ku.EntriesLinkKEGGurl, {'target_database_name': 'genes', 'entry_ids': ['a', 'b', 'c']}, 'link', 'genes/a+b+c'),
-    (ku.EntriesLinkKEGGurl, {'target_database_name': 'jtc', 'entry_ids': ['x']}, 'link', 'jtc/x')
+    (ku.EntriesLinkKEGGurl, {'target_database_name': 'jtc', 'entry_ids': ['x']}, 'link', 'jtc/x'),
+    (ku.DdiKEGGurl, {'drug_entry_ids': ['x', 'y']}, 'ddi', 'x+y')
 ]
 @pt.mark.parametrize('KEGGurl,kwargs,api_operation,rest_options', test_create_rest_options_data)
 def test_create_rest_options(KEGGurl: type, kwargs: dict, api_operation: str, rest_options: str):
