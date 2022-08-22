@@ -72,7 +72,7 @@ class KEGGrequest:
         return KEGGresponse(status=status, kegg_url=kegg_url)
 
     def test(self, kegg_url: ku.AbstractKEGGurl) -> bool:
-        for _ in self._n_tries:
+        for _ in range(self._n_tries):
             try:
                 response: rq.Response = rq.head(url=kegg_url.url, timeout=self._time_out)
 
