@@ -8,18 +8,18 @@ import kegg_pull.pull as p
 import itertools as i
 
 
-@pt.fixture(name='mock_output_dir', params=['mock-dir/', 'mock.zip'])
+@pt.fixture(name='output_dir_mock', params=['mock-dir/', 'mock.zip'])
 def setup_and_teardown(request):
     # Setup
-    mock_output_dir = request.param
+    output_dir_mock = request.param
 
-    yield mock_output_dir
+    yield output_dir_mock
 
     # Tear down
-    if mock_output_dir.endswith('.zip') and os.path.isfile(mock_output_dir):
-        os.remove(mock_output_dir)
+    if output_dir_mock.endswith('.zip') and os.path.isfile(output_dir_mock):
+        os.remove(output_dir_mock)
     else:
-        sh.rmtree(mock_output_dir, ignore_errors=True)
+        sh.rmtree(output_dir_mock, ignore_errors=True)
 
 # TODO: Test with non-None entry field
 # TODO: Test with binary response and another single entry response
@@ -27,36 +27,36 @@ def setup_and_teardown(request):
 # TODO: Test not getting all the requested entries
 # TODO: Test with timeout
 # TODO: Test with failures (complete failure and partial failure)
-pt.mark.parametrize('mock_output_dir', ['mock-dir/', 'mock.zip'], indirect='setup_and_teardown')
-def test_single_pull(mocker, mock_output_dir):
-    mock_entry_ids = ['abc', 'xyz', '123']
-    expected_file_contents = [f'{mock_entry_id} content' for mock_entry_id in mock_entry_ids]
-    mock_text_body = '///'.join(expected_file_contents) + '///'
+pt.mark.parametrize('output_dir_mock', ['mock-dir/', 'mock.zip'], indirect='setup_and_teardown')
+def test_single_pull(mocker, output_dir_mock):
+    entry_ids_mock = ['abc', 'xyz', '123']
+    expected_file_contents = [f'{entry_id_mock} content' for entry_id_mock in entry_ids_mock]
+    text_body_mock = '///'.join(expected_file_contents) + '///'
 
-    mock_response = mocker.MagicMock(
-        text_body=mock_text_body, status=r.KEGGresponse.Status.SUCCESS,
-        kegg_url=mocker.MagicMock(multiple_entry_ids=True, entry_ids=mock_entry_ids)
+    response_mock = mocker.MagicMock(
+        text_body=text_body_mock, status=r.KEGGresponse.Status.SUCCESS,
+        kegg_url=mocker.MagicMock(multiple_entry_ids=True, entry_ids=entry_ids_mock)
     )
 
-    mock_kegg_rest = mocker.MagicMock(get=mocker.MagicMock(return_value=mock_response))
-    MockKEGGrest = mocker.patch('kegg_pull.pull.r.KEGGrest', return_value=mock_kegg_rest)
-    single_pull = p.SinglePull(output_dir=mock_output_dir)
-    MockKEGGrest.assert_called_once_with()
-    pull_result: p.PullResult = single_pull.pull(entry_ids=mock_entry_ids)
-    mock_kegg_rest.get.assert_called_once_with(entry_ids=mock_entry_ids, entry_field=None)
+    kegg_rest_mock = mocker.MagicMock(get=mocker.MagicMock(return_value=response_mock))
+    KEGGrestMock = mocker.patch('kegg_pull.pull.r.KEGGrest', return_value=kegg_rest_mock)
+    single_pull = p.SinglePull(output_dir=output_dir_mock)
+    KEGGrestMock.assert_called_once_with()
+    pull_result: p.PullResult = single_pull.pull(entry_ids=entry_ids_mock)
+    kegg_rest_mock.get.assert_called_once_with(entry_ids=entry_ids_mock, entry_field=None)
 
-    assert pull_result.successful_entry_ids == tuple(mock_entry_ids)
+    assert pull_result.successful_entry_ids == tuple(entry_ids_mock)
     assert pull_result.failed_entry_ids == ()
     assert pull_result.timed_out_entry_ids == ()
 
-    for mock_entry_id, expected_file_content in zip(mock_entry_ids, expected_file_contents):
-        expected_file = f'{mock_entry_id}.txt'
+    for entry_id_mock, expected_file_content in zip(entry_ids_mock, expected_file_contents):
+        expected_file = f'{entry_id_mock}.txt'
 
-        if mock_output_dir.endswith('.zip'):
-            with zf.ZipFile(mock_output_dir, 'r') as zip_file:
+        if output_dir_mock.endswith('.zip'):
+            with zf.ZipFile(output_dir_mock, 'r') as zip_file:
                 actual_file_content: str = zip_file.read(expected_file).decode()
         else:
-            expected_file: str = os.path.join(mock_output_dir, expected_file)
+            expected_file: str = os.path.join(output_dir_mock, expected_file)
 
             with open(expected_file, 'r') as file:
                 actual_file_content: str = file.read()
@@ -77,7 +77,7 @@ def test_multiple_pull(mocker, MultiplePull: type, kwargs: dict):
         ['D0', 'D1']
     ]
 
-    mock_entry_ids = list(i.chain.from_iterable(expected_pull_calls))
+    entry_ids_mock = list(i.chain.from_iterable(expected_pull_calls))
 
     expected_successful_entry_ids = (
         'A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'B0', 'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8',
@@ -86,26 +86,26 @@ def test_multiple_pull(mocker, MultiplePull: type, kwargs: dict):
 
     expected_failed_entry_ids = ('A9', 'B9', 'C9', 'D1')
     expected_timed_out_entry_ids = ()
-    mock_single_pull = PickleableMockSinglePull()
+    single_pull_mock = PickleableSinglePullMock()
 
     if MultiplePull is p.SingleProcessMultiplePull:
-        mock_single_pull.pull = mocker.spy(mock_single_pull, 'pull')
+        single_pull_mock.pull = mocker.spy(single_pull_mock, 'pull')
 
-    multiple_pull = MultiplePull(single_pull=mock_single_pull, **kwargs)
-    multiple_pull_result: p.PullResult = multiple_pull.pull(entry_ids=mock_entry_ids)
+    multiple_pull = MultiplePull(single_pull=single_pull_mock, **kwargs)
+    multiple_pull_result: p.PullResult = multiple_pull.pull(entry_ids=entry_ids_mock)
 
     assert multiple_pull_result.successful_entry_ids == expected_successful_entry_ids
     assert multiple_pull_result.failed_entry_ids == expected_failed_entry_ids
     assert multiple_pull_result.timed_out_entry_ids == expected_timed_out_entry_ids
 
     if MultiplePull is p.SingleProcessMultiplePull:
-        actual_pull_calls = getattr(mock_single_pull.pull, 'call_args_list')
+        actual_pull_calls = getattr(single_pull_mock.pull, 'call_args_list')
 
         for actual_calls, expected_calls in zip(actual_pull_calls, expected_pull_calls):
             assert actual_calls.kwargs == {'entry_ids': expected_calls}
 
 
-class PickleableMockSinglePull:
+class PickleableSinglePullMock:
     def __init__(self):
         self.entry_field = None
 
@@ -132,34 +132,34 @@ def teardown():
 # TODO: Test from entry ID file and entry ID string
 # TODO: Test pull single
 def test_main(mocker, _):
-    mock_database = 'brite'
-    mocker.patch('sys.argv', ['kegg_pull', 'pull', 'multiple', f'--database-name={mock_database}'])
-    mock_kegg_rest = mocker.MagicMock()
-    MockKEGGrest = mocker.patch('kegg_pull.pull.r.KEGGrest', return_value=mock_kegg_rest)
-    mock_single_pull = mocker.MagicMock()
-    MockSinglePull = mocker.patch('kegg_pull.pull.SinglePull', return_value=mock_single_pull)
-    mock_entry_ids = ['1', '2', '3']
-    mock_entry_ids_getter = mocker.MagicMock(from_database=mocker.MagicMock(return_value=mock_entry_ids))
-    MockEntryIdsGetter = mocker.patch('kegg_pull.pull.ei.EntryIdsGetter', return_value=mock_entry_ids_getter)
+    database_mock = 'brite'
+    mocker.patch('sys.argv', ['kegg_pull', 'pull', 'multiple', f'--database-name={database_mock}'])
+    kegg_rest_mock = mocker.MagicMock()
+    KEGGrestMock = mocker.patch('kegg_pull.pull.r.KEGGrest', return_value=kegg_rest_mock)
+    single_pull_mock = mocker.MagicMock()
+    SinglePullMock = mocker.patch('kegg_pull.pull.SinglePull', return_value=single_pull_mock)
+    entry_ids_mock = ['1', '2', '3']
+    entry_ids_getter_mock = mocker.MagicMock(from_database=mocker.MagicMock(return_value=entry_ids_mock))
+    EntryIdsGetterMock = mocker.patch('kegg_pull.pull.ei.EntryIdsGetter', return_value=entry_ids_getter_mock)
 
-    mock_pull_result = mocker.MagicMock(
+    pull_result_mock = mocker.MagicMock(
         successful_entry_ids=('a', 'b', 'c', 'x'), failed_entry_ids=('y', 'z'), timed_out_entry_ids=()
     )
 
-    mock_pull = mocker.patch('kegg_pull.pull.SingleProcessMultiplePull.pull', return_value=mock_pull_result)
-    mock_multiple_pull = mocker.MagicMock(pull=mock_pull)
+    pull_mock = mocker.patch('kegg_pull.pull.SingleProcessMultiplePull.pull', return_value=pull_result_mock)
+    multiple_pull_mock = mocker.MagicMock(pull=pull_mock)
 
-    MockSingleProcessMultiplePull = mocker.patch(
-        'kegg_pull.pull.SingleProcessMultiplePull', return_value=mock_multiple_pull
+    SingleProcessMultiplePullMock = mocker.patch(
+        'kegg_pull.pull.SingleProcessMultiplePull', return_value=multiple_pull_mock
     )
 
     p.main()
-    MockKEGGrest.assert_called_once_with(n_tries=None, time_out=None, sleep_time=None)
-    MockSinglePull.assert_called_once_with(output_dir='.', kegg_rest=mock_kegg_rest, entry_field=None)
-    MockEntryIdsGetter.assert_called_once_with(kegg_rest=mock_kegg_rest)
-    mock_entry_ids_getter.from_database.assert_called_once_with(database_name=mock_database)
-    MockSingleProcessMultiplePull.assert_called_once_with(single_pull=mock_single_pull, force_single_entry=True)
-    mock_pull.assert_called_once_with(entry_ids=mock_entry_ids)
+    KEGGrestMock.assert_called_once_with(n_tries=None, time_out=None, sleep_time=None)
+    SinglePullMock.assert_called_once_with(output_dir='.', kegg_rest=kegg_rest_mock, entry_field=None)
+    EntryIdsGetterMock.assert_called_once_with(kegg_rest=kegg_rest_mock)
+    entry_ids_getter_mock.from_database.assert_called_once_with(database_name=database_mock)
+    SingleProcessMultiplePullMock.assert_called_once_with(single_pull=single_pull_mock, force_single_entry=True)
+    pull_mock.assert_called_once_with(entry_ids=entry_ids_mock)
 
     expected_pull_results = '\n'.join([
         '### Successful Entry IDs ###',
