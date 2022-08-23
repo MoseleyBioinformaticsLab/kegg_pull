@@ -136,7 +136,18 @@ def test_main(mocker, rest_method: str, args: list, kwargs: dict):
 
 test_rest_data = [
     (ku.ListKEGGurl, r.KEGGrest.list, {'database_name': 'module'}),
-    (ku.EntriesConvKEGGurl, r.KEGGrest.entries_conv, {'target_database_name': 'module', 'entry_ids': ['123', 'abc']})
+    (ku.GetKEGGurl, r.KEGGrest.get, {'entry_ids': ['xyz'], 'entry_field': None}),
+    (ku.InfoKEGGurl, r.KEGGrest.info, {'database_name': 'pathway'}),
+    (ku.KeywordsFindKEGGurl, r.KEGGrest.keywords_find, {'database_name': '', 'keywords': ['a', 'b']}),
+    (
+        ku.MolecularFindKEGGurl, r.KEGGrest.molecular_find,
+        {'database_name': '', 'formula': 'abc', 'exact_mass': None, 'molecular_weight': None}
+    ),
+    (ku.DatabaseConvKEGGurl, r.KEGGrest.database_conv, {'kegg_database_name': 'a', 'outside_database_name': 'b'}),
+    (ku.EntriesConvKEGGurl, r.KEGGrest.entries_conv, {'target_database_name': 'module', 'entry_ids': ['123', 'abc']}),
+    (ku.DatabaseLinkKEGGurl, r.KEGGrest.database_link, {'target_database_name': 'x', 'source_database_name': 'y'}),
+    (ku.EntriesLinkKEGGurl, r.KEGGrest.entries_link, {'target_database_name': '123', 'entry_ids': ['x', 'y']}),
+    (ku.DdiKEGGurl, r.KEGGrest.ddi, {'drug_entry_ids': ['1', '2']})
 ]
 @pt.mark.parametrize('KEGGurl,method,kwargs', test_rest_data)
 def test_rest_method(mocker, KEGGurl, method, kwargs):
@@ -158,11 +169,34 @@ def test_rest_method(mocker, KEGGurl, method, kwargs):
     assert kegg_response.kegg_url == kegg_url_mock
 
 
-def test_get_kegg_url_exception():
-    pass
+test_get_kegg_url_exception_data = [
+    (
+        {'KEGGurl': None, 'kegg_url': None},
+        'Either an instantiated kegg_url object must be provided or an extended class of AbstractKEGGurl along with the'
+        ' corresponding kwargs for its constructor.'
+    ),
+    (
+        {'KEGGurl': r.KEGGrest, 'kegg_url': None},
+        'The value for KEGGurl must be an inherited class of AbstractKEGGurl. The class "KEGGrest" is not.'
+    )
+]
+@pt.mark.parametrize('kwargs,expected_message', test_get_kegg_url_exception_data)
+def test_get_kegg_url_exception(kwargs: dict, expected_message: str):
+    with pt.raises(ValueError) as error:
+        r.KEGGrest._get_kegg_url(**kwargs)
+
+    u.assert_expected_error_message(expected_message=expected_message, error=error)
 
 
-def test_get_kegg_url_warning():
-    pass
+def test_get_kegg_url_warning(mocker, caplog):
+    kegg_url_mock = mocker.MagicMock()
+    kegg_url = r.KEGGrest._get_kegg_url(KEGGurl=ku.InfoKEGGurl, kegg_url=kegg_url_mock, database_name='database mock')
+
+    u.assert_warning(
+        message='Both an instantiated kegg_url object and KEGGurl class are provided. Using the instantiated object...',
+        caplog=caplog
+    )
+
+    assert kegg_url == kegg_url_mock
 
 # TODO test the other API operation in the KEGGrest class
