@@ -31,25 +31,25 @@ def test_kegg_rest_exception():
 
 def test_request_and_test_success(mocker):
     kegg_rest = r.KEGGrest()
-    mock_text = 'mock text'
-    mock_content = b'mock content'
-    mock_response = mocker.MagicMock(text=mock_text, content=mock_content, status_code=200)
-    mock_get: mocker.MagicMock = mocker.patch('kegg_pull.rest.rq.get', return_value=mock_response)
-    mock_url = 'mock url'
-    mock_kegg_url = mocker.MagicMock(url=mock_url)
+    text_mock = 'text mock'
+    content_mock = b'content mock'
+    response_mock = mocker.MagicMock(text=text_mock, content=content_mock, status_code=200)
+    get_mock: mocker.MagicMock = mocker.patch('kegg_pull.rest.rq.get', return_value=response_mock)
+    url_mock = 'url mock'
+    kegg_url_mock = mocker.MagicMock(url=url_mock)
     create_url_spy = mocker.spy(r.KEGGrest, '_get_kegg_url')
-    kegg_response: r.KEGGresponse = kegg_rest.request(kegg_url=mock_kegg_url)
-    create_url_spy.assert_called_once_with(KEGGurl=None, kegg_url=mock_kegg_url)
-    mock_get.assert_called_once_with(url=mock_url, timeout=60)
+    kegg_response: r.KEGGresponse = kegg_rest.request(kegg_url=kegg_url_mock)
+    create_url_spy.assert_called_once_with(KEGGurl=None, kegg_url=kegg_url_mock)
+    get_mock.assert_called_once_with(url=url_mock, timeout=60)
 
     assert kegg_response.status == r.KEGGresponse.Status.SUCCESS
-    assert kegg_response.text_body == mock_text
-    assert kegg_response.binary_body == mock_content
-    assert kegg_response.kegg_url == mock_kegg_url
+    assert kegg_response.text_body == text_mock
+    assert kegg_response.binary_body == content_mock
+    assert kegg_response.kegg_url == kegg_url_mock
 
-    head_mock: mocker.MagicMock = mocker.patch('kegg_pull.rest.rq.head', return_value=mock_response)
-    success: bool = kegg_rest.test(kegg_url=mock_kegg_url)
-    head_mock.assert_called_once_with(url=mock_url, timeout=60)
+    head_mock: mocker.MagicMock = mocker.patch('kegg_pull.rest.rq.head', return_value=response_mock)
+    success: bool = kegg_rest.test(kegg_url=kegg_url_mock)
+    head_mock.assert_called_once_with(url=url_mock, timeout=60)
 
     assert success == True
 
@@ -118,20 +118,20 @@ test_main_data = [
 ]
 @pt.mark.parametrize('rest_method,args,kwargs', test_main_data)
 def test_main(mocker, rest_method: str, args: list, kwargs: dict):
-    mock_argv = ['kegg_pull', 'rest']
-    mock_argv.extend(args)
-    mocker.patch('sys.argv', mock_argv)
-    mock_text_body = 'mock response body'
-    mock_kegg_response = mocker.MagicMock(status=r.KEGGresponse.Status.SUCCESS, text_body=mock_text_body)
+    argv_mock = ['kegg_pull', 'rest']
+    argv_mock.extend(args)
+    mocker.patch('sys.argv', argv_mock)
+    text_body_mock = 'response body mock'
+    kegg_response_mock = mocker.MagicMock(status=r.KEGGresponse.Status.SUCCESS, text_body=text_body_mock)
 
-    mock_rest_method: mocker.MagicMock = mocker.patch(
-        f'kegg_pull.rest.KEGGrest.{rest_method}', return_value=mock_kegg_response
+    rest_method_mock: mocker.MagicMock = mocker.patch(
+        f'kegg_pull.rest.KEGGrest.{rest_method}', return_value=kegg_response_mock
     )
 
-    mock_print: mocker.MagicMock = mocker.patch('builtins.print')
+    print_mock: mocker.MagicMock = mocker.patch('builtins.print')
     r.main()
-    mock_rest_method.assert_called_once_with(**kwargs)
-    mock_print.assert_called_once_with(mock_text_body)
+    rest_method_mock.assert_called_once_with(**kwargs)
+    print_mock.assert_called_once_with(text_body_mock)
 
 
 test_rest_data = [
