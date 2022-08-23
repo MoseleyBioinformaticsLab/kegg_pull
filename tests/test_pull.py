@@ -3,7 +3,7 @@ import shutil as sh
 import os
 import zipfile as zf
 
-import kegg_pull.kegg_request as kr
+import kegg_pull.rest as r
 import kegg_pull.pull as p
 import itertools as i
 
@@ -34,14 +34,14 @@ def test_single_pull(mocker, mock_output_dir):
     mock_text_body = '///'.join(expected_file_contents) + '///'
 
     mock_response = mocker.MagicMock(
-        text_body=mock_text_body, status=kr.KEGGresponse.Status.SUCCESS,
+        text_body=mock_text_body, status=r.KEGGresponse.Status.SUCCESS,
         kegg_url=mocker.MagicMock(multiple_entry_ids=True, entry_ids=mock_entry_ids)
     )
 
     mock_kegg_rest = mocker.MagicMock(get=mocker.MagicMock(return_value=mock_response))
-    MockKEGGrestAPI = mocker.patch('kegg_pull.pull.r.KEGGrest', return_value=mock_kegg_rest)
+    MockKEGGrest = mocker.patch('kegg_pull.pull.r.KEGGrest', return_value=mock_kegg_rest)
     single_pull = p.SinglePull(output_dir=mock_output_dir)
-    MockKEGGrestAPI.assert_called_once_with(kegg_request=None)
+    MockKEGGrest.assert_called_once_with()
     pull_result: p.PullResult = single_pull.pull(entry_ids=mock_entry_ids)
     mock_kegg_rest.get.assert_called_once_with(entry_ids=mock_entry_ids, entry_field=None)
 
@@ -134,8 +134,8 @@ def teardown():
 def test_main(mocker, _):
     mock_database = 'brite'
     mocker.patch('sys.argv', ['kegg_pull', 'pull', 'multiple', f'--database-name={mock_database}'])
-    mock_kegg_request = mocker.MagicMock()
-    MockKEGGrequest = mocker.patch('kegg_pull.pull.kr.KEGGrequest', return_value=mock_kegg_request)
+    mock_kegg_rest = mocker.MagicMock()
+    MockKEGGrest = mocker.patch('kegg_pull.pull.r.KEGGrest', return_value=mock_kegg_rest)
     mock_single_pull = mocker.MagicMock()
     MockSinglePull = mocker.patch('kegg_pull.pull.SinglePull', return_value=mock_single_pull)
     mock_entry_ids = ['1', '2', '3']
@@ -154,9 +154,9 @@ def test_main(mocker, _):
     )
 
     p.main()
-    MockKEGGrequest.assert_called_once_with(n_tries=None, time_out=None, sleep_time=None)
-    MockSinglePull.assert_called_once_with(output_dir='.', kegg_request=mock_kegg_request, entry_field=None)
-    MockEntryIdsGetter.assert_called_once_with(kegg_request=mock_kegg_request)
+    MockKEGGrest.assert_called_once_with(n_tries=None, time_out=None, sleep_time=None)
+    MockSinglePull.assert_called_once_with(output_dir='.', kegg_rest=mock_kegg_rest, entry_field=None)
+    MockEntryIdsGetter.assert_called_once_with(kegg_rest=mock_kegg_rest)
     mock_entry_ids_getter.from_database.assert_called_once_with(database_name=mock_database)
     MockSingleProcessMultiplePull.assert_called_once_with(single_pull=mock_single_pull, force_single_entry=True)
     mock_pull.assert_called_once_with(entry_ids=mock_entry_ids)

@@ -1,7 +1,7 @@
 import pytest as pt
 import typing as t
 
-import kegg_pull.kegg_request as kr
+import kegg_pull.rest as r
 import kegg_pull.entry_ids as ei
 
 
@@ -33,7 +33,7 @@ def test_entry_ids_from_kegg_api(mocker, get_entry_ids: t.Callable, rest_method:
     cpd:C22514	2,3-Bis-O-(geranylfarnesyl)-sn-glycerol 1-phosphate
     '''
 
-    mock_kegg_response = mocker.MagicMock(text_body=mock_text_body, status=kr.KEGGresponse.Status.SUCCESS)
+    mock_kegg_response = mocker.MagicMock(text_body=mock_text_body, status=r.KEGGresponse.Status.SUCCESS)
     mock_rest_method = mocker.patch(f'kegg_pull.entry_ids.r.KEGGrest.{rest_method}', return_value=mock_kegg_response)
     actual_entry_ids: list = get_entry_ids(**kwargs)
     mock_rest_method.assert_called_once_with(**kwargs)

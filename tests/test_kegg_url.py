@@ -269,26 +269,3 @@ def test_organism_set_unsuccessful(mocker, timeout: bool, _):
 
     get_mock.assert_called_once_with(url=url, timeout=60)
     u.assert_expected_error_message(expected_message=error_message, error=error)
-
-
-test_create_url_data = [
-    ('ListKEGGurl', ku.UrlType.LIST),
-    ('InfoKEGGurl', ku.UrlType.INFO),
-    ('GetKEGGurl', ku.UrlType.GET),
-    ('KeywordsFindKEGGurl', ku.UrlType.KEYWORDS_FIND),
-    ('MolecularFindKEGGurl', ku.UrlType.MOLECULAR_FIND),
-    ('DatabaseConvKEGGurl', ku.UrlType.DATABASE_CONV),
-    ('EntriesConvKEGGurl', ku.UrlType.ENTRIES_CONV),
-    ('DatabaseLinkKEGGurl', ku.UrlType.DATABASE_LINK),
-    ('EntriesLinkKEGGurl', ku.UrlType.ENTRIES_LINK),
-    ('DdiKEGGurl', ku.UrlType.DDI)
-]
-@pt.mark.parametrize('class_name,url_type', test_create_url_data)
-def test_create_url(mocker, class_name: str, url_type: ku.UrlType):
-    kegg_url_mock = mocker.MagicMock()
-    KEGGurlMock = mocker.patch(f'kegg_pull.kegg_url.{class_name}', return_value=kegg_url_mock)
-    kwargs_mock = {'param': 'arg'}
-    kegg_url = ku.create_url(url_type=url_type, **kwargs_mock)
-    KEGGurlMock.assert_called_once_with(**kwargs_mock)
-
-    assert kegg_url == kegg_url_mock
