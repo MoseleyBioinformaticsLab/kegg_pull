@@ -34,68 +34,168 @@ Options:
     ddi                                     Executes the "ddi" KEGG API operation, searching for drug to drug interactions. Providing one entry ID reports all known interactions, while providing multiple checks if any drug pair in a given set of drugs is CI or P. If providing multiple, all entries must belong to the same database.
     <drug-entry-ids>                        Comma separated list of drug entry IDs from the following databases: drug, ndc, or yj
 """
-import docopt as d
+import enum as e
+import requests as rq
+import time as t
+import inspect as ins
 import logging as l
+import docopt as d
 
-from . import kegg_request as kr
 from . import kegg_url as ku
 from . import utils as u
 
 
+class KEGGresponse:
+    class Status(e.Enum):
+        SUCCESS = 1
+        FAILED = 2
+        TIMEOUT = 3
+
+    def __init__(self, status: Status, kegg_url: ku.AbstractKEGGurl, text_body: str = None, binary_body: bytes = None):
+        if status is None:
+            raise ValueError('A status must be specified for the KEGG response')
+
+        if status == KEGGresponse.Status.SUCCESS and (
+            text_body is None or binary_body is None or text_body == '' or binary_body == b''
+        ):
+            raise ValueError('A KEGG response cannot be marked as successful if its response body is empty')
+
+        self._status = status
+        self._kegg_url = kegg_url
+        self._text_body = text_body
+        self._binary_body = binary_body
+
+    @property
+    def status(self):
+        return self._status
+
+    @property
+    def kegg_url(self):
+        return self._kegg_url
+
+    @property
+    def text_body(self):
+        return self._text_body
+
+    @property
+    def binary_body(self):
+        return self._binary_body
+
+
 class KEGGrest:
-    def __init__(self, kegg_request: kr.KEGGrequest = None):
-        self._kegg_request = kegg_request if kegg_request is not None else kr.KEGGrequest()
+    def __init__(self, n_tries: int = 3, time_out: int = 60, sleep_time: float = 0.0):
+        self._n_tries = n_tries if n_tries is not None else 3
+        self._time_out = time_out if time_out is not None else 60
+        self._sleep_time = sleep_time if time_out is not None else 0.0
 
-    def request(self, url_type: ku.UrlType, **kwargs) -> kr.KEGGresponse:
-        kegg_url: ku.AbstractKEGGurl = ku.create_url(url_type=url_type, **kwargs)
+        if self._n_tries < 1:
+            raise ValueError(f'{self._n_tries} is not a valid number of tries to make a KEGG request.')
 
-        return self._kegg_request.execute_api_operation(kegg_url=kegg_url)
+    def request(self, KEGGurl: type = None, kegg_url: ku.AbstractKEGGurl = None, **kwargs) -> KEGGresponse:
+        kegg_url: ku.AbstractKEGGurl = KEGGrest._get_kegg_url(KEGGurl=KEGGurl, kegg_url=kegg_url, **kwargs)
+        status = None
 
-    def test(self, url_type: ku.UrlType, **kwargs) -> bool:
-        kegg_url: ku.AbstractKEGGurl = ku.create_url(url_type=url_type, **kwargs)
+        for _ in range(self._n_tries):
+            try:
+                response: rq.Response = rq.get(url=kegg_url.url, timeout=self._time_out)
 
-        return self._kegg_request.test(kegg_url=kegg_url)
+                if response.status_code == 200:
+                    return KEGGresponse(
+                        status=KEGGresponse.Status.SUCCESS, kegg_url=kegg_url, text_body=response.text,
+                        binary_body=response.content
+                    )
+                else:
+                    status = KEGGresponse.Status.FAILED
+            except rq.exceptions.Timeout:
+                status = KEGGresponse.Status.TIMEOUT
+                t.sleep(self._sleep_time)
 
-    def list(self, database_name: str) -> kr.KEGGresponse:
-        return self.request(url_type=ku.UrlType.LIST, database_name=database_name)
+        return KEGGresponse(status=status, kegg_url=kegg_url)
 
-    def get(self, entry_ids: list, entry_field: str = None) -> kr.KEGGresponse:
-        return self.request(url_type=ku.UrlType.GET, entry_ids=entry_ids, entry_field=entry_field)
+    @staticmethod
+    def _get_kegg_url(KEGGurl: type = None, kegg_url: ku.AbstractKEGGurl = None, **kwargs) -> ku.AbstractKEGGurl:
+        if KEGGurl is None and kegg_url is None:
+            raise ValueError(
+                f'Either an instantiated kegg_url object must be provided or an extended class of '
+                f'{ku.AbstractKEGGurl.__name__} along with the corresponding kwargs for its constructor.'
+            )
 
-    def info(self, database_name: str) -> kr.KEGGresponse:
-        return self.request(url_type=ku.UrlType.INFO, database_name=database_name)
+        if kegg_url is not None and KEGGurl is not None:
+            l.warning(
+                'Both an instantiated kegg_url object and KEGGurl class are provided. Using the instantiated object...'
+            )
 
-    def keywords_find(self, database_name: str, keywords: list) -> kr.KEGGresponse:
-        return self.request(url_type=ku.UrlType.KEYWORDS_FIND, database_name=database_name, keywords=keywords)
+        if kegg_url is not None:
+            return kegg_url
+
+        if ku.AbstractKEGGurl not in ins.getmro(KEGGurl):
+            raise ValueError(
+                f'The value for KEGGurl must be an inherited class of {ku.AbstractKEGGurl.__name__}. '
+                f'The class "{KEGGurl.__name__}" is not.'
+            )
+
+        kegg_url: ku.AbstractKEGGurl = KEGGurl(**kwargs)
+
+        return kegg_url
+
+    def test(self, KEGGurl: type = None, kegg_url: ku.AbstractKEGGurl = None, **kwargs) -> bool:
+        kegg_url: ku.AbstractKEGGurl = KEGGrest._get_kegg_url(KEGGurl=KEGGurl, kegg_url=kegg_url, **kwargs)
+
+        for _ in range(self._n_tries):
+            try:
+                response: rq.Response = rq.head(url=kegg_url.url, timeout=self._time_out)
+
+                if response.status_code == 200:
+                    return True
+            except rq.exceptions.Timeout:
+                t.sleep(self._sleep_time)
+
+        return False
+
+    def list(self, database_name: str) -> KEGGresponse:
+        return self.request(KEGGurl=ku.ListKEGGurl, database_name=database_name)
+
+    def get(self, entry_ids: list, entry_field: str = None) -> KEGGresponse:
+        return self.request(KEGGurl=ku.GetKEGGurl, entry_ids=entry_ids, entry_field=entry_field)
+
+    def info(self, database_name: str) -> KEGGresponse:
+        return self.request(KEGGurl=ku.InfoKEGGurl, database_name=database_name)
+
+    def keywords_find(self, database_name: str, keywords: list) -> KEGGresponse:
+        return self.request(KEGGurl=ku.KeywordsFindKEGGurl, database_name=database_name, keywords=keywords)
 
     def molecular_find(
         self, database_name: str, formula: str = None, exact_mass: float = None, molecular_weight: int = None
-    ) -> kr.KEGGresponse:
+    ) -> KEGGresponse:
         return self.request(
-            url_type=ku.UrlType.MOLECULAR_FIND, database_name=database_name, formula=formula, exact_mass=exact_mass,
+            KEGGurl=ku.MolecularFindKEGGurl, database_name=database_name, formula=formula, exact_mass=exact_mass,
             molecular_weight=molecular_weight
         )
 
-    def database_conv(self, kegg_database_name: str, outside_database_name: str) -> kr.KEGGresponse:
+    def database_conv(self, kegg_database_name: str, outside_database_name: str) -> KEGGresponse:
         return self.request(
-            url_type=ku.UrlType.DATABASE_CONV, kegg_database_name=kegg_database_name,
+            KEGGurl=ku.DatabaseConvKEGGurl, kegg_database_name=kegg_database_name,
             outside_database_name=outside_database_name
         )
 
-    def entries_conv(self, target_database_name: str, entry_ids: list) -> kr.KEGGresponse:
-        return self.request(url_type=ku.UrlType.ENTRIES_CONV, target_database_name=target_database_name, entry_ids=entry_ids)
-
-    def database_link(self, target_database_name: str, source_database_name: str) -> kr.KEGGresponse:
+    def entries_conv(self, target_database_name: str, entry_ids: list) -> KEGGresponse:
         return self.request(
-            url_type=ku.UrlType.DATABASE_LINK, target_database_name=target_database_name,
+            KEGGurl=ku.EntriesConvKEGGurl, target_database_name=target_database_name, entry_ids=entry_ids
+        )
+
+    def database_link(self, target_database_name: str, source_database_name: str) -> KEGGresponse:
+        return self.request(
+            KEGGurl=ku.DatabaseLinkKEGGurl, target_database_name=target_database_name,
             source_database_name=source_database_name
         )
 
-    def entries_link(self, target_database_name: str, entry_ids: list) -> kr.KEGGresponse:
-        return self.request(url_type=ku.UrlType.ENTRIES_LINK, target_database_name=target_database_name, entry_ids=entry_ids)
+    def entries_link(self, target_database_name: str, entry_ids: list) -> KEGGresponse:
+        return self.request(
+            KEGGurl=ku.EntriesLinkKEGGurl, target_database_name=target_database_name, entry_ids=entry_ids
+        )
 
-    def ddi(self, drug_entry_ids: list) -> kr.KEGGresponse:
-        return self.request(url_type=ku.UrlType.DDI, drug_entry_ids=drug_entry_ids)
+    def ddi(self, drug_entry_ids: list) -> KEGGresponse:
+        return self.request(KEGGurl=ku.DdiKEGGurl, drug_entry_ids=drug_entry_ids)
 
 
 def main():
@@ -112,7 +212,7 @@ def main():
     kegg_rest = KEGGrest()
 
     if args['list']:
-        kegg_response: kr.KEGGresponse = kegg_rest.list(database_name=database_name)
+        kegg_response: KEGGresponse = kegg_rest.list(database_name=database_name)
     elif args['get']:
         entry_ids: list = u.split_comma_separated_list(list_string=entry_ids)
         entry_field: str = args['--entry-field']
@@ -120,15 +220,15 @@ def main():
         if ku.GetKEGGurl.is_binary(entry_field=entry_field):
             is_binary = True
 
-        kegg_response: kr.KEGGresponse = kegg_rest.get(entry_ids=entry_ids, entry_field=entry_field)
+        kegg_response: KEGGresponse = kegg_rest.get(entry_ids=entry_ids, entry_field=entry_field)
     elif args['find']:
         if args['<keywords>']:
             keywords: list = u.split_comma_separated_list(list_string=args['<keywords>'])
-            kegg_response: kr.KEGGresponse = kegg_rest.keywords_find(database_name=database_name, keywords=keywords)
+            kegg_response: KEGGresponse = kegg_rest.keywords_find(database_name=database_name, keywords=keywords)
         else:
             formula, exact_mass, molecular_weight = u.get_molecular_attribute_args(args=args)
 
-            kegg_response: kr.KEGGresponse = kegg_rest.molecular_find(
+            kegg_response: KEGGresponse = kegg_rest.molecular_find(
                 database_name=database_name, formula=formula, exact_mass=exact_mass, molecular_weight=molecular_weight
             )
     elif args['conv']:
@@ -136,14 +236,14 @@ def main():
             target_database_name: str = args['--conv-target']
             entry_ids: list = u.split_comma_separated_list(list_string=entry_ids)
 
-            kegg_response: kr.KEGGresponse = kegg_rest.entries_conv(
+            kegg_response: KEGGresponse = kegg_rest.entries_conv(
                 target_database_name=target_database_name, entry_ids=entry_ids
             )
         else:
             kegg_database_name = args['<kegg-database-name>']
             outside_database_name = args['<outside-database-name>']
 
-            kegg_response: kr.KEGGresponse = kegg_rest.database_conv(
+            kegg_response: KEGGresponse = kegg_rest.database_conv(
                 kegg_database_name=kegg_database_name, outside_database_name=outside_database_name
             )
     elif args['link']:
@@ -151,26 +251,26 @@ def main():
             target_database_name: str = args['--link-target']
             entry_ids: list = u.split_comma_separated_list(list_string=entry_ids)
 
-            kegg_response: kr.KEGGresponse = kegg_rest.entries_link(
+            kegg_response: KEGGresponse = kegg_rest.entries_link(
                 target_database_name=target_database_name, entry_ids=entry_ids
             )
         else:
             target_database_name: str = args['<target-database-name>']
             source_database_name: str = args['<source-database-name>']
 
-            kegg_response: kr.KEGGresponse = kegg_rest.database_link(
+            kegg_response: KEGGresponse = kegg_rest.database_link(
                 target_database_name=target_database_name, source_database_name=source_database_name
             )
     else:
         drug_entry_ids: str = args['<drug-entry-ids']
         drug_entry_ids: list = u.split_comma_separated_list(list_string=drug_entry_ids)
-        kegg_response: kr.KEGGresponse = kegg_rest.ddi(drug_entry_ids=drug_entry_ids)
+        kegg_response: KEGGresponse = kegg_rest.ddi(drug_entry_ids=drug_entry_ids)
 
-    if kegg_response.status == kr.KEGGresponse.Status.FAILED:
+    if kegg_response.status == KEGGresponse.Status.FAILED:
         raise RuntimeError(
             f'The request to the KEGG web API failed with the following URL: {kegg_response.kegg_url.url}'
         )
-    elif kegg_response.status == kr.KEGGresponse.Status.TIMEOUT:
+    elif kegg_response.status == KEGGresponse.Status.TIMEOUT:
         raise RuntimeError(
             f'The request to the KEGG web API timed out with the following URL: {kegg_response.kegg_url.url}'
         )

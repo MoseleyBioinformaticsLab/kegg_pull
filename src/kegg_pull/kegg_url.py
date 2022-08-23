@@ -148,38 +148,6 @@ class AbstractKEGGurl(abc.ABC):
             )
 
 
-class UrlType(e.Enum):
-    LIST = 'list'
-    INFO = 'info'
-    GET = 'get'
-    KEYWORDS_FIND = 'keywords_find'
-    MOLECULAR_FIND = 'molecular_find'
-    DATABASE_CONV = 'database_conv'
-    ENTRIES_CONV = 'entries_conv'
-    DATABASE_LINK = 'database_link'
-    ENTRIES_LINK = 'entries_link'
-    DDI = 'ddi'
-
-
-def create_url(url_type: UrlType, **kwargs) -> AbstractKEGGurl:
-    type_to_class = {
-        UrlType.LIST: ListKEGGurl,
-        UrlType.INFO: InfoKEGGurl,
-        UrlType.GET: GetKEGGurl,
-        UrlType.KEYWORDS_FIND: KeywordsFindKEGGurl,
-        UrlType.MOLECULAR_FIND: MolecularFindKEGGurl,
-        UrlType.DATABASE_CONV: DatabaseConvKEGGurl,
-        UrlType.ENTRIES_CONV: EntriesConvKEGGurl,
-        UrlType.DATABASE_LINK: DatabaseLinkKEGGurl,
-        UrlType.ENTRIES_LINK: EntriesLinkKEGGurl,
-        UrlType.DDI: DdiKEGGurl
-    }
-
-    KEGGurl: type =  type_to_class[url_type]
-
-    return KEGGurl(**kwargs)
-
-
 class ListKEGGurl(AbstractKEGGurl):
     """Contains the validation implementation and URL construction of the KEGG API list operation."""
     def __init__(self, database_name: str):
