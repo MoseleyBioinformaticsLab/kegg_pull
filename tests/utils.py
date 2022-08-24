@@ -11,3 +11,13 @@ def assert_warning(message: str, caplog):
 
     assert record.levelname == 'WARNING'
     assert record.message == message
+
+
+def assert_main_help(mocker, module, subcommand: str):
+    mocker.patch('sys.argv', ['kegg_pull', subcommand, '--help'])
+    print_mock: mocker.MagicMock = mocker.patch('builtins.print')
+
+    with pt.raises(SystemExit):
+        module.main()
+
+    print_mock.assert_any_call(module.__doc__.strip('\n'))

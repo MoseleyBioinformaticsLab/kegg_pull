@@ -3,6 +3,7 @@ import typing as t
 
 import kegg_pull.rest as r
 import kegg_pull.entry_ids as ei
+import tests.utils as u
 
 
 test_entry_ids_from_kegg_api_data = [
@@ -46,7 +47,10 @@ def test_entry_ids_from_kegg_rest(mocker, get_entry_ids: t.Callable, rest_method
     assert actual_entry_ids == expected_entry_ids
 
 
-# TODO: Test --help and -h
+def test_main_help(mocker):
+    u.assert_main_help(mocker=mocker, module=ei, subcommand='entry-ids')
+
+
 def test_main(mocker):
     database_mock = 'pathway'
 

@@ -1,8 +1,8 @@
 import pytest as pt
+import requests as rq
 
 import kegg_pull.rest as r
 import kegg_pull.kegg_url as ku
-import requests as rq
 import tests.utils as u
 
 
@@ -102,6 +102,10 @@ def test_request_and_test_timeout(mocker):
     sleep_mock.assert_has_calls(mocker.call(sleep_time) for _ in range(n_tries))
 
     assert success == False
+
+
+def test_main_help(mocker):
+    u.assert_main_help(mocker=mocker, module=r, subcommand='rest')
 
 
 # TODO test exceptions thrown with timeout and failed
