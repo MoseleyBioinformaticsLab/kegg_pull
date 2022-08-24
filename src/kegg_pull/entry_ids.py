@@ -94,11 +94,6 @@ class EntryIdsGetter:
 
 def main():
     args: dict = d.docopt(__doc__)
-
-    if args['--help']:
-        print(__doc__)
-        exit(0)
-
     database_name: str = args['<database-name>']
     entry_ids_getter = EntryIdsGetter()
 

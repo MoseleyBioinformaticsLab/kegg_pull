@@ -12,6 +12,7 @@ Usage:
     kegg_pull rest ddi <drug-entry-ids>
 
 Options:
+    -h --help                               Show this help message.
     list                                    Executes the "list" KEGG API operation, getting the entry IDs of the provided database.
     <database-name>                         The name of the database to get entry IDs from.
     --output=<output>                       The file to store the response body from the KEGG web API operation. Prints to the console if --output is not specified.
@@ -200,11 +201,6 @@ class KEGGrest:
 
 def main():
     args: dict = d.docopt(__doc__)
-
-    if args['--help']:
-        print(__doc__)
-        exit(0)
-
     database_name: str = args['<database-name>']
     entry_ids: str = args['<entry-ids>']
     output: str = args['--output']

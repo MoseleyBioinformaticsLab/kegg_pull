@@ -2,10 +2,11 @@ import pytest as pt
 import shutil as sh
 import os
 import zipfile as zf
+import itertools as i
 
 import kegg_pull.rest as r
 import kegg_pull.pull as p
-import itertools as i
+import tests.utils as u
 
 
 @pt.fixture(name='output_dir_mock', params=['mock-dir/', 'mock.zip'])
@@ -126,6 +127,10 @@ def teardown():
     yield
 
     os.remove('pull-results.txt')
+
+
+def test_main_help(mocker):
+    u.assert_main_help(mocker=mocker, module=p, subcommand='pull')
 
 
 # TODO: Test --help and -h

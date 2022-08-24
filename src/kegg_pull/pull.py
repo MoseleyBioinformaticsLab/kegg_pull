@@ -288,11 +288,6 @@ def _get_single_pull_result(entry_ids: list, single_pull: SinglePull) -> bytes:
 
 def main():
     args: dict = d.docopt(__doc__)
-
-    if args['--help']:
-        print(__doc__)
-        exit(0)
-
     n_tries: str = int(args['--n-tries']) if args['--n-tries'] is not None else None
     time_out: str = int(args['--time-out']) if args['--time-out'] is not None else None
     sleep_time: str = float(args['--sleep-time']) if args['--sleep-time'] is not None else None
