@@ -5,7 +5,6 @@ import requests as rq
 import logging as l
 import abc
 import typing as t
-import enum as e
 
 from . import utils as u
 
