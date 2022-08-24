@@ -62,7 +62,7 @@ class EntryIdsGetter:
             if entry_ids == '':
                 raise ValueError(f'Attempted to get entry IDs from {file_path}. But the file is empty')
 
-            entry_ids: list = EntryIdsGetter._parse_entry_ids_string()
+            entry_ids: list = EntryIdsGetter._parse_entry_ids_string(entry_ids_string=entry_ids)
 
         return entry_ids
 

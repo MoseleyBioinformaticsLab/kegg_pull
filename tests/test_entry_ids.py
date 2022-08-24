@@ -1,12 +1,30 @@
 import pytest as pt
 import typing as t
+import os
 
 import kegg_pull.rest as r
 import kegg_pull.entry_ids as ei
 import tests.utils as u
 
 
-test_entry_ids_from_kegg_api_data = [
+test_process_response_exception_data = [
+    ('The KEGG request failed to get the entry IDs from the following URL: url/mock', r.KEGGresponse.Status.FAILED),
+    (
+        'The KEGG request timed out while trying to get the entry IDs from the following URL: url/mock',
+        r.KEGGresponse.Status.TIMEOUT
+    )
+]
+@pt.mark.parametrize('expected_message,status', test_process_response_exception_data)
+def test_process_response_exception(mocker, expected_message: str, status: r.KEGGresponse.Status):
+    kegg_response_mock = mocker.MagicMock(kegg_url=mocker.MagicMock(url='url/mock'), status=status)
+
+    with pt.raises(RuntimeError) as error:
+        ei.EntryIdsGetter._process_response(kegg_response=kegg_response_mock)
+
+    u.assert_expected_error_message(expected_message=expected_message, error=error)
+
+
+test_from_kegg_rest_data = [
     (ei.EntryIdsGetter().from_database, 'list', {'database_name': 'compound'}),
     (ei.EntryIdsGetter().from_keywords, 'keywords_find', {'database_name': 'compound', 'keywords': ['kw1', 'kw2']}),
     (
@@ -14,11 +32,8 @@ test_entry_ids_from_kegg_api_data = [
         {'database_name': 'compound', 'formula': 'M4O3C2K1', 'exact_mass': None, 'molecular_weight': None}
     )
 ]
-
-# TODO: Test exceptions raised
-# TODO: Test loading from a file
-@pt.mark.parametrize('get_entry_ids,rest_method,kwargs', test_entry_ids_from_kegg_api_data)
-def test_entry_ids_from_kegg_rest(mocker, get_entry_ids: t.Callable, rest_method: str, kwargs: dict):
+@pt.mark.parametrize('get_entry_ids,rest_method,kwargs', test_from_kegg_rest_data)
+def test_from_kegg_rest(mocker, get_entry_ids: t.Callable, rest_method: str, kwargs: dict):
     text_body_mock = '''
     cpd:C22501	alpha-D-Xylulofuranose
     cpd:C22502	alpha-D-Fructofuranose; alpha-D-Fructose
@@ -45,6 +60,60 @@ def test_entry_ids_from_kegg_rest(mocker, get_entry_ids: t.Callable, rest_method
     ]
 
     assert actual_entry_ids == expected_entry_ids
+
+
+@pt.fixture(name='file_info', params=[True, False])
+def file_mock(request):
+    is_empty = request.param
+
+    if is_empty:
+        file_contents_mock = ''
+    else:
+        file_contents_mock = '''
+        cpd:C22501
+        cpd:C22502
+        cpd:C22500
+        cpd:C22504
+        cpd:C22506
+        cpd:C22507
+        cpd:C22509
+        cpd:C22510
+        cpd:C22511
+        cpd:C22512
+        cpd:C22513
+        cpd:C22514
+        '''
+
+    file_name = 'file-mock.txt'
+
+    with open(file_name, 'w') as file:
+        file.write(file_contents_mock)
+
+    yield file_name, is_empty
+
+    os.remove(file_name)
+
+
+def test_from_file(file_info: str):
+    file_name, is_empty = file_info
+
+    if is_empty:
+        with pt.raises(ValueError) as error:
+            ei.EntryIdsGetter.from_file(file_path=file_name)
+
+        u.assert_expected_error_message(
+            expected_message=f'Attempted to get entry IDs from {file_name}. But the file is empty',
+            error=error
+        )
+    else:
+        actual_entry_ids: list = ei.EntryIdsGetter.from_file(file_path=file_name)
+
+        expected_entry_ids = [
+            'cpd:C22501', 'cpd:C22502', 'cpd:C22500', 'cpd:C22504', 'cpd:C22506', 'cpd:C22507', 'cpd:C22509', 'cpd:C22510',
+            'cpd:C22511', 'cpd:C22512', 'cpd:C22513', 'cpd:C22514'
+        ]
+
+        assert actual_entry_ids == expected_entry_ids
 
 
 def test_main_help(mocker):
