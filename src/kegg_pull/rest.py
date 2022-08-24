@@ -1,20 +1,22 @@
 """
 Usage:
     kegg_pull rest -h | --help
+    kegg_pull rest info <database-name> [--output=<output>]
     kegg_pull rest list <database-name> [--output=<output>]
     kegg_pull rest get <entry-ids> [--entry-field=<entry-field>] [--output=<output>]
     kegg_pull rest find <database-name> <keywords> [--output=<output>]
     kegg_pull rest find <database-name> (--formula=<formula>|--exact-mass=<exact-mass>...|--molecular-weight=<molecular-weight>...) [--output=<output>]
-    kegg_pull rest conv <kegg-database-name> <outside-database-name>
-    kegg_pull rest conv --conv-target=<target-database-name> <entry-ids>
-    kegg_pull rest link <target-database-name> <source-database-name>
-    kegg_pull rest link --link-target=<target-database-name> <entry-ids>
-    kegg_pull rest ddi <drug-entry-ids>
+    kegg_pull rest conv <kegg-database-name> <outside-database-name> [--output=<output>]
+    kegg_pull rest conv --conv-target=<target-database-name> <entry-ids> [--output=<output>]
+    kegg_pull rest link <target-database-name> <source-database-name> [--output=<output>]
+    kegg_pull rest link --link-target=<target-database-name> <entry-ids> [--output=<output>]
+    kegg_pull rest ddi <drug-entry-ids> [--output=<output>]
 
 Options:
     -h --help                               Show this help message.
+    info                                    Executes the "info" KEGG API operation, getting information about a KEGG database.
+    <database-name>                         The name of the database to get information about or entry IDs from.
     list                                    Executes the "list" KEGG API operation, getting the entry IDs of the provided database.
-    <database-name>                         The name of the database to get entry IDs from.
     --output=<output>                       The file to store the response body from the KEGG web API operation. Prints to the console if --output is not specified.
     get                                     Executes the "get" KEGG API operation, getting the entries of the provided entry IDs.
     <entry-ids>                             Comma separated list of entry IDs.
@@ -207,7 +209,9 @@ def main():
     is_binary = False
     kegg_rest = KEGGrest()
 
-    if args['list']:
+    if args['info']:
+        kegg_response: KEGGresponse = kegg_rest.info(database_name=database_name)
+    elif args['list']:
         kegg_response: KEGGresponse = kegg_rest.list(database_name=database_name)
     elif args['get']:
         entry_ids: list = u.split_comma_separated_list(list_string=entry_ids)
@@ -258,7 +262,7 @@ def main():
                 target_database_name=target_database_name, source_database_name=source_database_name
             )
     else:
-        drug_entry_ids: str = args['<drug-entry-ids']
+        drug_entry_ids: str = args['<drug-entry-ids>']
         drug_entry_ids: list = u.split_comma_separated_list(list_string=drug_entry_ids)
         kegg_response: KEGGresponse = kegg_rest.ddi(drug_entry_ids=drug_entry_ids)
 

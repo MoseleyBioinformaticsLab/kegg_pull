@@ -7,7 +7,7 @@ def split_comma_separated_list(list_string: str) -> list:
 
     if '' in items:
         l.warning(f'Blank items detected in the comma separated list: "{list_string}". Removing blanks...')
-        items = [entry_id for entry_id in items if entry_id != '']
+        items = [item for item in items if item != '']
 
     return items
 
@@ -17,11 +17,16 @@ def get_molecular_attribute_args(args: dict) -> tuple:
     exact_mass: list = args['--exact-mass']
     molecular_weight: list = args['--molecular-weight']
 
-    if exact_mass is not None:
+    # exact_mass and molecular_weight will be [] (empty list) if not specified in the commandline args
+    if exact_mass:
         exact_mass: t.Union[float, tuple] = _get_range_values(range_values=exact_mass, value_type=float)
+    else:
+        exact_mass = None
 
-    if molecular_weight is not None:
+    if molecular_weight:
         molecular_weight: t.Union[int, tuple] = _get_range_values(range_values=molecular_weight, value_type=int)
+    else:
+        molecular_weight = None
 
     return formula, exact_mass, molecular_weight
 
