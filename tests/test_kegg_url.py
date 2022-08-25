@@ -5,7 +5,6 @@ import kegg_pull.kegg_url as ku
 import tests.utils as u
 
 
-# TODO Test other URL _validate methods
 test_validate_exception_data = [
     (
         ku.ListKEGGurl, {'database_name': 'ligand'},
@@ -167,7 +166,6 @@ def test_validate_warning(KEGGurl: type, kwargs: dict, expected_message: str, ur
     assert kegg_url.url == expected_url
 
 
-# TODO Test other URL _create_rest_options methods
 test_create_rest_options_data = [
     (ku.ListKEGGurl, {'database_name': 'vg'}, 'list', 'vg'),
     (ku.ListKEGGurl, {'database_name': 'organism-code'}, 'list', 'organism-code'),

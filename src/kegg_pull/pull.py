@@ -57,7 +57,7 @@ class PullResult:
             self._successful_entry_ids.extend(entry_ids)
         elif status == r.KEGGresponse.Status.FAILED:
             self._failed_entry_ids.extend(entry_ids)
-        elif status == r.KEGGresponse.Status.TIMEOUT:
+        else:
             self._timed_out_entry_ids.extend(entry_ids)
 
     def merge_pull_results(self, other):
@@ -75,7 +75,7 @@ class SinglePull:
 
         @abc.abstractmethod
         def _save(self, file_name: str, entry: t.Union[str, bytes]):
-            pass
+            pass  # pragma: no cover
 
     class _DirectoryEntrySaver(_AbstractEntrySaver):
         def __init__(self, output_dir: str):
@@ -155,7 +155,12 @@ class SinglePull:
 
     @staticmethod
     def _gene_separator(concatenated_entries: str) -> list:
-        return concatenated_entries.split('>')[1:]
+        entries: list = concatenated_entries.split('>')
+
+        if len(entries) > 1:
+            return entries[1:]
+        else:
+            return entries
 
     @staticmethod
     def _mol_separator(concatenated_entries: str) -> list:
@@ -163,7 +168,12 @@ class SinglePull:
 
     @staticmethod
     def _split_and_remove_last(concatenated_entries: str, deliminator: str) -> list:
-        return concatenated_entries.split(deliminator)[:-1]
+        entries: list = concatenated_entries.split(deliminator)
+
+        if len(entries) > 1:
+            return entries[:-1]
+        else:
+            return entries
 
     @staticmethod
     def _standard_separator(concatenated_entries: str) -> list:
