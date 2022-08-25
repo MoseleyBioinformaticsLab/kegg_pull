@@ -224,8 +224,6 @@ def test_not_all_requested_entries(mocker, entry_field: str):
 
 
 test_multiple_pull_data = [(p.SingleProcessMultiplePull, {}), (p.MultiProcessMultiplePull, {'n_workers': 2})]
-# TODO: Test with force_single_pull with an entry field that can have multiple entries
-# TODO: Test with an entry field that can only have one entry without force_single_pull
 @pt.mark.parametrize('MultiplePull,kwargs', test_multiple_pull_data)
 def test_multiple_pull(mocker, MultiplePull: type, kwargs: dict):
     expected_pull_calls = [
@@ -263,6 +261,35 @@ def test_multiple_pull(mocker, MultiplePull: type, kwargs: dict):
             assert actual_calls.kwargs == {'entry_ids': expected_calls}
 
 
+@pt.mark.parametrize('MultiplePull,kwargs', test_multiple_pull_data)
+def test_get_n_entries_per_url(mocker, MultiplePull: type, kwargs: dict):
+    entry_ids_mock = ['eid1', 'eid2', 'eid3', 'eid4']
+    multiple_pull = MultiplePull(single_pull=PickleableSinglePullMock(), **kwargs)
+    group_entry_ids_spy: mocker.MagicMock = mocker.spy(multiple_pull, '_group_entry_ids')
+    get_n_entries_per_url_spy: mocker.MagicMock = mocker.spy(p.AbstractMultiplePull, '_get_n_entries_per_url')
+    pull_mock: mocker.MagicMock = mocker.patch(f'kegg_pull.pull.{MultiplePull.__name__}._pull')
+    multiple_pull.pull(entry_ids=entry_ids_mock, force_single_entry=True, entry_field='compound')
+    group_entry_ids_spy.assert_called_once_with(entry_ids_to_group=entry_ids_mock, force_single_entry=True)
+    get_n_entries_per_url_spy.assert_called_once_with(force_single_entry=True, entry_field='compound')
+    expected_grouped_entry_ids = [[entry_id] for entry_id in entry_ids_mock]
+    pull_mock.assert_called_once_with(grouped_entry_ids=expected_grouped_entry_ids)
+
+    assert group_entry_ids_spy.spy_return == expected_grouped_entry_ids
+    assert get_n_entries_per_url_spy.spy_return == 1
+
+    group_entry_ids_spy.reset_mock()
+    get_n_entries_per_url_spy.reset_mock()
+    pull_mock.reset_mock()
+    multiple_pull.pull(entry_ids=entry_ids_mock, entry_field='json')
+
+    group_entry_ids_spy.assert_called_once_with(entry_ids_to_group=entry_ids_mock, force_single_entry=False)
+    get_n_entries_per_url_spy.assert_called_once_with(force_single_entry=False, entry_field='json')
+    pull_mock.assert_called_once_with(grouped_entry_ids=expected_grouped_entry_ids)
+
+    assert group_entry_ids_spy.spy_return == expected_grouped_entry_ids
+    assert get_n_entries_per_url_spy.spy_return == 1
+
+
 class PickleableSinglePullMock:
     def __init__(self):
         self.entry_field = None
@@ -279,6 +306,16 @@ class PickleableSinglePullMock:
         return single_pull_result
 
 
+def test_get_single_pull_result(mocker):
+    pull_result = p.PullResult()
+    single_pull_mock = mocker.MagicMock(pull=mocker.MagicMock(return_value=pull_result))
+    entry_ids = ['1', '2']
+    actual_result: bytes = p._get_single_pull_result(entry_ids=entry_ids, single_pull=single_pull_mock)
+    single_pull_mock.pull.assert_called_once_with(entry_ids=entry_ids)
+
+    assert actual_result == p.p.dumps(pull_result)
+
+
 @pt.fixture(name='_')
 def teardown():
     yield
@@ -290,7 +327,6 @@ def test_main_help(mocker):
     u.assert_main_help(mocker=mocker, module=p, subcommand='pull')
 
 
-# TODO: Test --help and -h
 # TODO: Test from entry ID file and entry ID string
 # TODO: Test pull single
 def test_main(mocker, _):

@@ -255,12 +255,12 @@ class AbstractMultiplePull(abc.ABC):
             return ku.GetKEGGurl.MAX_ENTRY_IDS_PER_URL
 
     @abc.abstractmethod
-    def _pull(self, grouped_entry_ids: list):
-        pass
+    def _pull(self, grouped_entry_ids: list) -> PullResult:
+        pass  # pragma: no cover
 
 
 class SingleProcessMultiplePull(AbstractMultiplePull):
-    def _pull(self, grouped_entry_ids: list):
+    def _pull(self, grouped_entry_ids: list) -> PullResult:
         multiple_pull_result = PullResult()
 
         for entry_id_group in grouped_entry_ids:
@@ -275,7 +275,7 @@ class MultiProcessMultiplePull(AbstractMultiplePull):
         super(MultiProcessMultiplePull, self).__init__(single_pull=single_pull, force_single_entry=force_single_entry)
         self._n_workers = n_workers
 
-    def _pull(self, grouped_entry_ids: list):
+    def _pull(self, grouped_entry_ids: list) -> PullResult:
         multiple_pull_result = PullResult()
         args = [(entry_ids, self._single_pull) for entry_ids in grouped_entry_ids]
         chunk_size: int = len(grouped_entry_ids) // self._n_workers
