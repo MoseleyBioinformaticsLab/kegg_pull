@@ -1,8 +1,8 @@
 """
 Usage:
     kegg_pull pull -h | --help
-    kegg_pull pull multiple (--database-name=<database-name>|--file-path=<file-path>) [--force-single-entry] [--multi-process] [--n-workers=<n-workers>] [--output-dir=<output_dir>] [--entry-field=<entry-field>] [--n-tries=<n-tries>] [--time-out=<time-out>] [--sleep-time=<sleep-time>] [--zip]
-    kegg_pull pull single (--entry-ids=<entry-ids>|--file-path=<file-path>) [--output-dir=<output_dir>] [--entry-field=<entry-field>] [--n-tries=<n-tries>] [--time-out=<time-out>] [--sleep-time=<sleep-time>] [--zip]
+    kegg_pull pull multiple (--database-name=<database-name>|--file-path=<file-path>) [--force-single-entry] [--multi-process] [--n-workers=<n-workers>] [--output=<output>] [--entry-field=<entry-field>] [--n-tries=<n-tries>] [--time-out=<time-out>] [--sleep-time=<sleep-time>]
+    kegg_pull pull single (--entry-ids=<entry-ids>|--file-path=<file-path>) [--output=<output>] [--entry-field=<entry-field>] [--n-tries=<n-tries>] [--time-out=<time-out>] [--sleep-time=<sleep-time>]
 
 Options:
     -h --help                           Show this help message.
@@ -12,7 +12,7 @@ Options:
     --force-single-entry                Forces pulling only one entry at a time for every request to the KEGG web API. This flag is automatically set if --database-name is "brite".
     --multi-process                     If set, the entries are pulled across multiple processes to increase speed. Otherwise, the entries are pulled sequentially in a single process.
     --n-workers=<n-workers>             The number of sub-processes to create when pulling. Defaults to the number of cores available. Ignored if --multi-process is not set.
-    --output-dir=<output_dir>           The directory where the pulled KEGG entries will be stored. Defaults to the current working directory. If ends in .zip, entries are saved to a zip archive instead of a directory.
+    --output=<output>                   The directory where the pulled KEGG entries will be stored. Defaults to the current working directory. If ends in .zip, entries are saved to a zip archive instead of a directory.
     --entry-field=<entry-field>         Optional field to extract from the entries pulled rather than the standard flat file format (or "htext" in the case of brite entries).
     --n-tries=<n-tries>                 The number of times to attempt a KEGG request before marking it as timed out or failed. Defaults to 3.
     --time-out=<time-out>               The number of seconds to wait for a KEGG request before marking it as timed out. Defaults to 60.
@@ -302,7 +302,7 @@ def main():
     time_out: str = int(args['--time-out']) if args['--time-out'] is not None else None
     sleep_time: str = float(args['--sleep-time']) if args['--sleep-time'] is not None else None
     kegg_rest = r.KEGGrest(n_tries=n_tries, time_out=time_out, sleep_time=sleep_time)
-    output_dir: str = args['--output-dir'] if args['--output-dir'] is not None else '.'
+    output_dir: str = args['--output'] if args['--output'] is not None else '.'
     entry_field: str = args['--entry-field']
     puller = SinglePull(output_dir=output_dir, kegg_rest=kegg_rest, entry_field=entry_field)
     database_name: str = args['--database-name']
