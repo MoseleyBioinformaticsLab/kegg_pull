@@ -4,8 +4,7 @@ import kegg_pull.rest as r
 import kegg_pull.pull as p
 
 
-# TODO: Test subcommand calls
-def test_main(mocker):
+def test_main_help(mocker):
     mocker.patch('sys.argv', ['kegg_pull', '--full-help'])
     print_mock: mocker.MagicMock = mocker.patch('builtins.print')
     m.main()
@@ -21,3 +20,6 @@ def test_main(mocker):
     mocker.patch('sys.argv', ['kegg_pull'])
     m.main()
     print_mock.assert_called_once_with(m.__doc__)
+
+
+# TODO: Test subcommands
