@@ -43,7 +43,7 @@ def _get_range_values(range_values: t.Union[int, float, tuple], value_type: type
     else:
         raise ValueError(
             f'Range can only be specified by two values but {len(range_values)} values were provided: '
-            f'{", ".join(range_values)}'
+            f'{", ".join(str(range_value) for range_value in range_values)}'
         )
 
 
