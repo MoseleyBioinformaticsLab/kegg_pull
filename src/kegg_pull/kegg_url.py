@@ -27,9 +27,8 @@ class AbstractKEGGurl(abc.ABC):
 
     _organism_set = None
 
-    def __init__(self, rest_operation: str, base_url: str = BASE_URL, **kwargs):
-        """ Validates the arguments and constructs the KEGG API URL from them.
-
+    def __init__(self, rest_operation: str, base_url: str = BASE_URL, **kwargs) -> None:
+        """
         :param rest_operation: The KEGG REST API operation in the URL.
         :param base_url: The base URL for accessing the KEGG web API.
         :param kwargs: The arguments used to construct the URL options after they are validated.
@@ -46,6 +45,7 @@ class AbstractKEGGurl(abc.ABC):
          so already.
 
         :return: The set of organism database names.
+        :raises RuntimeError:
         """
         if AbstractKEGGurl._organism_set is None:
             url = f'{BASE_URL}/list/organism'
@@ -76,7 +76,7 @@ class AbstractKEGGurl(abc.ABC):
         return AbstractKEGGurl._organism_set
 
     @abc.abstractmethod
-    def _validate(self, **kwargs):
+    def _validate(self, **kwargs) -> None:
         """ Ensures the arguments passed into the constructor result in a valid KEGG URL.
 
         :param kwargs: The arguments to validate.
@@ -97,11 +97,11 @@ class AbstractKEGGurl(abc.ABC):
     def url(self) -> str:
         return self._url
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.url
 
     @staticmethod
-    def _raise_error(reason: str):
+    def _raise_error(reason: str) -> None:
         """ Raises an exception for when a URL is not valid.
 
         :param reason: The reason why the URL was not valid.
@@ -112,7 +112,7 @@ class AbstractKEGGurl(abc.ABC):
     @staticmethod
     def _validate_rest_option(
         option_name: str, option_value: str, valid_rest_options: t.Iterable, add_org: bool = False
-    ):
+    ) -> None:
         """ Raises an exception if a provided REST API option is not valid.
 
         :param option_name: The name of the type of option to check.
@@ -158,8 +158,7 @@ class AbstractKEGGurl(abc.ABC):
 class ListKEGGurl(AbstractKEGGurl):
     """Contains the validation implementation and URL construction of the KEGG API list operation."""
     def __init__(self, database_name: str):
-        """ Validates and constructs a KEGG URL for the list API operation.
-
+        """
         :param database_name: The database option for the KEGG list URL.
         :raises ValueError:
         """
@@ -185,9 +184,8 @@ class ListKEGGurl(AbstractKEGGurl):
 
 class InfoKEGGurl(AbstractKEGGurl):
     """Contains the validation implementation and URL construction of the KEGG API info operation."""
-    def __init__(self, database_name: str):
-        """ Validates and constructs a KEGG URL for the info API operation.
-
+    def __init__(self, database_name: str) -> None:
+        """
         :param database_name: The database option for the KEGG info URL.
         :raises ValueError:
         """
@@ -498,7 +496,7 @@ class DatabaseConvKEGGurl(AbstractConvKEGGurl):
     """Contains the validation implementation and URL construction of the KEGG API conv operation based on the URL form
     that uses a kegg database and outside database."""
     def __init__(self, kegg_database_name: str, outside_database_name: str):
-        """ 
+        """
 
         :param kegg_database_name:
         :param outside_database_name:
