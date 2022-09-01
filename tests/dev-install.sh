@@ -4,5 +4,5 @@ echo "Creating new .env/ directory..."
 python3 -m venv .env/
 source .env/bin/activate
 python3 -m pip install --upgrade pip
-python3 -m pip install pytest pytest-mock pytest-cov
+python3 -m pip install pytest pytest-mock pytest-cov sphinx sphinx-rtd-theme
 python3 -m pip install -e .

@@ -1,4 +1,8 @@
 """
+Getting Lists of KEGG Entry IDs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Functionality for getting lists of KEGG entry IDs from the KEGG REST API.
+
 Usage:
     kegg_pull entry-ids -h | --help
     kegg_pull entry-ids from-database <database-name> [--output=<output>]
@@ -24,10 +28,13 @@ import typing as t
 import docopt as d
 
 from . import rest as r
-from . import utils as u
+from . import _utils as u
 
 
 class EntryIdsGetter:
+    """
+    Class with methods for various ways of getting a list of KEGG entry IDs from the KEGG REST API.
+    """
     def __init__(self, kegg_rest: r.KEGGrest = None):
         self._kegg_rest = kegg_rest if kegg_rest is not None else r.KEGGrest()
 

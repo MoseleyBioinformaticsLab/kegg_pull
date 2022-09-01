@@ -1,4 +1,8 @@
 """
+Pulling, Parsing, and Saving KEGG Entries
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Functionality for getting KEGG entries from the KEGG REST API, parsing them, and saving the entries as files.
+
 Usage:
     kegg_pull pull -h | --help
     kegg_pull pull multiple (--database-name=<database-name>|--file-path=<file-path>) [--force-single-entry] [--multi-process] [--n-workers=<n-workers>] [--output=<output>] [--entry-field=<entry-field>] [--n-tries=<n-tries>] [--time-out=<time-out>] [--sleep-time=<sleep-time>]
@@ -31,7 +35,7 @@ import zipfile as zf
 from . import kegg_url as ku
 from . import rest as r
 from . import entry_ids as ei
-from . import utils as u
+from . import _utils as u
 
 
 class PullResult:
