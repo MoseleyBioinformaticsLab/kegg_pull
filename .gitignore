@@ -3,3 +3,4 @@
 .idea/
 __pycache__/
 src/kegg_pull.egg-info/
+docs/_build
