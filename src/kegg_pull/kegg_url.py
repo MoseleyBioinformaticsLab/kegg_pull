@@ -225,7 +225,7 @@ class GetKEGGurl(AbstractKEGGurl):
 
     # noinspection PyMethodParameters
     @u.staticproperty
-    def MAX_ENTRY_IDS_PER_URL():
+    def MAX_ENTRY_IDS_PER_URL() -> int:
         """The maximum number of entry IDs allowed in a single get KEGG URL."""
         return GetKEGGurl._MAX_ENTRY_IDS_PER_URL
 

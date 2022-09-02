@@ -45,15 +45,15 @@ class PullResult:
         self._timed_out_entry_ids = []
 
     @property
-    def successful_entry_ids(self):
+    def successful_entry_ids(self) -> tuple:
         return tuple(self._successful_entry_ids)
 
     @property
-    def failed_entry_ids(self):
+    def failed_entry_ids(self) -> tuple:
         return tuple(self._failed_entry_ids)
 
     @property
-    def timed_out_entry_ids(self):
+    def timed_out_entry_ids(self) -> tuple:
         return tuple(self._timed_out_entry_ids)
 
     def add_entry_ids(self, *entry_ids, status: r.KEGGresponse.Status):
