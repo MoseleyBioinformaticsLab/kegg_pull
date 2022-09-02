@@ -73,19 +73,19 @@ class KEGGresponse:
         self._binary_body = binary_body
 
     @property
-    def status(self):
+    def status(self) -> Status:
         return self._status
 
     @property
-    def kegg_url(self):
+    def kegg_url(self) -> ku.AbstractKEGGurl:
         return self._kegg_url
 
     @property
-    def text_body(self):
+    def text_body(self) -> str:
         return self._text_body
 
     @property
-    def binary_body(self):
+    def binary_body(self) -> bytes:
         return self._binary_body
 
 
