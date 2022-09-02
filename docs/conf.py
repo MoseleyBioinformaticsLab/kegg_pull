@@ -42,27 +42,8 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 autodoc_typehints = 'both'
-
-def process_docstrings(app, what, name, obj, options, lines):
-    if what == 'module':
-        # Remove the CLI portion of the doc string in modules that provide both an API and CLI.
-        module_with_cli_to_remove = {'entry_ids', 'pull', 'rest'}
-        module_with_cli_to_remove = {f'kegg_pull.{module}' for module in module_with_cli_to_remove}
-
-        if name in module_with_cli_to_remove:
-            del lines[3:]
-    elif what == 'class' and obj.__init__.__doc__ is not None:
-        # Add the parameter and exception descriptions from the __init__ docstring to the class docstring
-        parameter_descriptions: list = obj.__init__.__doc__.split('\n')
-
-        for parameter_description in parameter_descriptions:
-            lines.append(parameter_description.strip())
-
-def setup(app):
-    app.connect('autodoc-process-docstring', process_docstrings)
-
+autoclass_content = 'both'
 autodoc_member_order = 'bysource'
-
 html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 

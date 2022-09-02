@@ -49,4 +49,7 @@ def _get_range_values(range_values: t.Union[int, float, tuple], value_type: type
 
 class staticproperty(staticmethod):
     def __get__(self, *_):
-        return self.__func__()
+        static_property = self.__func__()
+        static_property.__doc__ = self.__doc__
+
+        return static_property

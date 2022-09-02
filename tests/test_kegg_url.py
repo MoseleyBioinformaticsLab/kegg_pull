@@ -229,14 +229,14 @@ def test_organism_set(mocker, _):
 
     response_mock = mocker.MagicMock(status_code=200, text=text_mock)
     get_mock: mocker.MagicMock = mocker.patch('kegg_pull.kegg_url.rq.get', return_value=response_mock)
-    actual_organism_set = ku.AbstractKEGGurl.organism_set()
+    actual_organism_set = ku.AbstractKEGGurl.organism_set
     get_mock.assert_called_once_with(url=f'{ku.BASE_URL}/list/organism', timeout=60)
     expected_organism_set = {'agw', 'T03835', 'T06555', 'T03843', 'psyt', 'arg'}
 
     assert actual_organism_set == expected_organism_set
 
     get_mock.reset_mock()
-    actual_organism_set = ku.AbstractKEGGurl.organism_set()
+    actual_organism_set = ku.AbstractKEGGurl.organism_set
     get_mock.assert_not_called()
 
     assert actual_organism_set == expected_organism_set
