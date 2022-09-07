@@ -12,8 +12,7 @@ sys.path.insert(0, os.path.abspath('../src'))
 from kegg_pull import __version__
 
 def skip_organism_set(app, what, name, obj, skip, options) -> bool:
-    if name == 'organism_set':
-        print('#'*200)
+    if name in { 'organism_set', 'add_entry_ids', 'merge_pull_results'}:
         return True
 
 def setup(app):
