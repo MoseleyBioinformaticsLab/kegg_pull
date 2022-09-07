@@ -15,25 +15,34 @@ from . import rest as r
 
 
 class PullResult:
-    """The collections of entry IDs that resulted in a particular KEGG Response status after a pull"""
-    def __init__(self):
+    """The collections of entry IDs, each of which resulted in a particular KEGG Response status after a pull."""
+
+    def __init__(self) -> None:
         self._successful_entry_ids = []
         self._failed_entry_ids = []
         self._timed_out_entry_ids = []
 
     @property
     def successful_entry_ids(self) -> tuple:
+        """The IDs of entries successfully pulled."""
         return tuple(self._successful_entry_ids)
 
     @property
     def failed_entry_ids(self) -> tuple:
+        """The IDs of entries that failed to be pulled."""
         return tuple(self._failed_entry_ids)
 
     @property
     def timed_out_entry_ids(self) -> tuple:
+        """The IDs of entries that timed out before being pulled."""
         return tuple(self._timed_out_entry_ids)
 
-    def add_entry_ids(self, *entry_ids, status: r.KEGGresponse.Status):
+    def add_entry_ids(self, *entry_ids, status: r.KEGGresponse.Status) -> None:
+        """ Adds entry IDs of a given status to the pull result.
+
+        :param entry_ids: The entry IDs to add.
+        :param status: The status resulting from attempting to pull the entries of the given IDs.
+        """
         if status == r.KEGGresponse.Status.SUCCESS:
             self._successful_entry_ids.extend(entry_ids)
         elif status == r.KEGGresponse.Status.FAILED:
@@ -41,31 +50,60 @@ class PullResult:
         else:
             self._timed_out_entry_ids.extend(entry_ids)
 
-    def merge_pull_results(self, other):
+    def merge_pull_results(self, other) -> None:
+        """ Combines two pull results into one.
+
+        :param other: The pull result to combine into this one.
+        """
         self._successful_entry_ids.extend(other.successful_entry_ids)
         self._failed_entry_ids.extend(other.failed_entry_ids)
         self._timed_out_entry_ids.extend(other.timed_out_entry_ids)
 
 
 class SinglePull:
+    """Class capable of performing a single request to the KEGG REST API for pulling up to a maximum number of entries."""
+
     class _AbstractEntrySaver(abc.ABC):
-        def save(self, entry_id: str, entry: t.Union[str, bytes], entry_field: str):
+        """Abstract class for saving KEGG entries as files."""
+
+        def save(self, entry_id: str, entry: t.Union[str, bytes], entry_field: str) -> None:
+            """ Saves a KEGG entry as a file.
+
+            :param entry_id: The entry ID (part of the file name).
+            :param entry: The entry to save (contents of the file).
+            :param entry_field: The particular field of the entry (file extension).
+            """
             file_extension = 'txt' if entry_field is None else entry_field
             file_name = f'{entry_id}.{file_extension}'
             self._save(file_name=file_name, entry=entry)
 
         @abc.abstractmethod
-        def _save(self, file_name: str, entry: t.Union[str, bytes]):
+        def _save(self, file_name: str, entry: t.Union[str, bytes]) -> None:
+            """ Saves a KEGG entry in the particular manner of the child class.
+
+            :param file_name: The name of the file in which the KEGG entry is saved.
+            :param entry: The entry to save (contents of the file).
+            """
             pass  # pragma: no cover
 
     class _DirectoryEntrySaver(_AbstractEntrySaver):
-        def __init__(self, output_dir: str):
+        """Class that saves KEGG entries in a directory."""
+
+        def __init__(self, output_dir: str) -> None:
+            """
+            :param output_dir: The directory in which to save the KEGG entries.
+            """
             if not os.path.isdir(output_dir):
                 os.mkdir(output_dir)
 
             self._output_dir = output_dir
 
-        def _save(self, file_name: str, entry: t.Union[str, bytes]):
+        def _save(self, file_name: str, entry: t.Union[str, bytes]) -> None:
+            """ Saves a KEGG entry in a file within a directory.
+
+            :param file_name: The name of the file to save in the directory.
+            :param entry: The entry to save (content of the file).
+            """
             file_path = os.path.join(self._output_dir, file_name)
             save_type = 'wb' if type(entry) is bytes else 'w'
 
@@ -73,14 +111,29 @@ class SinglePull:
                 file.write(entry)
 
     class _ZipEntrySaver(_AbstractEntrySaver):
-        def __init__(self, zip_file: str):
+        """Class that saves KEGG entries in a ZIP file."""
+
+        def __init__(self, zip_file: str) -> None:
+            """
+            :param zip_file: The path to the zip file to save the entries in.
+            """
             self._zip_file = zip_file
 
-        def _save(self, file_name: str, entry: t.Union[str, bytes]):
+        def _save(self, file_name: str, entry: t.Union[str, bytes]) -> None:
+            """ Saves a KEGG entry in a zip file.
+
+            :param file_name: The name of the file to save.
+            :param entry: The entry to save (contents of file).
+            """
             with zf.ZipFile(self._zip_file, 'a') as zip_file:
                 zip_file.writestr(file_name, entry)
 
-    def __init__(self, output_dir: str, kegg_rest: r.KEGGrest = None, entry_field: str = None):
+    def __init__(self, output_dir: str, kegg_rest: r.KEGGrest = None, entry_field: str = None) -> None:
+        """
+        :param output_dir: Path to the location where entries are saved (treated like a zip file if ends in .zip, else a directory).
+        :param kegg_rest: Optional KEGGrest object used to make the requests to the KEGG REST API (a KEGGrest object with the default settings is created if one is not provided).
+        :param entry_field: Optional KEGG entry field to pull.
+        """
         if output_dir.endswith('.zip'):
             self._entry_saver = SinglePull._ZipEntrySaver(zip_file=output_dir)
         else:
@@ -91,6 +144,11 @@ class SinglePull:
 
 
     def pull(self, entry_ids: list) -> PullResult:
+        """ Makes a single request to the KEGG REST API to pull one or more entries and save them as files.
+
+        :param entry_ids: The IDs of the entries to pull and save.
+        :return: The pull result.
+        """
         kegg_response: r.KEGGresponse = self._kegg_rest.get(entry_ids=entry_ids, entry_field=self.entry_field)
         get_url: ku.GetKEGGurl = kegg_response.kegg_url
         pull_result = PullResult()
@@ -105,7 +163,12 @@ class SinglePull:
 
         return pull_result
 
-    def _save_multi_entry_response(self, kegg_response: r.KEGGresponse, pull_result: PullResult):
+    def _save_multi_entry_response(self, kegg_response: r.KEGGresponse, pull_result: PullResult) -> None:
+        """ Saves multiple entries within a KEGG response.
+
+        :param kegg_response: The response from KEGG with multiple entries.
+        :param pull_result: The pull result to update based on the status of the pull(s).
+        """
         entries: list = self._separate_entries(concatenated_entries=kegg_response.text_body)
         get_url: ku.GetKEGGurl = kegg_response.kegg_url
 
@@ -119,6 +182,11 @@ class SinglePull:
                 self._entry_saver.save(entry_id=entry_id, entry=entry, entry_field=self.entry_field)
 
     def _separate_entries(self, concatenated_entries: str) -> list:
+        """ Separates the entries in a multi-entry response from KEGG.
+
+        :param concatenated_entries: The response body with all the entries together.
+        :return: The separated KEGG entries.
+        """
         field_to_separator = {
             'aaseq': SinglePull._gene_separator, 'kcf': SinglePull._standard_separator,
             'mol': SinglePull._mol_separator, 'ntseq': SinglePull._gene_separator
@@ -136,6 +204,10 @@ class SinglePull:
 
     @staticmethod
     def _gene_separator(concatenated_entries: str) -> list:
+        """ Separates KEGG entries that are separated by a deliminator for nucleotide and amino acid sequence entries.
+        :param concatenated_entries: The response body with the gene-related entries together.
+        :return: The separated gene-related entries.
+        """
         entries: list = concatenated_entries.split('>')
 
         if len(entries) > 1:
@@ -145,10 +217,21 @@ class SinglePull:
 
     @staticmethod
     def _mol_separator(concatenated_entries: str) -> list:
+        """ Separates mol entries.
+
+        :param concatenated_entries: The response body with the mol entries together.
+        :return: The separated mole entries.
+        """
         return SinglePull._split_and_remove_last(concatenated_entries=concatenated_entries, deliminator='$$$$')
 
     @staticmethod
     def _split_and_remove_last(concatenated_entries: str, deliminator: str) -> list:
+        """ Splits entries based on a deliminator and removes the resulting empty string at the end of the list.
+
+        :param concatenated_entries: The response body with the entries together.
+        :param deliminator: The deliminator that separates the entries and is at the end of the response body.
+        :return: The separated entries with the empty string removed.
+        """
         entries: list = concatenated_entries.split(deliminator)
 
         if len(entries) > 1:
@@ -158,9 +241,19 @@ class SinglePull:
 
     @staticmethod
     def _standard_separator(concatenated_entries: str) -> list:
+        """ The separation method for most types of KEGG entries.
+
+        :param concatenated_entries: The response body with the KEGG entries together.
+        :return: The separated entries.
+        """
         return SinglePull._split_and_remove_last(concatenated_entries=concatenated_entries, deliminator='///')
 
-    def _pull_separate_entries(self, get_url: ku.GetKEGGurl, pull_result: PullResult):
+    def _pull_separate_entries(self, get_url: ku.GetKEGGurl, pull_result: PullResult) -> None:
+        """ Pulls one entry at a time for a Get KEGG URL that has multiple entry IDs.
+
+        :param get_url: The Get KEGG URL with multiple entry IDs to pull one at a time.
+        :param pull_result: The pull result to update based on the success of the pulling.
+        """
         for entry_id in get_url.entry_ids:
             kegg_response: r.KEGGresponse = self._kegg_rest.get(entry_ids=[entry_id], entry_field=self.entry_field)
 
@@ -169,7 +262,12 @@ class SinglePull:
             else:
                 pull_result.add_entry_ids(entry_id, status=kegg_response.status)
 
-    def _save_single_entry_response(self, kegg_response: r.KEGGresponse, pull_result: PullResult):
+    def _save_single_entry_response(self, kegg_response: r.KEGGresponse, pull_result: PullResult) -> None:
+        """ Saves the entry in a KEGG response that contains only one entry.
+
+        :param kegg_response: The KEGG response that only has one entry.
+        :param pull_result: The pull result to update with the successful entry ID.
+        """
         get_url: ku.GetKEGGurl = kegg_response.kegg_url
         [entry_id] = get_url.entry_ids
         pull_result.add_entry_ids(entry_id, status=r.KEGGresponse.Status.SUCCESS)
@@ -182,7 +280,12 @@ class SinglePull:
         self._entry_saver.save(entry_id=entry_id, entry=entry, entry_field=self.entry_field)
 
 
-    def _handle_unsuccessful_url(self, kegg_response: r.KEGGresponse, pull_result: PullResult):
+    def _handle_unsuccessful_url(self, kegg_response: r.KEGGresponse, pull_result: PullResult) -> None:
+        """ Handles an unsuccessful pull (failed or timed out).
+
+        :param kegg_response: The KEGG response resulting from a pull that was not successful.
+        :param pull_result: The pull result to update based on how the unsuccessful response is dealt with.
+        """
         get_url: ku.GetKEGGurl = kegg_response.kegg_url
         status: r.KEGGresponse.Status = kegg_response.status
 
