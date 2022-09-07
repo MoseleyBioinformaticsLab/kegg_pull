@@ -11,6 +11,14 @@ sys.path.insert(0, os.path.abspath('../src'))
 # It's recommended that you import the project version from your package's __init__.py file
 from kegg_pull import __version__
 
+def skip_organism_set(app, what, name, obj, skip, options) -> bool:
+    if name == 'organism_set':
+        print('#'*200)
+        return True
+
+def setup(app):
+    app.connect('autodoc-skip-member', skip_organism_set)
+
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 

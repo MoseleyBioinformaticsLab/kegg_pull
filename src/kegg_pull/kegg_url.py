@@ -42,7 +42,7 @@ class AbstractKEGGurl(abc.ABC):
     # noinspection PyMethodParameters
     @u.staticproperty
     def organism_set() -> set:
-        """ Static property (not a static method) - Obtains the set of valid KEGG organism database names by requesting from the KEGG REST API (caches this result so the request only needs to be done once).
+        """ Obtains the set of valid KEGG organism database names by requesting from the KEGG REST API (caches this result so the request only needs to be done once).
 
         :return: The set of organism database names.
         :raises RuntimeError: Raised in the unlikely case that the request fails.
@@ -227,7 +227,7 @@ class GetKEGGurl(AbstractKEGGurl):
     # noinspection PyMethodParameters
     @u.staticproperty
     def MAX_ENTRY_IDS_PER_URL() -> int:
-        """ Static property (not a static method) - The maximum number of entry IDs allowed in a single get KEGG URL."""
+        """ The maximum number of entry IDs allowed in a single get KEGG URL."""
         return GetKEGGurl._MAX_ENTRY_IDS_PER_URL
 
     def __init__(self, entry_ids: list, entry_field: str = None) -> None:
