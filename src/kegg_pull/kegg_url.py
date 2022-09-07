@@ -39,7 +39,8 @@ class AbstractKEGGurl(abc.ABC):
         url_options: str = self._create_rest_options(**kwargs)
         self._url = f'{base_url}/{rest_operation}/{url_options}'
 
-    @staticmethod
+    # noinspection PyMethodParameters
+    @u.staticproperty
     def organism_set() -> set:
         """ Obtains the set of valid KEGG organism database names by requesting from the KEGG REST API (caches this result so the request only needs to be done once).
 
@@ -144,7 +145,7 @@ class AbstractKEGGurl(abc.ABC):
         excluded_databases, extra_databases has priority.
         :raises ValueError: Raised when the provided database is not valid.
         """
-        if database_name not in AbstractKEGGurl.organism_set():
+        if database_name not in AbstractKEGGurl.organism_set:
             valid_databases = AbstractKEGGurl._valid_kegg_databases.union(AbstractKEGGurl._valid_medicus_databases)
             valid_databases: set = valid_databases - excluded_databases
             valid_databases: set = valid_databases.union(extra_databases)
@@ -226,7 +227,7 @@ class GetKEGGurl(AbstractKEGGurl):
     # noinspection PyMethodParameters
     @u.staticproperty
     def MAX_ENTRY_IDS_PER_URL() -> int:
-        """The maximum number of entry IDs allowed in a single get KEGG URL."""
+        """ The maximum number of entry IDs allowed in a single get KEGG URL."""
         return GetKEGGurl._MAX_ENTRY_IDS_PER_URL
 
     def __init__(self, entry_ids: list, entry_field: str = None) -> None:
@@ -520,7 +521,7 @@ class DatabaseConvKEGGurl(AbstractConvKEGGurl):
         :param outside_database_name: The name of the outside database to check.
         :raises ValueError: Raised if the database names are not valid or are not of the same type.
         """
-        valid_kegg_gene_databases: set = AbstractKEGGurl.organism_set()
+        valid_kegg_gene_databases: set = AbstractKEGGurl.organism_set
         valid_kegg_molecule_databases: set = AbstractConvKEGGurl._valid_kegg_molecule_databases
         valid_kegg_databases: set = valid_kegg_molecule_databases.union(valid_kegg_gene_databases)
 
@@ -587,7 +588,7 @@ class EntriesConvKEGGurl(AbstractConvKEGGurl):
         valid_databases: set = valid_databases.union(AbstractConvKEGGurl._valid_outside_molecule_databases)
         valid_databases.add('genes')
 
-        if target_database_name not in valid_databases.union(AbstractKEGGurl.organism_set()):
+        if target_database_name not in valid_databases.union(AbstractKEGGurl.organism_set):
             AbstractKEGGurl._validate_rest_option(
                 option_name='target database', option_value=target_database_name, valid_rest_options=valid_databases,
                 add_org=True

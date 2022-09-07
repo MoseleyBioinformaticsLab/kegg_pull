@@ -3,7 +3,7 @@ API
 
 .. automodule:: kegg_pull
 
-.. automodule:: kegg_pull.rest
+.. automodule:: kegg_pull.pull
     :members:
     :undoc-members:
     :exclude-members: main
@@ -13,7 +13,7 @@ API
     :undoc-members:
     :exclude-members: main
 
-.. automodule:: kegg_pull.pull
+.. automodule:: kegg_pull.rest
     :members:
     :undoc-members:
     :exclude-members: main
