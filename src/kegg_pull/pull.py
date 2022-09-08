@@ -297,13 +297,26 @@ class SinglePull:
 
 
 class AbstractMultiplePull(abc.ABC):
-    def __init__(self, single_pull: SinglePull, force_single_entry: bool = False):
+    """Abstract class that makes multiple requests to the KEGG REST API to pull and save entries of an unlimited amount."""
+
+    def __init__(self, single_pull: SinglePull, force_single_entry: bool = False) -> None:
+        """
+        :param single_pull: The SinglePull object used for each pull.
+        :param force_single_entry: Determines whether to pull only one entry at a time regardless of the entry field specified in the SinglePull argument.
+        """
         self._single_pull = single_pull
         self._force_single_entry = force_single_entry
 
     def pull(
         self, entry_ids: list, entry_field: t.Optional[str] = '', force_single_entry: t.Optional[bool] = None
     ) -> PullResult:
+        """ Makes multiple requests to the KEGG REST API for an unlimited amount of entry IDs.
+
+        :param entry_ids: The IDs of the entries that are split into multiple pulls.
+        :param entry_field: An optional field of the entries to pull.
+        :param force_single_entry: If provided, updates the force_single_single_entry value of this AbstractMultiplePull object for this call of pull.
+        :return: The pull result.
+        """
         force_single_entry = force_single_entry if force_single_entry is not None else self._force_single_entry
 
         # If a new entry field is provided, update it
@@ -331,6 +344,12 @@ class AbstractMultiplePull(abc.ABC):
 
     @staticmethod
     def _get_n_entries_per_url(force_single_entry: bool, entry_field: str) -> int:
+        """ Gets the number of entries for each Get KEGG URL used to make the pulls.
+
+        :param force_single_entry: If true, returns 1.
+        :param entry_field: If the entry field can only be pulled 1 at a time, return 1.
+        :return: 1 if the above specifications are true, else the maximum number of entries per Get URL.
+        """
         if force_single_entry:
             return 1
         elif ku.GetKEGGurl.only_one_entry(entry_field=entry_field):
@@ -340,11 +359,23 @@ class AbstractMultiplePull(abc.ABC):
 
     @abc.abstractmethod
     def _pull(self, grouped_entry_ids: list) -> PullResult:
+        """ Pulls the entries of specified IDs in the manner of the extended concrete class.
+
+        :param grouped_entry_ids: List of lists of entry IDs, with each list being below or equal to the number allowed per Get KEGG URL.
+        :return: The pull result.
+        """
         pass  # pragma: no cover
 
 
 class SingleProcessMultiplePull(AbstractMultiplePull):
+    """Class that makes multiple requests to the KEGG REST API to pull entries within a single process."""
+
     def _pull(self, grouped_entry_ids: list) -> PullResult:
+        """ Makes multiple requests to the KEGG REST API to pull entries within a single process.
+
+        :param grouped_entry_ids: List of lists of entry IDs, with each list being below or equal to the number allowed per Get KEGG URL.
+        :return: The pull result
+        """
         multiple_pull_result = PullResult()
 
         for entry_id_group in grouped_entry_ids:
@@ -355,11 +386,23 @@ class SingleProcessMultiplePull(AbstractMultiplePull):
 
 
 class MultiProcessMultiplePull(AbstractMultiplePull):
+    """Class that makes multiple requests to the KEGG REST API to pull entries within multiple processes."""
+
     def __init__(self, single_pull: SinglePull, force_single_entry: bool = False, n_workers: int = os.cpu_count()):
+        """
+        :param single_pull: The SinglePull object used for each pull.
+        :param force_single_entry: Determines whether to pull only one entry at a time despite the entry field specified in the SinglePull argument.
+        :param n_workers: The number of processes to use.
+        """
         super(MultiProcessMultiplePull, self).__init__(single_pull=single_pull, force_single_entry=force_single_entry)
         self._n_workers = n_workers
 
     def _pull(self, grouped_entry_ids: list) -> PullResult:
+        """ Makes multiple requests to the KEGG REST API to pull entries within multiple processes.
+
+        :param grouped_entry_ids: List of lists of entry IDs, with each list being below or equal to the number allowed per Get KEGG URL.
+        :return: The pull result
+        """
         multiple_pull_result = PullResult()
         args = [(entry_ids, self._single_pull) for entry_ids in grouped_entry_ids]
         chunk_size: int = len(grouped_entry_ids) // self._n_workers
@@ -375,6 +418,12 @@ class MultiProcessMultiplePull(AbstractMultiplePull):
 
 
 def _get_single_pull_result(entry_ids: list, single_pull: SinglePull) -> bytes:
+    """ Makes a request to the REST KEGG API to pull one or more entries.
+
+    :param entry_ids: The IDs of the entries to pull.
+    :param single_pull: The SinglePull object used to make the pull.
+    :return: The pull result.
+    """
     single_pull_result: PullResult = single_pull.pull(entry_ids=entry_ids)
 
     return p.dumps(single_pull_result)
