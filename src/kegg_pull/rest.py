@@ -155,7 +155,6 @@ class KEGGrest:
 
         return False
 
-
     def list(self, database_name: str) -> KEGGresponse:
         """ Executes the "list" KEGG API operation, getting the entry IDs of the provided database.
 
