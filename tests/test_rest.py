@@ -7,7 +7,6 @@ import tests.utils as u
 
 
 test_kegg_response_exception_data = [
-    ({'status': None, 'kegg_url': None}, 'A status must be specified for the KEGG response'),
     (
         {'status': r.KEGGresponse.Status.SUCCESS, 'kegg_url': None},
         'A KEGG response cannot be marked as successful if its response body is empty'
