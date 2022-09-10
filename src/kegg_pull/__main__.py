@@ -1,4 +1,8 @@
 """
+KEGG pull Commandline Interface
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Top-level commandline interface.
+
 Usage:
     kegg_pull -h | --help       Show this help message.
     kegg_pull --full-help       Show the help message of all sub commands.
@@ -8,27 +12,27 @@ Usage:
 """
 import sys
 
-from . import entry_ids as ei
-from . import rest as r
-from . import pull as p
+from . import entry_ids_cli as ei_cli
+from . import rest_cli as r_cli
+from . import pull_cli as p_cli
 
 
 def main():
     if len(sys.argv) > 1 and sys.argv[1] == 'entry-ids':
-        ei.main()
+        ei_cli.main()
     elif len(sys.argv) > 1 and sys.argv[1] == 'rest':
-        r.main()
+        r_cli.main()
     elif len(sys.argv) > 1 and sys.argv[1] == 'pull':
-        p.main()
+        p_cli.main()
     elif len(sys.argv) > 1 and sys.argv[1] == '--full-help':
         separator = '-'*80
         print(__doc__)
         print(separator)
-        print(ei.__doc__)
+        print(ei_cli.__doc__)
         print(separator)
-        print(r.__doc__)
+        print(r_cli.__doc__)
         print(separator)
-        print(p.__doc__)
+        print(p_cli.__doc__)
     else:
         print(__doc__)
 

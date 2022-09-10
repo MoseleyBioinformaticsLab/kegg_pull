@@ -15,8 +15,13 @@ def skip_organism_set(app, what, name, obj, skip, options) -> bool:
     if name in { 'organism_set', 'add_entry_ids', 'merge_pull_results'}:
         return True
 
+def remove_cli_usage(app, what, name, obj, options, lines):
+    if name in {'kegg_pull.__main__', 'kegg_pull.pull_cli', 'kegg_pull.entry_ids_cli', 'kegg_pull.rest_cli'}:
+        del lines[3:]
+
 def setup(app):
     app.connect('autodoc-skip-member', skip_organism_set)
+    app.connect('autodoc-process-docstring', remove_cli_usage)
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information

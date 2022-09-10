@@ -1,4 +1,8 @@
 """
+KEGG REST API Operations
+~~~~~~~~~~~~~~~~~~~~~~~~
+Interface for the KEGG REST API including all its operations.
+
 Usage:
     kegg_pull rest -h | --help
     kegg_pull rest info <database-name> [--output=<output>]
