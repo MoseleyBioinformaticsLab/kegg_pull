@@ -3,7 +3,7 @@ import requests as rq
 
 import kegg_pull.rest as r
 import kegg_pull.kegg_url as ku
-import tests.utils as u
+import dev.utils as u
 
 
 test_kegg_response_exception_data = [

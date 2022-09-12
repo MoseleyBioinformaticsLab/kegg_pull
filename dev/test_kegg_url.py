@@ -2,7 +2,7 @@ import pytest as pt
 import requests as rq
 
 import kegg_pull.kegg_url as ku
-import tests.utils as u
+import dev.utils as u
 
 
 test_validate_exception_data = [

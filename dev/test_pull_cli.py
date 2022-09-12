@@ -3,7 +3,7 @@ import os
 import typing as t
 
 import kegg_pull.pull_cli as p_cli
-import tests.utils as u
+import dev.utils as u
 
 testing_entry_ids = ['1', '2']
 

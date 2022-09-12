@@ -1,6 +1,6 @@
 import pytest as pt
 import kegg_pull._utils as utils
-import tests.utils as u
+import dev.utils as u
 
 def test_split_comma_separated_list_warning(caplog):
     comma_separated_list = 'a,,b'

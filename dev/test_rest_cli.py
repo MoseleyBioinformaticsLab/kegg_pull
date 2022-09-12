@@ -5,7 +5,7 @@ import typing as t
 
 import kegg_pull.rest as r
 import kegg_pull.rest_cli as r_cli
-import tests.utils as u
+import dev.utils as u
 
 
 def test_main_help(mocker):

@@ -24,6 +24,6 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install testing environment and kegg_pull package
-      run: bash tests/dev-install.sh
+      run: bash dev/install.sh
     - name: Test with pytest
-      run: bash tests/test.sh
+      run: bash dev/test.sh
