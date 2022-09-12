@@ -1,8 +1,4 @@
 """
-KEGG pull Commandline Interface
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Top-level commandline interface.
-
 Usage:
     kegg_pull -h | --help       Show this help message.
     kegg_pull --full-help       Show the help message of all sub commands.
