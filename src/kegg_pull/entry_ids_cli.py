@@ -1,8 +1,4 @@
 """
-Getting Lists of KEGG Entry IDs
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Functionality for getting lists of KEGG entry IDs from the KEGG REST API.
-
 Usage:
     kegg_pull entry-ids -h | --help
     kegg_pull entry-ids from-database <database-name> [--output=<output>]
