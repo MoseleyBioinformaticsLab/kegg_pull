@@ -2,7 +2,7 @@ import pytest as pt
 import os
 
 import kegg_pull.entry_ids_cli as ei_cli
-import tests.utils as u
+import dev.utils as u
 
 
 def test_main_help(mocker):

@@ -4,7 +4,7 @@ import os
 
 import kegg_pull.rest as r
 import kegg_pull.entry_ids as ei
-import tests.utils as u
+import dev.utils as u
 
 
 test_process_response_exception_data = [
