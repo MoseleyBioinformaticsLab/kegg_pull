@@ -388,14 +388,14 @@ class SingleProcessMultiplePull(AbstractMultiplePull):
 class MultiProcessMultiplePull(AbstractMultiplePull):
     """Class that makes multiple requests to the KEGG REST API to pull entries within multiple processes."""
 
-    def __init__(self, single_pull: SinglePull, force_single_entry: bool = False, n_workers: int = os.cpu_count()):
+    def __init__(self, single_pull: SinglePull, n_workers: int, force_single_entry: bool = False):
         """
         :param single_pull: The SinglePull object used for each pull.
         :param force_single_entry: Determines whether to pull only one entry at a time despite the entry field specified in the SinglePull argument.
         :param n_workers: The number of processes to use.
         """
         super(MultiProcessMultiplePull, self).__init__(single_pull=single_pull, force_single_entry=force_single_entry)
-        self._n_workers = n_workers
+        self._n_workers = n_workers if n_workers is not None else os.cpu_count()
 
     def _pull(self, grouped_entry_ids: list) -> PullResult:
         """ Makes multiple requests to the KEGG REST API to pull entries within multiple processes.
@@ -405,7 +405,10 @@ class MultiProcessMultiplePull(AbstractMultiplePull):
         """
         multiple_pull_result = PullResult()
         args = [(entry_ids, self._single_pull) for entry_ids in grouped_entry_ids]
-        chunk_size: int = len(grouped_entry_ids) // self._n_workers
+        chunk_size: int = min(len(grouped_entry_ids) // self._n_workers, 10)
+
+        if chunk_size == 0:
+            chunk_size = 1
 
         with mp.Pool(self._n_workers) as pool:
             results: list = pool.starmap(_get_single_pull_result, args, chunksize=chunk_size)

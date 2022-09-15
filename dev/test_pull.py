@@ -224,7 +224,10 @@ def test_not_all_requested_entries(mocker, entry_field: str):
         assert actual_file_content == expected_file_content
 
 
-test_multiple_pull_data = [(p.SingleProcessMultiplePull, {}), (p.MultiProcessMultiplePull, {'n_workers': 2})]
+test_multiple_pull_data = [
+    (p.SingleProcessMultiplePull, {}), (p.MultiProcessMultiplePull, {'n_workers': 2}),
+    (p.MultiProcessMultiplePull, {'n_workers': None})
+]
 @pt.mark.parametrize('MultiplePull,kwargs', test_multiple_pull_data)
 def test_multiple_pull(mocker, MultiplePull: type, kwargs: dict):
     expected_pull_calls = [

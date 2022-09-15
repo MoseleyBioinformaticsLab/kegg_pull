@@ -1,0 +1,3 @@
+gl:G13143	pubchem:405226698
+gl:G13141	pubchem:405226697
+gl:G13139	pubchem:405226696
