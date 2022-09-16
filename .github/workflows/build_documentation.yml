@@ -32,7 +32,7 @@ jobs:
         git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
         git clone "https://token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" --branch gh-pages --single-branch gh-pages
         
-        cp -r docs/_build/html/* gh-pages/
+        cp -r docs/_build/html/* gh-pages/docs/
         cd gh-pages
         touch .nojekyll
                 
