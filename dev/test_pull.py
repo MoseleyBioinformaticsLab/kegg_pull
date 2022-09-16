@@ -118,6 +118,10 @@ def test_pull_separate_entries(mocker, output_dir: str):
     assert pull_result.failed_entry_ids == (failed_entry_id,)
     assert pull_result.timed_out_entry_ids == (time_out_entry_id,)
 
+    assert str(pull_result) == f'Successful Entry Ids: {success_entry_id}\n' \
+               f'Failed Entry Ids: {failed_entry_id}\n' \
+               f'Timed Out Entry Ids: {time_out_entry_id}'
+
     with open(f'{output_dir}/{success_entry_id}.txt') as file:
         actual_file_content: str = file.read()
 

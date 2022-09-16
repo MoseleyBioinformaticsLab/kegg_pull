@@ -22,6 +22,18 @@ class PullResult:
         self._failed_entry_ids = []
         self._timed_out_entry_ids = []
 
+    def __repr__(self):
+        def get_entry_ids_repr(entry_ids) -> str:
+            return ', '.join(entry_ids) if len(entry_ids) > 0 else 'none'
+
+        successful_entry_ids: str = get_entry_ids_repr(entry_ids=self.successful_entry_ids)
+        failed_entry_ids: str = get_entry_ids_repr(entry_ids=self.failed_entry_ids)
+        timed_out_entry_ids: str = get_entry_ids_repr(entry_ids=self.timed_out_entry_ids)
+
+        return f'Successful Entry Ids: {successful_entry_ids}\n' \
+               f'Failed Entry Ids: {failed_entry_ids}\n' \
+               f'Timed Out Entry Ids: {timed_out_entry_ids}'
+
     @property
     def successful_entry_ids(self) -> tuple:
         """The IDs of entries successfully pulled."""
