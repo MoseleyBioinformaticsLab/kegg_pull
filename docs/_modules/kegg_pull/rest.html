@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kegg_pull.rest &mdash; KEGGpull 1.0.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> KEGGpull
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../guide.html">Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli.html">CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">KEGGpull</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>kegg_pull.rest</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for kegg_pull.rest</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">KEGG REST API Operations</span>
+<span class="sd">~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="sd">Interface for the KEGG REST API including all its operations.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">enum</span> <span class="k">as</span> <span class="nn">e</span>
+<span class="kn">import</span> <span class="nn">requests</span> <span class="k">as</span> <span class="nn">rq</span>
+<span class="kn">import</span> <span class="nn">time</span> <span class="k">as</span> <span class="nn">t</span>
+<span class="kn">import</span> <span class="nn">inspect</span> <span class="k">as</span> <span class="nn">ins</span>
+<span class="kn">import</span> <span class="nn">logging</span> <span class="k">as</span> <span class="nn">l</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">kegg_url</span> <span class="k">as</span> <span class="n">ku</span>
+
+
+<div class="viewcode-block" id="KEGGresponse"><a class="viewcode-back" href="../../api.html#kegg_pull.rest.KEGGresponse">[docs]</a><span class="k">class</span> <span class="nc">KEGGresponse</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Class containing details of a response from the KEGG REST API.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="KEGGresponse.Status"><a class="viewcode-back" href="../../api.html#kegg_pull.rest.KEGGresponse.Status">[docs]</a>    <span class="k">class</span> <span class="nc">Status</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The status of a KEGG response.&quot;&quot;&quot;</span>
+        <span class="n">SUCCESS</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">FAILED</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">TIMEOUT</span> <span class="o">=</span> <span class="mi">3</span></div>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="n">Status</span><span class="p">,</span> <span class="n">kegg_url</span><span class="p">:</span> <span class="n">ku</span><span class="o">.</span><span class="n">AbstractKEGGurl</span><span class="p">,</span> <span class="n">text_body</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">binary_body</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param status: The status of the KEGG response.</span>
+<span class="sd">        :param kegg_url: The URL used in the request to the KEGG REST API that resulted in the KEGG response.</span>
+<span class="sd">        :param text_body: The text version of the response body.</span>
+<span class="sd">        :param binary_body: The binary version of the response body.</span>
+<span class="sd">        :raises ValueError: Raised if the status is SUCCESS but a response body is not provided.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="n">KEGGresponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">SUCCESS</span> <span class="ow">and</span> <span class="p">(</span>
+            <span class="n">text_body</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">binary_body</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">text_body</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="ow">or</span> <span class="n">binary_body</span> <span class="o">==</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;A KEGG response cannot be marked as successful if its response body is empty&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_status</span> <span class="o">=</span> <span class="n">status</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_kegg_url</span> <span class="o">=</span> <span class="n">kegg_url</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_text_body</span> <span class="o">=</span> <span class="n">text_body</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_binary_body</span> <span class="o">=</span> <span class="n">binary_body</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Status</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_status</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">kegg_url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ku</span><span class="o">.</span><span class="n">AbstractKEGGurl</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kegg_url</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">text_body</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_text_body</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">binary_body</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_binary_body</span></div>
+
+
+<div class="viewcode-block" id="KEGGrest"><a class="viewcode-back" href="../../api.html#kegg_pull.rest.KEGGrest">[docs]</a><span class="k">class</span> <span class="nc">KEGGrest</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Class containing methods for making requests to the KEGG REST API, including all the KEGG REST API operations.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_tries</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">time_out</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">60</span><span class="p">,</span> <span class="n">sleep_time</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param n_tries: The number of times to try to make a request (can succeed the first time, or any of n_tries, or none of the tries).</span>
+<span class="sd">        :param time_out: The number of seconds to wait for a request until marking it as timed out.</span>
+<span class="sd">        :param sleep_time: The number of seconds to wait in between timed out requests.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_tries</span> <span class="o">=</span> <span class="n">n_tries</span> <span class="k">if</span> <span class="n">n_tries</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_time_out</span> <span class="o">=</span> <span class="n">time_out</span> <span class="k">if</span> <span class="n">time_out</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">60</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sleep_time</span> <span class="o">=</span> <span class="n">sleep_time</span> <span class="k">if</span> <span class="n">time_out</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mf">0.0</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_tries</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{self._n_tries}</span><span class="s1"> is not a valid number of tries to make a KEGG request.&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="KEGGrest.request"><a class="viewcode-back" href="../../api.html#kegg_pull.rest.KEGGrest.request">[docs]</a>    <span class="k">def</span> <span class="nf">request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">KEGGurl</span><span class="p">:</span> <span class="nb">type</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">kegg_url</span><span class="p">:</span> <span class="n">ku</span><span class="o">.</span><span class="n">AbstractKEGGurl</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGresponse</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; General KEGG request function based on a given KEGG URL (either a class that is instantiated or an already instantiated KEGG URL object).</span>
+
+<span class="sd">        :param KEGGurl: Optional KEGG URL class (extended from AbstractKEGGurl) that&#39;s instantiated with provided keyword arguments.</span>
+<span class="sd">        :param kegg_url: Optional KEGGurl object that&#39;s already instantiated (used if KEGGurl class is not provided).</span>
+<span class="sd">        :param kwargs: The keyword arguments used to instantiate the KEGGurl class, if provided.</span>
+<span class="sd">        :return: The KEGG response.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">kegg_url</span><span class="p">:</span> <span class="n">ku</span><span class="o">.</span><span class="n">AbstractKEGGurl</span> <span class="o">=</span> <span class="n">KEGGrest</span><span class="o">.</span><span class="n">_get_kegg_url</span><span class="p">(</span><span class="n">KEGGurl</span><span class="o">=</span><span class="n">KEGGurl</span><span class="p">,</span> <span class="n">kegg_url</span><span class="o">=</span><span class="n">kegg_url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">status</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_tries</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">response</span><span class="p">:</span> <span class="n">rq</span><span class="o">.</span><span class="n">Response</span> <span class="o">=</span> <span class="n">rq</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">kegg_url</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_time_out</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">KEGGresponse</span><span class="p">(</span>
+                        <span class="n">status</span><span class="o">=</span><span class="n">KEGGresponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">,</span> <span class="n">kegg_url</span><span class="o">=</span><span class="n">kegg_url</span><span class="p">,</span> <span class="n">text_body</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">,</span>
+                        <span class="n">binary_body</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">content</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">status</span> <span class="o">=</span> <span class="n">KEGGresponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">FAILED</span>
+            <span class="k">except</span> <span class="n">rq</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">Timeout</span><span class="p">:</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="n">KEGGresponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">TIMEOUT</span>
+                <span class="n">t</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sleep_time</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">KEGGresponse</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span> <span class="n">kegg_url</span><span class="o">=</span><span class="n">kegg_url</span><span class="p">)</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_get_kegg_url</span><span class="p">(</span><span class="n">KEGGurl</span><span class="p">:</span> <span class="nb">type</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">kegg_url</span><span class="p">:</span> <span class="n">ku</span><span class="o">.</span><span class="n">AbstractKEGGurl</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ku</span><span class="o">.</span><span class="n">AbstractKEGGurl</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Gets the KEGGurl object to be used to make the request to KEGG.</span>
+
+<span class="sd">        :param KEGGurl: Optional KEGGurl class to instantiate a KEGGurl object using keyword arguments.</span>
+<span class="sd">        :param kegg_url: Instantiated KEGGurl object that&#39;s simply returned if provided (used if the KEGGurl class is not provided).</span>
+<span class="sd">        :param kwargs: The keyword arguments used to instantiate the KEGGurl object if a KEGGurl class is provided.</span>
+<span class="sd">        :return: The KEGGurl object.</span>
+<span class="sd">        :raises ValueError: Raised if both a class and object are provided or the class does not inherit from AbstractKEGGurl.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">KEGGurl</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">kegg_url</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;Either an instantiated kegg_url object must be provided or an extended class of &#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{ku.AbstractKEGGurl.__name__}</span><span class="s1"> along with the corresponding kwargs for its constructor.&#39;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">kegg_url</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">KEGGurl</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">l</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s1">&#39;Both an instantiated kegg_url object and KEGGurl class are provided. Using the instantiated object...&#39;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">kegg_url</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">kegg_url</span>
+
+        <span class="k">if</span> <span class="n">ku</span><span class="o">.</span><span class="n">AbstractKEGGurl</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ins</span><span class="o">.</span><span class="n">getmro</span><span class="p">(</span><span class="n">KEGGurl</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;The value for KEGGurl must be an inherited class of </span><span class="si">{ku.AbstractKEGGurl.__name__}</span><span class="s1">. &#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;The class &quot;</span><span class="si">{KEGGurl.__name__}</span><span class="s1">&quot; is not.&#39;</span>
+            <span class="p">)</span>
+
+        <span class="n">kegg_url</span><span class="p">:</span> <span class="n">ku</span><span class="o">.</span><span class="n">AbstractKEGGurl</span> <span class="o">=</span> <span class="n">KEGGurl</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">kegg_url</span>
+
+<div class="viewcode-block" id="KEGGrest.test"><a class="viewcode-back" href="../../api.html#kegg_pull.rest.KEGGrest.test">[docs]</a>    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">KEGGurl</span><span class="p">:</span> <span class="nb">type</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">kegg_url</span><span class="p">:</span> <span class="n">ku</span><span class="o">.</span><span class="n">AbstractKEGGurl</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Tests if a KEGGurl will succeed upon being used in a request to the KEGG REST API.</span>
+
+<span class="sd">        :param KEGGurl: Optional KEGGurl class used to instantiate a KEGGurl object given keyword arguments.</span>
+<span class="sd">        :param kegg_url: KEGGurl object that&#39;s already instantiated (used if a KEGGurl class is not provided).</span>
+<span class="sd">        :param kwargs: The keyword arguments used to instantiated the KEGGurl object from the KEGGurl class, if provided.</span>
+<span class="sd">        :return: True if the URL would succeed, false if it would fail or time out.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">kegg_url</span><span class="p">:</span> <span class="n">ku</span><span class="o">.</span><span class="n">AbstractKEGGurl</span> <span class="o">=</span> <span class="n">KEGGrest</span><span class="o">.</span><span class="n">_get_kegg_url</span><span class="p">(</span><span class="n">KEGGurl</span><span class="o">=</span><span class="n">KEGGurl</span><span class="p">,</span> <span class="n">kegg_url</span><span class="o">=</span><span class="n">kegg_url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_tries</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">response</span><span class="p">:</span> <span class="n">rq</span><span class="o">.</span><span class="n">Response</span> <span class="o">=</span> <span class="n">rq</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">kegg_url</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_time_out</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">except</span> <span class="n">rq</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">Timeout</span><span class="p">:</span>
+                <span class="n">t</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sleep_time</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="KEGGrest.list"><a class="viewcode-back" href="../../api.html#kegg_pull.rest.KEGGrest.list">[docs]</a>    <span class="k">def</span> <span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGresponse</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Executes the &quot;list&quot; KEGG API operation, getting the entry IDs of the provided database.</span>
+
+<span class="sd">        :param database_name: The database from which to get entry IDs.</span>
+<span class="sd">        :return: The KEGG response.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">KEGGurl</span><span class="o">=</span><span class="n">ku</span><span class="o">.</span><span class="n">ListKEGGurl</span><span class="p">,</span> <span class="n">database_name</span><span class="o">=</span><span class="n">database_name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="KEGGrest.get"><a class="viewcode-back" href="../../api.html#kegg_pull.rest.KEGGrest.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">entry_field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGresponse</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Executes the &quot;get&quot; KEGG API operation, getting the entries of the provided entry IDs.</span>
+
+<span class="sd">        :param entry_ids: The IDs of entries to get.</span>
+<span class="sd">        :param entry_field: Optional field to extract from the entries.</span>
+<span class="sd">        :return: The KEGG response.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">KEGGurl</span><span class="o">=</span><span class="n">ku</span><span class="o">.</span><span class="n">GetKEGGurl</span><span class="p">,</span> <span class="n">entry_ids</span><span class="o">=</span><span class="n">entry_ids</span><span class="p">,</span> <span class="n">entry_field</span><span class="o">=</span><span class="n">entry_field</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="KEGGrest.info"><a class="viewcode-back" href="../../api.html#kegg_pull.rest.KEGGrest.info">[docs]</a>    <span class="k">def</span> <span class="nf">info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGresponse</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Executes the &quot;info&quot; KEGG API operation, getting information about a KEGG database.</span>
+
+<span class="sd">        :param database_name: The database to get information about.</span>
+<span class="sd">        :return: The KEGG response</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">KEGGurl</span><span class="o">=</span><span class="n">ku</span><span class="o">.</span><span class="n">InfoKEGGurl</span><span class="p">,</span> <span class="n">database_name</span><span class="o">=</span><span class="n">database_name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="KEGGrest.keywords_find"><a class="viewcode-back" href="../../api.html#kegg_pull.rest.KEGGrest.keywords_find">[docs]</a>    <span class="k">def</span> <span class="nf">keywords_find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">keywords</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGresponse</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Executes the &quot;find&quot; KEGG API operation, finding entry IDs based on keywords to search in entries.</span>
+
+<span class="sd">        :param database_name: The name of the database containing entries to search for.</span>
+<span class="sd">        :param keywords: The keywords to search in entries.</span>
+<span class="sd">        :return: The KEGG response</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">KEGGurl</span><span class="o">=</span><span class="n">ku</span><span class="o">.</span><span class="n">KeywordsFindKEGGurl</span><span class="p">,</span> <span class="n">database_name</span><span class="o">=</span><span class="n">database_name</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="KEGGrest.molecular_find"><a class="viewcode-back" href="../../api.html#kegg_pull.rest.KEGGrest.molecular_find">[docs]</a>    <span class="k">def</span> <span class="nf">molecular_find</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">formula</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">exact_mass</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">molecular_weight</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGresponse</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Executes the &quot;find&quot; KEGG API operation, finding entry IDs in chemical databases based on one (and only one) choice of three molecular attributes of the entries.</span>
+
+<span class="sd">        :param database_name: The name of the chemical database to search for entries in.</span>
+<span class="sd">        :param formula: The chemical formula (one of three choices) of chemical entries to search for.</span>
+<span class="sd">        :param exact_mass: The exact mass (one of three choices) of chemical entries to search for (single value or range).</span>
+<span class="sd">        :param molecular_weight: The molecular weight (one of three choices) of chemical entries to search for (single value or range).</span>
+<span class="sd">        :return: The KEGG response</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span>
+            <span class="n">KEGGurl</span><span class="o">=</span><span class="n">ku</span><span class="o">.</span><span class="n">MolecularFindKEGGurl</span><span class="p">,</span> <span class="n">database_name</span><span class="o">=</span><span class="n">database_name</span><span class="p">,</span> <span class="n">formula</span><span class="o">=</span><span class="n">formula</span><span class="p">,</span> <span class="n">exact_mass</span><span class="o">=</span><span class="n">exact_mass</span><span class="p">,</span>
+            <span class="n">molecular_weight</span><span class="o">=</span><span class="n">molecular_weight</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="KEGGrest.database_conv"><a class="viewcode-back" href="../../api.html#kegg_pull.rest.KEGGrest.database_conv">[docs]</a>    <span class="k">def</span> <span class="nf">database_conv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kegg_database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">outside_database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGresponse</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Executes the &quot;conv&quot; KEGG API operation, converting the entry IDs of a KEGG database to those of an outside database.</span>
+
+<span class="sd">        :param kegg_database_name: The name of the KEGG database to get converted entry IDs from.</span>
+<span class="sd">        :param outside_database_name: The name of the outside database to get converted entry IDs from.</span>
+<span class="sd">        :return: The KEGG response.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span>
+            <span class="n">KEGGurl</span><span class="o">=</span><span class="n">ku</span><span class="o">.</span><span class="n">DatabaseConvKEGGurl</span><span class="p">,</span> <span class="n">kegg_database_name</span><span class="o">=</span><span class="n">kegg_database_name</span><span class="p">,</span>
+            <span class="n">outside_database_name</span><span class="o">=</span><span class="n">outside_database_name</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="KEGGrest.entries_conv"><a class="viewcode-back" href="../../api.html#kegg_pull.rest.KEGGrest.entries_conv">[docs]</a>    <span class="k">def</span> <span class="nf">entries_conv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGresponse</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Executes the &quot;conv&quot; KEGG API operation, converting provided entry IDs from one database to the form of a target database.</span>
+
+<span class="sd">        :param target_database_name: The name of the database to get converted entry IDs from.</span>
+<span class="sd">        :param entry_ids: The entry IDs to convert to the form of the target database.</span>
+<span class="sd">        :return: The KEGG response.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span>
+            <span class="n">KEGGurl</span><span class="o">=</span><span class="n">ku</span><span class="o">.</span><span class="n">EntriesConvKEGGurl</span><span class="p">,</span> <span class="n">target_database_name</span><span class="o">=</span><span class="n">target_database_name</span><span class="p">,</span> <span class="n">entry_ids</span><span class="o">=</span><span class="n">entry_ids</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="KEGGrest.database_link"><a class="viewcode-back" href="../../api.html#kegg_pull.rest.KEGGrest.database_link">[docs]</a>    <span class="k">def</span> <span class="nf">database_link</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">source_database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGresponse</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Executes the &quot;link&quot; KEGG API operation, showing the IDs of entries in one KEGG database that are connected/related to entries of another KEGG database.</span>
+
+<span class="sd">        :param target_database_name: One of the two KEGG databases to get linked entries from.</span>
+<span class="sd">        :param source_database_name: The other KEGG database to link entries from the target database.</span>
+<span class="sd">        :return: The KEGG response</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span>
+            <span class="n">KEGGurl</span><span class="o">=</span><span class="n">ku</span><span class="o">.</span><span class="n">DatabaseLinkKEGGurl</span><span class="p">,</span> <span class="n">target_database_name</span><span class="o">=</span><span class="n">target_database_name</span><span class="p">,</span>
+            <span class="n">source_database_name</span><span class="o">=</span><span class="n">source_database_name</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="KEGGrest.entries_link"><a class="viewcode-back" href="../../api.html#kegg_pull.rest.KEGGrest.entries_link">[docs]</a>    <span class="k">def</span> <span class="nf">entries_link</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGresponse</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Executes the &quot;link&quot; KEGG API operation, showing the IDs of entries that are connected/related to entries of a provided databases.</span>
+
+<span class="sd">        :param target_database_name: The KEGG database to find links to the provided entries.</span>
+<span class="sd">        :param entry_ids: The IDs of the entries to link to entries in the target database.</span>
+<span class="sd">        :return: The KEGG response</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span>
+            <span class="n">KEGGurl</span><span class="o">=</span><span class="n">ku</span><span class="o">.</span><span class="n">EntriesLinkKEGGurl</span><span class="p">,</span> <span class="n">target_database_name</span><span class="o">=</span><span class="n">target_database_name</span><span class="p">,</span> <span class="n">entry_ids</span><span class="o">=</span><span class="n">entry_ids</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="KEGGrest.ddi"><a class="viewcode-back" href="../../api.html#kegg_pull.rest.KEGGrest.ddi">[docs]</a>    <span class="k">def</span> <span class="nf">ddi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">drug_entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGresponse</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Executes the &quot;ddi&quot; KEGG API operation, searching for drug to drug interactions. Providing one entry ID reports all known interactions, while providing multiple checks if any drug pair in a given set of drugs is CI or P. If providing multiple, all entries must belong to the same database.</span>
+
+<span class="sd">        :param drug_entry_ids: The IDs of the drug entries within which search for drug interactions.</span>
+<span class="sd">        :return: The KEGG response</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">KEGGurl</span><span class="o">=</span><span class="n">ku</span><span class="o">.</span><span class="n">DdiKEGGurl</span><span class="p">,</span> <span class="n">drug_entry_ids</span><span class="o">=</span><span class="n">drug_entry_ids</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Erik Huckvale.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
