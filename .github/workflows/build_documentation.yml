@@ -31,11 +31,12 @@ jobs:
         git config --global user.name "${GITHUB_ACTOR}"
         git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
         git clone "https://token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" --branch gh-pages --single-branch gh-pages
-        
-        cp -r docs/_build/html/* gh-pages/docs/
-        cd gh-pages
+        mkdir gh-pages/tmp/
+        cp -r docs/_build/html/* gh-pages/tmp/
+        cd gh-pages/
+        rm -rf docs/
+        mv tmp/ docs/
         touch .nojekyll
-                
         git add .
         git commit -m "Update documentation." -a || true
         # The above command will fail if no changes were present, so we ignore
