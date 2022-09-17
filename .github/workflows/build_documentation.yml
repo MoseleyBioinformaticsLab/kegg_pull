@@ -31,9 +31,9 @@ jobs:
         git config --global user.name "${GITHUB_ACTOR}"
         git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
         git clone "https://token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" --branch gh-pages --single-branch gh-pages
+        mkdir gh-pages/tmp/
+        cp -r docs/_build/html/* gh-pages/tmp/
         cd gh-pages/
-        mkdir tmp/
-        cp -r docs/_build/html/* tmp/
         rm -rf docs/
         mv tmp/ docs/
         touch .nojekyll
