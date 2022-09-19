@@ -1,4 +1,0 @@
-D00100	D00564	CI,P	unclassified
-D00109	D00564	P	unclassified
-D00564	D00100	CI,P	unclassified
-D00564	D00109	P	unclassified
