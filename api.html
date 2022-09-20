@@ -44,7 +44,7 @@
 <li class="toctree-l1"><a class="reference internal" href="cli.html">CLI</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#pulling-parsing-and-saving-kegg-entries">Pulling, Parsing, and Saving KEGG Entries</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#getting-lists-of-kegg-entry-ids">Getting Lists of KEGG Entry IDs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pulling-lists-of-kegg-entry-ids">Pulling Lists of KEGG Entry IDs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#kegg-rest-api-operations">KEGG REST API Operations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#constructing-urls-for-the-kegg-rest-api">Constructing URLs for the KEGG REST API</a></li>
 </ul>
@@ -84,7 +84,7 @@
 <p><code class="docutils literal notranslate"><span class="pre">kegg_url</span></code></p>
 <span class="target" id="module-kegg_pull.pull"></span><div class="section" id="pulling-parsing-and-saving-kegg-entries">
 <h2>Pulling, Parsing, and Saving KEGG Entries<a class="headerlink" href="#pulling-parsing-and-saving-kegg-entries" title="Permalink to this headline">¶</a></h2>
-<p>Functionality for getting KEGG entries from the KEGG REST API, parsing them, and saving the entries as files.</p>
+<p>Functionality for pulling KEGG entries from the KEGG REST API, parsing them, and saving the entries as files.</p>
 <dl class="class">
 <dt id="kegg_pull.pull.PullResult">
 <em class="property">class </em><code class="sig-prename descclassname">kegg_pull.pull.</code><code class="sig-name descname">PullResult</code><a class="reference internal" href="_modules/kegg_pull/pull.html#PullResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.pull.PullResult" title="Permalink to this definition">¶</a></dt>
@@ -200,25 +200,25 @@
 </dd></dl>
 
 </div>
-<span class="target" id="module-kegg_pull.entry_ids"></span><div class="section" id="getting-lists-of-kegg-entry-ids">
-<h2>Getting Lists of KEGG Entry IDs<a class="headerlink" href="#getting-lists-of-kegg-entry-ids" title="Permalink to this headline">¶</a></h2>
-<p>Functionality for getting lists of KEGG entry IDs from the KEGG REST API.</p>
+<span class="target" id="module-kegg_pull.entry_ids"></span><div class="section" id="pulling-lists-of-kegg-entry-ids">
+<h2>Pulling Lists of KEGG Entry IDs<a class="headerlink" href="#pulling-lists-of-kegg-entry-ids" title="Permalink to this headline">¶</a></h2>
+<p>Functionality for pulling lists of KEGG entry IDs from the KEGG REST API.</p>
 <dl class="class">
 <dt id="kegg_pull.entry_ids.EntryIdsGetter">
 <em class="property">class </em><code class="sig-prename descclassname">kegg_pull.entry_ids.</code><code class="sig-name descname">EntryIdsGetter</code><span class="sig-paren">(</span><em class="sig-param">kegg_rest: kegg_pull.rest.KEGGrest = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/entry_ids.html#EntryIdsGetter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.entry_ids.EntryIdsGetter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class with methods for various ways of getting a list of KEGG entry IDs from the KEGG REST API.</p>
+<dd><p>Class with methods for various ways of pulling a list of KEGG entry IDs from the KEGG REST API.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>kegg_rest</strong> – Optional KEGGrest object for making requests to the KEGG REST API to get entry IDs (if a KEGGrest object is not provided, a KEGGrest object is created with the default values).</p>
+<dd class="field-odd"><p><strong>kegg_rest</strong> – Optional KEGGrest object for making requests to the KEGG REST API to pull entry IDs (if a KEGGrest object is not provided, a KEGGrest object is created with the default values).</p>
 </dd>
 </dl>
 <dl class="method">
 <dt id="kegg_pull.entry_ids.EntryIdsGetter.from_database">
 <code class="sig-name descname">from_database</code><span class="sig-paren">(</span><em class="sig-param">database_name: str</em><span class="sig-paren">)</span> &#x2192; list<a class="reference internal" href="_modules/kegg_pull/entry_ids.html#EntryIdsGetter.from_database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.entry_ids.EntryIdsGetter.from_database" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets the KEGG entry IDs of a given database.</p>
+<dd><p>Pulls the KEGG entry IDs of a given database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>database_name</strong> – The KEGG database to get the entry IDs for.</p>
+<dd class="field-odd"><p><strong>database_name</strong> – The KEGG database to pull the entry IDs from.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The list of resulting entry IDs.</p>
@@ -232,7 +232,7 @@
 <dl class="method">
 <dt id="kegg_pull.entry_ids.EntryIdsGetter.from_file">
 <em class="property">static </em><code class="sig-name descname">from_file</code><span class="sig-paren">(</span><em class="sig-param">file_path: str</em><span class="sig-paren">)</span> &#x2192; list<a class="reference internal" href="_modules/kegg_pull/entry_ids.html#EntryIdsGetter.from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.entry_ids.EntryIdsGetter.from_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets KEGG entry IDs that are listed in a file with one entry ID on each line.</p>
+<dd><p>Loads KEGG entry IDs that are listed in a file with one entry ID on each line.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>file_path</strong> – The path to the file containing the entry IDs.</p>
@@ -249,11 +249,11 @@
 <dl class="method">
 <dt id="kegg_pull.entry_ids.EntryIdsGetter.from_keywords">
 <code class="sig-name descname">from_keywords</code><span class="sig-paren">(</span><em class="sig-param">database_name: str</em>, <em class="sig-param">keywords: list</em><span class="sig-paren">)</span> &#x2192; list<a class="reference internal" href="_modules/kegg_pull/entry_ids.html#EntryIdsGetter.from_keywords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.entry_ids.EntryIdsGetter.from_keywords" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets entry IDs from a database based on keywords searched in the entries.</p>
+<dd><p>Pulls entry IDs from a database based on keywords searched in the entries.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>database_name</strong> – The name of the database to get entry IDs from.</p></li>
+<li><p><strong>database_name</strong> – The name of the database to pull entry IDs from.</p></li>
 <li><p><strong>keywords</strong> – The keywords to search entries in the database with.</p></li>
 </ul>
 </dd>
@@ -269,7 +269,7 @@
 <dl class="method">
 <dt id="kegg_pull.entry_ids.EntryIdsGetter.from_molecular_attribute">
 <code class="sig-name descname">from_molecular_attribute</code><span class="sig-paren">(</span><em class="sig-param">database_name: str</em>, <em class="sig-param">formula: str = None</em>, <em class="sig-param">exact_mass: Union[float</em>, <em class="sig-param">tuple] = None</em>, <em class="sig-param">molecular_weight: Union[int</em>, <em class="sig-param">tuple] = None</em><span class="sig-paren">)</span> &#x2192; list<a class="reference internal" href="_modules/kegg_pull/entry_ids.html#EntryIdsGetter.from_molecular_attribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.entry_ids.EntryIdsGetter.from_molecular_attribute" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets entry IDs from a database containing chemical entries based on one (and only one) of three molecular attributes of the entries.</p>
+<dd><p>Pulls entry IDs from a database containing chemical entries based on one (and only one) of three molecular attributes of the entries.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -406,10 +406,10 @@
 <dl class="method">
 <dt id="kegg_pull.rest.KEGGrest.list">
 <code class="sig-name descname">list</code><span class="sig-paren">(</span><em class="sig-param">database_name: str</em><span class="sig-paren">)</span> &#x2192; kegg_pull.rest.KEGGresponse<a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest.list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest.list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Executes the “list” KEGG API operation, getting the entry IDs of the provided database.</p>
+<dd><p>Executes the “list” KEGG API operation, pulling the entry IDs of the provided database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>database_name</strong> – The database from which to get entry IDs.</p>
+<dd class="field-odd"><p><strong>database_name</strong> – The database from which to pull entry IDs.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The KEGG response.</p>
@@ -420,11 +420,11 @@
 <dl class="method">
 <dt id="kegg_pull.rest.KEGGrest.get">
 <code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param">entry_ids: kegg_pull.rest.KEGGrest.list</em>, <em class="sig-param">entry_field: str = None</em><span class="sig-paren">)</span> &#x2192; kegg_pull.rest.KEGGresponse<a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest.get" title="Permalink to this definition">¶</a></dt>
-<dd><p>Executes the “get” KEGG API operation, getting the entries of the provided entry IDs.</p>
+<dd><p>Executes the “get” KEGG API operation, pulling the entries of the provided entry IDs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>entry_ids</strong> – The IDs of entries to get.</p></li>
+<li><p><strong>entry_ids</strong> – The IDs of entries to pull.</p></li>
 <li><p><strong>entry_field</strong> – Optional field to extract from the entries.</p></li>
 </ul>
 </dd>
@@ -437,10 +437,10 @@
 <dl class="method">
 <dt id="kegg_pull.rest.KEGGrest.info">
 <code class="sig-name descname">info</code><span class="sig-paren">(</span><em class="sig-param">database_name: str</em><span class="sig-paren">)</span> &#x2192; kegg_pull.rest.KEGGresponse<a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest.info" title="Permalink to this definition">¶</a></dt>
-<dd><p>Executes the “info” KEGG API operation, getting information about a KEGG database.</p>
+<dd><p>Executes the “info” KEGG API operation, pulling information about a KEGG database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>database_name</strong> – The database to get information about.</p>
+<dd class="field-odd"><p><strong>database_name</strong> – The database to pull information about.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The KEGG response</p>
@@ -491,8 +491,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>kegg_database_name</strong> – The name of the KEGG database to get converted entry IDs from.</p></li>
-<li><p><strong>outside_database_name</strong> – The name of the outside database to get converted entry IDs from.</p></li>
+<li><p><strong>kegg_database_name</strong> – The name of the KEGG database to pull converted entry IDs from.</p></li>
+<li><p><strong>outside_database_name</strong> – The name of the outside database to pull converted entry IDs from.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -525,7 +525,7 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>target_database_name</strong> – One of the two KEGG databases to get linked entries from.</p></li>
+<li><p><strong>target_database_name</strong> – One of the two KEGG databases to pull linked entries from.</p></li>
 <li><p><strong>source_database_name</strong> – The other KEGG database to link entries from the target database.</p></li>
 </ul>
 </dd>
@@ -575,8 +575,7 @@
 <dl class="class">
 <dt id="kegg_pull.kegg_url.AbstractKEGGurl">
 <em class="property">class </em><code class="sig-prename descclassname">kegg_pull.kegg_url.</code><code class="sig-name descname">AbstractKEGGurl</code><span class="sig-paren">(</span><em class="sig-param">rest_operation: str</em>, <em class="sig-param">base_url: str = 'https://rest.kegg.jp'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#AbstractKEGGurl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.kegg_url.AbstractKEGGurl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Abstract class containing the base data and functionality for all KEGG URL classes which validate and construct URLs
-for accessing the KEGG REST API.</p>
+<dd><p>Abstract class which validates and constructs URLs for accessing the KEGG REST API and contains the base data and functionality for all KEGG URL classes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -600,7 +599,7 @@ for accessing the KEGG REST API.</p>
 <dl class="class">
 <dt id="kegg_pull.kegg_url.ListKEGGurl">
 <em class="property">class </em><code class="sig-prename descclassname">kegg_pull.kegg_url.</code><code class="sig-name descname">ListKEGGurl</code><span class="sig-paren">(</span><em class="sig-param">database_name: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#ListKEGGurl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.kegg_url.ListKEGGurl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Contains the validation implementation and URL construction of the KEGG API list operation.</p>
+<dd><p>Contains URL construction and validation functionality of the KEGG API list operation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>database_name</strong> – The database option for the KEGG list URL.</p>
@@ -614,7 +613,7 @@ for accessing the KEGG REST API.</p>
 <dl class="class">
 <dt id="kegg_pull.kegg_url.InfoKEGGurl">
 <em class="property">class </em><code class="sig-prename descclassname">kegg_pull.kegg_url.</code><code class="sig-name descname">InfoKEGGurl</code><span class="sig-paren">(</span><em class="sig-param">database_name: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#InfoKEGGurl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.kegg_url.InfoKEGGurl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Contains the validation implementation and URL construction of the KEGG API info operation.</p>
+<dd><p>Contains URL construction and validation functionality of the KEGG API info operation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>database_name</strong> – The database option for the KEGG info URL.</p>
@@ -628,7 +627,7 @@ for accessing the KEGG REST API.</p>
 <dl class="class">
 <dt id="kegg_pull.kegg_url.GetKEGGurl">
 <em class="property">class </em><code class="sig-prename descclassname">kegg_pull.kegg_url.</code><code class="sig-name descname">GetKEGGurl</code><span class="sig-paren">(</span><em class="sig-param">entry_ids: list</em>, <em class="sig-param">entry_field: str = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#GetKEGGurl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.kegg_url.GetKEGGurl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Contains validation and URL construction as well as a helpful interface for the KEGG API get operation.</p>
+<dd><p>Contains URL construction and validation functionality for the KEGG API get operation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -685,8 +684,7 @@ operation.</p>
 <dl class="class">
 <dt id="kegg_pull.kegg_url.KeywordsFindKEGGurl">
 <em class="property">class </em><code class="sig-prename descclassname">kegg_pull.kegg_url.</code><code class="sig-name descname">KeywordsFindKEGGurl</code><span class="sig-paren">(</span><em class="sig-param">database_name: str</em>, <em class="sig-param">keywords: list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#KeywordsFindKEGGurl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.kegg_url.KeywordsFindKEGGurl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Contains the validation implementation and URL construction of the KEGG API find operation based on the URL form
-that searches entries by keywords.</p>
+<dd><p>Contains the URL construction and validation functionality for the KEGG API find operation based on the URL form that searches entries by keywords.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -703,8 +701,7 @@ that searches entries by keywords.</p>
 <dl class="class">
 <dt id="kegg_pull.kegg_url.MolecularFindKEGGurl">
 <em class="property">class </em><code class="sig-prename descclassname">kegg_pull.kegg_url.</code><code class="sig-name descname">MolecularFindKEGGurl</code><span class="sig-paren">(</span><em class="sig-param">database_name: str</em>, <em class="sig-param">formula: str = None</em>, <em class="sig-param">exact_mass: Union[float</em>, <em class="sig-param">tuple] = None</em>, <em class="sig-param">molecular_weight: Union[int</em>, <em class="sig-param">tuple] = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#MolecularFindKEGGurl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.kegg_url.MolecularFindKEGGurl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Contains the validation implementation and URL construction of the KEGG API find operation based on the URL form
-that uses chemical / molecular attributes of compounds.</p>
+<dd><p>Contains the URL construction and validation functionality for the KEGG API find operation based on the URL form that uses chemical / molecular attributes of compounds.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -738,8 +735,7 @@ REST API operation.</p>
 <dl class="class">
 <dt id="kegg_pull.kegg_url.DatabaseConvKEGGurl">
 <em class="property">class </em><code class="sig-prename descclassname">kegg_pull.kegg_url.</code><code class="sig-name descname">DatabaseConvKEGGurl</code><span class="sig-paren">(</span><em class="sig-param">kegg_database_name: str</em>, <em class="sig-param">outside_database_name: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#DatabaseConvKEGGurl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.kegg_url.DatabaseConvKEGGurl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Contains the validation implementation and URL construction of the KEGG API conv operation based on the URL form
-that uses a kegg database and outside database.</p>
+<dd><p>Contains the URL construction and validation functionality of the KEGG API conv operation based on the URL form that uses a KEGG database and an outside database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -756,8 +752,7 @@ that uses a kegg database and outside database.</p>
 <dl class="class">
 <dt id="kegg_pull.kegg_url.EntriesConvKEGGurl">
 <em class="property">class </em><code class="sig-prename descclassname">kegg_pull.kegg_url.</code><code class="sig-name descname">EntriesConvKEGGurl</code><span class="sig-paren">(</span><em class="sig-param">target_database_name: str</em>, <em class="sig-param">entry_ids: list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#EntriesConvKEGGurl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.kegg_url.EntriesConvKEGGurl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Contains the validation implementation and URL construction of the KEGG API conv operation based on the URL form
-that uses a target database and entry IDs.</p>
+<dd><p>Contains the URL construction and validation functionality for the KEGG API conv operation based on the URL form that uses a target database and entry IDs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -788,8 +783,7 @@ that uses a target database and entry IDs.</p>
 <dl class="class">
 <dt id="kegg_pull.kegg_url.DatabaseLinkKEGGurl">
 <em class="property">class </em><code class="sig-prename descclassname">kegg_pull.kegg_url.</code><code class="sig-name descname">DatabaseLinkKEGGurl</code><span class="sig-paren">(</span><em class="sig-param">target_database_name: str</em>, <em class="sig-param">source_database_name: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#DatabaseLinkKEGGurl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.kegg_url.DatabaseLinkKEGGurl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Contains the validation and URL construction of URLs for the link KEGG REST API operation of the form that uses
-a target database and source database.</p>
+<dd><p>Contains the URL construction and validation functionality for the link KEGG REST API operation of the form that uses a target database and a source database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -806,8 +800,7 @@ a target database and source database.</p>
 <dl class="class">
 <dt id="kegg_pull.kegg_url.EntriesLinkKEGGurl">
 <em class="property">class </em><code class="sig-prename descclassname">kegg_pull.kegg_url.</code><code class="sig-name descname">EntriesLinkKEGGurl</code><span class="sig-paren">(</span><em class="sig-param">target_database_name: str</em>, <em class="sig-param">entry_ids: list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#EntriesLinkKEGGurl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.kegg_url.EntriesLinkKEGGurl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Contains the validation and URL construction of the URL for the link KEGG REST API operation of the form that uses
-a target database and entry IDs.</p>
+<dd><p>Contains the URL construction and validation functionality for the link KEGG REST API operation of the form that uses a target database and entry IDs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -824,7 +817,7 @@ a target database and entry IDs.</p>
 <dl class="class">
 <dt id="kegg_pull.kegg_url.DdiKEGGurl">
 <em class="property">class </em><code class="sig-prename descclassname">kegg_pull.kegg_url.</code><code class="sig-name descname">DdiKEGGurl</code><span class="sig-paren">(</span><em class="sig-param">drug_entry_ids: list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#DdiKEGGurl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.kegg_url.DdiKEGGurl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Contains the validation and construction of URLs for the ddi KEGG REST operation.</p>
+<dd><p>Contains the URL construction and validation functionality for the ddi KEGG REST operation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>drug_entry_ids</strong> – The entry IDs for a drug database.</p>

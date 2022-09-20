@@ -101,7 +101,7 @@
 Options:
     -h --help                           Show this help message.
     multiple                            Pull, separate, and store as many entries as requested via multiple automated requests to the KEGG web API. Useful when the number of entries requested is well above the maximum that KEGG allows for a single request.
-    --database-name=&lt;database-name&gt;     The KEGG database from which to get a list of entry IDs to pull.
+    --database-name=&lt;database-name&gt;     The KEGG database from which to pull a list of IDs of entries to then pull.
     --file-path=&lt;file-path&gt;             Path to a file containing a list of entry IDs to pull, with one entry ID on each line. Will likely need to set --force-single-entry if any of the entries are from the brite database.
     --force-single-entry                Forces pulling only one entry at a time for every request to the KEGG web API. This flag is automatically set if --database-name is &quot;brite&quot;.
     --multi-process                     If set, the entries are pulled across multiple processes to increase speed. Otherwise, the entries are pulled sequentially in a single process.
@@ -128,8 +128,8 @@ Options:
 
 Options:
     -h --help                               Show this help message.
-    from-database                           Gets all the entry IDs within a given database.
-    &lt;database-name&gt;                         The KEGG database from which to get a list of entry IDs.
+    from-database                           Pulls all the entry IDs within a given database.
+    &lt;database-name&gt;                         The KEGG database from which to pull a list of entry IDs.
     --output=&lt;output&gt;                       Path to the file to store the output (1 entry ID per line). Prints to the console if not specified.
     from-file                               Loads the entry IDs from a file.
     &lt;file-path&gt;                             Path to a file containing a list of entry IDs with one entry ID on each line.
@@ -160,11 +160,11 @@ Options:
 
 Options:
     -h --help                               Show this help message.
-    info                                    Executes the &quot;info&quot; KEGG API operation, getting information about a KEGG database.
-    &lt;database-name&gt;                         The name of the database to get information about or entry IDs from.
-    list                                    Executes the &quot;list&quot; KEGG API operation, getting the entry IDs of the provided database.
+    info                                    Executes the &quot;info&quot; KEGG API operation, pulling information about a KEGG database.
+    &lt;database-name&gt;                         The name of the database to pull information about or entry IDs from.
+    list                                    Executes the &quot;list&quot; KEGG API operation, pulling the entry IDs of the provided database.
     --output=&lt;output&gt;                       The file to store the response body from the KEGG web API operation. Prints to the console if --output is not specified.
-    get                                     Executes the &quot;get&quot; KEGG API operation, getting the entries of the provided entry IDs.
+    get                                     Executes the &quot;get&quot; KEGG API operation, pulling the entries of the provided entry IDs.
     &lt;entry-ids&gt;                             Comma separated list of entry IDs.
     --entry-field=&lt;entry-field&gt;             Optional field to extract from an entry instead of the default entry info (i.e. flat file or htext in the case of brite entries).
     find                                    Executes the &quot;find&quot; KEGG API operation, finding entry IDs based on provided queries.
