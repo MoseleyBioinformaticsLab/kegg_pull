@@ -14,6 +14,7 @@ Welcome to KEGGpull's documentation!
    tutorial
    cli
    api
+   license
 
 Indices and tables
 ==================
