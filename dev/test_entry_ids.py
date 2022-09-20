@@ -8,9 +8,9 @@ import dev.utils as u
 
 
 test_process_response_exception_data = [
-    ('The KEGG request failed to get the entry IDs from the following URL: url/mock', r.KEGGresponse.Status.FAILED),
+    ('The KEGG request failed to pull the entry IDs from the following URL: url/mock', r.KEGGresponse.Status.FAILED),
     (
-        'The KEGG request timed out while trying to get the entry IDs from the following URL: url/mock',
+        'The KEGG request timed out while trying to pull the entry IDs from the following URL: url/mock',
         r.KEGGresponse.Status.TIMEOUT
     )
 ]
@@ -102,7 +102,7 @@ def test_from_file(file_info: str):
             ei.EntryIdsGetter.from_file(file_path=file_name)
 
         u.assert_expected_error_message(
-            expected_message=f'Attempted to get entry IDs from {file_name}. But the file is empty',
+            expected_message=f'Attempted to load entry IDs from {file_name}. But the file is empty',
             error=error
         )
     else:

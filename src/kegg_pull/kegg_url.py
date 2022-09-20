@@ -14,8 +14,7 @@ BASE_URL: str = 'https://rest.kegg.jp'
 
 
 class AbstractKEGGurl(abc.ABC):
-    """Abstract class containing the base data and functionality for all KEGG URL classes which validate and construct URLs
-    for accessing the KEGG REST API."""
+    """Abstract class which validates and constructs URLs for accessing the KEGG REST API and contains the base data and functionality for all KEGG URL classes."""
 
     _valid_kegg_databases = {
         'pathway', 'brite', 'module', 'ko', 'genome', 'vg', 'vp', 'ag', 'compound', 'glycan', 'reaction', 'rclass',
@@ -157,7 +156,7 @@ class AbstractKEGGurl(abc.ABC):
 
 
 class ListKEGGurl(AbstractKEGGurl):
-    """Contains the validation implementation and URL construction of the KEGG API list operation."""
+    """Contains URL construction and validation functionality of the KEGG API list operation."""
 
     def __init__(self, database_name: str):
         """
@@ -186,7 +185,7 @@ class ListKEGGurl(AbstractKEGGurl):
 
 
 class InfoKEGGurl(AbstractKEGGurl):
-    """Contains the validation implementation and URL construction of the KEGG API info operation."""
+    """Contains URL construction and validation functionality of the KEGG API info operation."""
 
     def __init__(self, database_name: str) -> None:
         """
@@ -215,7 +214,7 @@ class InfoKEGGurl(AbstractKEGGurl):
 
 
 class GetKEGGurl(AbstractKEGGurl):
-    """Contains validation and URL construction as well as a helpful interface for the KEGG API get operation."""
+    """Contains URL construction and validation functionality for the KEGG API get operation."""
 
     _entry_fields = {
         'aaseq': True, 'ntseq': True, 'mol': True, 'kcf': True, 'image': False, 'conf': False, 'kgml': False,
@@ -313,8 +312,7 @@ class GetKEGGurl(AbstractKEGGurl):
 
 
 class KeywordsFindKEGGurl(AbstractKEGGurl):
-    """Contains the validation implementation and URL construction of the KEGG API find operation based on the URL form
-    that searches entries by keywords."""
+    """Contains the URL construction and validation functionality for the KEGG API find operation based on the URL form that searches entries by keywords."""
 
     def __init__(self, database_name: str, keywords: list):
         """
@@ -349,8 +347,7 @@ class KeywordsFindKEGGurl(AbstractKEGGurl):
 
 
 class MolecularFindKEGGurl(AbstractKEGGurl):
-    """Contains the validation implementation and URL construction of the KEGG API find operation based on the URL form
-    that uses chemical / molecular attributes of compounds."""
+    """Contains the URL construction and validation functionality for the KEGG API find operation based on the URL form that uses chemical / molecular attributes of compounds."""
 
     _valid_molecular_databases = {'compound', 'drug'}
 
@@ -501,8 +498,7 @@ class AbstractConvKEGGurl(AbstractKEGGurl):
 
 
 class DatabaseConvKEGGurl(AbstractConvKEGGurl):
-    """Contains the validation implementation and URL construction of the KEGG API conv operation based on the URL form
-    that uses a kegg database and outside database."""
+    """Contains the URL construction and validation functionality of the KEGG API conv operation based on the URL form that uses a KEGG database and an outside database."""
 
     def __init__(self, kegg_database_name: str, outside_database_name: str):
         """
@@ -565,8 +561,7 @@ class DatabaseConvKEGGurl(AbstractConvKEGGurl):
 
 
 class EntriesConvKEGGurl(AbstractConvKEGGurl):
-    """Contains the validation implementation and URL construction of the KEGG API conv operation based on the URL form
-    that uses a target database and entry IDs."""
+    """Contains the URL construction and validation functionality for the KEGG API conv operation based on the URL form that uses a target database and entry IDs."""
 
     def __init__(self, target_database_name: str, entry_ids: list):
         """
@@ -629,8 +624,7 @@ class AbstractLinkKEGGurl(AbstractKEGGurl):
 
 
 class DatabaseLinkKEGGurl(AbstractLinkKEGGurl):
-    """Contains the validation and URL construction of URLs for the link KEGG REST API operation of the form that uses
-    a target database and source database."""
+    """Contains the URL construction and validation functionality for the link KEGG REST API operation of the form that uses a target database and a source database."""
 
     def __init__(self, target_database_name: str, source_database_name: str):
         """
@@ -671,8 +665,7 @@ class DatabaseLinkKEGGurl(AbstractLinkKEGGurl):
 
 
 class EntriesLinkKEGGurl(AbstractLinkKEGGurl):
-    """Contains the validation and URL construction of the URL for the link KEGG REST API operation of the form that uses
-    a target database and entry IDs."""
+    """Contains the URL construction and validation functionality for the link KEGG REST API operation of the form that uses a target database and entry IDs."""
 
     def __init__(self, target_database_name: str, entry_ids: list):
         """
@@ -710,7 +703,7 @@ class EntriesLinkKEGGurl(AbstractLinkKEGGurl):
 
 
 class DdiKEGGurl(AbstractKEGGurl):
-    """Contains the validation and construction of URLs for the ddi KEGG REST operation."""
+    """Contains the URL construction and validation functionality for the ddi KEGG REST operation."""
 
     def __init__(self, drug_entry_ids: list):
         """

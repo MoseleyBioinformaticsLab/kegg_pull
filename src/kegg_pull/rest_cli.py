@@ -14,11 +14,11 @@ Usage:
 
 Options:
     -h --help                               Show this help message.
-    info                                    Executes the "info" KEGG API operation, getting information about a KEGG database.
-    <database-name>                         The name of the database to get information about or entry IDs from.
-    list                                    Executes the "list" KEGG API operation, getting the entry IDs of the provided database.
+    info                                    Executes the "info" KEGG API operation, pulling information about a KEGG database.
+    <database-name>                         The name of the database to pull information about or entry IDs from.
+    list                                    Executes the "list" KEGG API operation, pulling the entry IDs of the provided database.
     --output=<output>                       The file to store the response body from the KEGG web API operation. Prints to the console if --output is not specified.
-    get                                     Executes the "get" KEGG API operation, getting the entries of the provided entry IDs.
+    get                                     Executes the "get" KEGG API operation, pulling the entries of the provided entry IDs.
     <entry-ids>                             Comma separated list of entry IDs.
     --entry-field=<entry-field>             Optional field to extract from an entry instead of the default entry info (i.e. flat file or htext in the case of brite entries).
     find                                    Executes the "find" KEGG API operation, finding entry IDs based on provided queries.

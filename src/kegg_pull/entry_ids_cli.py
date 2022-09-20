@@ -8,8 +8,8 @@ Usage:
 
 Options:
     -h --help                               Show this help message.
-    from-database                           Gets all the entry IDs within a given database.
-    <database-name>                         The KEGG database from which to get a list of entry IDs.
+    from-database                           Pulls all the entry IDs within a given database.
+    <database-name>                         The KEGG database from which to pull a list of entry IDs.
     --output=<output>                       Path to the file to store the output (1 entry ID per line). Prints to the console if not specified.
     from-file                               Loads the entry IDs from a file.
     <file-path>                             Path to a file containing a list of entry IDs with one entry ID on each line.
