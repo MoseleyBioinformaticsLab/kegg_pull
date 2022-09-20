@@ -156,26 +156,26 @@ class KEGGrest:
         return False
 
     def list(self, database_name: str) -> KEGGresponse:
-        """ Executes the "list" KEGG API operation, getting the entry IDs of the provided database.
+        """ Executes the "list" KEGG API operation, pulling the entry IDs of the provided database.
 
-        :param database_name: The database from which to get entry IDs.
+        :param database_name: The database from which to pull entry IDs.
         :return: The KEGG response.
         """
         return self.request(KEGGurl=ku.ListKEGGurl, database_name=database_name)
 
     def get(self, entry_ids: list, entry_field: str = None) -> KEGGresponse:
-        """ Executes the "get" KEGG API operation, getting the entries of the provided entry IDs.
+        """ Executes the "get" KEGG API operation, pulling the entries of the provided entry IDs.
 
-        :param entry_ids: The IDs of entries to get.
+        :param entry_ids: The IDs of entries to pull.
         :param entry_field: Optional field to extract from the entries.
         :return: The KEGG response.
         """
         return self.request(KEGGurl=ku.GetKEGGurl, entry_ids=entry_ids, entry_field=entry_field)
 
     def info(self, database_name: str) -> KEGGresponse:
-        """ Executes the "info" KEGG API operation, getting information about a KEGG database.
+        """ Executes the "info" KEGG API operation, pulling information about a KEGG database.
 
-        :param database_name: The database to get information about.
+        :param database_name: The database to pull information about.
         :return: The KEGG response
         """
         return self.request(KEGGurl=ku.InfoKEGGurl, database_name=database_name)
@@ -208,8 +208,8 @@ class KEGGrest:
     def database_conv(self, kegg_database_name: str, outside_database_name: str) -> KEGGresponse:
         """ Executes the "conv" KEGG API operation, converting the entry IDs of a KEGG database to those of an outside database.
 
-        :param kegg_database_name: The name of the KEGG database to get converted entry IDs from.
-        :param outside_database_name: The name of the outside database to get converted entry IDs from.
+        :param kegg_database_name: The name of the KEGG database to pull converted entry IDs from.
+        :param outside_database_name: The name of the outside database to pull converted entry IDs from.
         :return: The KEGG response.
         """
         return self.request(
@@ -231,7 +231,7 @@ class KEGGrest:
     def database_link(self, target_database_name: str, source_database_name: str) -> KEGGresponse:
         """ Executes the "link" KEGG API operation, showing the IDs of entries in one KEGG database that are connected/related to entries of another KEGG database.
 
-        :param target_database_name: One of the two KEGG databases to get linked entries from.
+        :param target_database_name: One of the two KEGG databases to pull linked entries from.
         :param source_database_name: The other KEGG database to link entries from the target database.
         :return: The KEGG response
         """

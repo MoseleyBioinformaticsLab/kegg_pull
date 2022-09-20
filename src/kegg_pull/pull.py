@@ -1,7 +1,7 @@
 """
 Pulling, Parsing, and Saving KEGG Entries
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Functionality for getting KEGG entries from the KEGG REST API, parsing them, and saving the entries as files.
+Functionality for pulling KEGG entries from the KEGG REST API, parsing them, and saving the entries as files.
 """
 import multiprocessing as mp
 import os

@@ -7,7 +7,7 @@ Usage:
 Options:
     -h --help                           Show this help message.
     multiple                            Pull, separate, and store as many entries as requested via multiple automated requests to the KEGG web API. Useful when the number of entries requested is well above the maximum that KEGG allows for a single request.
-    --database-name=<database-name>     The KEGG database from which to get a list of entry IDs to pull.
+    --database-name=<database-name>     The KEGG database from which to pull a list of IDs of entries to then pull.
     --file-path=<file-path>             Path to a file containing a list of entry IDs to pull, with one entry ID on each line. Will likely need to set --force-single-entry if any of the entries are from the brite database.
     --force-single-entry                Forces pulling only one entry at a time for every request to the KEGG web API. This flag is automatically set if --database-name is "brite".
     --multi-process                     If set, the entries are pulled across multiple processes to increase speed. Otherwise, the entries are pulled sequentially in a single process.
