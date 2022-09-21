@@ -27,6 +27,19 @@ def test_main_help(mocker):
     print_mock.assert_called_once_with(m.__doc__)
 
 
+def test_main_version(mocker):
+    mocker.patch('sys.argv', ['kegg_pull', '--version'])
+    version_mock = 'version mock'
+    mocker.patch('kegg_pull.__main__.__version__', version_mock)
+    print_mock: mocker.MagicMock = mocker.patch('builtins.print')
+    m.main()
+    print_mock.assert_called_once_with(version_mock)
+    print_mock.reset_mock()
+    mocker.patch('sys.argv', ['kegg_pull', '-v'])
+    m.main()
+    print_mock.assert_called_once_with(version_mock)
+
+
 @pt.fixture(name='print_output', params=[True, False])
 def print_output_fixture(request):
     print_output: bool = request.param
