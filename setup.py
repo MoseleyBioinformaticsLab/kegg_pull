@@ -1,15 +1,26 @@
 import setuptools as st
-import src.kegg_pull as kp
+import re
 
 
-def _get_requirements() -> list:
-    with open('requirements.txt', 'r') as file:
-        requirements: str = file.read()
+requirements = [
+    'docopt',
+    'requests'
+]
 
-    requirements: list = requirements.split('\n')
-    requirements = [requirement.strip() for requirement in requirements if requirement != '']
 
-    return requirements
+def _readme() -> str:
+    with open('README.rst') as readme_file:
+        return readme_file.read()
+
+
+def _get_version() -> str:
+    with open('src/kegg_pull/__init__.py', 'r') as fd:
+        version: str = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
+                            fd.read(), re.MULTILINE).group(1)
+    if not version:
+        raise RuntimeError('Cannot find version information')
+
+    return version
 
 
 def _readme():
@@ -19,13 +30,14 @@ def _readme():
 
 st.setup(
     name='kegg_pull',
-    version=kp.__version__,
+    version=_get_version(),
     package_dir={'': 'src'},
-    install_requires=_get_requirements(),
-    entry_points={"console_scripts": ["kegg_pull = kegg_pull.__main__:main"]},
+    packages=st.find_packages('src', exclude=['dev', 'docs']),
+    install_requires=requirements,
+    entry_points={'console_scripts': ['kegg_pull = kegg_pull.__main__:main']},
     author='Erik Huckvale',
     author_email='edhu227@g.uky.edu',
     url='https://github.com/MoseleyBioinformaticsLab/KEGGpull',
-    long_description_content_type="text/x-rst",
+    long_description_content_type='text/x-rst',
     long_description=_readme()
 )
