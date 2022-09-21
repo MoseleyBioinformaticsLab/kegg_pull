@@ -6,3 +6,4 @@ src/kegg_pull.egg-info/
 docs/_build
 docs/notebook/.ipynb_checkpoints/
 docs/notebook/tutorial.ipynb
+dist/
