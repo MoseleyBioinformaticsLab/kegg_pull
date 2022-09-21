@@ -8,6 +8,7 @@ Usage:
 """
 import sys
 
+from . import __version__
 from . import entry_ids_cli as ei_cli
 from . import rest_cli as r_cli
 from . import pull_cli as p_cli
@@ -29,6 +30,8 @@ def main():
         print(r_cli.__doc__)
         print(separator)
         print(p_cli.__doc__)
+    elif len(sys.argv) > 1 and (sys.argv[1] == '--version' or sys.argv[1] == '-v'):
+        print(__version__)
     else:
         print(__doc__)
 
