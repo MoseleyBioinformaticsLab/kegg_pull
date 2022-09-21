@@ -23,6 +23,11 @@ def _get_version() -> str:
     return version
 
 
+def _readme():
+    with open('README.rst') as readme_file:
+        return readme_file.read()
+
+
 st.setup(
     name='kegg_pull',
     version=_get_version(),
