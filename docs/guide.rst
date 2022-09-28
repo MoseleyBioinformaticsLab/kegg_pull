@@ -12,12 +12,12 @@ Install on Linux, Mac OS X
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. parsed-literal::
 
-   python3 -m pip install kegg_pull
+   python3 -m pip install kegg-pull
 
 Install on Windows
 ~~~~~~~~~~~~~~~~~~
 .. parsed-literal::
-   py -3 -m pip install
+   py -3 -m pip install kegg-pull
 
 Dependencies
 ------------
@@ -27,12 +27,12 @@ Note, the ``pip`` command will install dependencies automatically.
 
 Get the source code
 -------------------
-Code is available on GitHub: https://github.com/MoseleyBioinformaticsLab/KEGGpull.
+Code is available on GitHub: https://github.com/MoseleyBioinformaticsLab/kegg_pull.
 
 You can clone the repository via:
 
 .. parsed-literal::
-   git clone https://github.com/MoseleyBioinformaticsLab/KEGGpull.git
+   git clone https://github.com/MoseleyBioinformaticsLab/kegg_pull.git
 
 Once you have a copy of the source, you can embed it in your own Python package, or install it into your system site-packages easily:
 
