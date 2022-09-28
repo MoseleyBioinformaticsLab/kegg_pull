@@ -21,7 +21,7 @@ def setup(app):
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'KEGGpull'
+project = 'kegg_pull'
 copyright = '2022, Erik Huckvale'
 author = 'Erik Huckvale'
 

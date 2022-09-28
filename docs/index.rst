@@ -1,10 +1,10 @@
-.. KEGGpull documentation master file, created by
+.. kegg_pull documentation master file, created by
    sphinx-quickstart on Tue Aug 30 16:32:53 2022.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to KEGGpull's documentation!
-====================================
+Welcome to kegg_pull's documentation!
+=====================================
 
 .. toctree::
    :maxdepth: 2
