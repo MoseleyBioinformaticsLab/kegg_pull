@@ -67,7 +67,7 @@ class KEGGrest:
         """
         self._n_tries = n_tries if n_tries is not None else 3
         self._time_out = time_out if time_out is not None else 60
-        self._sleep_time = sleep_time if time_out is not None else 0.0
+        self._sleep_time = sleep_time if time_out is not None else 10.0
 
         if self._n_tries < 1:
             raise ValueError(f'{self._n_tries} is not a valid number of tries to make a KEGG request.')
