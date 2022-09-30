@@ -58,11 +58,13 @@ def test_request_and_test_failed(mocker):
     kegg_rest = r.KEGGrest(n_tries=4)
     url_mock = 'url mock'
     kegg_url_mock = mocker.MagicMock(url=url_mock)
-    failed_status_code = 400
+    failed_status_code = 403
     response_mock = mocker.MagicMock(text='', content=b'', status_code=failed_status_code)
     get_mock: mocker.MagicMock = mocker.patch('kegg_pull.rest.rq.get', return_value=response_mock)
+    sleep_mock: mocker.MagicMock = mocker.patch('kegg_pull.rest.t.sleep')
     kegg_response: r.KEGGresponse = kegg_rest.request(kegg_url=kegg_url_mock)
     get_mock.assert_has_calls(mocker.call(url=url_mock, timeout=60) for _ in range(n_tries))
+    sleep_mock.assert_has_calls(mocker.call(10.0) for _ in range(n_tries))
 
     assert kegg_response.status == r.KEGGresponse.Status.FAILED
     assert kegg_response.kegg_url == kegg_url_mock

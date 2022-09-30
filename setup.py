@@ -23,11 +23,6 @@ def _get_version() -> str:
     return version
 
 
-def _readme():
-    with open('README.rst') as readme_file:
-        return readme_file.read()
-
-
 st.setup(
     name='kegg_pull',
     version=_get_version(),
@@ -38,6 +33,7 @@ st.setup(
     author='Erik Huckvale',
     author_email='edhu227@g.uky.edu',
     url='https://github.com/MoseleyBioinformaticsLab/KEGGpull',
+    description='Pulls all entries from all KEGG databases, pulls KEGG entry IDs, and wraps all the KEGG REST API operations.',
     long_description_content_type='text/x-rst',
     long_description=_readme()
 )
