@@ -84,6 +84,7 @@
 <p>Top-level commandline interface.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Usage:
     kegg_pull -h | --help       Show this help message.
+    kegg_pull -v | --version    Displays the package version.
     kegg_pull --full-help       Show the help message of all sub commands.
     kegg_pull entry-ids ...     Obtain a list of KEGG entry IDs.
     kegg_pull rest ...          Executes one of the KEGG REST API operations.
@@ -111,7 +112,7 @@ Options:
     --entry-field=&lt;entry-field&gt;         Optional field to extract from the entries pulled rather than the standard flat file format (or &quot;htext&quot; in the case of brite entries).
     --n-tries=&lt;n-tries&gt;                 The number of times to attempt a KEGG request before marking it as timed out or failed. Defaults to 3.
     --time-out=&lt;time-out&gt;               The number of seconds to wait for a KEGG request before marking it as timed out. Defaults to 60.
-    --sleep-time=&lt;sleep-time&gt;           The amount of time to wait after a KEGG request times out before attempting it again. Defaults to 0.
+    --sleep-time=&lt;sleep-time&gt;           The amount of time to wait after a KEGG request times out (or potentially blacklists with a 403 error code) before attempting it again. Defaults to 10.0.
     single                              Pull, separate, and store one or more KEGG entries via a single request to the KEGG web API. Useful when the number of entries requested is less than or equal to the maximum that KEGG allows for a single request.
     --entry-ids=&lt;entry-ids&gt;             Comma separated list of entry IDs to pull in a single request (e.g. --entry-ids=id1,id2,id3 etc.).
 </pre></div>

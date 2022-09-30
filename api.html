@@ -358,14 +358,14 @@
 
 <dl class="class">
 <dt id="kegg_pull.rest.KEGGrest">
-<em class="property">class </em><code class="sig-prename descclassname">kegg_pull.rest.</code><code class="sig-name descname">KEGGrest</code><span class="sig-paren">(</span><em class="sig-param">n_tries: int = 3</em>, <em class="sig-param">time_out: int = 60</em>, <em class="sig-param">sleep_time: float = 0.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">kegg_pull.rest.</code><code class="sig-name descname">KEGGrest</code><span class="sig-paren">(</span><em class="sig-param">n_tries: int = 3</em>, <em class="sig-param">time_out: int = 60</em>, <em class="sig-param">sleep_time: float = 10.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class containing methods for making requests to the KEGG REST API, including all the KEGG REST API operations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n_tries</strong> – The number of times to try to make a request (can succeed the first time, or any of n_tries, or none of the tries).</p></li>
 <li><p><strong>time_out</strong> – The number of seconds to wait for a request until marking it as timed out.</p></li>
-<li><p><strong>sleep_time</strong> – The number of seconds to wait in between timed out requests.</p></li>
+<li><p><strong>sleep_time</strong> – The number of seconds to wait in between timed out requests or blacklisted requests.</p></li>
 </ul>
 </dd>
 </dl>
