@@ -28,6 +28,20 @@ def test_kegg_rest_exception():
     u.assert_expected_error_message(expected_message=expected_message, error=error)
 
 
+def test_kegg_rest():
+    kegg_rest = r.KEGGrest(n_tries=2, time_out=30, sleep_time=0.5)
+
+    assert kegg_rest._n_tries == 2
+    assert kegg_rest._time_out == 30
+    assert kegg_rest._sleep_time == 0.5
+
+    kegg_rest = r.KEGGrest(n_tries=None, time_out=None, sleep_time=None)
+
+    assert kegg_rest._n_tries == 3
+    assert kegg_rest._time_out == 60
+    assert kegg_rest._sleep_time == 10.0
+
+
 def test_request_and_test_success(mocker):
     kegg_rest = r.KEGGrest()
     text_mock = 'text mock'
