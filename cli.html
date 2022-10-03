@@ -94,7 +94,16 @@
 </div>
 <div class="section" id="pulling-parsing-and-saving-kegg-entries">
 <h2>Pulling, Parsing, and Saving KEGG Entries<a class="headerlink" href="#pulling-parsing-and-saving-kegg-entries" title="Permalink to this headline">¶</a></h2>
-<p>Functionality for getting KEGG entries from the KEGG REST API, parsing them, and saving the entries as files.</p>
+<p>Functionality for getting KEGG entries from the KEGG REST API, parsing them, and saving the entries as files. A JSON file, called <code class="docutils literal notranslate"><span class="pre">pull-results.json</span></code>, is saved describing the results of the pull. Below is the interpretation of each of the fields:</p>
+<p><strong>success-rate:</strong> The percentage of the requested entries that were successfully pulled and saved in a file.</p>
+<p><strong>pull-minutes:</strong> The number of minutes that the pull took to complete.</p>
+<p><strong>num-successful:</strong> The number of entries that were successfully pulled and saved in a file.</p>
+<p><strong>num-failed:</strong> The number of entries that failed to be pulled.</p>
+<p><strong>num-timed-out:</strong> The number of entries that timed out when requested.</p>
+<p><strong>num-total:</strong> The number of total entry IDs requested.</p>
+<p><strong>successful-entry-ids:</strong> The list of successful entry IDs.</p>
+<p><strong>failed-entry-ids:</strong> The list of failed entry IDs.</p>
+<p><strong>timed-out-entry-ids:</strong> The list of timed out entry IDs.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Usage:
     kegg_pull pull -h | --help
     kegg_pull pull multiple (--database-name=&lt;database-name&gt;|--file-path=&lt;file-path&gt;) [--force-single-entry] [--multi-process] [--n-workers=&lt;n-workers&gt;] [--output=&lt;output&gt;] [--entry-field=&lt;entry-field&gt;] [--n-tries=&lt;n-tries&gt;] [--time-out=&lt;time-out&gt;] [--sleep-time=&lt;sleep-time&gt;]

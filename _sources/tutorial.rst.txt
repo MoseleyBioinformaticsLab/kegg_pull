@@ -185,7 +185,7 @@ and the internal URL used to request from the KEGG REST API.
 
 .. parsed-literal::
 
-    'module           KEGG Module Database\nmd               Release 103.0+/09-20, Sep 22\n                 Kanehisa Laboratories\n                 536 entries\n\nlinked db        pathway\n                 ko\n                 <org>\n                 genome\n                 compound\n                 glycan\n                 reaction\n                 enzyme\n                 disease\n                 pubmed\n'
+    'module           KEGG Module Database\nmd               Release 104.0+/10-04, Oct 22\n                 Kanehisa Laboratories\n                 536 entries\n\nlinked db        pathway\n                 ko\n                 <org>\n                 genome\n                 compound\n                 glycan\n                 reaction\n                 enzyme\n                 disease\n                 pubmed\n'
 
 
 
@@ -211,6 +211,9 @@ and ``rest``
 pull
 ~~~~
 
+single
+^^^^^^
+
 .. code:: ipython3
 
     % kegg_pull pull single --entry-ids=cpd:C00001,cpd:C00002,cpd:C00003 --output=compound-entries/
@@ -233,6 +236,52 @@ pull
                 R00022 R00024 R00025 R00026 R00028 R00036 R00041 R00044 
                 R00045 R00047 R00048 R00052 R00053 R00054 R00055 R00056 
 
+
+The ``pull`` subcommand creates a ``pull-results.json``\ file. You can
+load it as a dictionary using the python json library.
+
+.. code:: ipython3
+
+    import json as j
+    
+    with open('pull-results.json', 'r') as file:
+        pull_results: dict = j.load(file)
+    
+    print(pull_results)
+
+
+.. parsed-literal::
+
+    {'success-rate': 100.0, 'pull-minutes': 0.02, 'num-successful': 3, 'num-failed': 0, 'num-timed-out': 0, 'num-total': 3, 'successful-entry-ids': ['cpd:C00001', 'cpd:C00002', 'cpd:C00003'], 'failed-entry-ids': [], 'timed-out-entry-ids': []}
+
+
+Below is what the ``pull-results.json`` file contents look like:
+
+.. code:: ipython3
+
+    % cat pull-results.json
+
+
+.. parsed-literal::
+
+    {
+    "success-rate": 100.0,
+    "pull-minutes": 0.02,
+    "num-successful": 3,
+    "num-failed": 0,
+    "num-timed-out": 0,
+    "num-total": 3,
+    "successful-entry-ids": [
+    "cpd:C00001",
+    "cpd:C00002",
+    "cpd:C00003"
+    ],
+    "failed-entry-ids": [],
+    "timed-out-entry-ids": []
+    }
+
+multiple
+^^^^^^^^
 
 .. code:: ipython3
 
@@ -269,6 +318,25 @@ pull
     br:br08312.txt	br:br08601.txt	br:ko01002.txt	br:ko03032.txt	br:ko04990.txt
     br:br08313.txt	br:br08605.txt	br:ko01003.txt	br:ko03036.txt
     br:br08314.txt	br:br08610.txt	br:ko01004.txt	br:ko03037.txt
+
+
+.. code:: ipython3
+
+    % head pull-results.json
+
+
+.. parsed-literal::
+
+    {
+    "success-rate": 86.13,
+    "pull-minutes": 0.52,
+    "num-successful": 118,
+    "num-failed": 19,
+    "num-timed-out": 0,
+    "num-total": 137,
+    "successful-entry-ids": [
+    "br:br08901",
+    "br:br08902",
 
 
 entry-ids

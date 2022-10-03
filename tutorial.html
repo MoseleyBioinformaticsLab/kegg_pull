@@ -50,7 +50,11 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#cli">CLI</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#pull">pull</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pull">pull</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#single">single</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multiple">multiple</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#id1">entry-ids</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#rest">rest</a></li>
 </ul>
@@ -212,7 +216,7 @@ kegg_response: r.KEGGresponse = kegg_rest.info(database_name=&#39;module&#39;)
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>kegg_response.text_body
 </pre></div>
 </div>
-<pre class="literal-block">'module           KEGG Module Databasenmd               Release 103.0+/09-20, Sep 22n                 Kanehisa Laboratoriesn                 536 entriesnnlinked db        pathwayn                 kon                 &lt;org&gt;n                 genomen                 compoundn                 glycann                 reactionn                 enzymen                 diseasen                 pubmedn'</pre>
+<pre class="literal-block">'module           KEGG Module Databasenmd               Release 104.0+/10-04, Oct 22n                 Kanehisa Laboratoriesn                 536 entriesnnlinked db        pathwayn                 kon                 &lt;org&gt;n                 genomen                 compoundn                 glycann                 reactionn                 enzymen                 diseasen                 pubmedn'</pre>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>kegg_response.kegg_url
 </pre></div>
 </div>
@@ -227,6 +231,8 @@ kegg_response: r.KEGGresponse = kegg_rest.info(database_name=&#39;module&#39;)
 and <code class="docutils literal notranslate"><span class="pre">rest</span></code></p>
 <div class="section" id="pull">
 <h3>pull<a class="headerlink" href="#pull" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="single">
+<h4>single<a class="headerlink" href="#single" title="Permalink to this headline">¶</a></h4>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>% kegg_pull pull single --entry-ids=cpd:C00001,cpd:C00002,cpd:C00003 --output=compound-entries/
 </pre></div>
 </div>
@@ -245,6 +251,43 @@ and <code class="docutils literal notranslate"><span class="pre">rest</span></co
             <span class="n">R00045</span> <span class="n">R00047</span> <span class="n">R00048</span> <span class="n">R00052</span> <span class="n">R00053</span> <span class="n">R00054</span> <span class="n">R00055</span> <span class="n">R00056</span>
 </pre></div>
 </div>
+<p>The <code class="docutils literal notranslate"><span class="pre">pull</span></code> subcommand creates a <code class="docutils literal notranslate"><span class="pre">pull-results.json</span></code>file. You can
+load it as a dictionary using the python json library.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import json as j
+
+with open(&#39;pull-results.json&#39;, &#39;r&#39;) as file:
+    pull_results: dict = j.load(file)
+
+print(pull_results)
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;success-rate&#39;</span><span class="p">:</span> <span class="mf">100.0</span><span class="p">,</span> <span class="s1">&#39;pull-minutes&#39;</span><span class="p">:</span> <span class="mf">0.02</span><span class="p">,</span> <span class="s1">&#39;num-successful&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;num-failed&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;num-timed-out&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;num-total&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;successful-entry-ids&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;cpd:C00001&#39;</span><span class="p">,</span> <span class="s1">&#39;cpd:C00002&#39;</span><span class="p">,</span> <span class="s1">&#39;cpd:C00003&#39;</span><span class="p">],</span> <span class="s1">&#39;failed-entry-ids&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;timed-out-entry-ids&#39;</span><span class="p">:</span> <span class="p">[]}</span>
+</pre></div>
+</div>
+<p>Below is what the <code class="docutils literal notranslate"><span class="pre">pull-results.json</span></code> file contents look like:</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>% cat pull-results.json
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="s2">&quot;success-rate&quot;</span><span class="p">:</span> <span class="mf">100.0</span><span class="p">,</span>
+<span class="s2">&quot;pull-minutes&quot;</span><span class="p">:</span> <span class="mf">0.02</span><span class="p">,</span>
+<span class="s2">&quot;num-successful&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+<span class="s2">&quot;num-failed&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+<span class="s2">&quot;num-timed-out&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+<span class="s2">&quot;num-total&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+<span class="s2">&quot;successful-entry-ids&quot;</span><span class="p">:</span> <span class="p">[</span>
+<span class="s2">&quot;cpd:C00001&quot;</span><span class="p">,</span>
+<span class="s2">&quot;cpd:C00002&quot;</span><span class="p">,</span>
+<span class="s2">&quot;cpd:C00003&quot;</span>
+<span class="p">],</span>
+<span class="s2">&quot;failed-entry-ids&quot;</span><span class="p">:</span> <span class="p">[],</span>
+<span class="s2">&quot;timed-out-entry-ids&quot;</span><span class="p">:</span> <span class="p">[]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="multiple">
+<h4>multiple<a class="headerlink" href="#multiple" title="Permalink to this headline">¶</a></h4>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>% kegg_pull pull multiple --database-name=brite --multi-process --n-workers=11 --output=brite-entries/
 </pre></div>
 </div>
@@ -276,6 +319,22 @@ and <code class="docutils literal notranslate"><span class="pre">rest</span></co
 <span class="n">br</span><span class="p">:</span><span class="n">br08313</span><span class="o">.</span><span class="n">txt</span>      <span class="n">br</span><span class="p">:</span><span class="n">br08605</span><span class="o">.</span><span class="n">txt</span>  <span class="n">br</span><span class="p">:</span><span class="n">ko01003</span><span class="o">.</span><span class="n">txt</span>  <span class="n">br</span><span class="p">:</span><span class="n">ko03036</span><span class="o">.</span><span class="n">txt</span>
 <span class="n">br</span><span class="p">:</span><span class="n">br08314</span><span class="o">.</span><span class="n">txt</span>      <span class="n">br</span><span class="p">:</span><span class="n">br08610</span><span class="o">.</span><span class="n">txt</span>  <span class="n">br</span><span class="p">:</span><span class="n">ko01004</span><span class="o">.</span><span class="n">txt</span>  <span class="n">br</span><span class="p">:</span><span class="n">ko03037</span><span class="o">.</span><span class="n">txt</span>
 </pre></div>
+</div>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>% head pull-results.json
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="s2">&quot;success-rate&quot;</span><span class="p">:</span> <span class="mf">86.13</span><span class="p">,</span>
+<span class="s2">&quot;pull-minutes&quot;</span><span class="p">:</span> <span class="mf">0.52</span><span class="p">,</span>
+<span class="s2">&quot;num-successful&quot;</span><span class="p">:</span> <span class="mi">118</span><span class="p">,</span>
+<span class="s2">&quot;num-failed&quot;</span><span class="p">:</span> <span class="mi">19</span><span class="p">,</span>
+<span class="s2">&quot;num-timed-out&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+<span class="s2">&quot;num-total&quot;</span><span class="p">:</span> <span class="mi">137</span><span class="p">,</span>
+<span class="s2">&quot;successful-entry-ids&quot;</span><span class="p">:</span> <span class="p">[</span>
+<span class="s2">&quot;br:br08901&quot;</span><span class="p">,</span>
+<span class="s2">&quot;br:br08902&quot;</span><span class="p">,</span>
+</pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="id1">
