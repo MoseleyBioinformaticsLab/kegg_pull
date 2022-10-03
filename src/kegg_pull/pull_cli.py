@@ -21,8 +21,8 @@ Options:
     --entry-ids=<entry-ids>             Comma separated list of entry IDs to pull in a single request (e.g. --entry-ids=id1,id2,id3 etc.).
 """
 import docopt as d
-import typing as t
 import json as j
+import time as t
 
 from . import pull as p
 from . import rest as r
@@ -65,22 +65,33 @@ def main():
         else:
             puller = p.SingleProcessMultiplePull(single_pull=puller, force_single_entry=force_single_entry)
 
+    t1: float = _testable_time()
     pull_result: p.PullResult = puller.pull(entry_ids=entry_ids)
+    t2: float = _testable_time()
 
     total_entry_ids: int = len(pull_result.successful_entry_ids) + len(pull_result.failed_entry_ids)
     total_entry_ids += len(pull_result.timed_out_entry_ids)
     success_rate: float = len(pull_result.successful_entry_ids) / total_entry_ids * 100
 
     pull_results = {
-        'successful-entry-ids': pull_result.successful_entry_ids,
-        'failed-entry-ids': pull_result.failed_entry_ids,
-        'timed-out-entry-ids': pull_result.timed_out_entry_ids,
+        'success-rate': float(f'{success_rate:.2f}'),
+        'pull-minutes': float(f'{(t2 - t1) / 60:.2f}'),
         'num-successful': len(pull_result.successful_entry_ids),
         'num-failed': len(pull_result.failed_entry_ids),
         'num-timed-out': len(pull_result.timed_out_entry_ids),
         'num-total': total_entry_ids,
-        'success-rate': float(f'{success_rate:.2f}')
+        'successful-entry-ids': pull_result.successful_entry_ids,
+        'failed-entry-ids': pull_result.failed_entry_ids,
+        'timed-out-entry-ids': pull_result.timed_out_entry_ids
     }
 
     with open('pull-results.json', 'w') as file:
         j.dump(pull_results, file, indent=0)
+
+
+def _testable_time() -> float:
+    """ The time.time() function causes issues when mocked in tests, so we create this wrapper that can be safely mocked
+
+    :return: The result of time.time()
+    """
+    return t.time()
