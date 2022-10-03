@@ -72,9 +72,12 @@ def _test_pull(
     else:
         assert_multiple_pull_mocks = None
 
+    time_mock: mocker.MagicMock = mocker.patch('kegg_pull.pull_cli._testable_time', side_effect=[26, 94])
     p_cli.main()
     KEGGrestMock.assert_called_once_with(**kegg_rest_kwargs)
     SinglePullMock.assert_called_once_with(kegg_rest=kegg_rest_mock, **single_pull_kwargs)
+
+    assert time_mock.call_count == 2
 
     if assert_multiple_pull_mocks is not None:
         assert_multiple_pull_mocks()
@@ -82,14 +85,15 @@ def _test_pull(
         single_pull_mock.pull.assert_called_once_with(entry_ids=testing_entry_ids)
 
     expected_pull_results = {
-        'successful-entry-ids': ['a', 'b', 'c', 'x'],
-        'failed-entry-ids': ['y', 'z'],
-        'timed-out-entry-ids': [],
+        'success-rate': 66.67,
+        'pull-minutes': 1.13,
         'num-successful': 4,
         'num-failed': 2,
         'num-timed-out': 0,
         'num-total': 6,
-        'success-rate': 66.67
+        'successful-entry-ids': ['a', 'b', 'c', 'x'],
+        'failed-entry-ids': ['y', 'z'],
+        'timed-out-entry-ids': []
     }
 
     with open('pull-results.json', 'r') as file:
@@ -99,6 +103,12 @@ def _test_pull(
 
     expected_pull_results_text: str = '\n'.join([
         '{',
+        '"success-rate": 66.67,',
+        '"pull-minutes": 1.13,',
+        '"num-successful": 4,',
+        '"num-failed": 2,',
+        '"num-timed-out": 0,',
+        '"num-total": 6,',
         '"successful-entry-ids": [',
         '"a",',
         '"b",',
@@ -109,12 +119,7 @@ def _test_pull(
         '"y",',
         '"z"',
         '],',
-        '"timed-out-entry-ids": [],',
-        '"num-successful": 4,',
-        '"num-failed": 2,',
-        '"num-timed-out": 0,',
-        '"num-total": 6,',
-        '"success-rate": 66.67',
+        '"timed-out-entry-ids": []',
         '}'
     ])
 

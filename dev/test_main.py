@@ -140,12 +140,16 @@ def test_main_pull(mocker, args: list, output: str):
         'num-failed': 2,
         'num-timed-out': 0,
         'num-total': 4,
-        'success-rate': 50.0
+        'success-rate': 50.0,
+        'pull-minutes': 1.0
     }
 
     args: list = ['kegg_pull', 'pull', 'multiple'] + args + [f'--output={output}']
     mocker.patch('sys.argv', args)
+    time_mock: mocker.MagicMock = mocker.patch('kegg_pull.pull_cli._testable_time', side_effect=[30, 90])
     m.main()
+
+    assert time_mock.call_count == 2
 
     if output.endswith('.zip'):
         with zf.ZipFile(output, 'r') as actual_zip:
