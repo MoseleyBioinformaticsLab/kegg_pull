@@ -22,6 +22,7 @@ Options:
 """
 import docopt as d
 import typing as t
+import json as j
 
 from . import pull as p
 from . import rest as r
@@ -66,14 +67,20 @@ def main():
 
     pull_result: p.PullResult = puller.pull(entry_ids=entry_ids)
 
-    with open('pull-results.txt', 'w') as file:
-        _write_entry_ids(file=file, entry_id_type='Successful', entry_ids=pull_result.successful_entry_ids)
-        _write_entry_ids(file=file, entry_id_type='Failed', entry_ids=pull_result.failed_entry_ids)
-        _write_entry_ids(file=file, entry_id_type='Timed Out', entry_ids=pull_result.timed_out_entry_ids)
+    total_entry_ids: int = len(pull_result.successful_entry_ids) + len(pull_result.failed_entry_ids)
+    total_entry_ids += len(pull_result.timed_out_entry_ids)
+    success_rate: float = len(pull_result.successful_entry_ids) / total_entry_ids * 100
 
+    pull_results = {
+        'successful-entry-ids': pull_result.successful_entry_ids,
+        'failed-entry-ids': pull_result.failed_entry_ids,
+        'timed-out-entry-ids': pull_result.timed_out_entry_ids,
+        'num-successful': len(pull_result.successful_entry_ids),
+        'num-failed': len(pull_result.failed_entry_ids),
+        'num-timed-out': len(pull_result.timed_out_entry_ids),
+        'num-total': total_entry_ids,
+        'success-rate': float(f'{success_rate:.2f}')
+    }
 
-def _write_entry_ids(file: t.TextIO, entry_id_type: str, entry_ids: list):
-    file.write(f'### {entry_id_type} Entry IDs ###\n')
-
-    for entry_id in entry_ids:
-        file.write(entry_id + '\n')
+    with open('pull-results.json', 'w') as file:
+        j.dump(pull_results, file, indent=0)

@@ -2,6 +2,7 @@ import pytest as pt
 import zipfile as zf
 import os
 import shutil as sh
+import json as j
 
 import kegg_pull.__main__ as m
 import kegg_pull.entry_ids_cli as ei_cli
@@ -117,6 +118,8 @@ def pull_output(request):
     else:
         sh.rmtree(output, ignore_errors=True)
 
+    os.remove('pull-results.json')
+
 
 test_main_pull_data = [
     ['--file-path=dev/test_data/brite-entry-ids.txt', '--force-single-entry', '--multi-process', '--n-workers=2'],
@@ -124,19 +127,21 @@ test_main_pull_data = [
 ]
 @pt.mark.parametrize('args', test_main_pull_data)
 def test_main_pull(mocker, args: list, output: str):
-    expected_pull_results = '''### Successful Entry IDs ###
-br:br08005
-br:br08902
-### Failed Entry IDs ###
-br:br03220
-br:br03222
-### Timed Out Entry IDs ###
-'''
-
     successful_entry_ids = [
         'br:br08005',
         'br:br08902'
     ]
+
+    expected_pull_results = {
+        'successful-entry-ids': successful_entry_ids,
+        'failed-entry-ids': ['br:br03220', 'br:br03222'],
+        'timed-out-entry-ids': [],
+        'num-successful': 2,
+        'num-failed': 2,
+        'num-timed-out': 0,
+        'num-total': 4,
+        'success-rate': 50.0
+    }
 
     args: list = ['kegg_pull', 'pull', 'multiple'] + args + [f'--output={output}']
     mocker.patch('sys.argv', args)
@@ -159,7 +164,7 @@ br:br03222
 
             assert actual_entry == expected_entry
 
-    with open('pull-results.txt', 'r') as file:
-        actual_pull_results: str = file.read()
+    with open('pull-results.json', 'r') as file:
+        actual_pull_results: dict = j.load(file)
 
     assert actual_pull_results == expected_pull_results

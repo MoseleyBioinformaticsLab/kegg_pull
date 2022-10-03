@@ -1,6 +1,7 @@
 import pytest as pt
 import os
 import typing as t
+import json as j
 
 import kegg_pull.pull_cli as p_cli
 import dev.utils as u
@@ -16,7 +17,7 @@ def test_main_help(mocker):
 def teardown():
     yield
 
-    os.remove('pull-results.txt')
+    os.remove('pull-results.json')
 
 
 test_main_single_data = [
@@ -80,22 +81,47 @@ def _test_pull(
     else:
         single_pull_mock.pull.assert_called_once_with(entry_ids=testing_entry_ids)
 
-    expected_pull_results = '\n'.join([
-        '### Successful Entry IDs ###',
-        'a',
-        'b',
-        'c',
-        'x',
-        '### Failed Entry IDs ###',
-        'y',
-        'z',
-        '### Timed Out Entry IDs ###\n'
-     ])
+    expected_pull_results = {
+        'successful-entry-ids': ['a', 'b', 'c', 'x'],
+        'failed-entry-ids': ['y', 'z'],
+        'timed-out-entry-ids': [],
+        'num-successful': 4,
+        'num-failed': 2,
+        'num-timed-out': 0,
+        'num-total': 6,
+        'success-rate': 66.67
+    }
 
-    with open('pull-results.txt', 'r') as file:
-        actual_pull_results = file.read()
+    with open('pull-results.json', 'r') as file:
+        actual_pull_results: dict = j.load(file)
 
-        assert actual_pull_results == expected_pull_results
+    assert actual_pull_results == expected_pull_results
+
+    expected_pull_results_text: str = '\n'.join([
+        '{',
+        '"successful-entry-ids": [',
+        '"a",',
+        '"b",',
+        '"c",',
+        '"x"',
+        '],',
+        '"failed-entry-ids": [',
+        '"y",',
+        '"z"',
+        '],',
+        '"timed-out-entry-ids": [],',
+        '"num-successful": 4,',
+        '"num-failed": 2,',
+        '"num-timed-out": 0,',
+        '"num-total": 6,',
+        '"success-rate": 66.67',
+        '}'
+    ])
+
+    with open('pull-results.json', 'r') as file:
+        actual_pull_results_text: str = file.read()
+
+    assert expected_pull_results_text == actual_pull_results_text
 
 
 test_main_multiple_data = [
