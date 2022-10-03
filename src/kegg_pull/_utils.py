@@ -9,6 +9,10 @@ def split_comma_separated_list(list_string: str) -> list:
         l.warning(f'Blank items detected in the comma separated list: "{list_string}". Removing blanks...')
         items = [item for item in items if item != '']
 
+    # If the items end up being an empty list
+    if not items:
+        raise RuntimeError(f'ERROR - BAD INPUT: Empty list provided: "{list_string}"')
+
     return items
 
 
