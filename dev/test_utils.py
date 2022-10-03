@@ -1,4 +1,5 @@
 import pytest as pt
+# noinspection PyProtectedMember
 import kegg_pull._utils as utils
 import dev.utils as u
 
@@ -9,6 +10,15 @@ def test_split_comma_separated_list_warning(caplog):
     u.assert_warning(message=warning, caplog=caplog)
 
     assert items == ['a', 'b']
+
+
+@pt.mark.parametrize('comma_separated_list', [',,', ',', ''])
+def test_split_comma_separated_list_exception(comma_separated_list: str):
+    with pt.raises(RuntimeError) as error:
+        utils.split_comma_separated_list(list_string=comma_separated_list)
+
+    expected_message = f'ERROR - BAD INPUT: Empty list provided: "{comma_separated_list}"'
+    u.assert_expected_error_message(expected_message=expected_message, error=error)
 
 
 def test_get_range_values_exception():
