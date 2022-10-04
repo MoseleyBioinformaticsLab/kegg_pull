@@ -140,7 +140,7 @@ def test_main_pull(mocker, args: list, output: str):
         'num-failed': 2,
         'num-timed-out': 0,
         'num-total': 4,
-        'success-rate': 50.0,
+        'percent-success': 50.0,
         'pull-minutes': 1.0
     }
 

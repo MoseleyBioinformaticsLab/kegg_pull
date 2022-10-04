@@ -185,7 +185,7 @@ and the internal URL used to request from the KEGG REST API.
 
 .. parsed-literal::
 
-    'module           KEGG Module Database\nmd               Release 104.0+/10-04, Oct 22\n                 Kanehisa Laboratories\n                 536 entries\n\nlinked db        pathway\n                 ko\n                 <org>\n                 genome\n                 compound\n                 glycan\n                 reaction\n                 enzyme\n                 disease\n                 pubmed\n'
+    'module           KEGG Module Database\nmd               Release 104.0+/10-05, Oct 22\n                 Kanehisa Laboratories\n                 536 entries\n\nlinked db        pathway\n                 ko\n                 <org>\n                 genome\n                 compound\n                 glycan\n                 reaction\n                 enzyme\n                 disease\n                 pubmed\n'
 
 
 
@@ -252,7 +252,7 @@ load it as a dictionary using the python json library.
 
 .. parsed-literal::
 
-    {'success-rate': 100.0, 'pull-minutes': 0.02, 'num-successful': 3, 'num-failed': 0, 'num-timed-out': 0, 'num-total': 3, 'successful-entry-ids': ['cpd:C00001', 'cpd:C00002', 'cpd:C00003'], 'failed-entry-ids': [], 'timed-out-entry-ids': []}
+    {'percent-success': 100.0, 'pull-minutes': 0.02, 'num-successful': 3, 'num-failed': 0, 'num-timed-out': 0, 'num-total': 3, 'successful-entry-ids': ['cpd:C00001', 'cpd:C00002', 'cpd:C00003'], 'failed-entry-ids': [], 'timed-out-entry-ids': []}
 
 
 Below is what the ``pull-results.json`` file contents look like:
@@ -265,7 +265,7 @@ Below is what the ``pull-results.json`` file contents look like:
 .. parsed-literal::
 
     {
-    "success-rate": 100.0,
+    "percent-success": 100.0,
     "pull-minutes": 0.02,
     "num-successful": 3,
     "num-failed": 0,
@@ -328,7 +328,7 @@ multiple
 .. parsed-literal::
 
     {
-    "success-rate": 86.13,
+    "percent-success": 86.13,
     "pull-minutes": 0.52,
     "num-successful": 118,
     "num-failed": 19,

@@ -74,7 +74,7 @@ def main():
     success_rate: float = len(pull_result.successful_entry_ids) / total_entry_ids * 100
 
     pull_results = {
-        'success-rate': float(f'{success_rate:.2f}'),
+        'percent-success': float(f'{success_rate:.2f}'),
         'pull-minutes': float(f'{(t2 - t1) / 60:.2f}'),
         'num-successful': len(pull_result.successful_entry_ids),
         'num-failed': len(pull_result.failed_entry_ids),
@@ -94,4 +94,4 @@ def _testable_time() -> float:
 
     :return: The result of time.time()
     """
-    return t.time()
+    return t.time()  # pragma: no cover
