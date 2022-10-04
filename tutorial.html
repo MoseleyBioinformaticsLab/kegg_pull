@@ -216,7 +216,7 @@ kegg_response: r.KEGGresponse = kegg_rest.info(database_name=&#39;module&#39;)
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>kegg_response.text_body
 </pre></div>
 </div>
-<pre class="literal-block">'module           KEGG Module Databasenmd               Release 104.0+/10-04, Oct 22n                 Kanehisa Laboratoriesn                 536 entriesnnlinked db        pathwayn                 kon                 &lt;org&gt;n                 genomen                 compoundn                 glycann                 reactionn                 enzymen                 diseasen                 pubmedn'</pre>
+<pre class="literal-block">'module           KEGG Module Databasenmd               Release 104.0+/10-05, Oct 22n                 Kanehisa Laboratoriesn                 536 entriesnnlinked db        pathwayn                 kon                 &lt;org&gt;n                 genomen                 compoundn                 glycann                 reactionn                 enzymen                 diseasen                 pubmedn'</pre>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>kegg_response.kegg_url
 </pre></div>
 </div>
@@ -261,7 +261,7 @@ with open(&#39;pull-results.json&#39;, &#39;r&#39;) as file:
 print(pull_results)
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;success-rate&#39;</span><span class="p">:</span> <span class="mf">100.0</span><span class="p">,</span> <span class="s1">&#39;pull-minutes&#39;</span><span class="p">:</span> <span class="mf">0.02</span><span class="p">,</span> <span class="s1">&#39;num-successful&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;num-failed&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;num-timed-out&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;num-total&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;successful-entry-ids&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;cpd:C00001&#39;</span><span class="p">,</span> <span class="s1">&#39;cpd:C00002&#39;</span><span class="p">,</span> <span class="s1">&#39;cpd:C00003&#39;</span><span class="p">],</span> <span class="s1">&#39;failed-entry-ids&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;timed-out-entry-ids&#39;</span><span class="p">:</span> <span class="p">[]}</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;percent-success&#39;</span><span class="p">:</span> <span class="mf">100.0</span><span class="p">,</span> <span class="s1">&#39;pull-minutes&#39;</span><span class="p">:</span> <span class="mf">0.02</span><span class="p">,</span> <span class="s1">&#39;num-successful&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;num-failed&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;num-timed-out&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;num-total&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;successful-entry-ids&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;cpd:C00001&#39;</span><span class="p">,</span> <span class="s1">&#39;cpd:C00002&#39;</span><span class="p">,</span> <span class="s1">&#39;cpd:C00003&#39;</span><span class="p">],</span> <span class="s1">&#39;failed-entry-ids&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;timed-out-entry-ids&#39;</span><span class="p">:</span> <span class="p">[]}</span>
 </pre></div>
 </div>
 <p>Below is what the <code class="docutils literal notranslate"><span class="pre">pull-results.json</span></code> file contents look like:</p>
@@ -269,7 +269,7 @@ print(pull_results)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="s2">&quot;success-rate&quot;</span><span class="p">:</span> <span class="mf">100.0</span><span class="p">,</span>
+<span class="s2">&quot;percent-success&quot;</span><span class="p">:</span> <span class="mf">100.0</span><span class="p">,</span>
 <span class="s2">&quot;pull-minutes&quot;</span><span class="p">:</span> <span class="mf">0.02</span><span class="p">,</span>
 <span class="s2">&quot;num-successful&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
 <span class="s2">&quot;num-failed&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
@@ -324,7 +324,7 @@ print(pull_results)
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="s2">&quot;success-rate&quot;</span><span class="p">:</span> <span class="mf">86.13</span><span class="p">,</span>
+<span class="s2">&quot;percent-success&quot;</span><span class="p">:</span> <span class="mf">86.13</span><span class="p">,</span>
 <span class="s2">&quot;pull-minutes&quot;</span><span class="p">:</span> <span class="mf">0.52</span><span class="p">,</span>
 <span class="s2">&quot;num-successful&quot;</span><span class="p">:</span> <span class="mi">118</span><span class="p">,</span>
 <span class="s2">&quot;num-failed&quot;</span><span class="p">:</span> <span class="mi">19</span><span class="p">,</span>
