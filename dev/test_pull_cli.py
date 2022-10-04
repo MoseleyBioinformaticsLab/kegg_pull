@@ -85,7 +85,7 @@ def _test_pull(
         single_pull_mock.pull.assert_called_once_with(entry_ids=testing_entry_ids)
 
     expected_pull_results = {
-        'success-rate': 66.67,
+        'percent-success': 66.67,
         'pull-minutes': 1.13,
         'num-successful': 4,
         'num-failed': 2,
@@ -103,7 +103,7 @@ def _test_pull(
 
     expected_pull_results_text: str = '\n'.join([
         '{',
-        '"success-rate": 66.67,',
+        '"percent-success": 66.67,',
         '"pull-minutes": 1.13,',
         '"num-successful": 4,',
         '"num-failed": 2,',
