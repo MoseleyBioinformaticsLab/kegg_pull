@@ -400,7 +400,7 @@ class SingleProcessMultiplePull(AbstractMultiplePull):
 class MultiProcessMultiplePull(AbstractMultiplePull):
     """Class that makes multiple requests to the KEGG REST API to pull entries within multiple processes."""
 
-    def __init__(self, single_pull: SinglePull, n_workers: int, force_single_entry: bool = False):
+    def __init__(self, single_pull: SinglePull, n_workers: int = os.cpu_count(), force_single_entry: bool = False):
         """
         :param single_pull: The SinglePull object used for each pull.
         :param force_single_entry: Determines whether to pull only one entry at a time despite the entry field specified in the SinglePull argument.
