@@ -16,7 +16,7 @@ Options:
     --entry-field=<entry-field>         Optional field to extract from the entries pulled rather than the standard flat file format (or "htext" in the case of brite entries).
     --n-tries=<n-tries>                 The number of times to attempt a KEGG request before marking it as timed out or failed. Defaults to 3.
     --time-out=<time-out>               The number of seconds to wait for a KEGG request before marking it as timed out. Defaults to 60.
-    --sleep-time=<sleep-time>           The amount of time to wait after a KEGG request times out (or potentially blacklists with a 403 error code) before attempting it again. Defaults to 10.0.
+    --sleep-time=<sleep-time>           The amount of time to wait after a KEGG request times out (or potentially blacklists with a 403 error code) before attempting it again. Defaults to 5.0.
     single                              Pull, separate, and store one or more KEGG entries via a single request to the KEGG web API. Useful when the number of entries requested is less than or equal to the maximum that KEGG allows for a single request.
     --entry-ids=<entry-ids>             Comma separated list of entry IDs to pull in a single request (e.g. --entry-ids=id1,id2,id3 etc.).
 """
@@ -69,17 +69,17 @@ def main():
     pull_result: p.PullResult = puller.pull(entry_ids=entry_ids)
     t2: float = _testable_time()
 
-    total_entry_ids: int = len(pull_result.successful_entry_ids) + len(pull_result.failed_entry_ids)
-    total_entry_ids += len(pull_result.timed_out_entry_ids)
-    success_rate: float = len(pull_result.successful_entry_ids) / total_entry_ids * 100
+    n_total_entry_ids: int = len(pull_result.successful_entry_ids) + len(pull_result.failed_entry_ids)
+    n_total_entry_ids += len(pull_result.timed_out_entry_ids)
+    percent_success: float = len(pull_result.successful_entry_ids) / n_total_entry_ids * 100
 
     pull_results = {
-        'percent-success': float(f'{success_rate:.2f}'),
+        'percent-success': float(f'{percent_success:.2f}'),
         'pull-minutes': float(f'{(t2 - t1) / 60:.2f}'),
         'num-successful': len(pull_result.successful_entry_ids),
         'num-failed': len(pull_result.failed_entry_ids),
         'num-timed-out': len(pull_result.timed_out_entry_ids),
-        'num-total': total_entry_ids,
+        'num-total': n_total_entry_ids,
         'successful-entry-ids': pull_result.successful_entry_ids,
         'failed-entry-ids': pull_result.failed_entry_ids,
         'timed-out-entry-ids': pull_result.timed_out_entry_ids

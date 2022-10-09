@@ -280,7 +280,7 @@ def test_get_n_entries_per_url(mocker, MultiplePull: type, kwargs: dict):
     group_entry_ids_spy.assert_called_once_with(entry_ids_to_group=entry_ids_mock, force_single_entry=True)
     get_n_entries_per_url_spy.assert_called_once_with(force_single_entry=True, entry_field='compound')
     expected_grouped_entry_ids = [[entry_id] for entry_id in entry_ids_mock]
-    pull_mock.assert_called_once_with(grouped_entry_ids=expected_grouped_entry_ids)
+    pull_mock.assert_called_once()
 
     assert group_entry_ids_spy.spy_return == expected_grouped_entry_ids
     assert get_n_entries_per_url_spy.spy_return == 1
@@ -292,7 +292,7 @@ def test_get_n_entries_per_url(mocker, MultiplePull: type, kwargs: dict):
 
     group_entry_ids_spy.assert_called_once_with(entry_ids_to_group=entry_ids_mock, force_single_entry=False)
     get_n_entries_per_url_spy.assert_called_once_with(force_single_entry=False, entry_field='json')
-    pull_mock.assert_called_once_with(grouped_entry_ids=expected_grouped_entry_ids)
+    pull_mock.assert_called_once()
 
     assert group_entry_ids_spy.spy_return == expected_grouped_entry_ids
     assert get_n_entries_per_url_spy.spy_return == 1
