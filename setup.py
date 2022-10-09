@@ -4,7 +4,8 @@ import re
 
 requirements = [
     'docopt',
-    'requests'
+    'requests',
+    'tqdm'
 ]
 
 

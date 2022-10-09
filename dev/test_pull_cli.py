@@ -133,18 +133,24 @@ test_main_multiple_data = [
     (
         ['--file-path=entry-ids.txt', '--entry-field=mol'], {'n_tries': None, 'time_out': None, 'sleep_time': None},
         {'output_dir': '.', 'entry_field': 'mol'}, 'from_file', {'file_path': 'entry-ids.txt'},
-        'SingleProcessMultiplePull', {'force_single_entry': False}
+        'SingleProcessMultiplePull', {'force_single_entry': False, 'unsuccessful_threshold': None}
     ),
     (
         ['--database-name=pathway', '--output=out-dir', '--multi-process', '--sleep-time=20', '--force-single-entry'],
         {'n_tries': None, 'time_out': None, 'sleep_time': 20}, {'output_dir': 'out-dir', 'entry_field': None},
         'from_database', {'database_name': 'pathway'}, 'MultiProcessMultiplePull',
-        {'force_single_entry': True, 'n_workers': None}
+        {'force_single_entry': True, 'n_workers': None, 'unsuccessful_threshold': None}
     ),
     (
         ['--database-name=brite', '--multi-process', '--n-tries=5', '--time-out=35', '--n-workers=6'],
         {'n_tries': 5, 'time_out': 35, 'sleep_time': None}, {'output_dir': '.', 'entry_field': None}, 'from_database',
-        {'database_name': 'brite'}, 'MultiProcessMultiplePull', {'force_single_entry': True, 'n_workers': 6}
+        {'database_name': 'brite'}, 'MultiProcessMultiplePull',
+        {'force_single_entry': True, 'n_workers': 6, 'unsuccessful_threshold': None}
+    ),
+    (
+        ['--file-path=entry-ids.txt', '--ut=0.4'], {'n_tries': None, 'time_out': None, 'sleep_time': None},
+        {'output_dir': '.', 'entry_field': None}, 'from_file', {'file_path': 'entry-ids.txt'},
+        'SingleProcessMultiplePull', {'force_single_entry': False, 'unsuccessful_threshold': 0.4}
     )
 ]
 @pt.mark.parametrize(
