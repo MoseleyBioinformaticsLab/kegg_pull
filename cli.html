@@ -104,9 +104,18 @@
 <p><strong>successful-entry-ids:</strong> The list of successful entry IDs.</p>
 <p><strong>failed-entry-ids:</strong> The list of failed entry IDs.</p>
 <p><strong>timed-out-entry-ids:</strong> The list of timed out entry IDs.</p>
+<p>If the –unsuccessful-threshold option is set and surpassed, an <code class="docutils literal notranslate"><span class="pre">abort-results.json</span></code> file is instead output with the following fields:</p>
+<p><strong>num-remaining-entry-ids:</strong> The number of requested entries remaining after the process aborted. The process aborted before kegg_pull could even try to pull these entries.</p>
+<p><strong>num-successful:</strong> The number of entries that were successfully pulled before the process aborted.</p>
+<p><strong>num-failed:</strong> The number of entries that failed by the time the process aborted.</p>
+<p><strong>num-timed-out:</strong> The number of entries that timed out by the time the process aborted.</p>
+<p><strong>remaining-entry-ids:</strong> The IDs of the remaining entries.</p>
+<p><strong>successful-entry-ids:</strong> The IDs of the successful entries.</p>
+<p><strong>failed-entry-ids:</strong> The IDs of the failed entries.</p>
+<p><strong>timed-out-entry-ids:</strong> The IDs of the timed out entries.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Usage:
     kegg_pull pull -h | --help
-    kegg_pull pull multiple (--database-name=&lt;database-name&gt;|--file-path=&lt;file-path&gt;) [--force-single-entry] [--multi-process] [--n-workers=&lt;n-workers&gt;] [--output=&lt;output&gt;] [--entry-field=&lt;entry-field&gt;] [--n-tries=&lt;n-tries&gt;] [--time-out=&lt;time-out&gt;] [--sleep-time=&lt;sleep-time&gt;]
+    kegg_pull pull multiple (--database-name=&lt;database-name&gt;|--file-path=&lt;file-path&gt;) [--force-single-entry] [--multi-process] [--n-workers=&lt;n-workers&gt;] [--output=&lt;output&gt;] [--entry-field=&lt;entry-field&gt;] [--n-tries=&lt;n-tries&gt;] [--time-out=&lt;time-out&gt;] [--sleep-time=&lt;sleep-time&gt;] [--ut=&lt;unsuccessful-threshold&gt;]
     kegg_pull pull single (--entry-ids=&lt;entry-ids&gt;|--file-path=&lt;file-path&gt;) [--output=&lt;output&gt;] [--entry-field=&lt;entry-field&gt;] [--n-tries=&lt;n-tries&gt;] [--time-out=&lt;time-out&gt;] [--sleep-time=&lt;sleep-time&gt;]
 
 Options:
@@ -121,7 +130,8 @@ Options:
     --entry-field=&lt;entry-field&gt;         Optional field to extract from the entries pulled rather than the standard flat file format (or &quot;htext&quot; in the case of brite entries).
     --n-tries=&lt;n-tries&gt;                 The number of times to attempt a KEGG request before marking it as timed out or failed. Defaults to 3.
     --time-out=&lt;time-out&gt;               The number of seconds to wait for a KEGG request before marking it as timed out. Defaults to 60.
-    --sleep-time=&lt;sleep-time&gt;           The amount of time to wait after a KEGG request times out (or potentially blacklists with a 403 error code) before attempting it again. Defaults to 10.0.
+    --sleep-time=&lt;sleep-time&gt;           The amount of time to wait after a KEGG request times out (or potentially blacklists with a 403 error code) before attempting it again. Defaults to 5.0.
+    --ut=&lt;unsuccessful-threshold&gt;       If set, the ratio of unsuccessful entry IDs (failed or timed out) to total entry IDs at which kegg_pull quits. Valid values are between 0.0 and 1.0 non-inclusive.
     single                              Pull, separate, and store one or more KEGG entries via a single request to the KEGG web API. Useful when the number of entries requested is less than or equal to the maximum that KEGG allows for a single request.
     --entry-ids=&lt;entry-ids&gt;             Comma separated list of entry IDs to pull in a single request (e.g. --entry-ids=id1,id2,id3 etc.).
 </pre></div>

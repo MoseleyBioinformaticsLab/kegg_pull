@@ -44,7 +44,6 @@
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cli.html">CLI</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#pulling-parsing-and-saving-kegg-entries">Pulling, Parsing, and Saving KEGG Entries</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#pulling-lists-of-kegg-entry-ids">Pulling Lists of KEGG Entry IDs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#kegg-rest-api-operations">KEGG REST API Operations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#constructing-urls-for-the-kegg-rest-api">Constructing URLs for the KEGG REST API</a></li>
@@ -84,124 +83,6 @@
 <p><code class="docutils literal notranslate"><span class="pre">entry_ids</span></code></p>
 <p><code class="docutils literal notranslate"><span class="pre">pull</span></code></p>
 <p><code class="docutils literal notranslate"><span class="pre">kegg_url</span></code></p>
-<span class="target" id="module-kegg_pull.pull"></span><div class="section" id="pulling-parsing-and-saving-kegg-entries">
-<h2>Pulling, Parsing, and Saving KEGG Entries<a class="headerlink" href="#pulling-parsing-and-saving-kegg-entries" title="Permalink to this headline">¶</a></h2>
-<p>Functionality for pulling KEGG entries from the KEGG REST API, parsing them, and saving the entries as files.</p>
-<dl class="class">
-<dt id="kegg_pull.pull.PullResult">
-<em class="property">class </em><code class="sig-prename descclassname">kegg_pull.pull.</code><code class="sig-name descname">PullResult</code><a class="reference internal" href="_modules/kegg_pull/pull.html#PullResult"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.pull.PullResult" title="Permalink to this definition">¶</a></dt>
-<dd><p>The collections of entry IDs, each of which resulted in a particular KEGG Response status after a pull.</p>
-<dl class="method">
-<dt id="kegg_pull.pull.PullResult.successful_entry_ids">
-<em class="property">property </em><code class="sig-name descname">successful_entry_ids</code><a class="headerlink" href="#kegg_pull.pull.PullResult.successful_entry_ids" title="Permalink to this definition">¶</a></dt>
-<dd><p>The IDs of entries successfully pulled.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="kegg_pull.pull.PullResult.failed_entry_ids">
-<em class="property">property </em><code class="sig-name descname">failed_entry_ids</code><a class="headerlink" href="#kegg_pull.pull.PullResult.failed_entry_ids" title="Permalink to this definition">¶</a></dt>
-<dd><p>The IDs of entries that failed to be pulled.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="kegg_pull.pull.PullResult.timed_out_entry_ids">
-<em class="property">property </em><code class="sig-name descname">timed_out_entry_ids</code><a class="headerlink" href="#kegg_pull.pull.PullResult.timed_out_entry_ids" title="Permalink to this definition">¶</a></dt>
-<dd><p>The IDs of entries that timed out before being pulled.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="kegg_pull.pull.SinglePull">
-<em class="property">class </em><code class="sig-prename descclassname">kegg_pull.pull.</code><code class="sig-name descname">SinglePull</code><span class="sig-paren">(</span><em class="sig-param">output_dir: str</em>, <em class="sig-param">kegg_rest: kegg_pull.rest.KEGGrest = None</em>, <em class="sig-param">entry_field: str = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/pull.html#SinglePull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.pull.SinglePull" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class capable of performing a single request to the KEGG REST API for pulling up to a maximum number of entries.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>output_dir</strong> – Path to the location where entries are saved (treated like a zip file if ends in .zip, else a directory).</p></li>
-<li><p><strong>kegg_rest</strong> – Optional KEGGrest object used to make the requests to the KEGG REST API (a KEGGrest object with the default settings is created if one is not provided).</p></li>
-<li><p><strong>entry_field</strong> – Optional KEGG entry field to pull.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="method">
-<dt id="kegg_pull.pull.SinglePull.pull">
-<code class="sig-name descname">pull</code><span class="sig-paren">(</span><em class="sig-param">entry_ids: list</em><span class="sig-paren">)</span> &#x2192; kegg_pull.pull.PullResult<a class="reference internal" href="_modules/kegg_pull/pull.html#SinglePull.pull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.pull.SinglePull.pull" title="Permalink to this definition">¶</a></dt>
-<dd><p>Makes a single request to the KEGG REST API to pull one or more entries and save them as files.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>entry_ids</strong> – The IDs of the entries to pull and save.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The pull result.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="kegg_pull.pull.AbstractMultiplePull">
-<em class="property">class </em><code class="sig-prename descclassname">kegg_pull.pull.</code><code class="sig-name descname">AbstractMultiplePull</code><span class="sig-paren">(</span><em class="sig-param">single_pull: kegg_pull.pull.SinglePull</em>, <em class="sig-param">force_single_entry: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/pull.html#AbstractMultiplePull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.pull.AbstractMultiplePull" title="Permalink to this definition">¶</a></dt>
-<dd><p>Abstract class that makes multiple requests to the KEGG REST API to pull and save entries of an unlimited amount.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>single_pull</strong> – The SinglePull object used for each pull.</p></li>
-<li><p><strong>force_single_entry</strong> – Determines whether to pull only one entry at a time regardless of the entry field specified in the SinglePull argument.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="method">
-<dt id="kegg_pull.pull.AbstractMultiplePull.pull">
-<code class="sig-name descname">pull</code><span class="sig-paren">(</span><em class="sig-param">entry_ids: list</em>, <em class="sig-param">entry_field: Optional[str] = ''</em>, <em class="sig-param">force_single_entry: Optional[bool] = None</em><span class="sig-paren">)</span> &#x2192; kegg_pull.pull.PullResult<a class="reference internal" href="_modules/kegg_pull/pull.html#AbstractMultiplePull.pull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.pull.AbstractMultiplePull.pull" title="Permalink to this definition">¶</a></dt>
-<dd><p>Makes multiple requests to the KEGG REST API for an unlimited amount of entry IDs.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>entry_ids</strong> – The IDs of the entries that are split into multiple pulls.</p></li>
-<li><p><strong>entry_field</strong> – An optional field of the entries to pull.</p></li>
-<li><p><strong>force_single_entry</strong> – If provided, updates the force_single_single_entry value of this AbstractMultiplePull object for this call of pull.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The pull result.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="kegg_pull.pull.SingleProcessMultiplePull">
-<em class="property">class </em><code class="sig-prename descclassname">kegg_pull.pull.</code><code class="sig-name descname">SingleProcessMultiplePull</code><span class="sig-paren">(</span><em class="sig-param">single_pull: kegg_pull.pull.SinglePull</em>, <em class="sig-param">force_single_entry: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/pull.html#SingleProcessMultiplePull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.pull.SingleProcessMultiplePull" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class that makes multiple requests to the KEGG REST API to pull entries within a single process.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>single_pull</strong> – The SinglePull object used for each pull.</p></li>
-<li><p><strong>force_single_entry</strong> – Determines whether to pull only one entry at a time regardless of the entry field specified in the SinglePull argument.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="class">
-<dt id="kegg_pull.pull.MultiProcessMultiplePull">
-<em class="property">class </em><code class="sig-prename descclassname">kegg_pull.pull.</code><code class="sig-name descname">MultiProcessMultiplePull</code><span class="sig-paren">(</span><em class="sig-param">single_pull: kegg_pull.pull.SinglePull</em>, <em class="sig-param">n_workers: int = 2</em>, <em class="sig-param">force_single_entry: bool = False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/pull.html#MultiProcessMultiplePull"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.pull.MultiProcessMultiplePull" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class that makes multiple requests to the KEGG REST API to pull entries within multiple processes.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>single_pull</strong> – The SinglePull object used for each pull.</p></li>
-<li><p><strong>force_single_entry</strong> – Determines whether to pull only one entry at a time despite the entry field specified in the SinglePull argument.</p></li>
-<li><p><strong>n_workers</strong> – The number of processes to use.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</div>
 <span class="target" id="module-kegg_pull.entry_ids"></span><div class="section" id="pulling-lists-of-kegg-entry-ids">
 <h2>Pulling Lists of KEGG Entry IDs<a class="headerlink" href="#pulling-lists-of-kegg-entry-ids" title="Permalink to this headline">¶</a></h2>
 <p>Functionality for pulling lists of KEGG entry IDs from the KEGG REST API.</p>
@@ -358,7 +239,7 @@
 
 <dl class="class">
 <dt id="kegg_pull.rest.KEGGrest">
-<em class="property">class </em><code class="sig-prename descclassname">kegg_pull.rest.</code><code class="sig-name descname">KEGGrest</code><span class="sig-paren">(</span><em class="sig-param">n_tries: int = 3</em>, <em class="sig-param">time_out: int = 60</em>, <em class="sig-param">sleep_time: float = 10.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">kegg_pull.rest.</code><code class="sig-name descname">KEGGrest</code><span class="sig-paren">(</span><em class="sig-param">n_tries: int = 3</em>, <em class="sig-param">time_out: int = 60</em>, <em class="sig-param">sleep_time: float = 5.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest" title="Permalink to this definition">¶</a></dt>
 <dd><p>Class containing methods for making requests to the KEGG REST API, including all the KEGG REST API operations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
