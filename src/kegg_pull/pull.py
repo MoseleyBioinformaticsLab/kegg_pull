@@ -99,14 +99,6 @@ class SinglePull:
             file_name = f'{entry_id}.{file_extension}'
             self._save(file_name=file_name, entry=entry)
 
-            if os.path.isfile('brite-entries.zip') and file_name == 'br:br08902.txt':
-                with zf.ZipFile('brite-entries.zip', 'r') as actual_zip:
-                    try:
-                        actual_zip.read('br:br08902.txt')
-                    except KeyError as e:
-                        pass
-
-
         @abc.abstractmethod
         def _save(self, file_name: str, entry: t.Union[str, bytes]) -> None:
             """ Saves a KEGG entry in the particular manner of the child class.
@@ -142,8 +134,6 @@ class SinglePull:
 
     class _ZipEntrySaver(_AbstractEntrySaver):
         """Class that saves KEGG entries in a ZIP file."""
-
-        _save_tries = {}
 
         def __init__(self, zip_file: str) -> None:
             """
@@ -357,7 +347,6 @@ class AbstractMultiplePull(abc.ABC):
         """
         self._single_pull = single_pull
         self._force_single_entry = force_single_entry
-        self._unsuccessful_threshold = unsuccessful_threshold
 
         if unsuccessful_threshold is not None and (unsuccessful_threshold <= 0.0 or unsuccessful_threshold >= 1.0):
             raise ValueError(
