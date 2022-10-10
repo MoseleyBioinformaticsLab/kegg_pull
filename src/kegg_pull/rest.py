@@ -59,7 +59,7 @@ class KEGGresponse:
 class KEGGrest:
     """Class containing methods for making requests to the KEGG REST API, including all the KEGG REST API operations."""
 
-    def __init__(self, n_tries: int = 3, time_out: int = 60, sleep_time: float = 10.0):
+    def __init__(self, n_tries: int = 3, time_out: int = 60, sleep_time: float = 5.0):
         """
         :param n_tries: The number of times to try to make a request (can succeed the first time, or any of n_tries, or none of the tries).
         :param time_out: The number of seconds to wait for a request until marking it as timed out.
@@ -67,7 +67,7 @@ class KEGGrest:
         """
         self._n_tries = n_tries if n_tries is not None else 3
         self._time_out = time_out if time_out is not None else 60
-        self._sleep_time = sleep_time if sleep_time is not None else 10.0
+        self._sleep_time = sleep_time if sleep_time is not None else 5.0
 
         if self._n_tries < 1:
             raise ValueError(f'{self._n_tries} is not a valid number of tries to make a KEGG request.')
