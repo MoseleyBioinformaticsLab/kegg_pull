@@ -99,14 +99,6 @@ class SinglePull:
             file_name = f'{entry_id}.{file_extension}'
             self._save(file_name=file_name, entry=entry)
 
-            if os.path.isfile('brite-entries.zip') and file_name == 'br:br08902.txt':
-                with zf.ZipFile('brite-entries.zip', 'r') as actual_zip:
-                    try:
-                        actual_zip.read('br:br08902.txt')
-                    except KeyError as e:
-                        pass
-
-
         @abc.abstractmethod
         def _save(self, file_name: str, entry: t.Union[str, bytes]) -> None:
             """ Saves a KEGG entry in the particular manner of the child class.
@@ -143,13 +135,12 @@ class SinglePull:
     class _ZipEntrySaver(_AbstractEntrySaver):
         """Class that saves KEGG entries in a ZIP file."""
 
-        _save_tries = {}
-
         def __init__(self, zip_file: str) -> None:
             """
             :param zip_file: The path to the zip file to save the entries in.
             """
             self._zip_file = zip_file
+            self.multiprocessing_lock = None
 
         def _save(self, file_name: str, entry: t.Union[str, bytes]) -> None:
             """ Saves a KEGG entry in a zip file.
@@ -157,30 +148,17 @@ class SinglePull:
             :param file_name: The name of the file to save.
             :param entry: The entry to save (contents of file).
             """
-            file_written = False
-            n_tries = 0
+            # Writing to a zip file is not multiprocess safe.
+            # So if multiprocessing and another process is currently accessing the zip file, the code below is blocked.
+            if self.multiprocessing_lock is not None:
+                self.multiprocessing_lock.acquire()
 
-            # When multiprocessing, multiple processes can possibly access the same zip file at the same time
-            # This clashing can prevent the file from saving properly, so we retry until successful
-            while not file_written:
-                n_tries += 1
+            with zf.ZipFile(self._zip_file, 'a') as zip_file:
+                zip_file.writestr(file_name, entry)
 
-                with zf.ZipFile(self._zip_file, 'a') as zip_file:
-                    zip_file.writestr(file_name, entry)
-
-                try:
-                    with zf.ZipFile(self._zip_file, 'r') as zip_file:
-                        try:
-                            zip_file.read(file_name)
-                            file_written = True
-                        except KeyError:
-                            # If the file doesn't exist in the archive, a KeyError is raised.
-                            pass
-                except zf.BadZipFile:
-                    # A BadZipFile error can additionally be raised upon closing the zip file (exiting the 'with').
-                    pass
-
-            self._save_tries[file_name] = n_tries
+            # Unblock other processes from accessing the above code.
+            if self.multiprocessing_lock is not None:
+                self.multiprocessing_lock.release()
 
     def __init__(self, output_dir: str, kegg_rest: r.KEGGrest = None, entry_field: str = None) -> None:
         """
@@ -197,12 +175,16 @@ class SinglePull:
         self.entry_field = entry_field
 
 
-    def pull(self, entry_ids: list) -> PullResult:
+    def pull(self, entry_ids: list, multiprocessing_lock: mp.Lock = None) -> PullResult:
         """ Makes a single request to the KEGG REST API to pull one or more entries and save them as files.
 
         :param entry_ids: The IDs of the entries to pull and save.
+        :param multiprocessing_lock: Blocks code writing to the same zip file among multiple processes. Used only if pulling to a zip file while multiprocessing.
         :return: The pull result.
         """
+        if multiprocessing_lock is not None and type(self._entry_saver) is SinglePull._ZipEntrySaver:
+            self._entry_saver.multiprocessing_lock = multiprocessing_lock
+
         kegg_response: r.KEGGresponse = self._kegg_rest.get(entry_ids=entry_ids, entry_field=self.entry_field)
         get_url: ku.GetKEGGurl = kegg_response.kegg_url
         pull_result = PullResult()
@@ -365,6 +347,12 @@ class AbstractMultiplePull(abc.ABC):
         """
         self._single_pull = single_pull
         self._force_single_entry = force_single_entry
+
+        if unsuccessful_threshold is not None and (unsuccessful_threshold <= 0.0 or unsuccessful_threshold >= 1.0):
+            raise ValueError(
+                f'Unsuccessful threshold of {unsuccessful_threshold} is out of range. Valid values are within 0.0 and 1.0, non-inclusive'
+            )
+
         self._unsuccessful_threshold = unsuccessful_threshold
 
     def pull(
@@ -391,8 +379,8 @@ class AbstractMultiplePull(abc.ABC):
 
             if unsuccessful_threshold is not None and n_unsuccessful / n_entry_ids >= unsuccessful_threshold:
                 total_processed_entry_ids: set = set(multiple_pull_result.successful_entry_ids)
-                total_processed_entry_ids.union(set(multiple_pull_result.failed_entry_ids))
-                total_processed_entry_ids.union(set(multiple_pull_result.timed_out_entry_ids))
+                total_processed_entry_ids: set = total_processed_entry_ids.union(set(multiple_pull_result.failed_entry_ids))
+                total_processed_entry_ids: set = total_processed_entry_ids.union(set(multiple_pull_result.timed_out_entry_ids))
                 remaining_entry_ids = set()
 
                 for entry_ids_group in grouped_entry_ids:
@@ -508,7 +496,10 @@ class MultiProcessMultiplePull(AbstractMultiplePull):
         :param n_workers: The number of processes to use.
         :param unsuccessful_threshold: If set, the ratio of unsuccessful entry IDs to total entry IDs at which execution stops. Details of the aborted process are logged.
         """
-        super(MultiProcessMultiplePull, self).__init__(single_pull=single_pull, force_single_entry=force_single_entry)
+        super(MultiProcessMultiplePull, self).__init__(
+            single_pull=single_pull, force_single_entry=force_single_entry, unsuccessful_threshold=unsuccessful_threshold
+        )
+
         self._n_workers = n_workers if n_workers is not None else os.cpu_count()
 
     def _pull(self, grouped_entry_ids: list, check_progress: t.Callable) -> PullResult:
@@ -520,9 +511,13 @@ class MultiProcessMultiplePull(AbstractMultiplePull):
         """
         multiple_pull_result = PullResult()
 
-        with mp.Pool(self._n_workers) as pool:
+        # Passing in _set_multiprocessing_lock as the "initializer" allows setting the Lock object as a global variable.
+        # We need to set it as a global since pickling Lock objects is not allowed.
+        with mp.Pool(self._n_workers, initializer=_set_multiprocessing_lock, initargs=(mp.Lock(),)) as pool:
             async_results = [
-                pool.apply_async(_get_single_pull_result, (entry_ids, self._single_pull)) for entry_ids in grouped_entry_ids
+                pool.apply_async(
+                    _get_single_pull_result, (entry_ids, self._single_pull)
+                ) for entry_ids in grouped_entry_ids
             ]
 
             for async_result in async_results:
@@ -537,6 +532,19 @@ class MultiProcessMultiplePull(AbstractMultiplePull):
         return multiple_pull_result
 
 
+global_lock = None
+
+
+def _set_multiprocessing_lock(lock: mp.Lock) -> None:
+    """ Sets a global multiprocessing lock variable to be used in each process within a multiprocessing pool.
+
+    :param lock: The Lock object to set such that it's accessible to each process.
+    """
+    global global_lock
+
+    global_lock = lock  # pragma: no cover
+
+
 def _get_single_pull_result(entry_ids: list, single_pull: SinglePull) -> bytes:
     """ Makes a request to the REST KEGG API to pull one or more entries.
 
@@ -544,6 +552,6 @@ def _get_single_pull_result(entry_ids: list, single_pull: SinglePull) -> bytes:
     :param single_pull: The SinglePull object used to make the pull.
     :return: The pull result.
     """
-    single_pull_result: PullResult = single_pull.pull(entry_ids=entry_ids)
+    single_pull_result: PullResult = single_pull.pull(entry_ids=entry_ids, multiprocessing_lock=global_lock)
 
     return p.dumps(single_pull_result)

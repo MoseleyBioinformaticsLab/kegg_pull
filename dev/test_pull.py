@@ -3,11 +3,52 @@ import shutil as sh
 import os
 import zipfile as zf
 import itertools as i
+import json as j
 
 import kegg_pull.rest as r
 import kegg_pull.pull as p
+import dev.utils as u
 
 testing_entry_ids = ['1', '2']
+
+
+@pt.fixture(name='zip_file_path')
+def remove_zip_file():
+    zip_file_path = 'zip.zip'
+
+    yield zip_file_path
+
+    os.remove(zip_file_path)
+
+
+def test_multiprocess_locking(mocker, zip_file_path: str):
+    entry_ids_mock = ['xxx']
+    expected_file_content = 'entry file content'
+
+    kegg_response_mock = mocker.MagicMock(
+        text_body=expected_file_content, kegg_url=mocker.MagicMock(multiple_entry_ids=False, entry_ids=entry_ids_mock),
+        status=r.KEGGresponse.Status.SUCCESS
+    )
+
+    get_mock: mocker.MagicMock = mocker.patch('kegg_pull.pull.r.KEGGrest.get', return_value=kegg_response_mock)
+    single_pull = p.SinglePull(output_dir=zip_file_path)
+
+    assert single_pull._entry_saver.multiprocessing_lock is None
+
+    lock_mock = mocker.MagicMock(acquire=mocker.MagicMock(), release=mocker.MagicMock())
+    pull_result: p.PullResult = single_pull.pull(entry_ids=entry_ids_mock, multiprocessing_lock=lock_mock)
+
+    assert single_pull._entry_saver.multiprocessing_lock == lock_mock
+
+    get_mock.assert_called_once_with(entry_ids=entry_ids_mock, entry_field=None)
+    lock_mock.acquire.assert_called_once_with()
+    lock_mock.release.assert_called_once_with()
+
+    with zf.ZipFile(zip_file_path, 'r') as zip_file:
+        actual_file_content: str = zip_file.read(f'xxx.txt').decode()
+
+    assert actual_file_content == expected_file_content
+    assert str(pull_result) == 'Successful Entry Ids: xxx\nFailed Entry Ids: none\nTimed Out Entry Ids: none'
 
 
 @pt.fixture(name='output_dir_mock', params=['mock-dir/', 'mock.zip'])
@@ -59,7 +100,7 @@ def test_separate_entries(mocker, output_dir_mock: str, entry_field: str, separa
 
         if output_dir_mock.endswith('.zip'):
             with zf.ZipFile(output_dir_mock, 'r') as zip_file:
-                actual_file_content: str = zip_file.read(expected_file).decode()
+                actual_file_content: str = zip_file.read(name=expected_file).decode()
         else:
             expected_file: str = os.path.join(output_dir_mock, expected_file)
 
@@ -228,12 +269,19 @@ def test_not_all_requested_entries(mocker, entry_field: str):
         assert actual_file_content == expected_file_content
 
 
+@pt.fixture(name='_')
+def remove_aborted_pull_results():
+    yield
+
+    if os.path.isfile(p.AbstractMultiplePull.ABORTED_PULL_RESULTS_PATH):
+        os.remove(p.AbstractMultiplePull.ABORTED_PULL_RESULTS_PATH)
+
 test_multiple_pull_data = [
     (p.SingleProcessMultiplePull, {}), (p.MultiProcessMultiplePull, {'n_workers': 2}),
-    (p.MultiProcessMultiplePull, {'n_workers': None})
+    (p.MultiProcessMultiplePull, {'n_workers': None}), (p.MultiProcessMultiplePull, {'unsuccessful_threshold': 0.01})
 ]
 @pt.mark.parametrize('MultiplePull,kwargs', test_multiple_pull_data)
-def test_multiple_pull(mocker, MultiplePull: type, kwargs: dict):
+def test_multiple_pull(mocker, MultiplePull: type, kwargs: dict, caplog, _):
     expected_pull_calls = [
         ['A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9'],
         ['B0', 'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9'],
@@ -242,31 +290,63 @@ def test_multiple_pull(mocker, MultiplePull: type, kwargs: dict):
     ]
 
     entry_ids_mock = list(i.chain.from_iterable(expected_pull_calls))
-
-    expected_successful_entry_ids = (
-        'A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'B0', 'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8',
-        'C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'D0'
-    )
-
-    expected_failed_entry_ids = ('A9', 'B9', 'C9', 'D1')
-    expected_timed_out_entry_ids = ()
     single_pull_mock = PickleableSinglePullMock()
 
     if MultiplePull is p.SingleProcessMultiplePull:
         single_pull_mock.pull = mocker.spy(single_pull_mock, 'pull')
 
     multiple_pull = MultiplePull(single_pull=single_pull_mock, **kwargs)
-    multiple_pull_result: p.PullResult = multiple_pull.pull(entry_ids=entry_ids_mock)
 
-    assert multiple_pull_result.successful_entry_ids == expected_successful_entry_ids
-    assert multiple_pull_result.failed_entry_ids == expected_failed_entry_ids
-    assert multiple_pull_result.timed_out_entry_ids == expected_timed_out_entry_ids
+    if 'unsuccessful_threshold' in kwargs:
+        with pt.raises(SystemExit) as error:
+            multiple_pull.pull(entry_ids=entry_ids_mock)
 
-    if MultiplePull is p.SingleProcessMultiplePull:
-        actual_pull_calls = getattr(single_pull_mock.pull, 'call_args_list')
+        [record] = caplog.records
 
-        for actual_calls, expected_calls in zip(actual_pull_calls, expected_pull_calls):
-            assert actual_calls.kwargs == {'entry_ids': expected_calls}
+        assert record.levelname == 'ERROR'
+        assert record.message == f'Unsuccessful threshold of {kwargs["unsuccessful_threshold"]} met. Aborting. ' \
+                                 f'Details saved at {p.AbstractMultiplePull.ABORTED_PULL_RESULTS_PATH}'
+
+        assert error.value.args == (1,)
+
+        expected_abort_results = {
+            'num-remaining-entry-ids': 22,
+            'num-successful': 9,
+            'num-failed': 1,
+            'num-timed-out': 0,
+            'remaining-entry-ids': [
+                'B0', 'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6',
+                'C7', 'C8', 'C9', 'D0', 'D1'
+            ],
+            'successful-entry-ids': ['A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8'],
+            'failed-entry-ids': ['A9'],
+            'timed-out-entry-ids': [],
+        }
+
+        with open(p.AbstractMultiplePull.ABORTED_PULL_RESULTS_PATH, 'r') as file:
+            actual_abort_results: dict = j.load(file)
+
+        assert expected_abort_results == actual_abort_results
+    else:
+        multiple_pull_result: p.PullResult = multiple_pull.pull(entry_ids=entry_ids_mock)
+
+        expected_successful_entry_ids = (
+            'A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'B0', 'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8',
+            'C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'D0'
+        )
+
+        expected_failed_entry_ids = ('A9', 'B9', 'C9', 'D1')
+        expected_timed_out_entry_ids = ()
+
+        assert multiple_pull_result.successful_entry_ids == expected_successful_entry_ids
+        assert multiple_pull_result.failed_entry_ids == expected_failed_entry_ids
+        assert multiple_pull_result.timed_out_entry_ids == expected_timed_out_entry_ids
+
+        if MultiplePull is p.SingleProcessMultiplePull:
+            actual_pull_calls = getattr(single_pull_mock.pull, 'call_args_list')
+
+            for actual_calls, expected_calls in zip(actual_pull_calls, expected_pull_calls):
+                assert actual_calls.kwargs == {'entry_ids': expected_calls}
 
 
 @pt.mark.parametrize('MultiplePull,kwargs', test_multiple_pull_data)
@@ -302,8 +382,9 @@ class PickleableSinglePullMock:
     def __init__(self):
         self.entry_field = None
 
+    # noinspection PyUnusedLocal
     @staticmethod
-    def pull(entry_ids: list):
+    def pull(entry_ids: list, multiprocessing_lock = None):
         successful_entry_ids: list = tuple(entry_ids[:-1])
         failed_entry_ids: list = tuple(entry_ids[-1:])
         single_pull_result = p.PullResult()
@@ -318,6 +399,18 @@ def test_get_single_pull_result(mocker):
     pull_result = p.PullResult()
     single_pull_mock = mocker.MagicMock(pull=mocker.MagicMock(return_value=pull_result))
     actual_result: bytes = p._get_single_pull_result(entry_ids=testing_entry_ids, single_pull=single_pull_mock)
-    single_pull_mock.pull.assert_called_once_with(entry_ids=testing_entry_ids)
+    single_pull_mock.pull.assert_called_once_with(entry_ids=testing_entry_ids, multiprocessing_lock=None)
 
     assert actual_result == p.p.dumps(pull_result)
+
+
+@pt.mark.parametrize('unsuccessful_threshold', [1.2, -2.0])
+def test_multiple_pull_exception(mocker, unsuccessful_threshold):
+    single_pull_mock = mocker.MagicMock()
+    expected_message = f'Unsuccessful threshold of {unsuccessful_threshold} is out of range. Valid values are within ' \
+                       f'0.0 and 1.0, non-inclusive'
+
+    with pt.raises(ValueError) as error:
+        p.SingleProcessMultiplePull(single_pull=single_pull_mock, unsuccessful_threshold=unsuccessful_threshold)
+
+    u.assert_expected_error_message(expected_message=expected_message, error=error)
