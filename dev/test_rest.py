@@ -39,7 +39,7 @@ def test_kegg_rest():
 
     assert kegg_rest._n_tries == 3
     assert kegg_rest._time_out == 60
-    assert kegg_rest._sleep_time == 10.0
+    assert kegg_rest._sleep_time == 5.0
 
 
 def test_request_and_test_success(mocker):
@@ -78,7 +78,7 @@ def test_request_and_test_failed(mocker):
     sleep_mock: mocker.MagicMock = mocker.patch('kegg_pull.rest.t.sleep')
     kegg_response: r.KEGGresponse = kegg_rest.request(kegg_url=kegg_url_mock)
     get_mock.assert_has_calls(mocker.call(url=url_mock, timeout=60) for _ in range(n_tries))
-    sleep_mock.assert_has_calls(mocker.call(10.0) for _ in range(n_tries))
+    sleep_mock.assert_has_calls(mocker.call(5.0) for _ in range(n_tries))
 
     assert kegg_response.status == r.KEGGresponse.Status.FAILED
     assert kegg_response.kegg_url == kegg_url_mock
