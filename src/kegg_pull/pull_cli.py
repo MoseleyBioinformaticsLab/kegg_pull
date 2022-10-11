@@ -37,9 +37,9 @@ def main():
     time_out: int = int(args['--time-out']) if args['--time-out'] is not None else None
     sleep_time: float = float(args['--sleep-time']) if args['--sleep-time'] is not None else None
     kegg_rest = r.KEGGrest(n_tries=n_tries, time_out=time_out, sleep_time=sleep_time)
-    output_dir: str = args['--output'] if args['--output'] is not None else '.'
+    output: str = args['--output'] if args['--output'] is not None else '.'
     entry_field: str = args['--entry-field']
-    puller = p.SinglePull(output_dir=output_dir, kegg_rest=kegg_rest, entry_field=entry_field)
+    puller = p.SinglePull(output=output, kegg_rest=kegg_rest, entry_field=entry_field)
     database_name: str = args['--database-name']
     force_single_entry: bool = args['--force-single-entry']
 
