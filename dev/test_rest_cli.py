@@ -5,6 +5,7 @@ import typing as t
 
 import kegg_pull.rest as r
 import kegg_pull.rest_cli as r_cli
+import kegg_pull.kegg_url as ku
 import dev.utils as u
 
 
@@ -31,48 +32,46 @@ def test_main_exception(mocker, expected_message: str, status):
     u.assert_expected_error_message(expected_message=expected_message, error=error)
 
 
+test_main_args = [
+    ['info', 'ligand'], ['list', 'module'], ['get', 'x,y,z'], ['get', 'a', '--entry-field=image'],
+    ['find', 'pathway', 'a,b,c'], ['find', 'drug', '--formula=CO2'], ['find', 'drug', '--exact-mass=20.2'],
+    ['find', 'drug', '--molecular-weight=202'], ['find', 'drug', '--exact-mass=20.2', '--exact-mass=30.3'],
+    ['find', 'drug', '--molecular-weight=202', '--molecular-weight=303'], ['conv', 'kegg-db', 'out-db'],
+    ['conv', '--conv-target=genes', 'eid1,eid2'], ['link', 'target-db', 'source-db'],
+    ['link', '--link-target=target-db', 'x,y'], ['ddi', 'de1,de2,de3']
+]
+
+test_main_kwargs = [
+    {'database_name': 'ligand'}, {'database_name': 'module'}, {'entry_ids': ['x', 'y', 'z'], 'entry_field': None},
+    {'entry_ids': ['a'], 'entry_field': 'image'}, {'database_name': 'pathway', 'keywords': ['a', 'b', 'c']},
+    {'database_name': 'drug', 'formula': 'CO2', 'exact_mass': None, 'molecular_weight': None},
+    {'database_name': 'drug', 'formula': None, 'exact_mass': 20.2, 'molecular_weight': None},
+    {'database_name': 'drug', 'formula': None, 'exact_mass': None, 'molecular_weight': 202},
+    {'database_name': 'drug', 'formula': None, 'exact_mass': (20.2,30.3), 'molecular_weight': None},
+    {'database_name': 'drug', 'formula': None, 'exact_mass': None, 'molecular_weight': (202,303)},
+    {'kegg_database_name': 'kegg-db', 'outside_database_name': 'out-db'},
+    {'target_database_name': 'genes', 'entry_ids': ['eid1', 'eid2']},
+    {'target_database_name': 'target-db', 'source_database_name': 'source-db'},
+    {'target_database_name': 'target-db', 'entry_ids': ['x', 'y']}, {'drug_entry_ids': ['de1', 'de2', 'de3']}
+]
+
+
 test_main_data = [
-    ('info', ['info', 'ligand'], {'database_name': 'ligand'}, False),
-    ('list', ['list', 'module'], {'database_name': 'module'}, False),
-    ('get', ['get', 'x,y,z'], {'entry_ids': ['x', 'y', 'z'], 'entry_field': None}, False),
-    ('get', ['get', 'a', '--entry-field=image'], {'entry_ids': ['a'], 'entry_field': 'image'}, True),
-    ('keywords_find', ['find', 'pathway', 'a,b,c'], {'database_name': 'pathway', 'keywords': ['a', 'b', 'c']}, False),
-    (
-        'molecular_find', ['find', 'drug', '--formula=CO2'],
-        {'database_name': 'drug', 'formula': 'CO2', 'exact_mass': None, 'molecular_weight': None}, False
-    ),
-    (
-        'molecular_find', ['find', 'drug', '--exact-mass=20.2'],
-        {'database_name': 'drug', 'formula': None, 'exact_mass': 20.2, 'molecular_weight': None}, False
-    ),
-    (
-        'molecular_find', ['find', 'drug', '--molecular-weight=202'],
-        {'database_name': 'drug', 'formula': None, 'exact_mass': None, 'molecular_weight': 202}, False
-    ),    (
-        'molecular_find', ['find', 'drug', '--exact-mass=20.2', '--exact-mass=30.3'],
-        {'database_name': 'drug', 'formula': None, 'exact_mass': (20.2,30.3), 'molecular_weight': None}, False
-    ),
-    (
-        'molecular_find', ['find', 'drug', '--molecular-weight=202', '--molecular-weight=303'],
-        {'database_name': 'drug', 'formula': None, 'exact_mass': None, 'molecular_weight': (202,303)}, False
-    ),
-    (
-        'database_conv', ['conv', 'kegg-db', 'out-db'],
-        {'kegg_database_name': 'kegg-db', 'outside_database_name': 'out-db'}, False
-    ),
-    (
-        'entries_conv', ['conv', '--conv-target=genes', 'eid1,eid2'],
-        {'target_database_name': 'genes', 'entry_ids': ['eid1', 'eid2']}, False
-    ),
-    (
-        'database_link', ['link', 'target-db', 'source-db'],
-        {'target_database_name': 'target-db', 'source_database_name': 'source-db'}, False
-    ),
-    (
-        'entries_link', ['link', '--link-target=target-db', 'x,y'],
-        {'target_database_name': 'target-db', 'entry_ids': ['x', 'y']}, False
-    ),
-    ('ddi', ['ddi', 'de1,de2,de3'], {'drug_entry_ids': ['de1', 'de2', 'de3']}, False)
+    ('info', test_main_args[0], test_main_kwargs[0], False),
+    ('list', test_main_args[1], test_main_kwargs[1], False),
+    ('get', test_main_args[2], test_main_kwargs[2], False),
+    ('get', test_main_args[3], test_main_kwargs[3], True),
+    ('keywords_find', test_main_args[4], test_main_kwargs[4], False),
+    ('molecular_find', test_main_args[5], test_main_kwargs[5], False),
+    ('molecular_find', test_main_args[6], test_main_kwargs[6], False),
+    ('molecular_find', test_main_args[7], test_main_kwargs[7], False),
+    ('molecular_find', test_main_args[8], test_main_kwargs[8], False),
+    ('molecular_find', test_main_args[9], test_main_kwargs[9], False),
+    ('database_conv', test_main_args[10], test_main_kwargs[10], False),
+    ('entries_conv', test_main_args[11], test_main_kwargs[11], False),
+    ('database_link', test_main_args[12], test_main_kwargs[12], False),
+    ('entries_link', test_main_args[13], test_main_kwargs[13], False),
+    ('ddi', test_main_args[14], test_main_kwargs[14], False)
 ]
 @pt.mark.parametrize('rest_method,args,kwargs,is_binary', test_main_data)
 def test_main_print(mocker, rest_method: str, args: list, kwargs: dict, is_binary: bool, caplog):
@@ -116,6 +115,7 @@ def output_file_mock():
 
 @pt.mark.parametrize('rest_method,args,kwargs,is_binary', test_main_data)
 def test_main_file(mocker, rest_method: str, args: list, kwargs: dict, is_binary: bool, output_file: str):
+    args: list = args.copy()
     args.append(f'--output={output_file}')
     kegg_response: mocker.MagicMock = _test_main(mocker=mocker, rest_method=rest_method, args=args, kwargs=kwargs)
 
@@ -131,4 +131,36 @@ def test_main_file(mocker, rest_method: str, args: list, kwargs: dict, is_binary
 
         assert actual_file_contents == expected_file_contents
 
+@pt.fixture(name='test_result', params=[True, False])
+def get_test_result(request):
+    yield request.param
 
+
+test_main_test_data = [
+    (ku.InfoKEGGurl, test_main_args[0], test_main_kwargs[0]),
+    (ku.ListKEGGurl, test_main_args[1], test_main_kwargs[1]),
+    (ku.GetKEGGurl, test_main_args[2], test_main_kwargs[2]),
+    (ku.GetKEGGurl, test_main_args[3], test_main_kwargs[3]),
+    (ku.KeywordsFindKEGGurl, test_main_args[4], test_main_kwargs[4]),
+    (ku.MolecularFindKEGGurl, test_main_args[5], test_main_kwargs[5]),
+    (ku.MolecularFindKEGGurl, test_main_args[6], test_main_kwargs[6]),
+    (ku.MolecularFindKEGGurl, test_main_args[7], test_main_kwargs[7]),
+    (ku.MolecularFindKEGGurl, test_main_args[8], test_main_kwargs[8]),
+    (ku.MolecularFindKEGGurl, test_main_args[9], test_main_kwargs[9]),
+    (ku.DatabaseConvKEGGurl, test_main_args[10], test_main_kwargs[10]),
+    (ku.EntriesConvKEGGurl, test_main_args[11], test_main_kwargs[11]),
+    (ku.DatabaseLinkKEGGurl, test_main_args[12], test_main_kwargs[12]),
+    (ku.EntriesLinkKEGGurl, test_main_args[13], test_main_kwargs[13]),
+    (ku.DdiKEGGurl, test_main_args[14], test_main_kwargs[14])
+]
+@pt.mark.parametrize('KEGGurl,args,kwargs', test_main_test_data)
+def test_main_test(mocker, KEGGurl: t.Type, args: list, kwargs: dict, test_result: bool):
+    test_mock: mocker.MagicMock = mocker.patch('kegg_pull.rest_cli.r.KEGGrest.test', return_value=test_result)
+    argv_mock = ['kegg_pull', 'rest']
+    argv_mock.extend(args)
+    argv_mock.append('--test')
+    mocker.patch('sys.argv', argv_mock)
+    print_mock: mocker.MagicMock = mocker.patch('builtins.print')
+    r_cli.main()
+    test_mock.assert_called_with(KEGGurl=KEGGurl, **kwargs)
+    print_mock.assert_called_once_with(test_result)
