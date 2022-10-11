@@ -168,23 +168,24 @@ Options:
 <p>Interface for the KEGG REST API including all its operations.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Usage:
     kegg_pull rest -h | --help
-    kegg_pull rest info &lt;database-name&gt; [--output=&lt;output&gt;]
-    kegg_pull rest list &lt;database-name&gt; [--output=&lt;output&gt;]
-    kegg_pull rest get &lt;entry-ids&gt; [--entry-field=&lt;entry-field&gt;] [--output=&lt;output&gt;]
-    kegg_pull rest find &lt;database-name&gt; &lt;keywords&gt; [--output=&lt;output&gt;]
-    kegg_pull rest find &lt;database-name&gt; (--formula=&lt;formula&gt;|--exact-mass=&lt;exact-mass&gt;...|--molecular-weight=&lt;molecular-weight&gt;...) [--output=&lt;output&gt;]
-    kegg_pull rest conv &lt;kegg-database-name&gt; &lt;outside-database-name&gt; [--output=&lt;output&gt;]
-    kegg_pull rest conv --conv-target=&lt;target-database-name&gt; &lt;entry-ids&gt; [--output=&lt;output&gt;]
-    kegg_pull rest link &lt;target-database-name&gt; &lt;source-database-name&gt; [--output=&lt;output&gt;]
-    kegg_pull rest link --link-target=&lt;target-database-name&gt; &lt;entry-ids&gt; [--output=&lt;output&gt;]
-    kegg_pull rest ddi &lt;drug-entry-ids&gt; [--output=&lt;output&gt;]
+    kegg_pull rest info &lt;database-name&gt; [--output=&lt;output&gt;] [--test]
+    kegg_pull rest list &lt;database-name&gt; [--output=&lt;output&gt;] [--test]
+    kegg_pull rest get &lt;entry-ids&gt; [--entry-field=&lt;entry-field&gt;] [--output=&lt;output&gt;] [--test]
+    kegg_pull rest find &lt;database-name&gt; &lt;keywords&gt; [--output=&lt;output&gt;] [--test]
+    kegg_pull rest find &lt;database-name&gt; (--formula=&lt;formula&gt;|--exact-mass=&lt;exact-mass&gt;...|--molecular-weight=&lt;molecular-weight&gt;...) [--output=&lt;output&gt;] [--test]
+    kegg_pull rest conv &lt;kegg-database-name&gt; &lt;outside-database-name&gt; [--output=&lt;output&gt;] [--test]
+    kegg_pull rest conv --conv-target=&lt;target-database-name&gt; &lt;entry-ids&gt; [--output=&lt;output&gt;] [--test]
+    kegg_pull rest link &lt;target-database-name&gt; &lt;source-database-name&gt; [--output=&lt;output&gt;] [--test]
+    kegg_pull rest link --link-target=&lt;target-database-name&gt; &lt;entry-ids&gt; [--output=&lt;output&gt;] [--test]
+    kegg_pull rest ddi &lt;drug-entry-ids&gt; [--output=&lt;output&gt;] [--test]
 
 Options:
     -h --help                               Show this help message.
     info                                    Executes the &quot;info&quot; KEGG API operation, pulling information about a KEGG database.
     &lt;database-name&gt;                         The name of the database to pull information about or entry IDs from.
+    [--test]                                If set, test the request to ensure it works rather than sending it. Print True if the request would succeed and False if the request would fail.
+    --output=&lt;output&gt;                       The file to store the response body from the KEGG web API operation. Prints to the console if --output is not specified. Ignored if --test is set.
     list                                    Executes the &quot;list&quot; KEGG API operation, pulling the entry IDs of the provided database.
-    --output=&lt;output&gt;                       The file to store the response body from the KEGG web API operation. Prints to the console if --output is not specified.
     get                                     Executes the &quot;get&quot; KEGG API operation, pulling the entries of the provided entry IDs.
     &lt;entry-ids&gt;                             Comma separated list of entry IDs.
     --entry-field=&lt;entry-field&gt;             Optional field to extract from an entry instead of the default entry info (i.e. flat file or htext in the case of brite entries).
