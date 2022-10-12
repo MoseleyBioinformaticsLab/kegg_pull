@@ -1,23 +1,24 @@
 """
 Usage:
     kegg_pull rest -h | --help
-    kegg_pull rest info <database-name> [--output=<output>] [--test]
-    kegg_pull rest list <database-name> [--output=<output>] [--test]
-    kegg_pull rest get <entry-ids> [--entry-field=<entry-field>] [--output=<output>] [--test]
-    kegg_pull rest find <database-name> <keywords> [--output=<output>] [--test]
-    kegg_pull rest find <database-name> (--formula=<formula>|--exact-mass=<exact-mass>...|--molecular-weight=<molecular-weight>...) [--output=<output>] [--test]
-    kegg_pull rest conv <kegg-database-name> <outside-database-name> [--output=<output>] [--test]
-    kegg_pull rest conv --conv-target=<target-database-name> <entry-ids> [--output=<output>] [--test]
-    kegg_pull rest link <target-database-name> <source-database-name> [--output=<output>] [--test]
-    kegg_pull rest link --link-target=<target-database-name> <entry-ids> [--output=<output>] [--test]
-    kegg_pull rest ddi <drug-entry-ids> [--output=<output>] [--test]
+    kegg_pull rest info <database-name> [--test] [--output=<output>] [--zip-file=<zip-file>]
+    kegg_pull rest list <database-name> [--test] [--output=<output>] [--zip-file=<zip-file>]
+    kegg_pull rest get <entry-ids> [--entry-field=<entry-field>] [--test] [--output=<output>] [--zip-file=<zip-file>]
+    kegg_pull rest find <database-name> <keywords> [--test] [--output=<output>] [--zip-file=<zip-file>]
+    kegg_pull rest find <database-name> (--formula=<formula>|--exact-mass=<exact-mass>...|--molecular-weight=<molecular-weight>...) [--test] [--output=<output>] [--zip-file=<zip-file>]
+    kegg_pull rest conv <kegg-database-name> <outside-database-name> [--test] [--output=<output>] [--zip-file=<zip-file>]
+    kegg_pull rest conv --conv-target=<target-database-name> <entry-ids> [--test] [--output=<output>] [--zip-file=<zip-file>]
+    kegg_pull rest link <target-database-name> <source-database-name> [--test] [--output=<output>] [--zip-file=<zip-file>]
+    kegg_pull rest link --link-target=<target-database-name> <entry-ids> [--test] [--output=<output>] [--zip-file=<zip-file>]
+    kegg_pull rest ddi <drug-entry-ids> [--test] [--output=<output>] [--zip-file=<zip-file>]
 
 Options:
     -h --help                               Show this help message.
     info                                    Executes the "info" KEGG API operation, pulling information about a KEGG database.
     <database-name>                         The name of the database to pull information about or entry IDs from.
-    [--test]                                If set, test the request to ensure it works rather than sending it. Print True if the request would succeed and False if the request would fail.
-    --output=<output>                       The file to store the response body from the KEGG web API operation. Prints to the console if --output is not specified. Ignored if --test is set.
+    [--test]                                If set, test the request to ensure it works rather than sending it. Print True if the request would succeed and False if the request would fail. Ignores --output and/or --zip-file if these options are set along with --test.
+    --output=<output>                       The file to store the response body from the KEGG web API operation. Prints to the console if not set. If ends in ".zip", saves file in a zip archive.
+    --zip-file=<zip-file>                   The name of the file to store in a zip archive. If not set, defaults to saving a file with the same name as the zip archive minus the .zip extension. Ignored if --output does not end in ".zip".
     list                                    Executes the "list" KEGG API operation, pulling the entry IDs of the provided database.
     get                                     Executes the "get" KEGG API operation, pulling the entries of the provided entry IDs.
     <entry-ids>                             Comma separated list of entry IDs.
@@ -184,5 +185,8 @@ def main():
 
             print(response_body)
         else:
-            with open(output, save_type) as file:
-                file.write(response_body)
+            if output.endswith('.zip'):
+                u.save_to_zip_archive(zip_archive_path=output, zip_file_name=args['--zip-file'], file_content=response_body)
+            else:
+                with open(output, save_type) as file:
+                    file.write(response_body)

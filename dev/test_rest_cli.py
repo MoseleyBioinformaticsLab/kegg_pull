@@ -2,6 +2,7 @@ import pytest as pt
 import unittest.mock as mock
 import os
 import typing as t
+import zipfile as zf
 
 import kegg_pull.rest as r
 import kegg_pull.rest_cli as r_cli
@@ -164,3 +165,39 @@ def test_main_test(mocker, KEGGurl: t.Type, args: list, kwargs: dict, test_resul
     r_cli.main()
     test_mock.assert_called_with(KEGGurl=KEGGurl, **kwargs)
     print_mock.assert_called_once_with(test_result)
+
+
+@pt.fixture(name='zip_archive_data', params=['kegg-response.txt', None])
+def remove_zip_archive(request):
+    zip_file_name: str = request.param
+    zip_archive_path = 'kegg-response.zip'
+
+    yield zip_archive_path, zip_file_name
+
+    os.remove(zip_archive_path)
+
+
+@pt.mark.parametrize('rest_method,args,kwargs,is_binary', test_main_data)
+def test_main_zip_archive(mocker, rest_method: str, args: list, kwargs: dict, is_binary: bool, zip_archive_data: tuple):
+    zip_archive_path, zip_file_name = zip_archive_data
+    args: list = args.copy()
+    args.append(f'--output={zip_archive_path}')
+
+    if zip_file_name is not None:
+        args.append(f'--zip-file={zip_file_name}')
+
+    kegg_response: mocker.MagicMock = _test_main(mocker=mocker, rest_method=rest_method, args=args, kwargs=kwargs)
+
+    if zip_file_name is None:
+        zip_file_name = 'kegg-response'
+
+    with zf.ZipFile(zip_archive_path, 'r') as zip_file:
+        actual_file_contents: bytes = zip_file.read(zip_file_name)
+
+        if not is_binary:
+            actual_file_contents: str = actual_file_contents.decode()
+            expected_file_contents: str = kegg_response.text_body
+        else:
+            expected_file_contents: bytes = kegg_response.binary_body
+
+    assert actual_file_contents == expected_file_contents
