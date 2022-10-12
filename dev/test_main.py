@@ -60,10 +60,10 @@ test_main_entry_ids_data = [
 @pt.mark.parametrize('args,expected_output', test_main_entry_ids_data)
 def test_main_entry_ids(mocker, args: list, expected_output: str, print_output: bool):
     args: list = ['kegg_pull', 'entry-ids'] + args
-    _test_output(mocker=mocker, args=args, expected_output=expected_output, print_output=print_output, split_lines=True)
+    _test_output(mocker=mocker, args=args, expected_output=expected_output, print_output=print_output)
 
 
-def _test_output(mocker, args: list, expected_output: str, print_output: bool, split_lines: bool):
+def _test_output(mocker, args: list, expected_output: str, print_output: bool):
     print_mock = None
 
     if print_output:
@@ -78,15 +78,7 @@ def _test_output(mocker, args: list, expected_output: str, print_output: bool, s
         expected_output: str = file.read()
 
     if print_output:
-        if split_lines:
-            expected_output: list = expected_output.strip().split('\n')
-
-            for call, expected_entry_id in zip(print_mock.call_args_list, expected_output):
-                actual_entry_id, = call.args
-
-                assert actual_entry_id == expected_entry_id
-        else:
-             print_mock.assert_called_once_with(expected_output)
+         print_mock.assert_called_once_with(expected_output)
     else:
         with open('output.txt', 'r') as file:
             actual_entry_ids: str = file.read()
@@ -104,7 +96,7 @@ test_main_rest_data = [
 @pt.mark.parametrize('args,expected_output', test_main_rest_data)
 def test_main_rest(mocker, args: list, expected_output: str, print_output: bool):
     args = ['kegg_pull', 'rest'] + args
-    _test_output(mocker=mocker, args=args, expected_output=expected_output, print_output=print_output, split_lines=False)
+    _test_output(mocker=mocker, args=args, expected_output=expected_output, print_output=print_output)
 
 
 @pt.fixture(name='output', params=['brite-entries.zip', 'brite-entries'])
