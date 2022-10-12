@@ -23,15 +23,15 @@ def teardown():
 test_main_single_data = [
     (
         ['--file-path=entry-ids.txt'], {'n_tries': None, 'time_out': None, 'sleep_time': None},
-        {'output_dir': '.', 'entry_field': None}
+        {'output': '.', 'entry_field': None}
     ),
     (
         ['--entry-ids=1,2', '--output=out-dir/', '--sleep-time=10.1'],
-        {'n_tries': None, 'time_out': None, 'sleep_time': 10.1}, {'output_dir': 'out-dir/', 'entry_field': None}
+        {'n_tries': None, 'time_out': None, 'sleep_time': 10.1}, {'output': 'out-dir/', 'entry_field': None}
     ),
     (
         ['--entry-ids=1,2', '--n-tries=4', '--time-out=50', '--entry-field=mol'],
-        {'n_tries': 4, 'time_out': 50, 'sleep_time': None}, {'output_dir': '.', 'entry_field': 'mol'}
+        {'n_tries': 4, 'time_out': 50, 'sleep_time': None}, {'output': '.', 'entry_field': 'mol'}
     )
 ]
 @pt.mark.parametrize('args,kegg_rest_kwargs,single_pull_kwargs', test_main_single_data)
@@ -132,24 +132,24 @@ def _test_pull(
 test_main_multiple_data = [
     (
         ['--file-path=entry-ids.txt', '--entry-field=mol'], {'n_tries': None, 'time_out': None, 'sleep_time': None},
-        {'output_dir': '.', 'entry_field': 'mol'}, 'from_file', {'file_path': 'entry-ids.txt'},
+        {'output': '.', 'entry_field': 'mol'}, 'from_file', {'file_path': 'entry-ids.txt'},
         'SingleProcessMultiplePull', {'force_single_entry': False, 'unsuccessful_threshold': None}
     ),
     (
         ['--database-name=pathway', '--output=out-dir', '--multi-process', '--sleep-time=20', '--force-single-entry'],
-        {'n_tries': None, 'time_out': None, 'sleep_time': 20}, {'output_dir': 'out-dir', 'entry_field': None},
+        {'n_tries': None, 'time_out': None, 'sleep_time': 20}, {'output': 'out-dir', 'entry_field': None},
         'from_database', {'database_name': 'pathway'}, 'MultiProcessMultiplePull',
         {'force_single_entry': True, 'n_workers': None, 'unsuccessful_threshold': None}
     ),
     (
         ['--database-name=brite', '--multi-process', '--n-tries=5', '--time-out=35', '--n-workers=6'],
-        {'n_tries': 5, 'time_out': 35, 'sleep_time': None}, {'output_dir': '.', 'entry_field': None}, 'from_database',
+        {'n_tries': 5, 'time_out': 35, 'sleep_time': None}, {'output': '.', 'entry_field': None}, 'from_database',
         {'database_name': 'brite'}, 'MultiProcessMultiplePull',
         {'force_single_entry': True, 'n_workers': 6, 'unsuccessful_threshold': None}
     ),
     (
         ['--file-path=entry-ids.txt', '--ut=0.4'], {'n_tries': None, 'time_out': None, 'sleep_time': None},
-        {'output_dir': '.', 'entry_field': None}, 'from_file', {'file_path': 'entry-ids.txt'},
+        {'output': '.', 'entry_field': None}, 'from_file', {'file_path': 'entry-ids.txt'},
         'SingleProcessMultiplePull', {'force_single_entry': False, 'unsuccessful_threshold': 0.4}
     )
 ]

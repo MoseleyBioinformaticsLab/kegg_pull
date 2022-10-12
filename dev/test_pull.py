@@ -31,15 +31,12 @@ def test_multiprocess_locking(mocker, zip_file_path: str):
     )
 
     get_mock: mocker.MagicMock = mocker.patch('kegg_pull.pull.r.KEGGrest.get', return_value=kegg_response_mock)
-    single_pull = p.SinglePull(output_dir=zip_file_path)
-
-    assert single_pull._entry_saver.multiprocessing_lock is None
-
     lock_mock = mocker.MagicMock(acquire=mocker.MagicMock(), release=mocker.MagicMock())
-    pull_result: p.PullResult = single_pull.pull(entry_ids=entry_ids_mock, multiprocessing_lock=lock_mock)
+    single_pull = p.SinglePull(output=zip_file_path, multiprocessing_lock=lock_mock)
 
-    assert single_pull._entry_saver.multiprocessing_lock == lock_mock
+    assert single_pull._entry_saver._multiprocessing_lock == lock_mock
 
+    pull_result: p.PullResult = single_pull.pull(entry_ids=entry_ids_mock)
     get_mock.assert_called_once_with(entry_ids=entry_ids_mock, entry_field=None)
     lock_mock.acquire.assert_called_once_with()
     lock_mock.release.assert_called_once_with()
@@ -51,25 +48,25 @@ def test_multiprocess_locking(mocker, zip_file_path: str):
     assert str(pull_result) == 'Successful Entry Ids: xxx\nFailed Entry Ids: none\nTimed Out Entry Ids: none'
 
 
-@pt.fixture(name='output_dir_mock', params=['mock-dir/', 'mock.zip'])
+@pt.fixture(name='output_mock', params=['mock-dir/', 'mock.zip'])
 def setup_and_teardown(request):
     # Setup
-    output_dir_mock = request.param
+    output_mock = request.param
 
-    yield output_dir_mock
+    yield output_mock
 
     # Tear down
-    if output_dir_mock.endswith('.zip') and os.path.isfile(output_dir_mock):
-        os.remove(output_dir_mock)
+    if output_mock.endswith('.zip') and os.path.isfile(output_mock):
+        os.remove(output_mock)
     else:
-        sh.rmtree(output_dir_mock, ignore_errors=True)
+        sh.rmtree(output_mock, ignore_errors=True)
 
 
 test_separate_entries_data = [
     (None, '///'), ('mol', '$$$$'), ('kcf', '///'), ('aaseq', '>'), ('ntseq', '>')
 ]
 @pt.mark.parametrize('entry_field,separator', test_separate_entries_data)
-def test_separate_entries(mocker, output_dir_mock: str, entry_field: str, separator: str):
+def test_separate_entries(mocker, output_mock: str, entry_field: str, separator: str):
     entry_ids_mock = ['abc', 'xyz', '123']
     expected_file_contents = [f'{entry_id_mock} content' for entry_id_mock in entry_ids_mock]
 
@@ -85,7 +82,7 @@ def test_separate_entries(mocker, output_dir_mock: str, entry_field: str, separa
 
     kegg_rest_mock = mocker.MagicMock(get=mocker.MagicMock(return_value=response_mock))
     KEGGrestMock = mocker.patch('kegg_pull.pull.r.KEGGrest', return_value=kegg_rest_mock)
-    single_pull = p.SinglePull(output_dir=output_dir_mock, entry_field=entry_field)
+    single_pull = p.SinglePull(output=output_mock, entry_field=entry_field)
     KEGGrestMock.assert_called_once_with()
     pull_result: p.PullResult = single_pull.pull(entry_ids=entry_ids_mock)
     kegg_rest_mock.get.assert_called_once_with(entry_ids=entry_ids_mock, entry_field=entry_field)
@@ -98,11 +95,11 @@ def test_separate_entries(mocker, output_dir_mock: str, entry_field: str, separa
         expected_file_extension = 'txt' if entry_field is None else entry_field
         expected_file = f'{entry_id_mock}.{expected_file_extension}'
 
-        if output_dir_mock.endswith('.zip'):
-            with zf.ZipFile(output_dir_mock, 'r') as zip_file:
+        if output_mock.endswith('.zip'):
+            with zf.ZipFile(output_mock, 'r') as zip_file:
                 actual_file_content: str = zip_file.read(name=expected_file).decode()
         else:
-            expected_file: str = os.path.join(output_dir_mock, expected_file)
+            expected_file: str = os.path.join(output_mock, expected_file)
 
             with open(expected_file, 'r') as file:
                 actual_file_content: str = file.read()
@@ -142,7 +139,7 @@ def test_pull_separate_entries(mocker, output_dir: str):
         side_effect=[initial_response_mock, entry_response_mock1, entry_response_mock2, entry_response_mock3]
     )
 
-    single_pull = p.SinglePull(output_dir=output_dir)
+    single_pull = p.SinglePull(output=output_dir)
     pull_result: p.PullResult = single_pull.pull(entry_ids=entry_ids_mock)
 
     expected_get_call_kwargs = [
@@ -190,7 +187,7 @@ def test_single_entry(mocker, file_name: str, status: r.KEGGresponse.Status):
     )
 
     mocker.patch('kegg_pull.rest.KEGGrest.get', return_value=kegg_response_mock)
-    single_pull = p.SinglePull(output_dir='.', entry_field='image')
+    single_pull = p.SinglePull(output='.', entry_field='image')
     pull_result: p.PullResult = single_pull.pull(entry_ids=[single_entry_id])
 
     assert pull_result.timed_out_entry_ids == ()
@@ -244,7 +241,7 @@ def test_not_all_requested_entries(mocker, entry_field: str):
     )
 
     pull_result = p.PullResult()
-    single_pull = p.SinglePull(output_dir='.', entry_field=entry_field)
+    single_pull = p.SinglePull(output='.', entry_field=entry_field)
     single_pull._save_multi_entry_response(kegg_response=initial_kegg_response_mock, pull_result=pull_result)
 
     assert pull_result.successful_entry_ids == (entry_id1, entry_id2)
@@ -382,9 +379,8 @@ class PickleableSinglePullMock:
     def __init__(self):
         self.entry_field = None
 
-    # noinspection PyUnusedLocal
     @staticmethod
-    def pull(entry_ids: list, multiprocessing_lock = None):
+    def pull(entry_ids: list):
         successful_entry_ids: list = tuple(entry_ids[:-1])
         failed_entry_ids: list = tuple(entry_ids[-1:])
         single_pull_result = p.PullResult()
@@ -394,12 +390,16 @@ class PickleableSinglePullMock:
 
         return single_pull_result
 
+    def set_multiprocessing_lock(self):
+        return self
+
 
 def test_get_single_pull_result(mocker):
     pull_result = p.PullResult()
     single_pull_mock = mocker.MagicMock(pull=mocker.MagicMock(return_value=pull_result))
-    actual_result: bytes = p._get_single_pull_result(entry_ids=testing_entry_ids, single_pull=single_pull_mock)
-    single_pull_mock.pull.assert_called_once_with(entry_ids=testing_entry_ids, multiprocessing_lock=None)
+    mocker.patch('kegg_pull.pull.global_single_pull', single_pull_mock)
+    actual_result: bytes = p._get_single_pull_result(entry_ids=testing_entry_ids)
+    single_pull_mock.pull.assert_called_once_with(entry_ids=testing_entry_ids)
 
     assert actual_result == p.p.dumps(pull_result)
 
