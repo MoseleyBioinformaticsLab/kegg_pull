@@ -142,16 +142,17 @@ Options:
 <p>Functionality for getting lists of KEGG entry IDs from the KEGG REST API.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Usage:
     kegg_pull entry-ids -h | --help
-    kegg_pull entry-ids from-database &lt;database-name&gt; [--output=&lt;output&gt;]
-    kegg_pull entry-ids from-file &lt;file-path&gt; [--output=&lt;output&gt;]
-    kegg_pull entry-ids from-keywords &lt;database-name&gt; &lt;keywords&gt; [--output=&lt;output&gt;]
-    kegg_pull entry-ids from-molecular-attribute &lt;database-name&gt; (--formula=&lt;formula&gt;|--exact-mass=&lt;exact-mass&gt;...|--molecular-weight=&lt;molecular-weight&gt;...) [--output=&lt;output&gt;]
+    kegg_pull entry-ids from-database &lt;database-name&gt; [--output=&lt;output&gt;] [--zip-file=&lt;zip-file&gt;]
+    kegg_pull entry-ids from-file &lt;file-path&gt; [--output=&lt;output&gt;] [--zip-file=&lt;zip-file&gt;]
+    kegg_pull entry-ids from-keywords &lt;database-name&gt; &lt;keywords&gt; [--output=&lt;output&gt;] [--zip-file=&lt;zip-file&gt;]
+    kegg_pull entry-ids from-molecular-attribute &lt;database-name&gt; (--formula=&lt;formula&gt;|--exact-mass=&lt;exact-mass&gt;...|--molecular-weight=&lt;molecular-weight&gt;...) [--output=&lt;output&gt;] [--zip-file=&lt;zip-file&gt;]
 
 Options:
     -h --help                               Show this help message.
     from-database                           Pulls all the entry IDs within a given database.
     &lt;database-name&gt;                         The KEGG database from which to pull a list of entry IDs.
-    --output=&lt;output&gt;                       Path to the file to store the output (1 entry ID per line). Prints to the console if not specified.
+    --output=&lt;output&gt;                       Path to the file to store the output (1 entry ID per line). Prints to the console if not specified. If ends in &quot;.zip&quot;, saves file to a zip archive.
+    --zip-file=&lt;zip-file&gt;                   The name of the file to store in a zip archive. If not set, defaults to saving a file with the same name as the zip archive minus the .zip extension. Ignored if --output does not end in &quot;.zip&quot;.
     from-file                               Loads the entry IDs from a file.
     &lt;file-path&gt;                             Path to a file containing a list of entry IDs with one entry ID on each line.
     from-keywords                           Searches for entries within a database based on provided keywords.
@@ -168,23 +169,24 @@ Options:
 <p>Interface for the KEGG REST API including all its operations.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Usage:
     kegg_pull rest -h | --help
-    kegg_pull rest info &lt;database-name&gt; [--output=&lt;output&gt;] [--test]
-    kegg_pull rest list &lt;database-name&gt; [--output=&lt;output&gt;] [--test]
-    kegg_pull rest get &lt;entry-ids&gt; [--entry-field=&lt;entry-field&gt;] [--output=&lt;output&gt;] [--test]
-    kegg_pull rest find &lt;database-name&gt; &lt;keywords&gt; [--output=&lt;output&gt;] [--test]
-    kegg_pull rest find &lt;database-name&gt; (--formula=&lt;formula&gt;|--exact-mass=&lt;exact-mass&gt;...|--molecular-weight=&lt;molecular-weight&gt;...) [--output=&lt;output&gt;] [--test]
-    kegg_pull rest conv &lt;kegg-database-name&gt; &lt;outside-database-name&gt; [--output=&lt;output&gt;] [--test]
-    kegg_pull rest conv --conv-target=&lt;target-database-name&gt; &lt;entry-ids&gt; [--output=&lt;output&gt;] [--test]
-    kegg_pull rest link &lt;target-database-name&gt; &lt;source-database-name&gt; [--output=&lt;output&gt;] [--test]
-    kegg_pull rest link --link-target=&lt;target-database-name&gt; &lt;entry-ids&gt; [--output=&lt;output&gt;] [--test]
-    kegg_pull rest ddi &lt;drug-entry-ids&gt; [--output=&lt;output&gt;] [--test]
+    kegg_pull rest info &lt;database-name&gt; [--test] [--output=&lt;output&gt;] [--zip-file=&lt;zip-file&gt;]
+    kegg_pull rest list &lt;database-name&gt; [--test] [--output=&lt;output&gt;] [--zip-file=&lt;zip-file&gt;]
+    kegg_pull rest get &lt;entry-ids&gt; [--entry-field=&lt;entry-field&gt;] [--test] [--output=&lt;output&gt;] [--zip-file=&lt;zip-file&gt;]
+    kegg_pull rest find &lt;database-name&gt; &lt;keywords&gt; [--test] [--output=&lt;output&gt;] [--zip-file=&lt;zip-file&gt;]
+    kegg_pull rest find &lt;database-name&gt; (--formula=&lt;formula&gt;|--exact-mass=&lt;exact-mass&gt;...|--molecular-weight=&lt;molecular-weight&gt;...) [--test] [--output=&lt;output&gt;] [--zip-file=&lt;zip-file&gt;]
+    kegg_pull rest conv &lt;kegg-database-name&gt; &lt;outside-database-name&gt; [--test] [--output=&lt;output&gt;] [--zip-file=&lt;zip-file&gt;]
+    kegg_pull rest conv --conv-target=&lt;target-database-name&gt; &lt;entry-ids&gt; [--test] [--output=&lt;output&gt;] [--zip-file=&lt;zip-file&gt;]
+    kegg_pull rest link &lt;target-database-name&gt; &lt;source-database-name&gt; [--test] [--output=&lt;output&gt;] [--zip-file=&lt;zip-file&gt;]
+    kegg_pull rest link --link-target=&lt;target-database-name&gt; &lt;entry-ids&gt; [--test] [--output=&lt;output&gt;] [--zip-file=&lt;zip-file&gt;]
+    kegg_pull rest ddi &lt;drug-entry-ids&gt; [--test] [--output=&lt;output&gt;] [--zip-file=&lt;zip-file&gt;]
 
 Options:
     -h --help                               Show this help message.
     info                                    Executes the &quot;info&quot; KEGG API operation, pulling information about a KEGG database.
     &lt;database-name&gt;                         The name of the database to pull information about or entry IDs from.
-    [--test]                                If set, test the request to ensure it works rather than sending it. Print True if the request would succeed and False if the request would fail.
-    --output=&lt;output&gt;                       The file to store the response body from the KEGG web API operation. Prints to the console if --output is not specified. Ignored if --test is set.
+    [--test]                                If set, test the request to ensure it works rather than sending it. Print True if the request would succeed and False if the request would fail. Ignores --output and/or --zip-file if these options are set along with --test.
+    --output=&lt;output&gt;                       The file to store the response body from the KEGG web API operation. Prints to the console if not set. If ends in &quot;.zip&quot;, saves file in a zip archive.
+    --zip-file=&lt;zip-file&gt;                   The name of the file to store in a zip archive. If not set, defaults to saving a file with the same name as the zip archive minus the .zip extension. Ignored if --output does not end in &quot;.zip&quot;.
     list                                    Executes the &quot;list&quot; KEGG API operation, pulling the entry IDs of the provided database.
     get                                     Executes the &quot;get&quot; KEGG API operation, pulling the entries of the provided entry IDs.
     &lt;entry-ids&gt;                             Comma separated list of entry IDs.
