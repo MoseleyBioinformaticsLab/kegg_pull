@@ -11,10 +11,6 @@ API
     :members:
     :undoc-members:
 
-.. automodule:: kegg_pull.link_to_dict
-   :members:
-   :undoc-members:
-
 .. automodule:: kegg_pull.rest
     :members:
     :undoc-members:
