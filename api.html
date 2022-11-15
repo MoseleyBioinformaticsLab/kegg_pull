@@ -45,7 +45,6 @@
 <li class="toctree-l1"><a class="reference internal" href="cli.html">CLI</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#pulling-lists-of-kegg-entry-ids">Pulling Lists of KEGG Entry IDs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#creating-dictionaries-from-kegg-link-requests">Creating Dictionaries From KEGG Link Requests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#kegg-rest-api-operations">KEGG REST API Operations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#constructing-urls-for-the-kegg-rest-api">Constructing URLs for the KEGG REST API</a></li>
 </ul>
@@ -168,55 +167,6 @@
 </dd>
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.11)"><strong>RuntimeError</strong></a> – Raised if the request to the KEGG REST API fails or times out.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-</div>
-<span class="target" id="module-kegg_pull.link_to_dict"></span><div class="section" id="creating-dictionaries-from-kegg-link-requests">
-<h2>Creating Dictionaries From KEGG Link Requests<a class="headerlink" href="#creating-dictionaries-from-kegg-link-requests" title="Permalink to this headline">¶</a></h2>
-<p>Contains methods for converting the output from the KEGG “link” REST operation into dictionaries linking the entry IDs from one database to the IDs of related entries.</p>
-<dl class="class">
-<dt id="kegg_pull.link_to_dict.LinkToDict">
-<em class="property">class </em><code class="sig-prename descclassname">kegg_pull.link_to_dict.</code><code class="sig-name descname">LinkToDict</code><span class="sig-paren">(</span><em class="sig-param">kegg_rest: kegg_pull.rest.KEGGrest = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/link_to_dict.html#LinkToDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.link_to_dict.LinkToDict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class containing methods for creating dictionaries from the output of the “link” KEGG REST operation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>kegg_rest</strong> – Optional kegg_rest object for making the “link” operation requests. One is created by default.</p>
-</dd>
-</dl>
-<dl class="method">
-<dt id="kegg_pull.link_to_dict.LinkToDict.database_link">
-<code class="sig-name descname">database_link</code><span class="sig-paren">(</span><em class="sig-param">target_database_name: str</em>, <em class="sig-param">source_database_name: str</em><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/kegg_pull/link_to_dict.html#LinkToDict.database_link"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.link_to_dict.LinkToDict.database_link" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts the output od the KEGGrest database_link method into a dictionary.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>target_database_name</strong> – One of the two KEGG databases to pull linked entries from.</p></li>
-<li><p><strong>source_database_name</strong> – The other KEGG database to link entries from the target database.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The dictionary.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="kegg_pull.link_to_dict.LinkToDict.entries_link">
-<code class="sig-name descname">entries_link</code><span class="sig-paren">(</span><em class="sig-param">target_database_name: str</em>, <em class="sig-param">entry_ids: list</em><span class="sig-paren">)</span> &#x2192; dict<a class="reference internal" href="_modules/kegg_pull/link_to_dict.html#LinkToDict.entries_link"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.link_to_dict.LinkToDict.entries_link" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts the output od the KEGGrest entries_link method into a dictionary.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>target_database_name</strong> – The KEGG database to find links to the provided entries.</p></li>
-<li><p><strong>entry_ids</strong> – The IDs of the entries to link to entries in the target database.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The dictionary.</p>
 </dd>
 </dl>
 </dd></dl>
