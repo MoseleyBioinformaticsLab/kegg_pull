@@ -1,11 +1,11 @@
 """
 This package has the following modules:
 
-``rest``
+``pull``
 
 ``entry_ids``
 
-``pull``
+``rest``
 
 ``kegg_url``
 """
