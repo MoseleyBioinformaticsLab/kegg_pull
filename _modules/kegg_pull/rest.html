@@ -3,16 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kegg_pull.rest &mdash; kegg_pull 1.4.1 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <title>kegg_pull.rest &mdash; kegg_pull 1.4.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -36,7 +39,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../guide.html">Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Tutorial</a></li>
@@ -142,7 +145,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_sleep_time</span> <span class="o">=</span> <span class="n">sleep_time</span> <span class="k">if</span> <span class="n">sleep_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mf">5.0</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_tries</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{self._n_tries}</span><span class="s1"> is not a valid number of tries to make a KEGG request.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_tries</span><span class="si">}</span><span class="s1"> is not a valid number of tries to make a KEGG request.&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="KEGGrest.request"><a class="viewcode-back" href="../../api.html#kegg_pull.rest.KEGGrest.request">[docs]</a>    <span class="k">def</span> <span class="nf">request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">KEGGurl</span><span class="p">:</span> <span class="nb">type</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">kegg_url</span><span class="p">:</span> <span class="n">ku</span><span class="o">.</span><span class="n">AbstractKEGGurl</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGresponse</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; General KEGG request function based on a given KEGG URL (either a class that is instantiated or an already instantiated KEGG URL object).</span>
@@ -190,7 +193,7 @@
         <span class="k">if</span> <span class="n">KEGGurl</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">kegg_url</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s1">&#39;Either an instantiated kegg_url object must be provided or an extended class of &#39;</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{ku.AbstractKEGGurl.__name__}</span><span class="s1"> along with the corresponding kwargs for its constructor.&#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ku</span><span class="o">.</span><span class="n">AbstractKEGGurl</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1"> along with the corresponding kwargs for its constructor.&#39;</span>
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">kegg_url</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">KEGGurl</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -203,8 +206,8 @@
 
         <span class="k">if</span> <span class="n">ku</span><span class="o">.</span><span class="n">AbstractKEGGurl</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ins</span><span class="o">.</span><span class="n">getmro</span><span class="p">(</span><span class="n">KEGGurl</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;The value for KEGGurl must be an inherited class of </span><span class="si">{ku.AbstractKEGGurl.__name__}</span><span class="s1">. &#39;</span>
-                <span class="sa">f</span><span class="s1">&#39;The class &quot;</span><span class="si">{KEGGurl.__name__}</span><span class="s1">&quot; is not.&#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;The value for KEGGurl must be an inherited class of </span><span class="si">{</span><span class="n">ku</span><span class="o">.</span><span class="n">AbstractKEGGurl</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">. &#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;The class &quot;</span><span class="si">{</span><span class="n">KEGGurl</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s1">&quot; is not.&#39;</span>
             <span class="p">)</span>
 
         <span class="n">kegg_url</span><span class="p">:</span> <span class="n">ku</span><span class="o">.</span><span class="n">AbstractKEGGurl</span> <span class="o">=</span> <span class="n">KEGGurl</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>

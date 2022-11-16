@@ -3,16 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CLI &mdash; kegg_pull 1.4.1 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <title>CLI &mdash; kegg_pull 1.4.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -38,7 +41,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="guide.html">Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
@@ -78,9 +81,9 @@
            <div itemprop="articleBody">
              
   <div class="section" id="cli">
-<h1>CLI<a class="headerlink" href="#cli" title="Permalink to this headline">¶</a></h1>
+<h1>CLI<a class="headerlink" href="#cli" title="Permalink to this heading"></a></h1>
 <div class="section" id="kegg-pull-commandline-interface">
-<h2>KEGG pull Commandline Interface<a class="headerlink" href="#kegg-pull-commandline-interface" title="Permalink to this headline">¶</a></h2>
+<h2>KEGG pull Commandline Interface<a class="headerlink" href="#kegg-pull-commandline-interface" title="Permalink to this heading"></a></h2>
 <p>Top-level commandline interface.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Usage:
     kegg_pull -h | --help       Show this help message.
@@ -93,7 +96,7 @@
 </div>
 </div>
 <div class="section" id="pulling-parsing-and-saving-kegg-entries">
-<h2>Pulling, Parsing, and Saving KEGG Entries<a class="headerlink" href="#pulling-parsing-and-saving-kegg-entries" title="Permalink to this headline">¶</a></h2>
+<h2>Pulling, Parsing, and Saving KEGG Entries<a class="headerlink" href="#pulling-parsing-and-saving-kegg-entries" title="Permalink to this heading"></a></h2>
 <p>Functionality for getting KEGG entries from the KEGG REST API, parsing them, and saving the entries as files. A JSON file, called <code class="docutils literal notranslate"><span class="pre">pull-results.json</span></code>, is saved describing the results of the pull. Below is the interpretation of each of the fields:</p>
 <p><strong>percent-success:</strong> The percentage of the requested entries that were successfully pulled and saved in a file.</p>
 <p><strong>pull-minutes:</strong> The number of minutes that the pull took to complete.</p>
@@ -138,7 +141,7 @@ Options:
 </div>
 </div>
 <div class="section" id="getting-lists-of-kegg-entry-ids">
-<h2>Getting Lists of KEGG Entry IDs<a class="headerlink" href="#getting-lists-of-kegg-entry-ids" title="Permalink to this headline">¶</a></h2>
+<h2>Getting Lists of KEGG Entry IDs<a class="headerlink" href="#getting-lists-of-kegg-entry-ids" title="Permalink to this heading"></a></h2>
 <p>Functionality for getting lists of KEGG entry IDs from the KEGG REST API.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Usage:
     kegg_pull entry-ids -h | --help
@@ -165,7 +168,7 @@ Options:
 </div>
 </div>
 <div class="section" id="kegg-rest-api-operations">
-<h2>KEGG REST API Operations<a class="headerlink" href="#kegg-rest-api-operations" title="Permalink to this headline">¶</a></h2>
+<h2>KEGG REST API Operations<a class="headerlink" href="#kegg-rest-api-operations" title="Permalink to this heading"></a></h2>
 <p>Interface for the KEGG REST API including all its operations.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Usage:
     kegg_pull rest -h | --help

@@ -3,16 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tutorial &mdash; kegg_pull 1.4.1 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <title>Tutorial &mdash; kegg_pull 1.4.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -38,7 +41,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="guide.html">Guide</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
@@ -91,11 +94,11 @@
            <div itemprop="articleBody">
              
   <div class="section" id="tutorial">
-<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
+<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this heading"></a></h1>
 <div class="section" id="api">
-<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+<h2>API<a class="headerlink" href="#api" title="Permalink to this heading"></a></h2>
 <div class="section" id="single-pull">
-<h3>Single Pull<a class="headerlink" href="#single-pull" title="Permalink to this headline">¶</a></h3>
+<h3>Single Pull<a class="headerlink" href="#single-pull" title="Permalink to this heading"></a></h3>
 <p>You can pull (request and save to the file system within <code class="docutils literal notranslate"><span class="pre">output_dir</span></code>)
 a single KEGG entry using the <code class="docutils literal notranslate"><span class="pre">SinglePull</span></code> class, inputting the list
 of entry IDs. The <code class="docutils literal notranslate"><span class="pre">PullResult</span></code> object that’s returned tells you which
@@ -137,7 +140,7 @@ files.</p>
 <code class="docutils literal notranslate"><span class="pre">pull()</span></code> method than what is accepted by KEGG.</p>
 </div>
 <div class="section" id="multiple-pull">
-<h3>Multiple Pull<a class="headerlink" href="#multiple-pull" title="Permalink to this headline">¶</a></h3>
+<h3>Multiple Pull<a class="headerlink" href="#multiple-pull" title="Permalink to this heading"></a></h3>
 <p>To get around the limit on the number of entries that can be pulled at a
 time, we have two classes capable of pulling an unlimited number of
 entries. There’s the <code class="docutils literal notranslate"><span class="pre">SingleProcessMultiplePull</span></code> and
@@ -182,7 +185,7 @@ multiple_pull.pull(entry_ids)
 </div>
 </div>
 <div class="section" id="entry-ids">
-<h3>Entry IDs<a class="headerlink" href="#entry-ids" title="Permalink to this headline">¶</a></h3>
+<h3>Entry IDs<a class="headerlink" href="#entry-ids" title="Permalink to this heading"></a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">EntryIdsGetter</span></code> class provides a number of different ways to pull
 a list of KEGG entry IDs.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import kegg_pull.entry_ids as ei
@@ -196,7 +199,7 @@ print(entry_ids)
 </div>
 </div>
 <div class="section" id="rest-api">
-<h3>Rest API<a class="headerlink" href="#rest-api" title="Permalink to this headline">¶</a></h3>
+<h3>Rest API<a class="headerlink" href="#rest-api" title="Permalink to this heading"></a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">KEGGrest</span></code> class provides wrapper methods for the KEGG REST API,
 including all of its operations. The resulting <code class="docutils literal notranslate"><span class="pre">KEGGresponse</span></code> object
 contains both the text and binary versions of the response body, the
@@ -226,13 +229,13 @@ kegg_response: r.KEGGresponse = kegg_rest.info(database_name=&#39;module&#39;)
 </div>
 </div>
 <div class="section" id="cli">
-<h2>CLI<a class="headerlink" href="#cli" title="Permalink to this headline">¶</a></h2>
+<h2>CLI<a class="headerlink" href="#cli" title="Permalink to this heading"></a></h2>
 <p>The command line interface has 3 subcommands: <code class="docutils literal notranslate"><span class="pre">pull</span></code>, <code class="docutils literal notranslate"><span class="pre">entry-ids</span></code>,
 and <code class="docutils literal notranslate"><span class="pre">rest</span></code></p>
 <div class="section" id="pull">
-<h3>pull<a class="headerlink" href="#pull" title="Permalink to this headline">¶</a></h3>
+<h3>pull<a class="headerlink" href="#pull" title="Permalink to this heading"></a></h3>
 <div class="section" id="single">
-<h4>single<a class="headerlink" href="#single" title="Permalink to this headline">¶</a></h4>
+<h4>single<a class="headerlink" href="#single" title="Permalink to this heading"></a></h4>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>% kegg_pull pull single --entry-ids=cpd:C00001,cpd:C00002,cpd:C00003 --output=compound-entries/
 </pre></div>
 </div>
@@ -287,7 +290,7 @@ print(pull_results)
 </div>
 </div>
 <div class="section" id="multiple">
-<h4>multiple<a class="headerlink" href="#multiple" title="Permalink to this headline">¶</a></h4>
+<h4>multiple<a class="headerlink" href="#multiple" title="Permalink to this heading"></a></h4>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>% kegg_pull pull multiple --database-name=brite --multi-process --n-workers=11 --output=brite-entries/
 </pre></div>
 </div>
@@ -338,7 +341,7 @@ print(pull_results)
 </div>
 </div>
 <div class="section" id="id1">
-<h3>entry-ids<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<h3>entry-ids<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>% kegg_pull entry-ids from-molecular-attribute drug --exact-mass=433 --exact-mass=434
 </pre></div>
 </div>
@@ -365,7 +368,7 @@ print(pull_results)
 </div>
 </div>
 <div class="section" id="rest">
-<h3>rest<a class="headerlink" href="#rest" title="Permalink to this headline">¶</a></h3>
+<h3>rest<a class="headerlink" href="#rest" title="Permalink to this heading"></a></h3>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>% kegg_pull rest conv --conv-target=pubchem gl:G13143,gl:G13141,gl:G13139
 </pre></div>
 </div>

@@ -3,16 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kegg_pull.entry_ids &mdash; kegg_pull 1.4.1 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <title>kegg_pull.entry_ids &mdash; kegg_pull 1.4.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -36,7 +39,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../guide.html">Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Tutorial</a></li>
@@ -113,12 +116,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">kegg_response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGresponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">FAILED</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;The KEGG request failed to pull the entry IDs from the following URL: </span><span class="si">{kegg_response.kegg_url.url}</span><span class="s1">&#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;The KEGG request failed to pull the entry IDs from the following URL: </span><span class="si">{</span><span class="n">kegg_response</span><span class="o">.</span><span class="n">kegg_url</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s1">&#39;</span>
             <span class="p">)</span>
         <span class="k">elif</span> <span class="n">kegg_response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGresponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">TIMEOUT</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s1">&#39;The KEGG request timed out while trying to pull the entry IDs from the following URL: &#39;</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{kegg_response.kegg_url.url}</span><span class="s1">&#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">kegg_response</span><span class="o">.</span><span class="n">kegg_url</span><span class="o">.</span><span class="n">url</span><span class="si">}</span><span class="s1">&#39;</span>
             <span class="p">)</span>
 
         <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="n">EntryIdsGetter</span><span class="o">.</span><span class="n">_parse_entry_ids_string</span><span class="p">(</span><span class="n">entry_ids_string</span><span class="o">=</span><span class="n">kegg_response</span><span class="o">.</span><span class="n">text_body</span><span class="p">)</span>
@@ -138,7 +141,7 @@
             <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 
             <span class="k">if</span> <span class="n">entry_ids</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Attempted to load entry IDs from </span><span class="si">{file_path}</span><span class="s1">. But the file is empty&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Attempted to load entry IDs from </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s1">. But the file is empty&#39;</span><span class="p">)</span>
 
             <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="n">EntryIdsGetter</span><span class="o">.</span><span class="n">_parse_entry_ids_string</span><span class="p">(</span><span class="n">entry_ids_string</span><span class="o">=</span><span class="n">entry_ids</span><span class="p">)</span>
 

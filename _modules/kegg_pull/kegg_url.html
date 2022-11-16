@@ -3,16 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kegg_pull.kegg_url &mdash; kegg_pull 1.4.1 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <title>kegg_pull.kegg_url &mdash; kegg_pull 1.4.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/language_data.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -36,7 +39,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../guide.html">Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Tutorial</a></li>
@@ -108,7 +111,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">url_options</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_rest_options</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{base_url}</span><span class="s1">/</span><span class="si">{rest_operation}</span><span class="s1">/</span><span class="si">{url_options}</span><span class="s1">&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_url</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">rest_operation</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">url_options</span><span class="si">}</span><span class="s1">&#39;</span>
 
     <span class="c1"># noinspection PyMethodParameters</span>
     <span class="nd">@u</span><span class="o">.</span><span class="n">staticproperty</span>
@@ -119,7 +122,7 @@
 <span class="sd">        :raises RuntimeError: Raised in the unlikely case that the request fails.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">AbstractKEGGurl</span><span class="o">.</span><span class="n">_organism_set</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{BASE_URL}</span><span class="s1">/list/organism&#39;</span>
+            <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">BASE_URL</span><span class="si">}</span><span class="s1">/list/organism&#39;</span>
             <span class="n">error_message</span> <span class="o">=</span> <span class="s1">&#39;The request to the KEGG web API </span><span class="si">{}</span><span class="s1"> while fetching the organism set using the URL: </span><span class="si">{}</span><span class="s1">&#39;</span>
 
             <span class="k">try</span><span class="p">:</span>
@@ -133,7 +136,7 @@
 
             <span class="k">if</span> <span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-                    <span class="n">error_message</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;failed with status code </span><span class="si">{status_code}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+                    <span class="n">error_message</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;failed with status code </span><span class="si">{</span><span class="n">status_code</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
                 <span class="p">)</span>
 
             <span class="n">organism_list</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -179,7 +182,7 @@
 <span class="sd">        :param reason: The reason why the URL was not valid.</span>
 <span class="sd">        :raises ValueError: The error that is raised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cannot create URL - </span><span class="si">{reason}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cannot create URL - </span><span class="si">{</span><span class="n">reason</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_validate_rest_option</span><span class="p">(</span>
@@ -199,7 +202,7 @@
                 <span class="n">valid_rest_options</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;&lt;org&gt;&#39;</span><span class="p">)</span>
 
             <span class="n">valid_options</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">valid_rest_options</span><span class="p">))</span>
-            <span class="n">error_reason</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Invalid </span><span class="si">{option_name}</span><span class="s1">: &quot;</span><span class="si">{option_value}</span><span class="s1">&quot;. Valid values are: </span><span class="si">{valid_options}</span><span class="s1">.&#39;</span>
+            <span class="n">error_reason</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Invalid </span><span class="si">{</span><span class="n">option_name</span><span class="si">}</span><span class="s1">: &quot;</span><span class="si">{</span><span class="n">option_value</span><span class="si">}</span><span class="s1">&quot;. Valid values are: </span><span class="si">{</span><span class="n">valid_options</span><span class="si">}</span><span class="s1">.&#39;</span>
 
             <span class="k">if</span> <span class="n">add_org</span><span class="p">:</span>
                 <span class="n">error_reason</span> <span class="o">+=</span> <span class="s1">&#39; Where &lt;org&gt; is an organism code or T number.&#39;</span>
@@ -337,7 +340,7 @@
 
         <span class="k">if</span> <span class="n">n_entry_ids</span> <span class="o">&gt;</span> <span class="n">max_entry_ids</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_raise_error</span><span class="p">(</span>
-                <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;The maximum number of entry IDs is </span><span class="si">{max_entry_ids}</span><span class="s1"> but </span><span class="si">{n_entry_ids}</span><span class="s1"> were provided&#39;</span>
+                <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;The maximum number of entry IDs is </span><span class="si">{</span><span class="n">max_entry_ids</span><span class="si">}</span><span class="s1"> but </span><span class="si">{</span><span class="n">n_entry_ids</span><span class="si">}</span><span class="s1"> were provided&#39;</span>
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">entry_field</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -347,8 +350,8 @@
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">only_one_entry</span><span class="p">(</span><span class="n">entry_field</span><span class="o">=</span><span class="n">entry_field</span><span class="p">)</span> <span class="ow">and</span> <span class="n">n_entry_ids</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_raise_error</span><span class="p">(</span>
-                    <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;The KEGG entry field: &quot;</span><span class="si">{entry_field}</span><span class="s1">&quot; only supports requests of one KEGG entry &#39;</span>
-                           <span class="sa">f</span><span class="s1">&#39;at a time but </span><span class="si">{n_entry_ids}</span><span class="s1"> entry IDs are provided&#39;</span>
+                    <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;The KEGG entry field: &quot;</span><span class="si">{</span><span class="n">entry_field</span><span class="si">}</span><span class="s1">&quot; only supports requests of one KEGG entry &#39;</span>
+                           <span class="sa">f</span><span class="s1">&#39;at a time but </span><span class="si">{</span><span class="n">n_entry_ids</span><span class="si">}</span><span class="s1"> entry IDs are provided&#39;</span>
                 <span class="p">)</span>
 
 <div class="viewcode-block" id="GetKEGGurl.only_one_entry"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.GetKEGGurl.only_one_entry">[docs]</a>    <span class="nd">@staticmethod</span>
@@ -378,7 +381,7 @@
         <span class="n">entry_ids_url_option</span> <span class="o">=</span> <span class="s1">&#39;+&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">entry_ids</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">entry_field</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{entry_ids_url_option}</span><span class="s1">/</span><span class="si">{entry_field}</span><span class="s1">&#39;</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">entry_ids_url_option</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">entry_field</span><span class="si">}</span><span class="s1">&#39;</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">entry_ids_url_option</span></div>
 
@@ -415,7 +418,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">keywords_string</span> <span class="o">=</span> <span class="s1">&#39;+&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">keywords</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{database_name}</span><span class="s1">/</span><span class="si">{keywords_string}</span><span class="s1">&#39;</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">database_name</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">keywords_string</span><span class="si">}</span><span class="s1">&#39;</span></div>
 
 
 <div class="viewcode-block" id="MolecularFindKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.MolecularFindKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">MolecularFindKEGGurl</span><span class="p">(</span><span class="n">AbstractKEGGurl</span><span class="p">):</span>
@@ -484,8 +487,8 @@
                 <span class="n">provided_values</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">range_value</span><span class="p">)</span> <span class="k">for</span> <span class="n">range_value</span> <span class="ow">in</span> <span class="n">range_values</span><span class="p">)</span>
 
                 <span class="n">AbstractKEGGurl</span><span class="o">.</span><span class="n">_raise_error</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{range_name}</span><span class="s1"> range can only be constructed from 2 values but {len(range_values)} are provided: &#39;</span>
-                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{provided_values}</span><span class="s1">&#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">range_name</span><span class="si">}</span><span class="s1"> range can only be constructed from 2 values but </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">range_values</span><span class="p">)</span><span class="si">}</span><span class="s1"> are provided: &#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">provided_values</span><span class="si">}</span><span class="s1">&#39;</span>
                 <span class="p">)</span>
 
             <span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span> <span class="o">=</span> <span class="n">range_values</span>
@@ -493,7 +496,7 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="n">min_val</span> <span class="o">&lt;</span> <span class="n">max_val</span><span class="p">:</span>
                 <span class="n">AbstractKEGGurl</span><span class="o">.</span><span class="n">_raise_error</span><span class="p">(</span>
                     <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;The first value in the range must be less than the second. Values provided:&#39;</span>
-                           <span class="sa">f</span><span class="s1">&#39; </span><span class="si">{min_val}</span><span class="s1">-</span><span class="si">{max_val}</span><span class="s1">&#39;</span>
+                           <span class="sa">f</span><span class="s1">&#39; </span><span class="si">{</span><span class="n">min_val</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">max_val</span><span class="si">}</span><span class="s1">&#39;</span>
                 <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_create_rest_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">formula</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">exact_mass</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -508,13 +511,13 @@
 <span class="sd">        :return: The constructed options.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">formula</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">options</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{formula}</span><span class="s1">/formula&#39;</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">formula</span><span class="si">}</span><span class="s1">/formula&#39;</span>
         <span class="k">elif</span> <span class="n">exact_mass</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">options</span> <span class="o">=</span> <span class="n">MolecularFindKEGGurl</span><span class="o">.</span><span class="n">_get_range_options</span><span class="p">(</span><span class="n">option_name</span><span class="o">=</span><span class="s1">&#39;exact_mass&#39;</span><span class="p">,</span> <span class="n">option_value</span><span class="o">=</span><span class="n">exact_mass</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">options</span> <span class="o">=</span> <span class="n">MolecularFindKEGGurl</span><span class="o">.</span><span class="n">_get_range_options</span><span class="p">(</span><span class="n">option_name</span><span class="o">=</span><span class="s1">&#39;mol_weight&#39;</span><span class="p">,</span> <span class="n">option_value</span><span class="o">=</span><span class="n">molecular_weight</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{database_name}</span><span class="s1">/</span><span class="si">{options}</span><span class="s1">&#39;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">database_name</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">options</span><span class="si">}</span><span class="s1">&#39;</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_range_options</span><span class="p">(</span><span class="n">option_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">option_value</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -530,9 +533,9 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">minimum</span><span class="p">,</span> <span class="n">maximum</span> <span class="o">=</span> <span class="n">option_value</span>
 
-            <span class="n">options</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{minimum}</span><span class="s1">-</span><span class="si">{maximum}</span><span class="s1">&#39;</span>
+            <span class="n">options</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">minimum</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">maximum</span><span class="si">}</span><span class="s1">&#39;</span>
 
-        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{options}</span><span class="s1">/</span><span class="si">{option_name}</span><span class="s1">&#39;</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">options</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">option_name</span><span class="si">}</span><span class="s1">&#39;</span></div>
 
 
 <div class="viewcode-block" id="AbstractConvKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.AbstractConvKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">AbstractConvKEGGurl</span><span class="p">(</span><span class="n">AbstractKEGGurl</span><span class="p">):</span>
@@ -611,15 +614,15 @@
         <span class="k">if</span> <span class="n">kegg_database_name</span> <span class="ow">in</span> <span class="n">valid_kegg_gene_databases</span> <span class="ow">and</span> \
                 <span class="n">outside_database_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_outside_gene_databases</span><span class="p">:</span>
             <span class="n">AbstractKEGGurl</span><span class="o">.</span><span class="n">_raise_error</span><span class="p">(</span>
-                <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;KEGG database &quot;</span><span class="si">{kegg_database_name}</span><span class="s1">&quot; is a gene database but outside database &#39;</span>
-                       <span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{outside_database_name}</span><span class="s1">&quot; is not.&#39;</span>
+                <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;KEGG database &quot;</span><span class="si">{</span><span class="n">kegg_database_name</span><span class="si">}</span><span class="s1">&quot; is a gene database but outside database &#39;</span>
+                       <span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">outside_database_name</span><span class="si">}</span><span class="s1">&quot; is not.&#39;</span>
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">kegg_database_name</span> <span class="ow">in</span> <span class="n">valid_kegg_molecule_databases</span> <span class="ow">and</span> \
                 <span class="n">outside_database_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid_outside_molecule_databases</span><span class="p">:</span>
             <span class="n">AbstractKEGGurl</span><span class="o">.</span><span class="n">_raise_error</span><span class="p">(</span>
-                <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;KEGG database &quot;</span><span class="si">{kegg_database_name}</span><span class="s1">&quot; is a molecule database but outside database &#39;</span>
-                       <span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{outside_database_name}</span><span class="s1">&quot; is not.&#39;</span>
+                <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;KEGG database &quot;</span><span class="si">{</span><span class="n">kegg_database_name</span><span class="si">}</span><span class="s1">&quot; is a molecule database but outside database &#39;</span>
+                       <span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">outside_database_name</span><span class="si">}</span><span class="s1">&quot; is not.&#39;</span>
             <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_create_rest_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kegg_database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">outside_database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -629,7 +632,7 @@
 <span class="sd">        :param outside_database_name: The outside database option</span>
 <span class="sd">        :return: The constructed options.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{kegg_database_name}</span><span class="s1">/</span><span class="si">{outside_database_name}</span><span class="s1">&#39;</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">kegg_database_name</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">outside_database_name</span><span class="si">}</span><span class="s1">&#39;</span></div>
 
 
 <div class="viewcode-block" id="EntriesConvKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.EntriesConvKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">EntriesConvKEGGurl</span><span class="p">(</span><span class="n">AbstractConvKEGGurl</span><span class="p">):</span>
@@ -671,7 +674,7 @@
 <span class="sd">        :param entry_ids: The entry IDs in the second part of the URL.</span>
 <span class="sd">        :return: The constructed options.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{target_database_name}</span><span class="s1">/{&quot;+&quot;.join(entry_ids)}&#39;</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">target_database_name</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="s2">&quot;+&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">entry_ids</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span></div>
 
 
 <div class="viewcode-block" id="AbstractLinkKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.AbstractLinkKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">AbstractLinkKEGGurl</span><span class="p">(</span><span class="n">AbstractKEGGurl</span><span class="p">):</span>
@@ -733,7 +736,7 @@
 <span class="sd">        :param source_database_name: The source database name for the second option.</span>
 <span class="sd">        :return: The constructed options.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{target_database_name}</span><span class="s1">/</span><span class="si">{source_database_name}</span><span class="s1">&#39;</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">target_database_name</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">source_database_name</span><span class="si">}</span><span class="s1">&#39;</span></div>
 
 
 <div class="viewcode-block" id="EntriesLinkKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.EntriesLinkKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">EntriesLinkKEGGurl</span><span class="p">(</span><span class="n">AbstractLinkKEGGurl</span><span class="p">):</span>
@@ -771,7 +774,7 @@
 <span class="sd">        :param entry_ids: The entry IDs as the last options.</span>
 <span class="sd">        :return: The constructed options.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{target_database_name}</span><span class="s1">/{&quot;+&quot;.join(entry_ids)}&#39;</span></div>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">target_database_name</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="s2">&quot;+&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">entry_ids</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span></div>
 
 
 <div class="viewcode-block" id="DdiKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.DdiKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">DdiKEGGurl</span><span class="p">(</span><span class="n">AbstractKEGGurl</span><span class="p">):</span>

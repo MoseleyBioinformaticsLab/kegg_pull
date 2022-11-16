@@ -3,16 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>API &mdash; kegg_pull 1.4.1 documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <title>API &mdash; kegg_pull 1.4.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -38,15 +41,73 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="guide.html">Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cli.html">CLI</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#pulling-lists-of-kegg-entry-ids">Pulling Lists of KEGG Entry IDs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kegg_pull.entry_ids.EntryIdsGetter"><code class="docutils literal notranslate"><span class="pre">EntryIdsGetter</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.entry_ids.EntryIdsGetter.from_database"><code class="docutils literal notranslate"><span class="pre">EntryIdsGetter.from_database()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.entry_ids.EntryIdsGetter.from_file"><code class="docutils literal notranslate"><span class="pre">EntryIdsGetter.from_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.entry_ids.EntryIdsGetter.from_keywords"><code class="docutils literal notranslate"><span class="pre">EntryIdsGetter.from_keywords()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.entry_ids.EntryIdsGetter.from_molecular_attribute"><code class="docutils literal notranslate"><span class="pre">EntryIdsGetter.from_molecular_attribute()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#kegg-rest-api-operations">KEGG REST API Operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kegg_pull.rest.KEGGresponse"><code class="docutils literal notranslate"><span class="pre">KEGGresponse</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.rest.KEGGresponse.Status"><code class="docutils literal notranslate"><span class="pre">KEGGresponse.Status</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#kegg_pull.rest.KEGGresponse.Status.SUCCESS"><code class="docutils literal notranslate"><span class="pre">KEGGresponse.Status.SUCCESS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kegg_pull.rest.KEGGresponse.Status.FAILED"><code class="docutils literal notranslate"><span class="pre">KEGGresponse.Status.FAILED</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kegg_pull.rest.KEGGresponse.Status.TIMEOUT"><code class="docutils literal notranslate"><span class="pre">KEGGresponse.Status.TIMEOUT</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.rest.KEGGresponse.status"><code class="docutils literal notranslate"><span class="pre">KEGGresponse.status</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.rest.KEGGresponse.kegg_url"><code class="docutils literal notranslate"><span class="pre">KEGGresponse.kegg_url</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.rest.KEGGresponse.text_body"><code class="docutils literal notranslate"><span class="pre">KEGGresponse.text_body</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.rest.KEGGresponse.binary_body"><code class="docutils literal notranslate"><span class="pre">KEGGresponse.binary_body</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#kegg_pull.rest.KEGGrest"><code class="docutils literal notranslate"><span class="pre">KEGGrest</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.rest.KEGGrest.request"><code class="docutils literal notranslate"><span class="pre">KEGGrest.request()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.rest.KEGGrest.test"><code class="docutils literal notranslate"><span class="pre">KEGGrest.test()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.rest.KEGGrest.list"><code class="docutils literal notranslate"><span class="pre">KEGGrest.list()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.rest.KEGGrest.get"><code class="docutils literal notranslate"><span class="pre">KEGGrest.get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.rest.KEGGrest.info"><code class="docutils literal notranslate"><span class="pre">KEGGrest.info()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.rest.KEGGrest.keywords_find"><code class="docutils literal notranslate"><span class="pre">KEGGrest.keywords_find()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.rest.KEGGrest.molecular_find"><code class="docutils literal notranslate"><span class="pre">KEGGrest.molecular_find()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.rest.KEGGrest.database_conv"><code class="docutils literal notranslate"><span class="pre">KEGGrest.database_conv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.rest.KEGGrest.entries_conv"><code class="docutils literal notranslate"><span class="pre">KEGGrest.entries_conv()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.rest.KEGGrest.database_link"><code class="docutils literal notranslate"><span class="pre">KEGGrest.database_link()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.rest.KEGGrest.entries_link"><code class="docutils literal notranslate"><span class="pre">KEGGrest.entries_link()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.rest.KEGGrest.ddi"><code class="docutils literal notranslate"><span class="pre">KEGGrest.ddi()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#constructing-urls-for-the-kegg-rest-api">Constructing URLs for the KEGG REST API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kegg_pull.kegg_url.AbstractKEGGurl"><code class="docutils literal notranslate"><span class="pre">AbstractKEGGurl</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.kegg_url.AbstractKEGGurl.url"><code class="docutils literal notranslate"><span class="pre">AbstractKEGGurl.url</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#kegg_pull.kegg_url.ListKEGGurl"><code class="docutils literal notranslate"><span class="pre">ListKEGGurl</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kegg_pull.kegg_url.InfoKEGGurl"><code class="docutils literal notranslate"><span class="pre">InfoKEGGurl</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kegg_pull.kegg_url.GetKEGGurl"><code class="docutils literal notranslate"><span class="pre">GetKEGGurl</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.kegg_url.GetKEGGurl.MAX_ENTRY_IDS_PER_URL"><code class="docutils literal notranslate"><span class="pre">GetKEGGurl.MAX_ENTRY_IDS_PER_URL</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.kegg_url.GetKEGGurl.entry_ids"><code class="docutils literal notranslate"><span class="pre">GetKEGGurl.entry_ids</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.kegg_url.GetKEGGurl.multiple_entry_ids"><code class="docutils literal notranslate"><span class="pre">GetKEGGurl.multiple_entry_ids</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.kegg_url.GetKEGGurl.only_one_entry"><code class="docutils literal notranslate"><span class="pre">GetKEGGurl.only_one_entry()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.kegg_url.GetKEGGurl.is_binary"><code class="docutils literal notranslate"><span class="pre">GetKEGGurl.is_binary()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#kegg_pull.kegg_url.KeywordsFindKEGGurl"><code class="docutils literal notranslate"><span class="pre">KeywordsFindKEGGurl</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kegg_pull.kegg_url.MolecularFindKEGGurl"><code class="docutils literal notranslate"><span class="pre">MolecularFindKEGGurl</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kegg_pull.kegg_url.AbstractConvKEGGurl"><code class="docutils literal notranslate"><span class="pre">AbstractConvKEGGurl</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kegg_pull.kegg_url.DatabaseConvKEGGurl"><code class="docutils literal notranslate"><span class="pre">DatabaseConvKEGGurl</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kegg_pull.kegg_url.EntriesConvKEGGurl"><code class="docutils literal notranslate"><span class="pre">EntriesConvKEGGurl</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kegg_pull.kegg_url.AbstractLinkKEGGurl"><code class="docutils literal notranslate"><span class="pre">AbstractLinkKEGGurl</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kegg_pull.kegg_url.DatabaseLinkKEGGurl"><code class="docutils literal notranslate"><span class="pre">DatabaseLinkKEGGurl</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kegg_pull.kegg_url.EntriesLinkKEGGurl"><code class="docutils literal notranslate"><span class="pre">EntriesLinkKEGGurl</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kegg_pull.kegg_url.DdiKEGGurl"><code class="docutils literal notranslate"><span class="pre">DdiKEGGurl</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
@@ -77,31 +138,32 @@
            <div itemprop="articleBody">
              
   <div class="section" id="module-kegg_pull">
-<span id="api"></span><h1>API<a class="headerlink" href="#module-kegg_pull" title="Permalink to this headline">¶</a></h1>
+<span id="api"></span><h1>API<a class="headerlink" href="#module-kegg_pull" title="Permalink to this heading"></a></h1>
 <p>This package has the following modules:</p>
 <p><code class="docutils literal notranslate"><span class="pre">pull</span></code></p>
 <p><code class="docutils literal notranslate"><span class="pre">entry_ids</span></code></p>
 <p><code class="docutils literal notranslate"><span class="pre">rest</span></code></p>
 <p><code class="docutils literal notranslate"><span class="pre">kegg_url</span></code></p>
 <span class="target" id="module-kegg_pull.entry_ids"></span><div class="section" id="pulling-lists-of-kegg-entry-ids">
-<h2>Pulling Lists of KEGG Entry IDs<a class="headerlink" href="#pulling-lists-of-kegg-entry-ids" title="Permalink to this headline">¶</a></h2>
+<h2>Pulling Lists of KEGG Entry IDs<a class="headerlink" href="#pulling-lists-of-kegg-entry-ids" title="Permalink to this heading"></a></h2>
 <p>Functionality for pulling lists of KEGG entry IDs from the KEGG REST API.</p>
-<dl class="class">
-<dt id="kegg_pull.entry_ids.EntryIdsGetter">
-<em class="property">class </em><code class="sig-prename descclassname">kegg_pull.entry_ids.</code><code class="sig-name descname">EntryIdsGetter</code><span class="sig-paren">(</span><em class="sig-param">kegg_rest: kegg_pull.rest.KEGGrest = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/entry_ids.html#EntryIdsGetter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.entry_ids.EntryIdsGetter" title="Permalink to this definition">¶</a></dt>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="kegg_pull.entry_ids.EntryIdsGetter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kegg_pull.entry_ids.</span></span><span class="sig-name descname"><span class="pre">EntryIdsGetter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kegg_rest</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#kegg_pull.rest.KEGGrest" title="kegg_pull.rest.KEGGrest"><span class="pre">KEGGrest</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/entry_ids.html#EntryIdsGetter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.entry_ids.EntryIdsGetter" title="Permalink to this definition"></a></dt>
 <dd><p>Class with methods for various ways of pulling a list of KEGG entry IDs from the KEGG REST API.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>kegg_rest</strong> – Optional KEGGrest object for making requests to the KEGG REST API to pull entry IDs (if a KEGGrest object is not provided, a KEGGrest object is created with the default values).</p>
+<dd class="field-odd"><p><strong>kegg_rest</strong> (<a class="reference internal" href="#kegg_pull.rest.KEGGrest" title="kegg_pull.rest.KEGGrest"><em>KEGGrest</em></a>) – Optional KEGGrest object for making requests to the KEGG REST API to pull entry IDs (if a KEGGrest object is not provided, a KEGGrest object is created with the default values).</p>
 </dd>
 </dl>
-<dl class="method">
-<dt id="kegg_pull.entry_ids.EntryIdsGetter.from_database">
-<code class="sig-name descname">from_database</code><span class="sig-paren">(</span><em class="sig-param">database_name: str</em><span class="sig-paren">)</span> &#x2192; list<a class="reference internal" href="_modules/kegg_pull/entry_ids.html#EntryIdsGetter.from_database"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.entry_ids.EntryIdsGetter.from_database" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="kegg_pull.entry_ids.EntryIdsGetter.from_database">
+<span class="sig-name descname"><span class="pre">from_database</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><span class="pre">list</span></a></span></span><a class="reference internal" href="_modules/kegg_pull/entry_ids.html#EntryIdsGetter.from_database"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.entry_ids.EntryIdsGetter.from_database" title="Permalink to this definition"></a></dt>
 <dd><p>Pulls the KEGG entry IDs of a given database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>database_name</strong> – The KEGG database to pull the entry IDs from.</p>
+<dd class="field-odd"><p><strong>database_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The KEGG database to pull the entry IDs from.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The list of resulting entry IDs.</p>
@@ -109,16 +171,19 @@
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.11)"><strong>RuntimeError</strong></a> – Raised if the request to the KEGG REST API fails or times out.</p>
 </dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a></p>
+</dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="kegg_pull.entry_ids.EntryIdsGetter.from_file">
-<em class="property">static </em><code class="sig-name descname">from_file</code><span class="sig-paren">(</span><em class="sig-param">file_path: str</em><span class="sig-paren">)</span> &#x2192; list<a class="reference internal" href="_modules/kegg_pull/entry_ids.html#EntryIdsGetter.from_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.entry_ids.EntryIdsGetter.from_file" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="kegg_pull.entry_ids.EntryIdsGetter.from_file">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><span class="pre">list</span></a></span></span><a class="reference internal" href="_modules/kegg_pull/entry_ids.html#EntryIdsGetter.from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.entry_ids.EntryIdsGetter.from_file" title="Permalink to this definition"></a></dt>
 <dd><p>Loads KEGG entry IDs that are listed in a file with one entry ID on each line.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>file_path</strong> – The path to the file containing the entry IDs.</p>
+<dd class="field-odd"><p><strong>file_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The path to the file containing the entry IDs.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The list of entry IDs.</p>
@@ -126,18 +191,21 @@
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – Raised if the file is empty.</p>
 </dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a></p>
+</dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="kegg_pull.entry_ids.EntryIdsGetter.from_keywords">
-<code class="sig-name descname">from_keywords</code><span class="sig-paren">(</span><em class="sig-param">database_name: str</em>, <em class="sig-param">keywords: list</em><span class="sig-paren">)</span> &#x2192; list<a class="reference internal" href="_modules/kegg_pull/entry_ids.html#EntryIdsGetter.from_keywords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.entry_ids.EntryIdsGetter.from_keywords" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="kegg_pull.entry_ids.EntryIdsGetter.from_keywords">
+<span class="sig-name descname"><span class="pre">from_keywords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><span class="pre">list</span></a></span></span><a class="reference internal" href="_modules/kegg_pull/entry_ids.html#EntryIdsGetter.from_keywords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.entry_ids.EntryIdsGetter.from_keywords" title="Permalink to this definition"></a></dt>
 <dd><p>Pulls entry IDs from a database based on keywords searched in the entries.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>database_name</strong> – The name of the database to pull entry IDs from.</p></li>
-<li><p><strong>keywords</strong> – The keywords to search entries in the database with.</p></li>
+<li><p><strong>database_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the database to pull entry IDs from.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – The keywords to search entries in the database with.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -146,20 +214,23 @@
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.11)"><strong>RuntimeError</strong></a> – Raised if the request to the KEGG REST API fails or times out.</p>
 </dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a></p>
+</dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="kegg_pull.entry_ids.EntryIdsGetter.from_molecular_attribute">
-<code class="sig-name descname">from_molecular_attribute</code><span class="sig-paren">(</span><em class="sig-param">database_name: str</em>, <em class="sig-param">formula: str = None</em>, <em class="sig-param">exact_mass: Union[float</em>, <em class="sig-param">tuple] = None</em>, <em class="sig-param">molecular_weight: Union[int</em>, <em class="sig-param">tuple] = None</em><span class="sig-paren">)</span> &#x2192; list<a class="reference internal" href="_modules/kegg_pull/entry_ids.html#EntryIdsGetter.from_molecular_attribute"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.entry_ids.EntryIdsGetter.from_molecular_attribute" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="kegg_pull.entry_ids.EntryIdsGetter.from_molecular_attribute">
+<span class="sig-name descname"><span class="pre">from_molecular_attribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">formula</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exact_mass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><span class="pre">tuple</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">molecular_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><span class="pre">tuple</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><span class="pre">list</span></a></span></span><a class="reference internal" href="_modules/kegg_pull/entry_ids.html#EntryIdsGetter.from_molecular_attribute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.entry_ids.EntryIdsGetter.from_molecular_attribute" title="Permalink to this definition"></a></dt>
 <dd><p>Pulls entry IDs from a database containing chemical entries based on one (and only one) of three molecular attributes of the entries.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>database_name</strong> – The name of the database containing chemical entries.</p></li>
-<li><p><strong>formula</strong> – The chemical formula to search for.</p></li>
-<li><p><strong>exact_mass</strong> – The exact mass of the compound to search for (a single value or a range).</p></li>
-<li><p><strong>molecular_weight</strong> – The molecular weight of the compound to search for (a single value or a range).</p></li>
+<li><p><strong>database_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the database containing chemical entries.</p></li>
+<li><p><strong>formula</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – The chemical formula to search for.</p></li>
+<li><p><strong>exact_mass</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><em>Union</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a><em>]</em><em>]</em>) – The exact mass of the compound to search for (a single value or a range).</p></li>
+<li><p><strong>molecular_weight</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><em>Union</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a><em>]</em><em>]</em>) – The molecular weight of the compound to search for (a single value or a range).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -168,302 +239,341 @@
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.11)"><strong>RuntimeError</strong></a> – Raised if the request to the KEGG REST API fails or times out.</p>
 </dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a></p>
+</dd>
 </dl>
 </dd></dl>
 
 </dd></dl>
 
-</div>
 <span class="target" id="module-kegg_pull.rest"></span><div class="section" id="kegg-rest-api-operations">
-<h2>KEGG REST API Operations<a class="headerlink" href="#kegg-rest-api-operations" title="Permalink to this headline">¶</a></h2>
+<h2>KEGG REST API Operations<a class="headerlink" href="#kegg-rest-api-operations" title="Permalink to this heading"></a></h2>
 <p>Interface for the KEGG REST API including all its operations.</p>
-<dl class="class">
-<dt id="kegg_pull.rest.KEGGresponse">
-<em class="property">class </em><code class="sig-prename descclassname">kegg_pull.rest.</code><code class="sig-name descname">KEGGresponse</code><span class="sig-paren">(</span><em class="sig-param">status: kegg_pull.rest.KEGGresponse.Status</em>, <em class="sig-param">kegg_url: kegg_pull.kegg_url.AbstractKEGGurl</em>, <em class="sig-param">text_body: str = None</em>, <em class="sig-param">binary_body: bytes = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGresponse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.rest.KEGGresponse" title="Permalink to this definition">¶</a></dt>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="kegg_pull.rest.KEGGresponse">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kegg_pull.rest.</span></span><span class="sig-name descname"><span class="pre">KEGGresponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#kegg_pull.rest.KEGGresponse.Status" title="kegg_pull.rest.KEGGresponse.Status"><span class="pre">Status</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">kegg_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#kegg_pull.kegg_url.AbstractKEGGurl" title="kegg_pull.kegg_url.AbstractKEGGurl"><span class="pre">AbstractKEGGurl</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">binary_body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGresponse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.rest.KEGGresponse" title="Permalink to this definition"></a></dt>
 <dd><p>Class containing details of a response from the KEGG REST API.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>status</strong> – The status of the KEGG response.</p></li>
-<li><p><strong>kegg_url</strong> – The URL used in the request to the KEGG REST API that resulted in the KEGG response.</p></li>
-<li><p><strong>text_body</strong> – The text version of the response body.</p></li>
-<li><p><strong>binary_body</strong> – The binary version of the response body.</p></li>
+<li><p><strong>status</strong> (<a class="reference internal" href="#kegg_pull.rest.KEGGresponse.Status" title="kegg_pull.rest.KEGGresponse.Status"><em>Status</em></a>) – The status of the KEGG response.</p></li>
+<li><p><strong>kegg_url</strong> (<a class="reference internal" href="#kegg_pull.kegg_url.AbstractKEGGurl" title="kegg_pull.kegg_url.AbstractKEGGurl"><em>AbstractKEGGurl</em></a>) – The URL used in the request to the KEGG REST API that resulted in the KEGG response.</p></li>
+<li><p><strong>text_body</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The text version of the response body.</p></li>
+<li><p><strong>binary_body</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><em>bytes</em></a>) – The binary version of the response body.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – Raised if the status is SUCCESS but a response body is not provided.</p>
 </dd>
 </dl>
-<dl class="class">
-<dt id="kegg_pull.rest.KEGGresponse.Status">
-<em class="property">class </em><code class="sig-name descname">Status</code><a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGresponse.Status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.rest.KEGGresponse.Status" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="kegg_pull.rest.KEGGresponse.Status">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGresponse.Status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.rest.KEGGresponse.Status" title="Permalink to this definition"></a></dt>
 <dd><p>The status of a KEGG response.</p>
-<dl class="attribute">
-<dt id="kegg_pull.rest.KEGGresponse.Status.SUCCESS">
-<code class="sig-name descname">SUCCESS</code><em class="property"> = 1</em><a class="headerlink" href="#kegg_pull.rest.KEGGresponse.Status.SUCCESS" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kegg_pull.rest.KEGGresponse.Status.SUCCESS">
+<span class="sig-name descname"><span class="pre">SUCCESS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#kegg_pull.rest.KEGGresponse.Status.SUCCESS" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="kegg_pull.rest.KEGGresponse.Status.FAILED">
-<code class="sig-name descname">FAILED</code><em class="property"> = 2</em><a class="headerlink" href="#kegg_pull.rest.KEGGresponse.Status.FAILED" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kegg_pull.rest.KEGGresponse.Status.FAILED">
+<span class="sig-name descname"><span class="pre">FAILED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#kegg_pull.rest.KEGGresponse.Status.FAILED" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="attribute">
-<dt id="kegg_pull.rest.KEGGresponse.Status.TIMEOUT">
-<code class="sig-name descname">TIMEOUT</code><em class="property"> = 3</em><a class="headerlink" href="#kegg_pull.rest.KEGGresponse.Status.TIMEOUT" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="method">
-<dt id="kegg_pull.rest.KEGGresponse.status">
-<em class="property">property </em><code class="sig-name descname">status</code><a class="headerlink" href="#kegg_pull.rest.KEGGresponse.status" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="kegg_pull.rest.KEGGresponse.kegg_url">
-<em class="property">property </em><code class="sig-name descname">kegg_url</code><a class="headerlink" href="#kegg_pull.rest.KEGGresponse.kegg_url" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="kegg_pull.rest.KEGGresponse.text_body">
-<em class="property">property </em><code class="sig-name descname">text_body</code><a class="headerlink" href="#kegg_pull.rest.KEGGresponse.text_body" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="kegg_pull.rest.KEGGresponse.binary_body">
-<em class="property">property </em><code class="sig-name descname">binary_body</code><a class="headerlink" href="#kegg_pull.rest.KEGGresponse.binary_body" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kegg_pull.rest.KEGGresponse.Status.TIMEOUT">
+<span class="sig-name descname"><span class="pre">TIMEOUT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#kegg_pull.rest.KEGGresponse.Status.TIMEOUT" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="kegg_pull.rest.KEGGrest">
-<em class="property">class </em><code class="sig-prename descclassname">kegg_pull.rest.</code><code class="sig-name descname">KEGGrest</code><span class="sig-paren">(</span><em class="sig-param">n_tries: int = 3</em>, <em class="sig-param">time_out: int = 60</em>, <em class="sig-param">sleep_time: float = 5.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="kegg_pull.rest.KEGGresponse.status">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">status</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#kegg_pull.rest.KEGGresponse.Status" title="kegg_pull.rest.KEGGresponse.Status"><span class="pre">Status</span></a></em><a class="headerlink" href="#kegg_pull.rest.KEGGresponse.status" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kegg_pull.rest.KEGGresponse.kegg_url">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">kegg_url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#kegg_pull.kegg_url.AbstractKEGGurl" title="kegg_pull.kegg_url.AbstractKEGGurl"><span class="pre">AbstractKEGGurl</span></a></em><a class="headerlink" href="#kegg_pull.rest.KEGGresponse.kegg_url" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kegg_pull.rest.KEGGresponse.text_body">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">text_body</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#kegg_pull.rest.KEGGresponse.text_body" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kegg_pull.rest.KEGGresponse.binary_body">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">binary_body</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><span class="pre">bytes</span></a></em><a class="headerlink" href="#kegg_pull.rest.KEGGresponse.binary_body" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="kegg_pull.rest.KEGGrest">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kegg_pull.rest.</span></span><span class="sig-name descname"><span class="pre">KEGGrest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_tries</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sleep_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest" title="Permalink to this definition"></a></dt>
 <dd><p>Class containing methods for making requests to the KEGG REST API, including all the KEGG REST API operations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>n_tries</strong> – The number of times to try to make a request (can succeed the first time, or any of n_tries, or none of the tries).</p></li>
-<li><p><strong>time_out</strong> – The number of seconds to wait for a request until marking it as timed out.</p></li>
-<li><p><strong>sleep_time</strong> – The number of seconds to wait in between timed out requests or blacklisted requests.</p></li>
+<li><p><strong>n_tries</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – The number of times to try to make a request (can succeed the first time, or any of n_tries, or none of the tries).</p></li>
+<li><p><strong>time_out</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – The number of seconds to wait for a request until marking it as timed out.</p></li>
+<li><p><strong>sleep_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – The number of seconds to wait in between timed out requests or blacklisted requests.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="method">
-<dt id="kegg_pull.rest.KEGGrest.request">
-<code class="sig-name descname">request</code><span class="sig-paren">(</span><em class="sig-param">KEGGurl: type = None</em>, <em class="sig-param">kegg_url: kegg_pull.kegg_url.AbstractKEGGurl = None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span> &#x2192; kegg_pull.rest.KEGGresponse<a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest.request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest.request" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="kegg_pull.rest.KEGGrest.request">
+<span class="sig-name descname"><span class="pre">request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">KEGGurl</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.11)"><span class="pre">type</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kegg_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#kegg_pull.kegg_url.AbstractKEGGurl" title="kegg_pull.kegg_url.AbstractKEGGurl"><span class="pre">AbstractKEGGurl</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#kegg_pull.rest.KEGGresponse" title="kegg_pull.rest.KEGGresponse"><span class="pre">KEGGresponse</span></a></span></span><a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest.request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest.request" title="Permalink to this definition"></a></dt>
 <dd><p>General KEGG request function based on a given KEGG URL (either a class that is instantiated or an already instantiated KEGG URL object).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>KEGGurl</strong> – Optional KEGG URL class (extended from AbstractKEGGurl) that’s instantiated with provided keyword arguments.</p></li>
-<li><p><strong>kegg_url</strong> – Optional KEGGurl object that’s already instantiated (used if KEGGurl class is not provided).</p></li>
+<li><p><strong>KEGGurl</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.11)"><em>type</em></a><em>]</em>) – Optional KEGG URL class (extended from AbstractKEGGurl) that’s instantiated with provided keyword arguments.</p></li>
+<li><p><strong>kegg_url</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><em>Optional</em></a><em>[</em><a class="reference internal" href="#kegg_pull.kegg_url.AbstractKEGGurl" title="kegg_pull.kegg_url.AbstractKEGGurl"><em>AbstractKEGGurl</em></a><em>]</em>) – Optional KEGGurl object that’s already instantiated (used if KEGGurl class is not provided).</p></li>
 <li><p><strong>kwargs</strong> – The keyword arguments used to instantiate the KEGGurl class, if provided.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The KEGG response.</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#kegg_pull.rest.KEGGresponse" title="kegg_pull.rest.KEGGresponse"><em>KEGGresponse</em></a></p>
+</dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="kegg_pull.rest.KEGGrest.test">
-<code class="sig-name descname">test</code><span class="sig-paren">(</span><em class="sig-param">KEGGurl: type = None</em>, <em class="sig-param">kegg_url: kegg_pull.kegg_url.AbstractKEGGurl = None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest.test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest.test" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="kegg_pull.rest.KEGGrest.test">
+<span class="sig-name descname"><span class="pre">test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">KEGGurl</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.11)"><span class="pre">type</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kegg_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#kegg_pull.kegg_url.AbstractKEGGurl" title="kegg_pull.kegg_url.AbstractKEGGurl"><span class="pre">AbstractKEGGurl</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest.test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest.test" title="Permalink to this definition"></a></dt>
 <dd><p>Tests if a KEGGurl will succeed upon being used in a request to the KEGG REST API.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>KEGGurl</strong> – Optional KEGGurl class used to instantiate a KEGGurl object given keyword arguments.</p></li>
-<li><p><strong>kegg_url</strong> – KEGGurl object that’s already instantiated (used if a KEGGurl class is not provided).</p></li>
+<li><p><strong>KEGGurl</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.11)"><em>type</em></a><em>]</em>) – Optional KEGGurl class used to instantiate a KEGGurl object given keyword arguments.</p></li>
+<li><p><strong>kegg_url</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><em>Optional</em></a><em>[</em><a class="reference internal" href="#kegg_pull.kegg_url.AbstractKEGGurl" title="kegg_pull.kegg_url.AbstractKEGGurl"><em>AbstractKEGGurl</em></a><em>]</em>) – KEGGurl object that’s already instantiated (used if a KEGGurl class is not provided).</p></li>
 <li><p><strong>kwargs</strong> – The keyword arguments used to instantiated the KEGGurl object from the KEGGurl class, if provided.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>True if the URL would succeed, false if it would fail or time out.</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)">bool</a></p>
+</dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="kegg_pull.rest.KEGGrest.list">
-<code class="sig-name descname">list</code><span class="sig-paren">(</span><em class="sig-param">database_name: str</em><span class="sig-paren">)</span> &#x2192; kegg_pull.rest.KEGGresponse<a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest.list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest.list" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="kegg_pull.rest.KEGGrest.list">
+<span class="sig-name descname"><span class="pre">list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#kegg_pull.rest.KEGGresponse" title="kegg_pull.rest.KEGGresponse"><span class="pre">KEGGresponse</span></a></span></span><a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest.list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest.list" title="Permalink to this definition"></a></dt>
 <dd><p>Executes the “list” KEGG API operation, pulling the entry IDs of the provided database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>database_name</strong> – The database from which to pull entry IDs.</p>
+<dd class="field-odd"><p><strong>database_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The database from which to pull entry IDs.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The KEGG response.</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#kegg_pull.rest.KEGGresponse" title="kegg_pull.rest.KEGGresponse"><em>KEGGresponse</em></a></p>
+</dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="kegg_pull.rest.KEGGrest.get">
-<code class="sig-name descname">get</code><span class="sig-paren">(</span><em class="sig-param">entry_ids: kegg_pull.rest.KEGGrest.list</em>, <em class="sig-param">entry_field: str = None</em><span class="sig-paren">)</span> &#x2192; kegg_pull.rest.KEGGresponse<a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest.get" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="kegg_pull.rest.KEGGrest.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entry_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entry_field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#kegg_pull.rest.KEGGresponse" title="kegg_pull.rest.KEGGresponse"><span class="pre">KEGGresponse</span></a></span></span><a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest.get" title="Permalink to this definition"></a></dt>
 <dd><p>Executes the “get” KEGG API operation, pulling the entries of the provided entry IDs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>entry_ids</strong> – The IDs of entries to pull.</p></li>
-<li><p><strong>entry_field</strong> – Optional field to extract from the entries.</p></li>
+<li><p><strong>entry_ids</strong> (<em>list</em>) – The IDs of entries to pull.</p></li>
+<li><p><strong>entry_field</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – Optional field to extract from the entries.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The KEGG response.</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#kegg_pull.rest.KEGGresponse" title="kegg_pull.rest.KEGGresponse"><em>KEGGresponse</em></a></p>
+</dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="kegg_pull.rest.KEGGrest.info">
-<code class="sig-name descname">info</code><span class="sig-paren">(</span><em class="sig-param">database_name: str</em><span class="sig-paren">)</span> &#x2192; kegg_pull.rest.KEGGresponse<a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest.info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest.info" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="kegg_pull.rest.KEGGrest.info">
+<span class="sig-name descname"><span class="pre">info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#kegg_pull.rest.KEGGresponse" title="kegg_pull.rest.KEGGresponse"><span class="pre">KEGGresponse</span></a></span></span><a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest.info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest.info" title="Permalink to this definition"></a></dt>
 <dd><p>Executes the “info” KEGG API operation, pulling information about a KEGG database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>database_name</strong> – The database to pull information about.</p>
+<dd class="field-odd"><p><strong>database_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The database to pull information about.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The KEGG response</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#kegg_pull.rest.KEGGresponse" title="kegg_pull.rest.KEGGresponse"><em>KEGGresponse</em></a></p>
+</dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="kegg_pull.rest.KEGGrest.keywords_find">
-<code class="sig-name descname">keywords_find</code><span class="sig-paren">(</span><em class="sig-param">database_name: str</em>, <em class="sig-param">keywords: kegg_pull.rest.KEGGrest.list</em><span class="sig-paren">)</span> &#x2192; kegg_pull.rest.KEGGresponse<a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest.keywords_find"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest.keywords_find" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="kegg_pull.rest.KEGGrest.keywords_find">
+<span class="sig-name descname"><span class="pre">keywords_find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#kegg_pull.rest.KEGGresponse" title="kegg_pull.rest.KEGGresponse"><span class="pre">KEGGresponse</span></a></span></span><a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest.keywords_find"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest.keywords_find" title="Permalink to this definition"></a></dt>
 <dd><p>Executes the “find” KEGG API operation, finding entry IDs based on keywords to search in entries.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>database_name</strong> – The name of the database containing entries to search for.</p></li>
-<li><p><strong>keywords</strong> – The keywords to search in entries.</p></li>
+<li><p><strong>database_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the database containing entries to search for.</p></li>
+<li><p><strong>keywords</strong> (<em>list</em>) – The keywords to search in entries.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The KEGG response</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#kegg_pull.rest.KEGGresponse" title="kegg_pull.rest.KEGGresponse"><em>KEGGresponse</em></a></p>
+</dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="kegg_pull.rest.KEGGrest.molecular_find">
-<code class="sig-name descname">molecular_find</code><span class="sig-paren">(</span><em class="sig-param">database_name: str</em>, <em class="sig-param">formula: str = None</em>, <em class="sig-param">exact_mass: float = None</em>, <em class="sig-param">molecular_weight: int = None</em><span class="sig-paren">)</span> &#x2192; kegg_pull.rest.KEGGresponse<a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest.molecular_find"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest.molecular_find" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="kegg_pull.rest.KEGGrest.molecular_find">
+<span class="sig-name descname"><span class="pre">molecular_find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">formula</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exact_mass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">molecular_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#kegg_pull.rest.KEGGresponse" title="kegg_pull.rest.KEGGresponse"><span class="pre">KEGGresponse</span></a></span></span><a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest.molecular_find"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest.molecular_find" title="Permalink to this definition"></a></dt>
 <dd><p>Executes the “find” KEGG API operation, finding entry IDs in chemical databases based on one (and only one) choice of three molecular attributes of the entries.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>database_name</strong> – The name of the chemical database to search for entries in.</p></li>
-<li><p><strong>formula</strong> – The chemical formula (one of three choices) of chemical entries to search for.</p></li>
-<li><p><strong>exact_mass</strong> – The exact mass (one of three choices) of chemical entries to search for (single value or range).</p></li>
-<li><p><strong>molecular_weight</strong> – The molecular weight (one of three choices) of chemical entries to search for (single value or range).</p></li>
+<li><p><strong>database_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the chemical database to search for entries in.</p></li>
+<li><p><strong>formula</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – The chemical formula (one of three choices) of chemical entries to search for.</p></li>
+<li><p><strong>exact_mass</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>]</em>) – The exact mass (one of three choices) of chemical entries to search for (single value or range).</p></li>
+<li><p><strong>molecular_weight</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>]</em>) – The molecular weight (one of three choices) of chemical entries to search for (single value or range).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The KEGG response</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#kegg_pull.rest.KEGGresponse" title="kegg_pull.rest.KEGGresponse"><em>KEGGresponse</em></a></p>
+</dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="kegg_pull.rest.KEGGrest.database_conv">
-<code class="sig-name descname">database_conv</code><span class="sig-paren">(</span><em class="sig-param">kegg_database_name: str</em>, <em class="sig-param">outside_database_name: str</em><span class="sig-paren">)</span> &#x2192; kegg_pull.rest.KEGGresponse<a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest.database_conv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest.database_conv" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="kegg_pull.rest.KEGGrest.database_conv">
+<span class="sig-name descname"><span class="pre">database_conv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kegg_database_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">outside_database_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#kegg_pull.rest.KEGGresponse" title="kegg_pull.rest.KEGGresponse"><span class="pre">KEGGresponse</span></a></span></span><a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest.database_conv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest.database_conv" title="Permalink to this definition"></a></dt>
 <dd><p>Executes the “conv” KEGG API operation, converting the entry IDs of a KEGG database to those of an outside database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>kegg_database_name</strong> – The name of the KEGG database to pull converted entry IDs from.</p></li>
-<li><p><strong>outside_database_name</strong> – The name of the outside database to pull converted entry IDs from.</p></li>
+<li><p><strong>kegg_database_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the KEGG database to pull converted entry IDs from.</p></li>
+<li><p><strong>outside_database_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the outside database to pull converted entry IDs from.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The KEGG response.</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#kegg_pull.rest.KEGGresponse" title="kegg_pull.rest.KEGGresponse"><em>KEGGresponse</em></a></p>
+</dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="kegg_pull.rest.KEGGrest.entries_conv">
-<code class="sig-name descname">entries_conv</code><span class="sig-paren">(</span><em class="sig-param">target_database_name: str</em>, <em class="sig-param">entry_ids: kegg_pull.rest.KEGGrest.list</em><span class="sig-paren">)</span> &#x2192; kegg_pull.rest.KEGGresponse<a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest.entries_conv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest.entries_conv" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="kegg_pull.rest.KEGGrest.entries_conv">
+<span class="sig-name descname"><span class="pre">entries_conv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_database_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">entry_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#kegg_pull.rest.KEGGresponse" title="kegg_pull.rest.KEGGresponse"><span class="pre">KEGGresponse</span></a></span></span><a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest.entries_conv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest.entries_conv" title="Permalink to this definition"></a></dt>
 <dd><p>Executes the “conv” KEGG API operation, converting provided entry IDs from one database to the form of a target database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>target_database_name</strong> – The name of the database to get converted entry IDs from.</p></li>
-<li><p><strong>entry_ids</strong> – The entry IDs to convert to the form of the target database.</p></li>
+<li><p><strong>target_database_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the database to get converted entry IDs from.</p></li>
+<li><p><strong>entry_ids</strong> (<em>list</em>) – The entry IDs to convert to the form of the target database.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The KEGG response.</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#kegg_pull.rest.KEGGresponse" title="kegg_pull.rest.KEGGresponse"><em>KEGGresponse</em></a></p>
+</dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="kegg_pull.rest.KEGGrest.database_link">
-<code class="sig-name descname">database_link</code><span class="sig-paren">(</span><em class="sig-param">target_database_name: str</em>, <em class="sig-param">source_database_name: str</em><span class="sig-paren">)</span> &#x2192; kegg_pull.rest.KEGGresponse<a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest.database_link"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest.database_link" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="kegg_pull.rest.KEGGrest.database_link">
+<span class="sig-name descname"><span class="pre">database_link</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_database_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_database_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#kegg_pull.rest.KEGGresponse" title="kegg_pull.rest.KEGGresponse"><span class="pre">KEGGresponse</span></a></span></span><a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest.database_link"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest.database_link" title="Permalink to this definition"></a></dt>
 <dd><p>Executes the “link” KEGG API operation, showing the IDs of entries in one KEGG database that are connected/related to entries of another KEGG database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>target_database_name</strong> – One of the two KEGG databases to pull linked entries from.</p></li>
-<li><p><strong>source_database_name</strong> – The other KEGG database to link entries from the target database.</p></li>
+<li><p><strong>target_database_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – One of the two KEGG databases to pull linked entries from.</p></li>
+<li><p><strong>source_database_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The other KEGG database to link entries from the target database.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The KEGG response</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#kegg_pull.rest.KEGGresponse" title="kegg_pull.rest.KEGGresponse"><em>KEGGresponse</em></a></p>
+</dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="kegg_pull.rest.KEGGrest.entries_link">
-<code class="sig-name descname">entries_link</code><span class="sig-paren">(</span><em class="sig-param">target_database_name: str</em>, <em class="sig-param">entry_ids: kegg_pull.rest.KEGGrest.list</em><span class="sig-paren">)</span> &#x2192; kegg_pull.rest.KEGGresponse<a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest.entries_link"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest.entries_link" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="kegg_pull.rest.KEGGrest.entries_link">
+<span class="sig-name descname"><span class="pre">entries_link</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_database_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">entry_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#kegg_pull.rest.KEGGresponse" title="kegg_pull.rest.KEGGresponse"><span class="pre">KEGGresponse</span></a></span></span><a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest.entries_link"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest.entries_link" title="Permalink to this definition"></a></dt>
 <dd><p>Executes the “link” KEGG API operation, showing the IDs of entries that are connected/related to entries of a provided databases.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>target_database_name</strong> – The KEGG database to find links to the provided entries.</p></li>
-<li><p><strong>entry_ids</strong> – The IDs of the entries to link to entries in the target database.</p></li>
+<li><p><strong>target_database_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The KEGG database to find links to the provided entries.</p></li>
+<li><p><strong>entry_ids</strong> (<em>list</em>) – The IDs of the entries to link to entries in the target database.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The KEGG response</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#kegg_pull.rest.KEGGresponse" title="kegg_pull.rest.KEGGresponse"><em>KEGGresponse</em></a></p>
+</dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="kegg_pull.rest.KEGGrest.ddi">
-<code class="sig-name descname">ddi</code><span class="sig-paren">(</span><em class="sig-param">drug_entry_ids: kegg_pull.rest.KEGGrest.list</em><span class="sig-paren">)</span> &#x2192; kegg_pull.rest.KEGGresponse<a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest.ddi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest.ddi" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="kegg_pull.rest.KEGGrest.ddi">
+<span class="sig-name descname"><span class="pre">ddi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drug_entry_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#kegg_pull.rest.KEGGresponse" title="kegg_pull.rest.KEGGresponse"><span class="pre">KEGGresponse</span></a></span></span><a class="reference internal" href="_modules/kegg_pull/rest.html#KEGGrest.ddi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.rest.KEGGrest.ddi" title="Permalink to this definition"></a></dt>
 <dd><p>Executes the “ddi” KEGG API operation, searching for drug to drug interactions. Providing one entry ID reports all known interactions, while providing multiple checks if any drug pair in a given set of drugs is CI or P. If providing multiple, all entries must belong to the same database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>drug_entry_ids</strong> – The IDs of the drug entries within which search for drug interactions.</p>
+<dd class="field-odd"><p><strong>drug_entry_ids</strong> (<em>list</em>) – The IDs of the drug entries within which search for drug interactions.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The KEGG response</p>
 </dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#kegg_pull.rest.KEGGresponse" title="kegg_pull.rest.KEGGresponse"><em>KEGGresponse</em></a></p>
+</dd>
 </dl>
 </dd></dl>
 
 </dd></dl>
 
-</div>
 <span class="target" id="module-kegg_pull.kegg_url"></span><div class="section" id="constructing-urls-for-the-kegg-rest-api">
-<h2>Constructing URLs for the KEGG REST API<a class="headerlink" href="#constructing-urls-for-the-kegg-rest-api" title="Permalink to this headline">¶</a></h2>
+<h2>Constructing URLs for the KEGG REST API<a class="headerlink" href="#constructing-urls-for-the-kegg-rest-api" title="Permalink to this heading"></a></h2>
 <p>Classes for creating and validating KEGG REST API URLs.</p>
-<dl class="class">
-<dt id="kegg_pull.kegg_url.AbstractKEGGurl">
-<em class="property">class </em><code class="sig-prename descclassname">kegg_pull.kegg_url.</code><code class="sig-name descname">AbstractKEGGurl</code><span class="sig-paren">(</span><em class="sig-param">rest_operation: str</em>, <em class="sig-param">base_url: str = 'https://rest.kegg.jp'</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#AbstractKEGGurl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.kegg_url.AbstractKEGGurl" title="Permalink to this definition">¶</a></dt>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="kegg_pull.kegg_url.AbstractKEGGurl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kegg_pull.kegg_url.</span></span><span class="sig-name descname"><span class="pre">AbstractKEGGurl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rest_operation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'https://rest.kegg.jp'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#AbstractKEGGurl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.kegg_url.AbstractKEGGurl" title="Permalink to this definition"></a></dt>
 <dd><p>Abstract class which validates and constructs URLs for accessing the KEGG REST API and contains the base data and functionality for all KEGG URL classes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>rest_operation</strong> – The KEGG REST API operation in the URL.</p></li>
-<li><p><strong>base_url</strong> – The base URL for accessing the KEGG web API.</p></li>
+<li><p><strong>rest_operation</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The KEGG REST API operation in the URL.</p></li>
+<li><p><strong>base_url</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The base URL for accessing the KEGG web API.</p></li>
 <li><p><strong>kwargs</strong> – The arguments used to construct the REST options after they are validated.</p></li>
 </ul>
 </dd>
@@ -471,21 +581,21 @@
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – Raised if the given arguments cannot construct a valid KEGG URL.</p>
 </dd>
 </dl>
-<dl class="method">
-<dt id="kegg_pull.kegg_url.AbstractKEGGurl.url">
-<em class="property">property </em><code class="sig-name descname">url</code><a class="headerlink" href="#kegg_pull.kegg_url.AbstractKEGGurl.url" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="kegg_pull.kegg_url.AbstractKEGGurl.url">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#kegg_pull.kegg_url.AbstractKEGGurl.url" title="Permalink to this definition"></a></dt>
 <dd><p>The constructed and validated KEGG URL.</p>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="kegg_pull.kegg_url.ListKEGGurl">
-<em class="property">class </em><code class="sig-prename descclassname">kegg_pull.kegg_url.</code><code class="sig-name descname">ListKEGGurl</code><span class="sig-paren">(</span><em class="sig-param">database_name: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#ListKEGGurl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.kegg_url.ListKEGGurl" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="kegg_pull.kegg_url.ListKEGGurl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kegg_pull.kegg_url.</span></span><span class="sig-name descname"><span class="pre">ListKEGGurl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#ListKEGGurl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.kegg_url.ListKEGGurl" title="Permalink to this definition"></a></dt>
 <dd><p>Contains URL construction and validation functionality of the KEGG API list operation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>database_name</strong> – The database option for the KEGG list URL.</p>
+<dd class="field-odd"><p><strong>database_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The database option for the KEGG list URL.</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – Raised if the provided database is not valid.</p>
@@ -493,13 +603,13 @@
 </dl>
 </dd></dl>
 
-<dl class="class">
-<dt id="kegg_pull.kegg_url.InfoKEGGurl">
-<em class="property">class </em><code class="sig-prename descclassname">kegg_pull.kegg_url.</code><code class="sig-name descname">InfoKEGGurl</code><span class="sig-paren">(</span><em class="sig-param">database_name: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#InfoKEGGurl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.kegg_url.InfoKEGGurl" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="kegg_pull.kegg_url.InfoKEGGurl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kegg_pull.kegg_url.</span></span><span class="sig-name descname"><span class="pre">InfoKEGGurl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#InfoKEGGurl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.kegg_url.InfoKEGGurl" title="Permalink to this definition"></a></dt>
 <dd><p>Contains URL construction and validation functionality of the KEGG API info operation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>database_name</strong> – The database option for the KEGG info URL.</p>
+<dd class="field-odd"><p><strong>database_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The database option for the KEGG info URL.</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – Raised if the provided database is not valid.</p>
@@ -507,72 +617,78 @@
 </dl>
 </dd></dl>
 
-<dl class="class">
-<dt id="kegg_pull.kegg_url.GetKEGGurl">
-<em class="property">class </em><code class="sig-prename descclassname">kegg_pull.kegg_url.</code><code class="sig-name descname">GetKEGGurl</code><span class="sig-paren">(</span><em class="sig-param">entry_ids: list</em>, <em class="sig-param">entry_field: str = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#GetKEGGurl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.kegg_url.GetKEGGurl" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="kegg_pull.kegg_url.GetKEGGurl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kegg_pull.kegg_url.</span></span><span class="sig-name descname"><span class="pre">GetKEGGurl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entry_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><span class="pre">list</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">entry_field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#GetKEGGurl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.kegg_url.GetKEGGurl" title="Permalink to this definition"></a></dt>
 <dd><p>Contains URL construction and validation functionality for the KEGG API get operation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>entry_ids</strong> – Specifies which entry IDs go in the first option of the URL.</p></li>
-<li><p><strong>entry_field</strong> – Specifies which entry field goes in the second option.</p></li>
+<li><p><strong>entry_ids</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – Specifies which entry IDs go in the first option of the URL.</p></li>
+<li><p><strong>entry_field</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Specifies which entry field goes in the second option.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – Raised if the entry IDs or entry field is not valid.</p>
 </dd>
 </dl>
-<dl class="attribute">
-<dt id="kegg_pull.kegg_url.GetKEGGurl.MAX_ENTRY_IDS_PER_URL">
-<code class="sig-name descname">MAX_ENTRY_IDS_PER_URL</code><em class="property"> = 10</em><a class="headerlink" href="#kegg_pull.kegg_url.GetKEGGurl.MAX_ENTRY_IDS_PER_URL" title="Permalink to this definition">¶</a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kegg_pull.kegg_url.GetKEGGurl.MAX_ENTRY_IDS_PER_URL">
+<span class="sig-name descname"><span class="pre">MAX_ENTRY_IDS_PER_URL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#kegg_pull.kegg_url.GetKEGGurl.MAX_ENTRY_IDS_PER_URL" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="method">
-<dt id="kegg_pull.kegg_url.GetKEGGurl.entry_ids">
-<em class="property">property </em><code class="sig-name descname">entry_ids</code><a class="headerlink" href="#kegg_pull.kegg_url.GetKEGGurl.entry_ids" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="kegg_pull.kegg_url.GetKEGGurl.entry_ids">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">entry_ids</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><span class="pre">list</span></a></em><a class="headerlink" href="#kegg_pull.kegg_url.GetKEGGurl.entry_ids" title="Permalink to this definition"></a></dt>
 <dd><p>The entry IDs of the get KEGG URL.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="kegg_pull.kegg_url.GetKEGGurl.multiple_entry_ids">
-<em class="property">property </em><code class="sig-name descname">multiple_entry_ids</code><a class="headerlink" href="#kegg_pull.kegg_url.GetKEGGurl.multiple_entry_ids" title="Permalink to this definition">¶</a></dt>
+<dl class="py property">
+<dt class="sig sig-object py" id="kegg_pull.kegg_url.GetKEGGurl.multiple_entry_ids">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">multiple_entry_ids</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></em><a class="headerlink" href="#kegg_pull.kegg_url.GetKEGGurl.multiple_entry_ids" title="Permalink to this definition"></a></dt>
 <dd><p>Determines whether the get KEGG URL has more than one entry ID.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="kegg_pull.kegg_url.GetKEGGurl.only_one_entry">
-<em class="property">static </em><code class="sig-name descname">only_one_entry</code><span class="sig-paren">(</span><em class="sig-param">entry_field: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/kegg_pull/kegg_url.html#GetKEGGurl.only_one_entry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.kegg_url.GetKEGGurl.only_one_entry" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="kegg_pull.kegg_url.GetKEGGurl.only_one_entry">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">only_one_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entry_field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#GetKEGGurl.only_one_entry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.kegg_url.GetKEGGurl.only_one_entry" title="Permalink to this definition"></a></dt>
 <dd><p>Determines whether a KEGG entry field can only be pulled in one entry at a time for the KEGG get API
 operation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>entry_field</strong> – The KEGG entry field to check.</p>
+<dd class="field-odd"><p><strong>entry_field</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The KEGG entry field to check.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="kegg_pull.kegg_url.GetKEGGurl.is_binary">
-<em class="property">static </em><code class="sig-name descname">is_binary</code><span class="sig-paren">(</span><em class="sig-param">entry_field: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="reference internal" href="_modules/kegg_pull/kegg_url.html#GetKEGGurl.is_binary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.kegg_url.GetKEGGurl.is_binary" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="kegg_pull.kegg_url.GetKEGGurl.is_binary">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_binary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entry_field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#GetKEGGurl.is_binary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.kegg_url.GetKEGGurl.is_binary" title="Permalink to this definition"></a></dt>
 <dd><p>Determines if the entry field is a binary response or not.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>entry_field</strong> – The KEGG entry field to check.</p>
+<dd class="field-odd"><p><strong>entry_field</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The KEGG entry field to check.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 </dd></dl>
 
-<dl class="class">
-<dt id="kegg_pull.kegg_url.KeywordsFindKEGGurl">
-<em class="property">class </em><code class="sig-prename descclassname">kegg_pull.kegg_url.</code><code class="sig-name descname">KeywordsFindKEGGurl</code><span class="sig-paren">(</span><em class="sig-param">database_name: str</em>, <em class="sig-param">keywords: list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#KeywordsFindKEGGurl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.kegg_url.KeywordsFindKEGGurl" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="kegg_pull.kegg_url.KeywordsFindKEGGurl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kegg_pull.kegg_url.</span></span><span class="sig-name descname"><span class="pre">KeywordsFindKEGGurl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#KeywordsFindKEGGurl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.kegg_url.KeywordsFindKEGGurl" title="Permalink to this definition"></a></dt>
 <dd><p>Contains the URL construction and validation functionality for the KEGG API find operation based on the URL form that searches entries by keywords.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>database_name</strong> – The database name option for the first part of the URL.</p></li>
-<li><p><strong>keywords</strong> – The keyword options for the second part of the URL.</p></li>
+<li><p><strong>database_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The database name option for the first part of the URL.</p></li>
+<li><p><strong>keywords</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – The keyword options for the second part of the URL.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -581,17 +697,17 @@ operation.</p>
 </dl>
 </dd></dl>
 
-<dl class="class">
-<dt id="kegg_pull.kegg_url.MolecularFindKEGGurl">
-<em class="property">class </em><code class="sig-prename descclassname">kegg_pull.kegg_url.</code><code class="sig-name descname">MolecularFindKEGGurl</code><span class="sig-paren">(</span><em class="sig-param">database_name: str</em>, <em class="sig-param">formula: str = None</em>, <em class="sig-param">exact_mass: Union[float</em>, <em class="sig-param">tuple] = None</em>, <em class="sig-param">molecular_weight: Union[int</em>, <em class="sig-param">tuple] = None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#MolecularFindKEGGurl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.kegg_url.MolecularFindKEGGurl" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="kegg_pull.kegg_url.MolecularFindKEGGurl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kegg_pull.kegg_url.</span></span><span class="sig-name descname"><span class="pre">MolecularFindKEGGurl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">formula</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exact_mass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><span class="pre">tuple</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">molecular_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><span class="pre">Union</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><span class="pre">tuple</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#MolecularFindKEGGurl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.kegg_url.MolecularFindKEGGurl" title="Permalink to this definition"></a></dt>
 <dd><p>Contains the URL construction and validation functionality for the KEGG API find operation based on the URL form that uses chemical / molecular attributes of compounds.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>database_name</strong> – The database name option for the first part of the URL.</p></li>
-<li><p><strong>formula</strong> – The chemical formula option that can go in the second part of the URL.</p></li>
-<li><p><strong>exact_mass</strong> – The exact molecule mass option that can go in the second part of the URL.</p></li>
-<li><p><strong>molecular_weight</strong> – The molecular weight option that can go in the second part of the URL.</p></li>
+<li><p><strong>database_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The database name option for the first part of the URL.</p></li>
+<li><p><strong>formula</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The chemical formula option that can go in the second part of the URL.</p></li>
+<li><p><strong>exact_mass</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><em>Union</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a><em>]</em>) – The exact molecule mass option that can go in the second part of the URL.</p></li>
+<li><p><strong>molecular_weight</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Union" title="(in Python v3.11)"><em>Union</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a><em>]</em>) – The molecular weight option that can go in the second part of the URL.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -600,9 +716,9 @@ operation.</p>
 </dl>
 </dd></dl>
 
-<dl class="class">
-<dt id="kegg_pull.kegg_url.AbstractConvKEGGurl">
-<em class="property">class </em><code class="sig-prename descclassname">kegg_pull.kegg_url.</code><code class="sig-name descname">AbstractConvKEGGurl</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#AbstractConvKEGGurl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.kegg_url.AbstractConvKEGGurl" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="kegg_pull.kegg_url.AbstractConvKEGGurl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kegg_pull.kegg_url.</span></span><span class="sig-name descname"><span class="pre">AbstractConvKEGGurl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#AbstractConvKEGGurl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.kegg_url.AbstractConvKEGGurl" title="Permalink to this definition"></a></dt>
 <dd><p>Abstract class containing data shared by the KEGG URL classes that validate and construct URLs for the conv KEGG
 REST API operation.</p>
 <dl class="field-list simple">
@@ -615,15 +731,15 @@ REST API operation.</p>
 </dl>
 </dd></dl>
 
-<dl class="class">
-<dt id="kegg_pull.kegg_url.DatabaseConvKEGGurl">
-<em class="property">class </em><code class="sig-prename descclassname">kegg_pull.kegg_url.</code><code class="sig-name descname">DatabaseConvKEGGurl</code><span class="sig-paren">(</span><em class="sig-param">kegg_database_name: str</em>, <em class="sig-param">outside_database_name: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#DatabaseConvKEGGurl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.kegg_url.DatabaseConvKEGGurl" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="kegg_pull.kegg_url.DatabaseConvKEGGurl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kegg_pull.kegg_url.</span></span><span class="sig-name descname"><span class="pre">DatabaseConvKEGGurl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kegg_database_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">outside_database_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#DatabaseConvKEGGurl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.kegg_url.DatabaseConvKEGGurl" title="Permalink to this definition"></a></dt>
 <dd><p>Contains the URL construction and validation functionality of the KEGG API conv operation based on the URL form that uses a KEGG database and an outside database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>kegg_database_name</strong> – The name of the KEGG database.</p></li>
-<li><p><strong>outside_database_name</strong> – The name of the outside database.</p></li>
+<li><p><strong>kegg_database_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the KEGG database.</p></li>
+<li><p><strong>outside_database_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the outside database.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -632,15 +748,15 @@ REST API operation.</p>
 </dl>
 </dd></dl>
 
-<dl class="class">
-<dt id="kegg_pull.kegg_url.EntriesConvKEGGurl">
-<em class="property">class </em><code class="sig-prename descclassname">kegg_pull.kegg_url.</code><code class="sig-name descname">EntriesConvKEGGurl</code><span class="sig-paren">(</span><em class="sig-param">target_database_name: str</em>, <em class="sig-param">entry_ids: list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#EntriesConvKEGGurl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.kegg_url.EntriesConvKEGGurl" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="kegg_pull.kegg_url.EntriesConvKEGGurl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kegg_pull.kegg_url.</span></span><span class="sig-name descname"><span class="pre">EntriesConvKEGGurl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_database_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">entry_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#EntriesConvKEGGurl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.kegg_url.EntriesConvKEGGurl" title="Permalink to this definition"></a></dt>
 <dd><p>Contains the URL construction and validation functionality for the KEGG API conv operation based on the URL form that uses a target database and entry IDs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>target_database_name</strong> – The target database option.</p></li>
-<li><p><strong>entry_ids</strong> – The entry IDs options.</p></li>
+<li><p><strong>target_database_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The target database option.</p></li>
+<li><p><strong>entry_ids</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – The entry IDs options.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -649,9 +765,9 @@ REST API operation.</p>
 </dl>
 </dd></dl>
 
-<dl class="class">
-<dt id="kegg_pull.kegg_url.AbstractLinkKEGGurl">
-<em class="property">class </em><code class="sig-prename descclassname">kegg_pull.kegg_url.</code><code class="sig-name descname">AbstractLinkKEGGurl</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#AbstractLinkKEGGurl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.kegg_url.AbstractLinkKEGGurl" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="kegg_pull.kegg_url.AbstractLinkKEGGurl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kegg_pull.kegg_url.</span></span><span class="sig-name descname"><span class="pre">AbstractLinkKEGGurl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#AbstractLinkKEGGurl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.kegg_url.AbstractLinkKEGGurl" title="Permalink to this definition"></a></dt>
 <dd><p>Abstract class containing the shared data for the link KEGG URLs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -663,15 +779,15 @@ REST API operation.</p>
 </dl>
 </dd></dl>
 
-<dl class="class">
-<dt id="kegg_pull.kegg_url.DatabaseLinkKEGGurl">
-<em class="property">class </em><code class="sig-prename descclassname">kegg_pull.kegg_url.</code><code class="sig-name descname">DatabaseLinkKEGGurl</code><span class="sig-paren">(</span><em class="sig-param">target_database_name: str</em>, <em class="sig-param">source_database_name: str</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#DatabaseLinkKEGGurl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.kegg_url.DatabaseLinkKEGGurl" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="kegg_pull.kegg_url.DatabaseLinkKEGGurl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kegg_pull.kegg_url.</span></span><span class="sig-name descname"><span class="pre">DatabaseLinkKEGGurl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_database_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_database_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#DatabaseLinkKEGGurl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.kegg_url.DatabaseLinkKEGGurl" title="Permalink to this definition"></a></dt>
 <dd><p>Contains the URL construction and validation functionality for the link KEGG REST API operation of the form that uses a target database and a source database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>target_database_name</strong> – The name of the target database option.</p></li>
-<li><p><strong>source_database_name</strong> – The name of the source database option.</p></li>
+<li><p><strong>target_database_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the target database option.</p></li>
+<li><p><strong>source_database_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the source database option.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -680,15 +796,15 @@ REST API operation.</p>
 </dl>
 </dd></dl>
 
-<dl class="class">
-<dt id="kegg_pull.kegg_url.EntriesLinkKEGGurl">
-<em class="property">class </em><code class="sig-prename descclassname">kegg_pull.kegg_url.</code><code class="sig-name descname">EntriesLinkKEGGurl</code><span class="sig-paren">(</span><em class="sig-param">target_database_name: str</em>, <em class="sig-param">entry_ids: list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#EntriesLinkKEGGurl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.kegg_url.EntriesLinkKEGGurl" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="kegg_pull.kegg_url.EntriesLinkKEGGurl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kegg_pull.kegg_url.</span></span><span class="sig-name descname"><span class="pre">EntriesLinkKEGGurl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_database_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">entry_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#EntriesLinkKEGGurl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.kegg_url.EntriesLinkKEGGurl" title="Permalink to this definition"></a></dt>
 <dd><p>Contains the URL construction and validation functionality for the link KEGG REST API operation of the form that uses a target database and entry IDs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>target_database_name</strong> – The name of the target database option.</p></li>
-<li><p><strong>entry_ids</strong> – The entry IDs options.</p></li>
+<li><p><strong>target_database_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the target database option.</p></li>
+<li><p><strong>entry_ids</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – The entry IDs options.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -697,13 +813,13 @@ REST API operation.</p>
 </dl>
 </dd></dl>
 
-<dl class="class">
-<dt id="kegg_pull.kegg_url.DdiKEGGurl">
-<em class="property">class </em><code class="sig-prename descclassname">kegg_pull.kegg_url.</code><code class="sig-name descname">DdiKEGGurl</code><span class="sig-paren">(</span><em class="sig-param">drug_entry_ids: list</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#DdiKEGGurl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kegg_pull.kegg_url.DdiKEGGurl" title="Permalink to this definition">¶</a></dt>
+<dl class="py class">
+<dt class="sig sig-object py" id="kegg_pull.kegg_url.DdiKEGGurl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kegg_pull.kegg_url.</span></span><span class="sig-name descname"><span class="pre">DdiKEGGurl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drug_entry_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/kegg_url.html#DdiKEGGurl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.kegg_url.DdiKEGGurl" title="Permalink to this definition"></a></dt>
 <dd><p>Contains the URL construction and validation functionality for the ddi KEGG REST operation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>drug_entry_ids</strong> – The entry IDs for a drug database.</p>
+<dd class="field-odd"><p><strong>drug_entry_ids</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – The entry IDs for a drug database.</p>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – Raised if the drug entry IDs are not provided.</p>
@@ -711,7 +827,6 @@ REST API operation.</p>
 </dl>
 </dd></dl>
 
-</div>
 </div>
 
 
