@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kegg_pull.pull &mdash; kegg_pull 1.4.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> kegg_pull
+          </a>
+              <div class="version">
+                1.4.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../guide.html">Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli.html">CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">kegg_pull</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">kegg_pull.pull</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for kegg_pull.pull</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Pulling, Parsing, and Saving KEGG Entries</span>
+<span class="sd">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="sd">Functionality for pulling KEGG entries from the KEGG REST API, parsing them, and saving the entries as files.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span> <span class="k">as</span> <span class="nn">mp</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">abc</span>
+<span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
+<span class="kn">import</span> <span class="nn">pickle</span> <span class="k">as</span> <span class="nn">p</span>
+<span class="kn">import</span> <span class="nn">zipfile</span> <span class="k">as</span> <span class="nn">zf</span>
+<span class="kn">import</span> <span class="nn">logging</span> <span class="k">as</span> <span class="nn">l</span>
+<span class="kn">import</span> <span class="nn">json</span> <span class="k">as</span> <span class="nn">j</span>
+<span class="kn">import</span> <span class="nn">tqdm</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">kegg_url</span> <span class="k">as</span> <span class="n">ku</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">rest</span> <span class="k">as</span> <span class="n">r</span>
+
+
+<div class="viewcode-block" id="PullResult"><a class="viewcode-back" href="../../api.html#kegg_pull.pull.PullResult">[docs]</a><span class="k">class</span> <span class="nc">PullResult</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;The collections of entry IDs, each of which resulted in a particular KEGG Response status after a pull.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_successful_entry_ids</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_failed_entry_ids</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timed_out_entry_ids</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">get_entry_ids_repr</span><span class="p">(</span><span class="n">entry_ids</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">entry_ids</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">entry_ids</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s1">&#39;none&#39;</span>
+
+        <span class="n">successful_entry_ids</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">get_entry_ids_repr</span><span class="p">(</span><span class="n">entry_ids</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">successful_entry_ids</span><span class="p">)</span>
+        <span class="n">failed_entry_ids</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">get_entry_ids_repr</span><span class="p">(</span><span class="n">entry_ids</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">failed_entry_ids</span><span class="p">)</span>
+        <span class="n">timed_out_entry_ids</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">get_entry_ids_repr</span><span class="p">(</span><span class="n">entry_ids</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">timed_out_entry_ids</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;Successful Entry Ids: </span><span class="si">{</span><span class="n">successful_entry_ids</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span> \
+               <span class="sa">f</span><span class="s1">&#39;Failed Entry Ids: </span><span class="si">{</span><span class="n">failed_entry_ids</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span> \
+               <span class="sa">f</span><span class="s1">&#39;Timed Out Entry Ids: </span><span class="si">{</span><span class="n">timed_out_entry_ids</span><span class="si">}</span><span class="s1">&#39;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">successful_entry_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;The IDs of entries successfully pulled.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_successful_entry_ids</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">failed_entry_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;The IDs of entries that failed to be pulled.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_failed_entry_ids</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">timed_out_entry_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;The IDs of entries that timed out before being pulled.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_timed_out_entry_ids</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">add_entry_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">entry_ids</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGresponse</span><span class="o">.</span><span class="n">Status</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Adds entry IDs of a given status to the pull result.</span>
+
+<span class="sd">        :param entry_ids: The entry IDs to add.</span>
+<span class="sd">        :param status: The status resulting from attempting to pull the entries of the given IDs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGresponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_successful_entry_ids</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">entry_ids</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">status</span> <span class="o">==</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGresponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">FAILED</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_failed_entry_ids</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">entry_ids</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_timed_out_entry_ids</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">entry_ids</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">merge_pull_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Combines two pull results into one.</span>
+
+<span class="sd">        :param other: The pull result to combine into this one.</span>
+<span class="sd">        :return: The number of entry IDs added.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_successful_entry_ids</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">successful_entry_ids</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_failed_entry_ids</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">failed_entry_ids</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_timed_out_entry_ids</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">timed_out_entry_ids</span><span class="p">)</span>
+
+        <span class="n">n_entry_ids_processed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">successful_entry_ids</span><span class="p">)</span>
+        <span class="n">n_entry_ids_processed</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">failed_entry_ids</span><span class="p">)</span>
+        <span class="n">n_entry_ids_processed</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">timed_out_entry_ids</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">n_entry_ids_processed</span></div>
+
+
+<div class="viewcode-block" id="SinglePull"><a class="viewcode-back" href="../../api.html#kegg_pull.pull.SinglePull">[docs]</a><span class="k">class</span> <span class="nc">SinglePull</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Class capable of performing a single request to the KEGG REST API for pulling up to a maximum number of entries.&quot;&quot;&quot;</span>
+
+    <span class="k">class</span> <span class="nc">_AbstractEntrySaver</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Abstract class for saving KEGG entries as files.&quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            :param output: The output container where entry files are saved.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_output</span> <span class="o">=</span> <span class="n">output</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_output</span>
+
+        <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span> <span class="n">entry_field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="sd">&quot;&quot;&quot; Saves a KEGG entry as a file.</span>
+
+<span class="sd">            :param entry_id: The entry ID (part of the file name).</span>
+<span class="sd">            :param entry: The entry to save (contents of the file).</span>
+<span class="sd">            :param entry_field: The particular field of the entry (file extension).</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">file_extension</span> <span class="o">=</span> <span class="s1">&#39;txt&#39;</span> <span class="k">if</span> <span class="n">entry_field</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">entry_field</span>
+            <span class="n">file_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">entry_id</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">file_extension</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_save</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="n">file_name</span><span class="p">,</span> <span class="n">entry</span><span class="o">=</span><span class="n">entry</span><span class="p">)</span>
+
+        <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+        <span class="k">def</span> <span class="nf">_save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="sd">&quot;&quot;&quot; Saves a KEGG entry in the particular manner of the child class.</span>
+
+<span class="sd">            :param file_name: The name of the file in which the KEGG entry is saved.</span>
+<span class="sd">            :param entry: The entry to save (contents of the file).</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">pass</span>  <span class="c1"># pragma: no cover</span>
+
+    <span class="k">class</span> <span class="nc">_DirectoryEntrySaver</span><span class="p">(</span><span class="n">_AbstractEntrySaver</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Class that saves KEGG entries in a directory.&quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            :param output_dir: The directory in which to save the KEGG entries.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+
+            <span class="nb">super</span><span class="p">(</span><span class="n">SinglePull</span><span class="o">.</span><span class="n">_DirectoryEntrySaver</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="n">output_dir</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="sd">&quot;&quot;&quot; Saves a KEGG entry in a file within a directory.</span>
+
+<span class="sd">            :param file_name: The name of the file to save in the directory.</span>
+<span class="sd">            :param entry: The entry to save (content of the file).</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_output</span><span class="p">,</span> <span class="n">file_name</span><span class="p">)</span>
+            <span class="n">save_type</span> <span class="o">=</span> <span class="s1">&#39;wb&#39;</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">bytes</span> <span class="k">else</span> <span class="s1">&#39;w&#39;</span>
+
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">save_type</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+
+    <span class="k">class</span> <span class="nc">_ZipEntrySaver</span><span class="p">(</span><span class="n">_AbstractEntrySaver</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Class that saves KEGG entries in a ZIP file.&quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zip_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">multiprocessing_lock</span><span class="p">:</span> <span class="n">mp</span><span class="o">.</span><span class="n">Lock</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            :param zip_file: The path to the zip file to save the entries in.</span>
+<span class="sd">            :param multiprocessing_lock: If provided, blocks code writing to the same zip file among multiple processes.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_multiprocessing_lock</span> <span class="o">=</span> <span class="n">multiprocessing_lock</span>
+            <span class="nb">super</span><span class="p">(</span><span class="n">SinglePull</span><span class="o">.</span><span class="n">_ZipEntrySaver</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="n">zip_file</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entry</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]):</span>
+            <span class="sd">&quot;&quot;&quot; Saves a KEGG entry in a zip file.</span>
+
+<span class="sd">            :param file_name: The name of the file to save.</span>
+<span class="sd">            :param entry: The entry to save (contents of file).</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_multiprocessing_lock</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># Writing to a zip file is not multiprocess safe since multiple processes are writing to the same file.</span>
+                <span class="c1"># So if another process is currently accessing the zip file, the code below is blocked.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_multiprocessing_lock</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
+
+            <span class="k">with</span> <span class="n">zf</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_output</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">zip_file</span><span class="p">:</span>
+                <span class="n">zip_file</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">entry</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_multiprocessing_lock</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># Unblock other processes from accessing the above code.</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_multiprocessing_lock</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kegg_rest</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGrest</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">entry_field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">multiprocessing_lock</span><span class="p">:</span> <span class="n">mp</span><span class="o">.</span><span class="n">Lock</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param output: Path to the location where entries are saved (treated like a zip file if ends in .zip, else a directory).</span>
+<span class="sd">        :param kegg_rest: Optional KEGGrest object used to make the requests to the KEGG REST API (a KEGGrest object with the default settings is created if one is not provided).</span>
+<span class="sd">        :param entry_field: Optional KEGG entry field to pull.</span>
+<span class="sd">        :param multiprocessing_lock: Blocks code writing to the same zip file among multiple processes. Used only if pulling to a zip file while multiprocessing.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.zip&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_entry_saver</span> <span class="o">=</span> <span class="n">SinglePull</span><span class="o">.</span><span class="n">_ZipEntrySaver</span><span class="p">(</span><span class="n">zip_file</span><span class="o">=</span><span class="n">output</span><span class="p">,</span> <span class="n">multiprocessing_lock</span><span class="o">=</span><span class="n">multiprocessing_lock</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_entry_saver</span> <span class="o">=</span> <span class="n">SinglePull</span><span class="o">.</span><span class="n">_DirectoryEntrySaver</span><span class="p">(</span><span class="n">output_dir</span><span class="o">=</span><span class="n">output</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_kegg_rest</span> <span class="o">=</span> <span class="n">kegg_rest</span> <span class="k">if</span> <span class="n">kegg_rest</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGrest</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">entry_field</span> <span class="o">=</span> <span class="n">entry_field</span>
+
+<div class="viewcode-block" id="SinglePull.pull"><a class="viewcode-back" href="../../api.html#kegg_pull.pull.SinglePull.pull">[docs]</a>    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PullResult</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Makes a single request to the KEGG REST API to pull one or more entries and save them as files.</span>
+
+<span class="sd">        :param entry_ids: The IDs of the entries to pull and save.</span>
+<span class="sd">        :return: The pull result.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">kegg_response</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGresponse</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kegg_rest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">entry_ids</span><span class="o">=</span><span class="n">entry_ids</span><span class="p">,</span> <span class="n">entry_field</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entry_field</span><span class="p">)</span>
+        <span class="n">get_url</span><span class="p">:</span> <span class="n">ku</span><span class="o">.</span><span class="n">GetKEGGurl</span> <span class="o">=</span> <span class="n">kegg_response</span><span class="o">.</span><span class="n">kegg_url</span>
+        <span class="n">pull_result</span> <span class="o">=</span> <span class="n">PullResult</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">kegg_response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGresponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">get_url</span><span class="o">.</span><span class="n">multiple_entry_ids</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_save_multi_entry_response</span><span class="p">(</span><span class="n">kegg_response</span><span class="o">=</span><span class="n">kegg_response</span><span class="p">,</span> <span class="n">pull_result</span><span class="o">=</span><span class="n">pull_result</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_save_single_entry_response</span><span class="p">(</span><span class="n">kegg_response</span><span class="o">=</span><span class="n">kegg_response</span><span class="p">,</span> <span class="n">pull_result</span><span class="o">=</span><span class="n">pull_result</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_handle_unsuccessful_url</span><span class="p">(</span><span class="n">kegg_response</span><span class="o">=</span><span class="n">kegg_response</span><span class="p">,</span> <span class="n">pull_result</span><span class="o">=</span><span class="n">pull_result</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">pull_result</span></div>
+
+<div class="viewcode-block" id="SinglePull.set_multiprocessing_lock"><a class="viewcode-back" href="../../api.html#kegg_pull.pull.SinglePull.set_multiprocessing_lock">[docs]</a>    <span class="k">def</span> <span class="nf">set_multiprocessing_lock</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns a copy of the SinglePull object with a new multiprocessing Lock object set to make the SinglePull multiprocess-safe (only useful when the output is a zip archive and if the multiprocessing_lock was not passed into the constructor initially).</span>
+
+<span class="sd">        :return SinglePull: The SinglePull copy with a new Lock object set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">lock</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">SinglePull</span><span class="p">(</span>
+            <span class="n">output</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_entry_saver</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">kegg_rest</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_kegg_rest</span><span class="p">,</span> <span class="n">entry_field</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entry_field</span><span class="p">,</span>
+            <span class="n">multiprocessing_lock</span><span class="o">=</span><span class="n">lock</span>
+        <span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_save_multi_entry_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kegg_response</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGresponse</span><span class="p">,</span> <span class="n">pull_result</span><span class="p">:</span> <span class="n">PullResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Saves multiple entries within a KEGG response.</span>
+
+<span class="sd">        :param kegg_response: The response from KEGG with multiple entries.</span>
+<span class="sd">        :param pull_result: The pull result to update based on the status of the pull(s).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">entries</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_separate_entries</span><span class="p">(</span><span class="n">concatenated_entries</span><span class="o">=</span><span class="n">kegg_response</span><span class="o">.</span><span class="n">text_body</span><span class="p">)</span>
+        <span class="n">get_url</span><span class="p">:</span> <span class="n">ku</span><span class="o">.</span><span class="n">GetKEGGurl</span> <span class="o">=</span> <span class="n">kegg_response</span><span class="o">.</span><span class="n">kegg_url</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">entries</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">get_url</span><span class="o">.</span><span class="n">entry_ids</span><span class="p">):</span>
+            <span class="c1"># If we did not get all the entries requested, process each entry one at a time</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pull_separate_entries</span><span class="p">(</span><span class="n">get_url</span><span class="o">=</span><span class="n">get_url</span><span class="p">,</span> <span class="n">pull_result</span><span class="o">=</span><span class="n">pull_result</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pull_result</span><span class="o">.</span><span class="n">add_entry_ids</span><span class="p">(</span><span class="o">*</span><span class="n">get_url</span><span class="o">.</span><span class="n">entry_ids</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">KEGGresponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">entry_id</span><span class="p">,</span> <span class="n">entry</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">get_url</span><span class="o">.</span><span class="n">entry_ids</span><span class="p">,</span> <span class="n">entries</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_entry_saver</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">entry_id</span><span class="o">=</span><span class="n">entry_id</span><span class="p">,</span> <span class="n">entry</span><span class="o">=</span><span class="n">entry</span><span class="p">,</span> <span class="n">entry_field</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entry_field</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_separate_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">concatenated_entries</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Separates the entries in a multi-entry response from KEGG.</span>
+
+<span class="sd">        :param concatenated_entries: The response body with all the entries together.</span>
+<span class="sd">        :return: The separated KEGG entries.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">field_to_separator</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;aaseq&#39;</span><span class="p">:</span> <span class="n">SinglePull</span><span class="o">.</span><span class="n">_gene_separator</span><span class="p">,</span> <span class="s1">&#39;kcf&#39;</span><span class="p">:</span> <span class="n">SinglePull</span><span class="o">.</span><span class="n">_standard_separator</span><span class="p">,</span>
+            <span class="s1">&#39;mol&#39;</span><span class="p">:</span> <span class="n">SinglePull</span><span class="o">.</span><span class="n">_mol_separator</span><span class="p">,</span> <span class="s1">&#39;ntseq&#39;</span><span class="p">:</span> <span class="n">SinglePull</span><span class="o">.</span><span class="n">_gene_separator</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">entry_field</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">separator</span> <span class="o">=</span> <span class="n">SinglePull</span><span class="o">.</span><span class="n">_standard_separator</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">separator</span> <span class="o">=</span> <span class="n">field_to_separator</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">entry_field</span><span class="p">]</span>
+
+        <span class="n">entries</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="n">separator</span><span class="p">(</span><span class="n">concatenated_entries</span><span class="o">=</span><span class="n">concatenated_entries</span><span class="p">)</span>
+        <span class="n">entries</span> <span class="o">=</span> <span class="p">[</span><span class="n">entry</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">entries</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">entries</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_gene_separator</span><span class="p">(</span><span class="n">concatenated_entries</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Separates KEGG entries that are separated by a deliminator for nucleotide and amino acid sequence entries.</span>
+<span class="sd">        :param concatenated_entries: The response body with the gene-related entries together.</span>
+<span class="sd">        :return: The separated gene-related entries.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">entries</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="n">concatenated_entries</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;&gt;&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">entries</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">entries</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">entries</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_mol_separator</span><span class="p">(</span><span class="n">concatenated_entries</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Separates mol entries.</span>
+
+<span class="sd">        :param concatenated_entries: The response body with the mol entries together.</span>
+<span class="sd">        :return: The separated mole entries.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">SinglePull</span><span class="o">.</span><span class="n">_split_and_remove_last</span><span class="p">(</span><span class="n">concatenated_entries</span><span class="o">=</span><span class="n">concatenated_entries</span><span class="p">,</span> <span class="n">deliminator</span><span class="o">=</span><span class="s1">&#39;$$$$&#39;</span><span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_split_and_remove_last</span><span class="p">(</span><span class="n">concatenated_entries</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">deliminator</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Splits entries based on a deliminator and removes the resulting empty string at the end of the list.</span>
+
+<span class="sd">        :param concatenated_entries: The response body with the entries together.</span>
+<span class="sd">        :param deliminator: The deliminator that separates the entries and is at the end of the response body.</span>
+<span class="sd">        :return: The separated entries with the empty string removed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">entries</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="n">concatenated_entries</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">deliminator</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">entries</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">entries</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">entries</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_standard_separator</span><span class="p">(</span><span class="n">concatenated_entries</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; The separation method for most types of KEGG entries.</span>
+
+<span class="sd">        :param concatenated_entries: The response body with the KEGG entries together.</span>
+<span class="sd">        :return: The separated entries.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">SinglePull</span><span class="o">.</span><span class="n">_split_and_remove_last</span><span class="p">(</span><span class="n">concatenated_entries</span><span class="o">=</span><span class="n">concatenated_entries</span><span class="p">,</span> <span class="n">deliminator</span><span class="o">=</span><span class="s1">&#39;///&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_pull_separate_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">get_url</span><span class="p">:</span> <span class="n">ku</span><span class="o">.</span><span class="n">GetKEGGurl</span><span class="p">,</span> <span class="n">pull_result</span><span class="p">:</span> <span class="n">PullResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Pulls one entry at a time for a Get KEGG URL that has multiple entry IDs.</span>
+
+<span class="sd">        :param get_url: The Get KEGG URL with multiple entry IDs to pull one at a time.</span>
+<span class="sd">        :param pull_result: The pull result to update based on the success of the pulling.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">entry_id</span> <span class="ow">in</span> <span class="n">get_url</span><span class="o">.</span><span class="n">entry_ids</span><span class="p">:</span>
+            <span class="n">kegg_response</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGresponse</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_kegg_rest</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">entry_ids</span><span class="o">=</span><span class="p">[</span><span class="n">entry_id</span><span class="p">],</span> <span class="n">entry_field</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entry_field</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">kegg_response</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGresponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_save_single_entry_response</span><span class="p">(</span><span class="n">kegg_response</span><span class="o">=</span><span class="n">kegg_response</span><span class="p">,</span> <span class="n">pull_result</span><span class="o">=</span><span class="n">pull_result</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">pull_result</span><span class="o">.</span><span class="n">add_entry_ids</span><span class="p">(</span><span class="n">entry_id</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">kegg_response</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_save_single_entry_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kegg_response</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGresponse</span><span class="p">,</span> <span class="n">pull_result</span><span class="p">:</span> <span class="n">PullResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Saves the entry in a KEGG response that contains only one entry.</span>
+
+<span class="sd">        :param kegg_response: The KEGG response that only has one entry.</span>
+<span class="sd">        :param pull_result: The pull result to update with the successful entry ID.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">get_url</span><span class="p">:</span> <span class="n">ku</span><span class="o">.</span><span class="n">GetKEGGurl</span> <span class="o">=</span> <span class="n">kegg_response</span><span class="o">.</span><span class="n">kegg_url</span>
+        <span class="p">[</span><span class="n">entry_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_url</span><span class="o">.</span><span class="n">entry_ids</span>
+        <span class="n">pull_result</span><span class="o">.</span><span class="n">add_entry_ids</span><span class="p">(</span><span class="n">entry_id</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">KEGGresponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">ku</span><span class="o">.</span><span class="n">GetKEGGurl</span><span class="o">.</span><span class="n">is_binary</span><span class="p">(</span><span class="n">entry_field</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entry_field</span><span class="p">):</span>
+            <span class="n">entry</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">kegg_response</span><span class="o">.</span><span class="n">binary_body</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">entry</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">kegg_response</span><span class="o">.</span><span class="n">text_body</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_entry_saver</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">entry_id</span><span class="o">=</span><span class="n">entry_id</span><span class="p">,</span> <span class="n">entry</span><span class="o">=</span><span class="n">entry</span><span class="p">,</span> <span class="n">entry_field</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">entry_field</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">_handle_unsuccessful_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kegg_response</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGresponse</span><span class="p">,</span> <span class="n">pull_result</span><span class="p">:</span> <span class="n">PullResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Handles an unsuccessful pull (failed or timed out).</span>
+
+<span class="sd">        :param kegg_response: The KEGG response resulting from a pull that was not successful.</span>
+<span class="sd">        :param pull_result: The pull result to update based on how the unsuccessful response is dealt with.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">get_url</span><span class="p">:</span> <span class="n">ku</span><span class="o">.</span><span class="n">GetKEGGurl</span> <span class="o">=</span> <span class="n">kegg_response</span><span class="o">.</span><span class="n">kegg_url</span>
+        <span class="n">status</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGresponse</span><span class="o">.</span><span class="n">Status</span> <span class="o">=</span> <span class="n">kegg_response</span><span class="o">.</span><span class="n">status</span>
+
+        <span class="k">if</span> <span class="n">get_url</span><span class="o">.</span><span class="n">multiple_entry_ids</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pull_separate_entries</span><span class="p">(</span><span class="n">get_url</span><span class="o">=</span><span class="n">get_url</span><span class="p">,</span> <span class="n">pull_result</span><span class="o">=</span><span class="n">pull_result</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="p">[</span><span class="n">entry_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_url</span><span class="o">.</span><span class="n">entry_ids</span>
+            <span class="n">pull_result</span><span class="o">.</span><span class="n">add_entry_ids</span><span class="p">(</span><span class="n">entry_id</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AbstractMultiplePull"><a class="viewcode-back" href="../../api.html#kegg_pull.pull.AbstractMultiplePull">[docs]</a><span class="k">class</span> <span class="nc">AbstractMultiplePull</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Abstract class that makes multiple requests to the KEGG REST API to pull and save entries of an unlimited amount.&quot;&quot;&quot;</span>
+
+    <span class="n">ABORTED_PULL_RESULTS_PATH</span> <span class="o">=</span> <span class="s1">&#39;aborted-pull-results.json&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">single_pull</span><span class="p">:</span> <span class="n">SinglePull</span><span class="p">,</span> <span class="n">force_single_entry</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">unsuccessful_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param single_pull: The SinglePull object used for each pull.</span>
+<span class="sd">        :param force_single_entry: Determines whether to pull only one entry at a time regardless of the entry field specified in the SinglePull argument.</span>
+<span class="sd">        :param unsuccessful_threshold: If set, the ratio of unsuccessful entry IDs to total entry IDs at which execution stops. Details of the aborted process are logged.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_single_pull</span> <span class="o">=</span> <span class="n">single_pull</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_force_single_entry</span> <span class="o">=</span> <span class="n">force_single_entry</span>
+
+        <span class="k">if</span> <span class="n">unsuccessful_threshold</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="n">unsuccessful_threshold</span> <span class="o">&lt;=</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="n">unsuccessful_threshold</span> <span class="o">&gt;=</span> <span class="mf">1.0</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;Unsuccessful threshold of </span><span class="si">{</span><span class="n">unsuccessful_threshold</span><span class="si">}</span><span class="s1"> is out of range. Valid values are within 0.0 and 1.0, non-inclusive&#39;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_unsuccessful_threshold</span> <span class="o">=</span> <span class="n">unsuccessful_threshold</span>
+
+<div class="viewcode-block" id="AbstractMultiplePull.pull"><a class="viewcode-back" href="../../api.html#kegg_pull.pull.AbstractMultiplePull.pull">[docs]</a>    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">entry_field</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">force_single_entry</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PullResult</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Makes multiple requests to the KEGG REST API for an unlimited amount of entry IDs.</span>
+
+<span class="sd">        :param entry_ids: The IDs of the entries that are split into multiple pulls.</span>
+<span class="sd">        :param entry_field: An optional field of the entries to pull.</span>
+<span class="sd">        :param force_single_entry: If provided, updates the force_single_single_entry value of this AbstractMultiplePull object for this call of pull.</span>
+<span class="sd">        :return: The pull result.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">force_single_entry</span> <span class="o">=</span> <span class="n">force_single_entry</span> <span class="k">if</span> <span class="n">force_single_entry</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_force_single_entry</span>
+        <span class="n">n_entry_ids</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">entry_ids</span><span class="p">)</span>
+        <span class="n">unsuccessful_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unsuccessful_threshold</span>
+        <span class="n">progress_bar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="n">n_entry_ids</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">check_progress</span><span class="p">(</span><span class="n">single_pull_result</span><span class="p">:</span> <span class="n">PullResult</span><span class="p">,</span> <span class="n">multiple_pull_result</span><span class="p">:</span> <span class="n">PullResult</span><span class="p">,</span> <span class="n">grouped_entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">n_entry_ids_processed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">multiple_pull_result</span><span class="o">.</span><span class="n">merge_pull_results</span><span class="p">(</span><span class="n">other</span><span class="o">=</span><span class="n">single_pull_result</span><span class="p">)</span>
+
+            <span class="n">n_unsuccessful</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">multiple_pull_result</span><span class="o">.</span><span class="n">failed_entry_ids</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span>
+                <span class="n">multiple_pull_result</span><span class="o">.</span><span class="n">timed_out_entry_ids</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">unsuccessful_threshold</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">n_unsuccessful</span> <span class="o">/</span> <span class="n">n_entry_ids</span> <span class="o">&gt;=</span> <span class="n">unsuccessful_threshold</span><span class="p">:</span>
+                <span class="n">total_processed_entry_ids</span><span class="p">:</span> <span class="nb">set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">multiple_pull_result</span><span class="o">.</span><span class="n">successful_entry_ids</span><span class="p">)</span>
+                <span class="n">total_processed_entry_ids</span><span class="p">:</span> <span class="nb">set</span> <span class="o">=</span> <span class="n">total_processed_entry_ids</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">multiple_pull_result</span><span class="o">.</span><span class="n">failed_entry_ids</span><span class="p">))</span>
+                <span class="n">total_processed_entry_ids</span><span class="p">:</span> <span class="nb">set</span> <span class="o">=</span> <span class="n">total_processed_entry_ids</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">multiple_pull_result</span><span class="o">.</span><span class="n">timed_out_entry_ids</span><span class="p">))</span>
+                <span class="n">remaining_entry_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+                <span class="k">for</span> <span class="n">entry_ids_group</span> <span class="ow">in</span> <span class="n">grouped_entry_ids</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">entry_id</span> <span class="ow">in</span> <span class="n">entry_ids_group</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">entry_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">total_processed_entry_ids</span><span class="p">:</span>
+                            <span class="n">remaining_entry_ids</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">entry_id</span><span class="p">)</span>
+
+                <span class="n">l</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;Unsuccessful threshold of </span><span class="si">{</span><span class="n">unsuccessful_threshold</span><span class="si">}</span><span class="s1"> met. Aborting. Details saved at &#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">AbstractMultiplePull</span><span class="o">.</span><span class="n">ABORTED_PULL_RESULTS_PATH</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="p">)</span>
+
+                <span class="n">aborted_pull_results</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;num-remaining-entry-ids&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">remaining_entry_ids</span><span class="p">),</span>
+                    <span class="s1">&#39;num-successful&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">multiple_pull_result</span><span class="o">.</span><span class="n">successful_entry_ids</span><span class="p">),</span>
+                    <span class="s1">&#39;num-failed&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">multiple_pull_result</span><span class="o">.</span><span class="n">failed_entry_ids</span><span class="p">),</span>
+                    <span class="s1">&#39;num-timed-out&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">multiple_pull_result</span><span class="o">.</span><span class="n">timed_out_entry_ids</span><span class="p">),</span>
+                    <span class="s1">&#39;remaining-entry-ids&#39;</span><span class="p">:</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">remaining_entry_ids</span><span class="p">),</span>
+                    <span class="s1">&#39;successful-entry-ids&#39;</span><span class="p">:</span> <span class="n">multiple_pull_result</span><span class="o">.</span><span class="n">successful_entry_ids</span><span class="p">,</span>
+                    <span class="s1">&#39;failed-entry-ids&#39;</span><span class="p">:</span> <span class="n">multiple_pull_result</span><span class="o">.</span><span class="n">failed_entry_ids</span><span class="p">,</span>
+                    <span class="s1">&#39;timed-out-entry-ids&#39;</span><span class="p">:</span> <span class="n">multiple_pull_result</span><span class="o">.</span><span class="n">timed_out_entry_ids</span><span class="p">,</span>
+                <span class="p">}</span>
+
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">AbstractMultiplePull</span><span class="o">.</span><span class="n">ABORTED_PULL_RESULTS_PATH</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                    <span class="n">j</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">aborted_pull_results</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+                <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">progress_bar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">n_entry_ids_processed</span><span class="p">)</span>
+
+        <span class="c1"># If a new entry field is provided, update it</span>
+        <span class="k">if</span> <span class="n">entry_field</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_single_pull</span><span class="o">.</span><span class="n">entry_field</span> <span class="o">=</span> <span class="n">entry_field</span>
+
+        <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_group_entry_ids</span><span class="p">(</span>
+            <span class="n">entry_ids_to_group</span><span class="o">=</span><span class="n">entry_ids</span><span class="p">,</span> <span class="n">force_single_entry</span><span class="o">=</span><span class="n">force_single_entry</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pull</span><span class="p">(</span><span class="n">grouped_entry_ids</span><span class="o">=</span><span class="n">entry_ids</span><span class="p">,</span> <span class="n">check_progress</span><span class="o">=</span><span class="n">check_progress</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_group_entry_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_ids_to_group</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">force_single_entry</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="n">group_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">AbstractMultiplePull</span><span class="o">.</span><span class="n">_get_n_entries_per_url</span><span class="p">(</span>
+            <span class="n">force_single_entry</span><span class="o">=</span><span class="n">force_single_entry</span><span class="p">,</span> <span class="n">entry_field</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_single_pull</span><span class="o">.</span><span class="n">entry_field</span>
+        <span class="p">)</span>
+
+        <span class="n">grouped_entry_ids</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">entry_ids_to_group</span><span class="p">),</span> <span class="n">group_size</span><span class="p">):</span>
+            <span class="n">entry_id_group</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="n">entry_ids_to_group</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="n">group_size</span><span class="p">]</span>
+            <span class="n">grouped_entry_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry_id_group</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">grouped_entry_ids</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_get_n_entries_per_url</span><span class="p">(</span><span class="n">force_single_entry</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">entry_field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Gets the number of entries for each Get KEGG URL used to make the pulls.</span>
+
+<span class="sd">        :param force_single_entry: If true, returns 1.</span>
+<span class="sd">        :param entry_field: If the entry field can only be pulled 1 at a time, return 1.</span>
+<span class="sd">        :return: 1 if the above specifications are true, else the maximum number of entries per Get URL.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">force_single_entry</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">ku</span><span class="o">.</span><span class="n">GetKEGGurl</span><span class="o">.</span><span class="n">only_one_entry</span><span class="p">(</span><span class="n">entry_field</span><span class="o">=</span><span class="n">entry_field</span><span class="p">):</span>
+            <span class="k">return</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ku</span><span class="o">.</span><span class="n">GetKEGGurl</span><span class="o">.</span><span class="n">MAX_ENTRY_IDS_PER_URL</span>
+
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span> <span class="nf">_pull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grouped_entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">check_progress</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PullResult</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Pulls the entries of specified IDs in the manner of the extended concrete class.</span>
+
+<span class="sd">        :param grouped_entry_ids: List of lists of entry IDs, with each list being below or equal to the number allowed per Get KEGG URL.</span>
+<span class="sd">        :param check_progress: Function that updates the progress bar and pull result if the unsuccessful threshold either isn&#39;t set or hasn&#39;t been reached. Else aborts.</span>
+<span class="sd">        :return: The pull result.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>  <span class="c1"># pragma: no cover</span></div>
+
+
+<div class="viewcode-block" id="SingleProcessMultiplePull"><a class="viewcode-back" href="../../api.html#kegg_pull.pull.SingleProcessMultiplePull">[docs]</a><span class="k">class</span> <span class="nc">SingleProcessMultiplePull</span><span class="p">(</span><span class="n">AbstractMultiplePull</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class that makes multiple requests to the KEGG REST API to pull entries within a single process.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">_pull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grouped_entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">check_progress</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PullResult</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Makes multiple requests to the KEGG REST API to pull entries within a single process.</span>
+
+<span class="sd">        :param grouped_entry_ids: List of lists of entry IDs, with each list being below or equal to the number allowed per Get KEGG URL.</span>
+<span class="sd">        :param check_progress: Function that updates the progress bar and pull result if the unsuccessful threshold either isn&#39;t set or hasn&#39;t been reached. Else aborts.</span>
+<span class="sd">        :return: The pull result</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">multiple_pull_result</span> <span class="o">=</span> <span class="n">PullResult</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">entry_id_group</span> <span class="ow">in</span> <span class="n">grouped_entry_ids</span><span class="p">:</span>
+            <span class="n">single_pull_result</span><span class="p">:</span> <span class="n">PullResult</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_single_pull</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="n">entry_ids</span><span class="o">=</span><span class="n">entry_id_group</span><span class="p">)</span>
+
+            <span class="n">check_progress</span><span class="p">(</span>
+                <span class="n">single_pull_result</span><span class="o">=</span><span class="n">single_pull_result</span><span class="p">,</span> <span class="n">multiple_pull_result</span><span class="o">=</span><span class="n">multiple_pull_result</span><span class="p">,</span>
+                <span class="n">grouped_entry_ids</span><span class="o">=</span><span class="n">grouped_entry_ids</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">multiple_pull_result</span></div>
+
+
+<div class="viewcode-block" id="MultiProcessMultiplePull"><a class="viewcode-back" href="../../api.html#kegg_pull.pull.MultiProcessMultiplePull">[docs]</a><span class="k">class</span> <span class="nc">MultiProcessMultiplePull</span><span class="p">(</span><span class="n">AbstractMultiplePull</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class that makes multiple requests to the KEGG REST API to pull entries within multiple processes.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">single_pull</span><span class="p">:</span> <span class="n">SinglePull</span><span class="p">,</span> <span class="n">n_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">(),</span> <span class="n">force_single_entry</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">unsuccessful_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param single_pull: The SinglePull object used for each pull.</span>
+<span class="sd">        :param force_single_entry: Determines whether to pull only one entry at a time despite the entry field specified in the SinglePull argument.</span>
+<span class="sd">        :param n_workers: The number of processes to use.</span>
+<span class="sd">        :param unsuccessful_threshold: If set, the ratio of unsuccessful entry IDs to total entry IDs at which execution stops. Details of the aborted process are logged.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">single_pull</span><span class="p">:</span> <span class="n">SinglePull</span> <span class="o">=</span> <span class="n">single_pull</span><span class="o">.</span><span class="n">set_multiprocessing_lock</span><span class="p">()</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">MultiProcessMultiplePull</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">single_pull</span><span class="o">=</span><span class="n">single_pull</span><span class="p">,</span> <span class="n">force_single_entry</span><span class="o">=</span><span class="n">force_single_entry</span><span class="p">,</span> <span class="n">unsuccessful_threshold</span><span class="o">=</span><span class="n">unsuccessful_threshold</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_workers</span> <span class="o">=</span> <span class="n">n_workers</span> <span class="k">if</span> <span class="n">n_workers</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_pull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grouped_entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">check_progress</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PullResult</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Makes multiple requests to the KEGG REST API to pull entries within multiple processes.</span>
+
+<span class="sd">        :param grouped_entry_ids: List of lists of entry IDs, with each list being below or equal to the number allowed per Get KEGG URL.</span>
+<span class="sd">        :param check_progress: Function that updates the progress bar and pull result if the unsuccessful threshold either isn&#39;t set or hasn&#39;t been reached. Else aborts.</span>
+<span class="sd">        :return: The pull result</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">multiple_pull_result</span> <span class="o">=</span> <span class="n">PullResult</span><span class="p">()</span>
+
+        <span class="c1"># Passing in _set_single_pull as the &quot;initializer&quot; allows setting the SinglePull object as a global variable.</span>
+        <span class="c1"># We need to set it as a global since pickling its Lock member is not allowed.</span>
+        <span class="c1"># Also, this makes it available to each process without pickling it every time it&#39;s passed to a worker.</span>
+        <span class="k">with</span> <span class="n">mp</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_workers</span><span class="p">,</span> <span class="n">initializer</span><span class="o">=</span><span class="n">_set_single_pull</span><span class="p">,</span> <span class="n">initargs</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_single_pull</span><span class="p">,))</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
+            <span class="n">async_results</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">pool</span><span class="o">.</span><span class="n">apply_async</span><span class="p">(</span><span class="n">_get_single_pull_result</span><span class="p">,</span> <span class="p">(</span><span class="n">entry_ids</span><span class="p">,))</span> <span class="k">for</span> <span class="n">entry_ids</span> <span class="ow">in</span> <span class="n">grouped_entry_ids</span>
+            <span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">async_result</span> <span class="ow">in</span> <span class="n">async_results</span><span class="p">:</span>
+                <span class="n">result</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="n">async_result</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+                <span class="n">single_pull_result</span><span class="p">:</span> <span class="n">PullResult</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+                <span class="n">check_progress</span><span class="p">(</span>
+                    <span class="n">single_pull_result</span><span class="o">=</span><span class="n">single_pull_result</span><span class="p">,</span> <span class="n">multiple_pull_result</span><span class="o">=</span><span class="n">multiple_pull_result</span><span class="p">,</span>
+                    <span class="n">grouped_entry_ids</span><span class="o">=</span><span class="n">grouped_entry_ids</span>
+                <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">multiple_pull_result</span></div>
+
+
+<span class="n">global_single_pull</span><span class="p">:</span> <span class="n">SinglePull</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<span class="k">def</span> <span class="nf">_set_single_pull</span><span class="p">(</span><span class="n">single_pull</span><span class="p">:</span> <span class="n">SinglePull</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Sets a global SinglePull variable to be used in each process within a multiprocessing pool.</span>
+
+<span class="sd">    :param single_pull: The SinglePull object to set such that it&#39;s accessible to each process.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">global_single_pull</span>
+
+    <span class="n">global_single_pull</span> <span class="o">=</span> <span class="n">single_pull</span>  <span class="c1"># pragma: no cover</span>
+
+
+<span class="k">def</span> <span class="nf">_get_single_pull_result</span><span class="p">(</span><span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Makes a request to the REST KEGG API to pull one or more entries.</span>
+
+<span class="sd">    :param entry_ids: The IDs of the entries to pull.</span>
+<span class="sd">    :return: The pull result.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">single_pull_result</span><span class="p">:</span> <span class="n">PullResult</span> <span class="o">=</span> <span class="n">global_single_pull</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="n">entry_ids</span><span class="o">=</span><span class="n">entry_ids</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">p</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">single_pull_result</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Erik Huckvale.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -47,6 +47,25 @@
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cli.html">CLI</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pulling-parsing-and-saving-kegg-entries">Pulling, Parsing, and Saving KEGG Entries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kegg_pull.pull.PullResult"><code class="docutils literal notranslate"><span class="pre">PullResult</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.pull.PullResult.successful_entry_ids"><code class="docutils literal notranslate"><span class="pre">PullResult.successful_entry_ids</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.pull.PullResult.failed_entry_ids"><code class="docutils literal notranslate"><span class="pre">PullResult.failed_entry_ids</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.pull.PullResult.timed_out_entry_ids"><code class="docutils literal notranslate"><span class="pre">PullResult.timed_out_entry_ids</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#kegg_pull.pull.SinglePull"><code class="docutils literal notranslate"><span class="pre">SinglePull</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.pull.SinglePull.pull"><code class="docutils literal notranslate"><span class="pre">SinglePull.pull()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.pull.SinglePull.set_multiprocessing_lock"><code class="docutils literal notranslate"><span class="pre">SinglePull.set_multiprocessing_lock()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#kegg_pull.pull.AbstractMultiplePull"><code class="docutils literal notranslate"><span class="pre">AbstractMultiplePull</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.pull.AbstractMultiplePull.ABORTED_PULL_RESULTS_PATH"><code class="docutils literal notranslate"><span class="pre">AbstractMultiplePull.ABORTED_PULL_RESULTS_PATH</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kegg_pull.pull.AbstractMultiplePull.pull"><code class="docutils literal notranslate"><span class="pre">AbstractMultiplePull.pull()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#kegg_pull.pull.SingleProcessMultiplePull"><code class="docutils literal notranslate"><span class="pre">SingleProcessMultiplePull</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kegg_pull.pull.MultiProcessMultiplePull"><code class="docutils literal notranslate"><span class="pre">MultiProcessMultiplePull</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#pulling-lists-of-kegg-entry-ids">Pulling Lists of KEGG Entry IDs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#kegg_pull.entry_ids.EntryIdsGetter"><code class="docutils literal notranslate"><span class="pre">EntryIdsGetter</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#kegg_pull.entry_ids.EntryIdsGetter.from_database"><code class="docutils literal notranslate"><span class="pre">EntryIdsGetter.from_database()</span></code></a></li>
@@ -144,6 +163,152 @@
 <p><code class="docutils literal notranslate"><span class="pre">entry_ids</span></code></p>
 <p><code class="docutils literal notranslate"><span class="pre">rest</span></code></p>
 <p><code class="docutils literal notranslate"><span class="pre">kegg_url</span></code></p>
+<span class="target" id="module-kegg_pull.pull"></span><div class="section" id="pulling-parsing-and-saving-kegg-entries">
+<h2>Pulling, Parsing, and Saving KEGG Entries<a class="headerlink" href="#pulling-parsing-and-saving-kegg-entries" title="Permalink to this heading"></a></h2>
+<p>Functionality for pulling KEGG entries from the KEGG REST API, parsing them, and saving the entries as files.</p>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="kegg_pull.pull.PullResult">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kegg_pull.pull.</span></span><span class="sig-name descname"><span class="pre">PullResult</span></span><a class="reference internal" href="_modules/kegg_pull/pull.html#PullResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.pull.PullResult" title="Permalink to this definition"></a></dt>
+<dd><p>The collections of entry IDs, each of which resulted in a particular KEGG Response status after a pull.</p>
+<dl class="field-list simple">
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="kegg_pull.pull.PullResult.successful_entry_ids">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">successful_entry_ids</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><span class="pre">tuple</span></a></em><a class="headerlink" href="#kegg_pull.pull.PullResult.successful_entry_ids" title="Permalink to this definition"></a></dt>
+<dd><p>The IDs of entries successfully pulled.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kegg_pull.pull.PullResult.failed_entry_ids">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">failed_entry_ids</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><span class="pre">tuple</span></a></em><a class="headerlink" href="#kegg_pull.pull.PullResult.failed_entry_ids" title="Permalink to this definition"></a></dt>
+<dd><p>The IDs of entries that failed to be pulled.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kegg_pull.pull.PullResult.timed_out_entry_ids">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">timed_out_entry_ids</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><span class="pre">tuple</span></a></em><a class="headerlink" href="#kegg_pull.pull.PullResult.timed_out_entry_ids" title="Permalink to this definition"></a></dt>
+<dd><p>The IDs of entries that timed out before being pulled.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="kegg_pull.pull.SinglePull">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kegg_pull.pull.</span></span><span class="sig-name descname"><span class="pre">SinglePull</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">kegg_rest</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#kegg_pull.rest.KEGGrest" title="kegg_pull.rest.KEGGrest"><span class="pre">KEGGrest</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entry_field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multiprocessing_lock</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><span class="pre">Lock</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/pull.html#SinglePull"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.pull.SinglePull" title="Permalink to this definition"></a></dt>
+<dd><p>Class capable of performing a single request to the KEGG REST API for pulling up to a maximum number of entries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Path to the location where entries are saved (treated like a zip file if ends in .zip, else a directory).</p></li>
+<li><p><strong>kegg_rest</strong> (<a class="reference internal" href="#kegg_pull.rest.KEGGrest" title="kegg_pull.rest.KEGGrest"><em>KEGGrest</em></a>) – Optional KEGGrest object used to make the requests to the KEGG REST API (a KEGGrest object with the default settings is created if one is not provided).</p></li>
+<li><p><strong>entry_field</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Optional KEGG entry field to pull.</p></li>
+<li><p><strong>multiprocessing_lock</strong> (<em>Lock</em>) – Blocks code writing to the same zip file among multiple processes. Used only if pulling to a zip file while multiprocessing.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="kegg_pull.pull.SinglePull.pull">
+<span class="sig-name descname"><span class="pre">pull</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entry_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><span class="pre">list</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#kegg_pull.pull.PullResult" title="kegg_pull.pull.PullResult"><span class="pre">PullResult</span></a></span></span><a class="reference internal" href="_modules/kegg_pull/pull.html#SinglePull.pull"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.pull.SinglePull.pull" title="Permalink to this definition"></a></dt>
+<dd><p>Makes a single request to the KEGG REST API to pull one or more entries and save them as files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>entry_ids</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – The IDs of the entries to pull and save.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The pull result.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#kegg_pull.pull.PullResult" title="kegg_pull.pull.PullResult"><em>PullResult</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kegg_pull.pull.SinglePull.set_multiprocessing_lock">
+<span class="sig-name descname"><span class="pre">set_multiprocessing_lock</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/pull.html#SinglePull.set_multiprocessing_lock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.pull.SinglePull.set_multiprocessing_lock" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a copy of the SinglePull object with a new multiprocessing Lock object set to make the SinglePull multiprocess-safe (only useful when the output is a zip archive and if the multiprocessing_lock was not passed into the constructor initially).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return SinglePull</dt>
+<dd class="field-odd"><p>The SinglePull copy with a new Lock object set.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="kegg_pull.pull.AbstractMultiplePull">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kegg_pull.pull.</span></span><span class="sig-name descname"><span class="pre">AbstractMultiplePull</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">single_pull</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#kegg_pull.pull.SinglePull" title="kegg_pull.pull.SinglePull"><span class="pre">SinglePull</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_single_entry</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unsuccessful_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/pull.html#AbstractMultiplePull"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.pull.AbstractMultiplePull" title="Permalink to this definition"></a></dt>
+<dd><p>Abstract class that makes multiple requests to the KEGG REST API to pull and save entries of an unlimited amount.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>single_pull</strong> (<a class="reference internal" href="#kegg_pull.pull.SinglePull" title="kegg_pull.pull.SinglePull"><em>SinglePull</em></a>) – The SinglePull object used for each pull.</p></li>
+<li><p><strong>force_single_entry</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Determines whether to pull only one entry at a time regardless of the entry field specified in the SinglePull argument.</p></li>
+<li><p><strong>unsuccessful_threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – If set, the ratio of unsuccessful entry IDs to total entry IDs at which execution stops. Details of the aborted process are logged.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kegg_pull.pull.AbstractMultiplePull.ABORTED_PULL_RESULTS_PATH">
+<span class="sig-name descname"><span class="pre">ABORTED_PULL_RESULTS_PATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'aborted-pull-results.json'</span></em><a class="headerlink" href="#kegg_pull.pull.AbstractMultiplePull.ABORTED_PULL_RESULTS_PATH" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kegg_pull.pull.AbstractMultiplePull.pull">
+<span class="sig-name descname"><span class="pre">pull</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entry_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><span class="pre">list</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">entry_field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_single_entry</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#kegg_pull.pull.PullResult" title="kegg_pull.pull.PullResult"><span class="pre">PullResult</span></a></span></span><a class="reference internal" href="_modules/kegg_pull/pull.html#AbstractMultiplePull.pull"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.pull.AbstractMultiplePull.pull" title="Permalink to this definition"></a></dt>
+<dd><p>Makes multiple requests to the KEGG REST API for an unlimited amount of entry IDs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>entry_ids</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – The IDs of the entries that are split into multiple pulls.</p></li>
+<li><p><strong>entry_field</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – An optional field of the entries to pull.</p></li>
+<li><p><strong>force_single_entry</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><em>Optional</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a><em>]</em>) – If provided, updates the force_single_single_entry value of this AbstractMultiplePull object for this call of pull.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The pull result.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#kegg_pull.pull.PullResult" title="kegg_pull.pull.PullResult"><em>PullResult</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="kegg_pull.pull.SingleProcessMultiplePull">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kegg_pull.pull.</span></span><span class="sig-name descname"><span class="pre">SingleProcessMultiplePull</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">single_pull</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#kegg_pull.pull.SinglePull" title="kegg_pull.pull.SinglePull"><span class="pre">SinglePull</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_single_entry</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unsuccessful_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/pull.html#SingleProcessMultiplePull"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.pull.SingleProcessMultiplePull" title="Permalink to this definition"></a></dt>
+<dd><p>Class that makes multiple requests to the KEGG REST API to pull entries within a single process.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>single_pull</strong> (<a class="reference internal" href="#kegg_pull.pull.SinglePull" title="kegg_pull.pull.SinglePull"><em>SinglePull</em></a>) – The SinglePull object used for each pull.</p></li>
+<li><p><strong>force_single_entry</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Determines whether to pull only one entry at a time regardless of the entry field specified in the SinglePull argument.</p></li>
+<li><p><strong>unsuccessful_threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – If set, the ratio of unsuccessful entry IDs to total entry IDs at which execution stops. Details of the aborted process are logged.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="kegg_pull.pull.MultiProcessMultiplePull">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">kegg_pull.pull.</span></span><span class="sig-name descname"><span class="pre">MultiProcessMultiplePull</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">single_pull</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#kegg_pull.pull.SinglePull" title="kegg_pull.pull.SinglePull"><span class="pre">SinglePull</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force_single_entry</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unsuccessful_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.11)"><span class="pre">Optional</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kegg_pull/pull.html#MultiProcessMultiplePull"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kegg_pull.pull.MultiProcessMultiplePull" title="Permalink to this definition"></a></dt>
+<dd><p>Class that makes multiple requests to the KEGG REST API to pull entries within multiple processes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>single_pull</strong> (<a class="reference internal" href="#kegg_pull.pull.SinglePull" title="kegg_pull.pull.SinglePull"><em>SinglePull</em></a>) – The SinglePull object used for each pull.</p></li>
+<li><p><strong>force_single_entry</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – Determines whether to pull only one entry at a time despite the entry field specified in the SinglePull argument.</p></li>
+<li><p><strong>n_workers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – The number of processes to use.</p></li>
+<li><p><strong>unsuccessful_threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – If set, the ratio of unsuccessful entry IDs to total entry IDs at which execution stops. Details of the aborted process are logged.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <span class="target" id="module-kegg_pull.entry_ids"></span><div class="section" id="pulling-lists-of-kegg-entry-ids">
 <h2>Pulling Lists of KEGG Entry IDs<a class="headerlink" href="#pulling-lists-of-kegg-entry-ids" title="Permalink to this heading"></a></h2>
 <p>Functionality for pulling lists of KEGG entry IDs from the KEGG REST API.</p>
