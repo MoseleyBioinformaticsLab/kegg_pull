@@ -15,6 +15,7 @@ import tqdm
 
 from . import kegg_url as ku
 from . import rest as r
+from . import _utils as u
 
 
 class PullResult:
@@ -84,109 +85,19 @@ class PullResult:
 
 class SinglePull:
     """Class capable of performing a single request to the KEGG REST API for pulling up to a maximum number of entries."""
-
-    class _AbstractEntrySaver(abc.ABC):
-        """Abstract class for saving KEGG entries as files."""
-
-        def __init__(self, output: str):
-            """
-            :param output: The output container where entry files are saved.
-            """
-            self._output = output
-
-        @property
-        def output(self):
-            return self._output
-
-        def save(self, entry_id: str, entry: t.Union[str, bytes], entry_field: str) -> None:
-            """ Saves a KEGG entry as a file.
-
-            :param entry_id: The entry ID (part of the file name).
-            :param entry: The entry to save (contents of the file).
-            :param entry_field: The particular field of the entry (file extension).
-            """
-            file_extension = 'txt' if entry_field is None else entry_field
-            file_name = f'{entry_id}.{file_extension}'
-            self._save(file_name=file_name, entry=entry)
-
-        @abc.abstractmethod
-        def _save(self, file_name: str, entry: t.Union[str, bytes]) -> None:
-            """ Saves a KEGG entry in the particular manner of the child class.
-
-            :param file_name: The name of the file in which the KEGG entry is saved.
-            :param entry: The entry to save (contents of the file).
-            """
-            pass  # pragma: no cover
-
-    class _DirectoryEntrySaver(_AbstractEntrySaver):
-        """Class that saves KEGG entries in a directory."""
-
-        def __init__(self, output_dir: str) -> None:
-            """
-            :param output_dir: The directory in which to save the KEGG entries.
-            """
-            if not os.path.isdir(output_dir):
-                os.mkdir(output_dir)
-
-            super(SinglePull._DirectoryEntrySaver, self).__init__(output=output_dir)
-
-        def _save(self, file_name: str, entry: t.Union[str, bytes]) -> None:
-            """ Saves a KEGG entry in a file within a directory.
-
-            :param file_name: The name of the file to save in the directory.
-            :param entry: The entry to save (content of the file).
-            """
-            file_path = os.path.join(self._output, file_name)
-            save_type = 'wb' if type(entry) is bytes else 'w'
-
-            with open(file_path, save_type) as file:
-                file.write(entry)
-
-    class _ZipEntrySaver(_AbstractEntrySaver):
-        """Class that saves KEGG entries in a ZIP file."""
-
-        def __init__(self, zip_file: str, multiprocessing_lock: mp.Lock = None) -> None:
-            """
-            :param zip_file: The path to the zip file to save the entries in.
-            :param multiprocessing_lock: If provided, blocks code writing to the same zip file among multiple processes.
-            """
-            self._multiprocessing_lock = multiprocessing_lock
-            super(SinglePull._ZipEntrySaver, self).__init__(output=zip_file)
-
-        def _save(self, file_name: str, entry: t.Union[str, bytes]):
-            """ Saves a KEGG entry in a zip file.
-
-            :param file_name: The name of the file to save.
-            :param entry: The entry to save (contents of file).
-            """
-            if self._multiprocessing_lock is not None:
-                # Writing to a zip file is not multiprocess safe since multiple processes are writing to the same file.
-                # So if another process is currently accessing the zip file, the code below is blocked.
-                self._multiprocessing_lock.acquire()
-
-            with zf.ZipFile(self._output, 'a') as zip_file:
-                zip_file.writestr(file_name, entry)
-
-            if self._multiprocessing_lock is not None:
-                # Unblock other processes from accessing the above code.
-                self._multiprocessing_lock.release()
-
     def __init__(
-        self, output: str, kegg_rest: r.KEGGrest = None, entry_field: str = None, multiprocessing_lock: mp.Lock = None
+        self, output: str, kegg_rest: r.KEGGrest = None, entry_field: str = None, multiprocess_lock_save: bool = False
     ) -> None:
         """
         :param output: Path to the location where entries are saved (treated like a zip file if ends in .zip, else a directory).
         :param kegg_rest: Optional KEGGrest object used to make the requests to the KEGG REST API (a KEGGrest object with the default settings is created if one is not provided).
         :param entry_field: Optional KEGG entry field to pull.
-        :param multiprocessing_lock: Blocks code writing to the same zip file among multiple processes. Used only if pulling to a zip file while multiprocessing.
+        :param multiprocess_lock_save: Whether to block the code that saves KEGG entries in order to be multiprocess safe. Should not be needed unless saving entries to a ZIP archive.
         """
-        if output.endswith('.zip'):
-            self._entry_saver = SinglePull._ZipEntrySaver(zip_file=output, multiprocessing_lock=multiprocessing_lock)
-        else:
-            self._entry_saver = SinglePull._DirectoryEntrySaver(output_dir=output)
-
+        self._output = output
         self._kegg_rest = kegg_rest if kegg_rest is not None else r.KEGGrest()
         self.entry_field = entry_field
+        self._multiprocess_lock = mp.Lock() if multiprocess_lock_save else None
 
     def pull(self, entry_ids: list) -> PullResult:
         """ Makes a single request to the KEGG REST API to pull one or more entries and save them as files.
@@ -208,18 +119,6 @@ class SinglePull:
 
         return pull_result
 
-    def set_multiprocessing_lock(self):
-        """ Returns a copy of the SinglePull object with a new multiprocessing Lock object set to make the SinglePull multiprocess-safe (only useful when the output is a zip archive and if the multiprocessing_lock was not passed into the constructor initially).
-
-        :return SinglePull: The SinglePull copy with a new Lock object set.
-        """
-        lock = mp.Lock()
-
-        return SinglePull(
-            output=self._entry_saver.output, kegg_rest=self._kegg_rest, entry_field=self.entry_field,
-            multiprocessing_lock=lock
-        )
-
     def _save_multi_entry_response(self, kegg_response: r.KEGGresponse, pull_result: PullResult) -> None:
         """ Saves multiple entries within a KEGG response.
 
@@ -236,7 +135,7 @@ class SinglePull:
             pull_result.add_entry_ids(*get_url.entry_ids, status=r.KEGGresponse.Status.SUCCESS)
 
             for entry_id, entry in zip(get_url.entry_ids, entries):
-                self._entry_saver.save(entry_id=entry_id, entry=entry, entry_field=self.entry_field)
+                self._save(entry_id=entry_id, entry=entry, entry_field=self.entry_field)
 
     def _separate_entries(self, concatenated_entries: str) -> list:
         """ Separates the entries in a multi-entry response from KEGG.
@@ -319,6 +218,28 @@ class SinglePull:
             else:
                 pull_result.add_entry_ids(entry_id, status=kegg_response.status)
 
+    def _save(self, entry_id: str, entry: t.Union[str, bytes], entry_field: str) -> None:
+        """ Saves a KEGG entry as a file.
+
+        :param entry_id: The entry ID (part of the file name).
+        :param entry: The entry to save (contents of the file).
+        :param entry_field: The particular field of the entry (file extension).
+        """
+        file_extension = 'txt' if entry_field is None else entry_field
+        file_name = f'{entry_id}.{file_extension}'
+        save_type = 'wb' if type(entry) is bytes else 'w'
+
+        if self._multiprocess_lock is not None:
+            # Writing to a zip file is not multiprocess safe since multiple processes are writing to the same file.
+            # So if another process is currently accessing the zip file, the code below is blocked.
+            self._multiprocess_lock.acquire()
+
+        u.save_file(file_location=self._output, file_content=entry, file_name=file_name, save_type=save_type)
+
+        if self._multiprocess_lock is not None:
+            # Unblock other processes from accessing the above code.
+            self._multiprocess_lock.release()
+
     def _save_single_entry_response(self, kegg_response: r.KEGGresponse, pull_result: PullResult) -> None:
         """ Saves the entry in a KEGG response that contains only one entry.
 
@@ -334,7 +255,7 @@ class SinglePull:
         else:
             entry: str = kegg_response.text_body
 
-        self._entry_saver.save(entry_id=entry_id, entry=entry, entry_field=self.entry_field)
+        self._save(entry_id=entry_id, entry=entry, entry_field=self.entry_field)
 
 
     def _handle_unsuccessful_url(self, kegg_response: r.KEGGresponse, pull_result: PullResult) -> None:
@@ -512,13 +433,11 @@ class MultiProcessMultiplePull(AbstractMultiplePull):
         unsuccessful_threshold: float = None
     ):
         """
-        :param single_pull: The SinglePull object used for each pull.
+        :param single_pull: The SinglePull object used for each pull. If saving to a ZIP archive, must be instantiated with multiprocess_lock_save set to True.
         :param force_single_entry: Determines whether to pull only one entry at a time despite the entry field specified in the SinglePull argument.
         :param n_workers: The number of processes to use.
         :param unsuccessful_threshold: If set, the ratio of unsuccessful entry IDs to total entry IDs at which execution stops. Details of the aborted process are logged.
         """
-        single_pull: SinglePull = single_pull.set_multiprocessing_lock()
-
         super(MultiProcessMultiplePull, self).__init__(
             single_pull=single_pull, force_single_entry=force_single_entry, unsuccessful_threshold=unsuccessful_threshold
         )

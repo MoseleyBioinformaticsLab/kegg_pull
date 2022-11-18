@@ -3,7 +3,7 @@ Usage:
     kegg_pull -h | --help           Show this help message.
     kegg_pull -v | --version        Displays the package version.
     kegg_pull --full-help           Show the help message of all sub commands.
-    kegg_pull pull ...              Pull, separate, and store KEGG entries to the local file system.
+    kegg_pull pull ...              Pull, separate, and store an arbitrary number of KEGG entries to the local file system.
     kegg_pull entry-ids ...         Obtain a list of KEGG entry IDs.
     kegg_pull link-to-dict ...      Obtain a mapping of KEGG entries to the IDs of related entries.
     kegg_pull pathway-organizer ... Creates a flattened version of a pathways Brite hierarchy.

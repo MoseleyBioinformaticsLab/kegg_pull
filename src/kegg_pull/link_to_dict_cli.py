@@ -1,27 +1,27 @@
 """
 Usage:
     kegg_pull link-to-dict -h | --help
-    kegg_pull link-to-dict <target-database-name> <source-database-name> [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull link-to-dict --link-target=<target-database-name> <entry-ids> [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull link-to-dict pathway-to-compound [--add-glycans] [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull link-to-dict reaction-to-compound [--add-glycans] [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull link-to-dict gene-to-compound [--add-glycans] [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull link-to-dict compound-to-pathway [--add-glycans] [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull link-to-dict compound-to-reaction [--add-glycans] [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull link-to-dict compound-to-gene [--add-glycans] [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull link-to-dict pathway-to-gene [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull link-to-dict pathway-to-reaction [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull link-to-dict gene-to-pathway [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull link-to-dict reaction-to-pathway [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull link-to-dict reaction-to-gene [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull link-to-dict gene-to-reaction [--output=<output>] [--zip-file=<zip-file>]
+    kegg_pull link-to-dict <target-database-name> <source-database-name> [--output=<output-location>] [--file=<file-name>]
+    kegg_pull link-to-dict --link-target=<target-database-name> <entry-ids> [--output=<output-location>] [--file=<file-name>]
+    kegg_pull link-to-dict pathway-to-compound [--add-glycans] [--output=<output-location>] [--file=<file-name>]
+    kegg_pull link-to-dict reaction-to-compound [--add-glycans] [--output=<output-location>] [--file=<file-name>]
+    kegg_pull link-to-dict gene-to-compound [--add-glycans] [--output=<output-location>] [--file=<file-name>]
+    kegg_pull link-to-dict compound-to-pathway [--add-glycans] [--output=<output-location>] [--file=<file-name>]
+    kegg_pull link-to-dict compound-to-reaction [--add-glycans] [--output=<output-location>] [--file=<file-name>]
+    kegg_pull link-to-dict compound-to-gene [--add-glycans] [--output=<output-location>] [--file=<file-name>]
+    kegg_pull link-to-dict pathway-to-gene [--output=<output-location>] [--file=<file-name>]
+    kegg_pull link-to-dict pathway-to-reaction [--output=<output-location>] [--file=<file-name>]
+    kegg_pull link-to-dict gene-to-pathway [--output=<output-location>] [--file=<file-name>]
+    kegg_pull link-to-dict reaction-to-pathway [--output=<output-location>] [--file=<file-name>]
+    kegg_pull link-to-dict reaction-to-gene [--output=<output-location>] [--file=<file-name>]
+    kegg_pull link-to-dict gene-to-reaction [--output=<output-location>] [--file=<file-name>]
 
 Options:
     -h --help                               Show this help message.
     <target-database-name>                  The name of the database to find cross-references in the source database.
     <source-database-name>                  The name of the database from which cross-references are found in the target database.
-    --output=<output>                       The file to store the mapping, either a JSON file or ZIP archive. Prints to the console if not set. If ends in ".zip", saves file in a zip archive.
-    --zip-file=<zip-file>                   The name of the JSON file to store in a zip archive. If not set, defaults to saving a file with the same name as the ZIP archive minus the .zip extension. Ignored if --output does not end in ".zip".
+    --output=<output-location>              The location (either a directory or ZIP archive if ends in '.zip') of the file to store the mapping. Prints to the console if not set.
+    --file=<file-name>                      The name of the JSON file to store in the output location (specified by --output). If --output is set but --file is not set, defaults to file name of "mapping.json".
     --link-target=<target-database-name>    The name of the database to find cross-references in the provided entry IDs.
     <entry-ids>                             Comma separated list of entry IDs.
     pathway-to-compound                     Creates a specific mapping of KEGG entry IDs.
@@ -68,4 +68,7 @@ def main():
         mapping: dict = link_to_dict.entries_link(target_database_name=args['--link-target'], entry_ids=entry_ids)
 
     mapping: str = j.dumps(obj=mapping, indent=1)
-    u.handle_cli_output(output_path=args['--output'], output_string=mapping, zip_file_name=args['--zip-file'], save_type='w')
+    output_location: str = args['--output']
+    file_name: str = args['--file-name']
+    file_name: str = 'entry-ids.txt' if file_name is None and output_location is not None else file_name
+    u.handle_cli_output(output_location=output_location, output_content=mapping, file_name=file_name, save_type='w')

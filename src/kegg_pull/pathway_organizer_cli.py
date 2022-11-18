@@ -22,5 +22,5 @@ def main():
     hierarchy_nodes_json_string = str(pathway_organizer)
 
     u.handle_cli_output(
-        output_path=args['--output'], output_string=hierarchy_nodes_json_string, zip_file_name=args['--zip-file'], save_type='w'
+        output_location=args['--output'], output_content=hierarchy_nodes_json_string, file_name=args['--zip-file'], save_type='w'
     )

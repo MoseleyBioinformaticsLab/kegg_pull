@@ -1,17 +1,17 @@
 """
 Usage:
     kegg_pull entry-ids -h | --help
-    kegg_pull entry-ids from-database <database-name> [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull entry-ids from-file <file-path> [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull entry-ids from-keywords <database-name> <keywords> [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull entry-ids from-molecular-attribute <database-name> (--formula=<formula>|--exact-mass=<exact-mass>...|--molecular-weight=<molecular-weight>...) [--output=<output>] [--zip-file=<zip-file>]
+    kegg_pull entry-ids from-database <database-name> [--output=<output-location>] [--file=<file-name>]
+    kegg_pull entry-ids from-file <file-path> [--output=<output-location>] [--file=<file-name>]
+    kegg_pull entry-ids from-keywords <database-name> <keywords> [--output=<output-location>] [--file=<file-name>]
+    kegg_pull entry-ids from-molecular-attribute <database-name> (--formula=<formula>|--exact-mass=<exact-mass>...|--molecular-weight=<molecular-weight>...) [--output=<output-location>] [--file=<file-name>]
 
 Options:
     -h --help                               Show this help message.
     from-database                           Pulls all the entry IDs within a given database.
     <database-name>                         The KEGG database from which to pull a list of entry IDs.
-    --output=<output>                       Path to the file to store the output (1 entry ID per line). Prints to the console if not specified. If ends in ".zip", saves file to a zip archive.
-    --zip-file=<zip-file>                   The name of the file to store in a zip archive. If not set, defaults to saving a file with the same name as the zip archive minus the .zip extension. Ignored if --output does not end in ".zip".
+    --output=<output-location>              The location (either a directory or ZIP archive if ends in '.zip') of the file to store the output (1 entry ID per line). Prints to the console if not set.
+    --file=<file-name>                      The name of the file to store in the output location (specified by --output). If --output is set but --file is not set, defaults to file name of "entry-ids.txt".
     from-file                               Loads the entry IDs from a file.
     <file-path>                             Path to a file containing a list of entry IDs with one entry ID on each line.
     from-keywords                           Searches for entries within a database based on provided keywords.
@@ -48,6 +48,8 @@ def main():
             database_name=database_name, formula=formula, exact_mass=exact_mass, molecular_weight=molecular_weight
         )
 
-    output: str = args['--output']
+    output_location: str = args['--output']
+    file_name: str = args['--file']
+    file_name: str = 'entry-ids.txt' if file_name is None and output_location is not None else file_name
     entry_ids: str = '\n'.join(entry_ids)
-    u.handle_cli_output(output_path=output, output_string=entry_ids, zip_file_name=args['--zip-file'], save_type='w')
+    u.handle_cli_output(output_location=output_location, output_content=entry_ids, file_name=file_name, save_type='w')

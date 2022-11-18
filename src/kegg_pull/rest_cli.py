@@ -1,24 +1,25 @@
+# TODO: /filepath_to_zip_archive/my_zipfile.zip:/filepath
 """
 Usage:
     kegg_pull rest -h | --help
-    kegg_pull rest info <database-name> [--test] [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull rest list <database-name> [--test] [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull rest get <entry-ids> [--entry-field=<entry-field>] [--test] [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull rest find <database-name> <keywords> [--test] [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull rest find <database-name> (--formula=<formula>|--exact-mass=<exact-mass>...|--molecular-weight=<molecular-weight>...) [--test] [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull rest conv <kegg-database-name> <outside-database-name> [--test] [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull rest conv --conv-target=<target-database-name> <entry-ids> [--test] [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull rest link <target-database-name> <source-database-name> [--test] [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull rest link --link-target=<target-database-name> <entry-ids> [--test] [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull rest ddi <drug-entry-ids> [--test] [--output=<output>] [--zip-file=<zip-file>]
+    kegg_pull rest info <database-name> [--test] [--output=<output-location>] [--file=<file-name>]
+    kegg_pull rest list <database-name> [--test] [--output=<output-location>] [--file=<file-name>]
+    kegg_pull rest get <entry-ids> [--entry-field=<entry-field>] [--test] [--output=<output-location>] [--file=<file-name>]
+    kegg_pull rest find <database-name> <keywords> [--test] [--output=<output-location>] [--file=<file-name>]
+    kegg_pull rest find <database-name> (--formula=<formula>|--exact-mass=<exact-mass>...|--molecular-weight=<molecular-weight>...) [--test] [--output=<output-location>] [--file=<file-name>]
+    kegg_pull rest conv <kegg-database-name> <outside-database-name> [--test] [--output=<output-location>] [--file=<file-name>]
+    kegg_pull rest conv --conv-target=<target-database-name> <entry-ids> [--test] [--output=<output-location>] [--file=<file-name>]
+    kegg_pull rest link <target-database-name> <source-database-name> [--test] [--output=<output-location>] [--file=<file-name>]
+    kegg_pull rest link --link-target=<target-database-name> <entry-ids> [--test] [--output=<output-location>] [--file=<file-name>]
+    kegg_pull rest ddi <drug-entry-ids> [--test] [--output=<output-location>] [--file=<file-name>]
 
 Options:
     -h --help                               Show this help message.
     info                                    Executes the "info" KEGG API operation, pulling information about a KEGG database.
     <database-name>                         The name of the database to pull information about or entry IDs from.
-    --test                                  If set, test the request to ensure it works rather than sending it. Print True if the request would succeed and False if the request would fail. Ignores --output and/or --zip-file if these options are set along with --test.
-    --output=<output>                       The file to store the response body from the KEGG web API operation. Prints to the console if not set. If ends in ".zip", saves file in a zip archive.
-    --zip-file=<zip-file>                   The name of the file to store in a zip archive. If not set, defaults to saving a file with the same name as the zip archive minus the .zip extension. Ignored if --output does not end in ".zip".
+    --test                                  If set, test the request to ensure it works rather than sending it. Print True if the request would succeed and False if the request would fail. Ignores --output and --file if these options are set along with --test.
+    --output=<output-location>              The location (either a directory or ZIP archive if ends in '.zip') of the file to store the the response body from the KEGG web API operation. Prints to the console if not set.
+    --file=<file-name>                      The name of the file to store in the output location (specified by --output). If --output is set but --file is not set, defaults to file name of "kegg-rest-output".
     list                                    Executes the "list" KEGG API operation, pulling the entry IDs of the provided database.
     get                                     Executes the "get" KEGG API operation, pulling the entries of the provided entry IDs.
     <entry-ids>                             Comma separated list of entry IDs.
@@ -51,7 +52,9 @@ def main():
     args: dict = d.docopt(__doc__)
     database_name: str = args['<database-name>']
     entry_ids: str = args['<entry-ids>']
-    output: str = args['--output']
+    output_location: str = args['--output_location']
+    file_name: str = args['--file']
+    file_name: str = 'kegg-rest-output' if file_name is None and output_location is not None else file_name
     test: bool = args['--test']
     is_binary = False
     test_result: bool = None
@@ -179,7 +182,7 @@ def main():
             response_body: str = kegg_response.text_body
             save_type: str = 'w'
 
-        if output is None and is_binary:
+        if output_location is None and is_binary:
             l.warning('Printing binary response body')
 
-        u.handle_cli_output(output_path=output, output_string=response_body, zip_file_name=args['--zip-file'], save_type=save_type)
+        u.handle_cli_output(output_location=output_location, output_content=response_body, file_name=file_name, save_type=save_type)
