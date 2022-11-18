@@ -20,20 +20,19 @@ from . import rest_cli as r_cli
 
 
 def main():
-    args_provided: bool = len(sys.argv) > 1
-    first_arg: str = sys.argv[1]
+    first_arg: str = sys.argv[1] if len(sys.argv) > 1 else None
 
-    if args_provided and first_arg == 'pull':
+    if first_arg == 'pull':
         p_cli.main()
-    elif args_provided and first_arg == 'entry-ids':
+    elif first_arg == 'entry-ids':
         ei_cli.main()
-    elif args_provided and first_arg == 'link-to-dict':
+    elif first_arg == 'link-to-dict':
         ltd_cli.main()
-    elif args_provided and first_arg == 'pathway-organizer':
+    elif first_arg == 'pathway-organizer':
         po_cli.main()
-    elif args_provided and first_arg == 'rest':
+    elif first_arg == 'rest':
         r_cli.main()
-    elif args_provided and first_arg == '--full-help':
+    elif first_arg == '--full-help':
         separator = '-'*80
         print(__doc__)
         print(separator)
@@ -46,7 +45,7 @@ def main():
         print(po_cli.__doc__)
         print(separator)
         print(r_cli.__doc__)
-    elif args_provided and (first_arg == '--version' or first_arg == '-v'):
+    elif first_arg == '--version' or first_arg == '-v':
         print(__version__)
     else:
         print(__doc__)
