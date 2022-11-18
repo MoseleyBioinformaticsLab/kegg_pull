@@ -12,7 +12,6 @@ class EntryIdsGetter:
     """
     Class with methods for various ways of pulling a list of KEGG entry IDs from the KEGG REST API.
     """
-
     def __init__(self, kegg_rest: r.KEGGrest = None) -> None:
         """
         :param kegg_rest: Optional KEGGrest object for making requests to the KEGG REST API to pull entry IDs (if a KEGGrest object is not provided, a KEGGrest object is created with the default values).

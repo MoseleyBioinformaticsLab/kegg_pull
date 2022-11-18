@@ -22,7 +22,6 @@ Options:
     --molecular-weight=<molecular-weight>   Same as --exact-mass but searches based on the molecular weight.
 """
 import docopt as d
-import zipfile as zf
 
 from . import entry_ids as ei
 from . import _utils as u
@@ -51,12 +50,4 @@ def main():
 
     output: str = args['--output']
     entry_ids: str = '\n'.join(entry_ids)
-
-    if output is not None:
-        if output.endswith('.zip'):
-            u.save_to_zip_archive(zip_archive_path=output, zip_file_name=args['--zip-file'], file_content=entry_ids)
-        else:
-            with open(output, 'w') as file:
-                file.write(entry_ids)
-    else:
-        print(entry_ids)
+    u.handle_cli_output(output_path=output, output_string=entry_ids, zip_file_name=args['--zip-file'], save_type='w')

@@ -16,7 +16,7 @@ Options:
     -h --help                               Show this help message.
     info                                    Executes the "info" KEGG API operation, pulling information about a KEGG database.
     <database-name>                         The name of the database to pull information about or entry IDs from.
-    [--test]                                If set, test the request to ensure it works rather than sending it. Print True if the request would succeed and False if the request would fail. Ignores --output and/or --zip-file if these options are set along with --test.
+    --test                                  If set, test the request to ensure it works rather than sending it. Print True if the request would succeed and False if the request would fail. Ignores --output and/or --zip-file if these options are set along with --test.
     --output=<output>                       The file to store the response body from the KEGG web API operation. Prints to the console if not set. If ends in ".zip", saves file in a zip archive.
     --zip-file=<zip-file>                   The name of the file to store in a zip archive. If not set, defaults to saving a file with the same name as the zip archive minus the .zip extension. Ignored if --output does not end in ".zip".
     list                                    Executes the "list" KEGG API operation, pulling the entry IDs of the provided database.
@@ -179,14 +179,7 @@ def main():
             response_body: str = kegg_response.text_body
             save_type: str = 'w'
 
-        if output is None:
-            if is_binary:
-                l.warning('Printing binary response body')
+        if output is None and is_binary:
+            l.warning('Printing binary response body')
 
-            print(response_body)
-        else:
-            if output.endswith('.zip'):
-                u.save_to_zip_archive(zip_archive_path=output, zip_file_name=args['--zip-file'], file_content=response_body)
-            else:
-                with open(output, save_type) as file:
-                    file.write(response_body)
+        u.handle_cli_output(output_path=output, output_string=response_body, zip_file_name=args['--zip-file'], save_type=save_type)
