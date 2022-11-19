@@ -1,6 +1,7 @@
 import logging as l
 import typing as t
 import zipfile as zf
+import os
 
 
 def split_comma_separated_list(list_string: str) -> list:
@@ -52,13 +53,36 @@ def _get_range_values(range_values: t.Union[int, float, tuple], value_type: type
         )
 
 
-def save_to_zip_archive(zip_archive_path: str, zip_file_name: str, file_content: t.Union[str, bytes]) -> None:
-    if zip_file_name is None:
-        # Set the file name to the same name as the zip archive minus the .zip extension.
-        zip_file_name = zip_archive_path[:-len('.zip')]
+def handle_cli_output(output: str, output_content: t.Union[str, bytes]) -> None:
+    if output is None:
+        if type(output_content) is bytes:
+            l.warning('Printing binary output...')
 
-    with zf.ZipFile(zip_archive_path, 'a') as zip_file:
-        zip_file.writestr(zip_file_name, file_content)
+        print(output_content)
+    else:
+        if '.zip:' in output:
+            [file_location, file_name] = output.split('.zip:')
+            file_location: str = file_location + '.zip'
+        else:
+            file_location, file_name = os.path.split(output)
+            file_location = '.' if file_location == '' else file_location
+
+        save_file(file_location=file_location, file_content=output_content, file_name=file_name)
+
+
+def save_file(file_location: str, file_content: t.Union[str, bytes], file_name: str) -> None:
+        if file_location.endswith('.zip'):
+            with zf.ZipFile(file_location, 'a') as zip_file:
+                zip_file.writestr(file_name, file_content)
+        else:
+            if not os.path.isdir(file_location):
+                os.makedirs(file_location)
+
+            file_path: str = os.path.join(file_location, file_name)
+            save_type: str = 'wb' if type(file_content) is bytes else 'w'
+
+            with open(file_path, save_type) as file:
+                file.write(file_content)
 
 
 class staticproperty(staticmethod):
