@@ -1,24 +1,23 @@
 """
 Usage:
     kegg_pull rest -h | --help
-    kegg_pull rest info <database-name> [--test] [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull rest list <database-name> [--test] [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull rest get <entry-ids> [--entry-field=<entry-field>] [--test] [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull rest find <database-name> <keywords> [--test] [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull rest find <database-name> (--formula=<formula>|--exact-mass=<exact-mass>...|--molecular-weight=<molecular-weight>...) [--test] [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull rest conv <kegg-database-name> <outside-database-name> [--test] [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull rest conv --conv-target=<target-database-name> <entry-ids> [--test] [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull rest link <target-database-name> <source-database-name> [--test] [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull rest link --link-target=<target-database-name> <entry-ids> [--test] [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull rest ddi <drug-entry-ids> [--test] [--output=<output>] [--zip-file=<zip-file>]
+    kegg_pull rest info <database-name> [--test] [--output=<output>]
+    kegg_pull rest list <database-name> [--test] [--output=<output>]
+    kegg_pull rest get <entry-ids> [--entry-field=<entry-field>] [--test] [--output=<output>]
+    kegg_pull rest find <database-name> <keywords> [--test] [--output=<output>]
+    kegg_pull rest find <database-name> (--formula=<formula>|--exact-mass=<exact-mass>...|--molecular-weight=<molecular-weight>...) [--test] [--output=<output>]
+    kegg_pull rest conv <kegg-database-name> <outside-database-name> [--test] [--output=<output>]
+    kegg_pull rest conv --conv-target=<target-database-name> <entry-ids> [--test] [--output=<output>]
+    kegg_pull rest link <target-database-name> <source-database-name> [--test] [--output=<output>]
+    kegg_pull rest link --link-target=<target-database-name> <entry-ids> [--test] [--output=<output>]
+    kegg_pull rest ddi <drug-entry-ids> [--test] [--output=<output>]
 
 Options:
     -h --help                               Show this help message.
     info                                    Executes the "info" KEGG API operation, pulling information about a KEGG database.
     <database-name>                         The name of the database to pull information about or entry IDs from.
-    [--test]                                If set, test the request to ensure it works rather than sending it. Print True if the request would succeed and False if the request would fail. Ignores --output and/or --zip-file if these options are set along with --test.
-    --output=<output>                       The file to store the response body from the KEGG web API operation. Prints to the console if not set. If ends in ".zip", saves file in a zip archive.
-    --zip-file=<zip-file>                   The name of the file to store in a zip archive. If not set, defaults to saving a file with the same name as the zip archive minus the .zip extension. Ignored if --output does not end in ".zip".
+    --test                                  If set, test the request to ensure it works rather than sending it. Print True if the request would succeed and False if the request would fail. Ignores --output if this options is set along with --test.
+    --output=<output>                       Path to the file (either in a directory or ZIP archive) to store the response body from the KEGG web API operation. Prints to the console if not specified. If a ZIP archive, the file path must be in the form of /path/to/zip-archive.zip:/path/to/file (e.g. ./archive.zip:file.txt).
     list                                    Executes the "list" KEGG API operation, pulling the entry IDs of the provided database.
     get                                     Executes the "get" KEGG API operation, pulling the entries of the provided entry IDs.
     <entry-ids>                             Comma separated list of entry IDs.
@@ -40,7 +39,6 @@ Options:
     <drug-entry-ids>                        Comma separated list of drug entry IDs from the following databases: drug, ndc, or yj
 """
 import docopt as d
-import logging as l
 
 from . import kegg_url as ku
 from . import rest as r
@@ -51,7 +49,6 @@ def main():
     args: dict = d.docopt(__doc__)
     database_name: str = args['<database-name>']
     entry_ids: str = args['<entry-ids>']
-    output: str = args['--output']
     test: bool = args['--test']
     is_binary = False
     test_result: bool = None
@@ -174,19 +171,7 @@ def main():
 
         if is_binary:
             response_body: bytes = kegg_response.binary_body
-            save_type: str = 'wb'
         else:
             response_body: str = kegg_response.text_body
-            save_type: str = 'w'
 
-        if output is None:
-            if is_binary:
-                l.warning('Printing binary response body')
-
-            print(response_body)
-        else:
-            if output.endswith('.zip'):
-                u.save_to_zip_archive(zip_archive_path=output, zip_file_name=args['--zip-file'], file_content=response_body)
-            else:
-                with open(output, save_type) as file:
-                    file.write(response_body)
+        u.handle_cli_output(output=args['--output'], output_content=response_body)

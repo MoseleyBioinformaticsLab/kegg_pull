@@ -1,5 +1,6 @@
 import pytest as pt
 import os
+import shutil as sh
 import zipfile as zf
 
 import kegg_pull.entry_ids_cli as ei_cli
@@ -40,7 +41,6 @@ test_main_data = [
 def test_main_print(mocker, args: list, method: str, kwargs: dict):
     print_mock: mocker.MagicMock = mocker.patch('builtins.print')
     entry_ids_mock: list = _test_main(mocker=mocker, args=args, method=method, kwargs=kwargs)
-
     print_mock.assert_called_once_with('\n'.join(entry_ids_mock))
 
 
@@ -60,13 +60,14 @@ def _test_main(mocker, args: list, method: str, kwargs: dict) -> list:
     return entry_ids_mock
 
 
-@pt.fixture(name='output_file')
-def output_file_mock():
-    output_file = 'output-file-mock.txt'
+@pt.fixture(name='output_file', params=['dir/subdir/file.txt', 'dir/file.txt', './file.txt', 'file.txt'])
+def output_file_mock(request):
+    output_file: str = request.param
 
     yield output_file
 
     os.remove(output_file)
+    sh.rmtree('dir', ignore_errors=True)
 
 
 @pt.mark.parametrize('args,method,kwargs', test_main_data)
@@ -82,7 +83,7 @@ def test_main_file(mocker, args: list, method: str, kwargs: dict, output_file: s
     assert actual_output == expected_output
 
 
-@pt.fixture(name='zip_archive_data', params=['entry-ids.txt', None])
+@pt.fixture(name='zip_archive_data', params=['entry-ids.txt', 'directory/entry-ids.txt', '/entry-ids.txt', '/directory/entry-ids.txt'])
 def remove_zip_archive(request):
     zip_file_name: str = request.param
     zip_archive_path = 'entry-ids.zip'
@@ -95,16 +96,9 @@ def remove_zip_archive(request):
 def test_main_zip_archive(mocker, args: list, method: str, kwargs: dict, zip_archive_data: tuple):
     zip_archive_path, zip_file_name = zip_archive_data
     args: list = args.copy()
-    args.append(f'--output={zip_archive_path}')
-
-    if zip_file_name is not None:
-        args.append(f'--zip-file={zip_file_name}')
-
+    args.append(f'--output={zip_archive_path}:{zip_file_name}')
     entry_ids_mock: list = _test_main(mocker=mocker, args=args, method=method, kwargs=kwargs)
     expected_output = '\n'.join(entry_ids_mock)
-
-    if zip_file_name is None:
-        zip_file_name = 'entry-ids'
 
     with zf.ZipFile(zip_archive_path, 'r') as zip_file:
         actual_output: str = zip_file.read(zip_file_name).decode()

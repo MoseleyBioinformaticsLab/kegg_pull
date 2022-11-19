@@ -1,17 +1,16 @@
 """
 Usage:
     kegg_pull entry-ids -h | --help
-    kegg_pull entry-ids from-database <database-name> [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull entry-ids from-file <file-path> [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull entry-ids from-keywords <database-name> <keywords> [--output=<output>] [--zip-file=<zip-file>]
-    kegg_pull entry-ids from-molecular-attribute <database-name> (--formula=<formula>|--exact-mass=<exact-mass>...|--molecular-weight=<molecular-weight>...) [--output=<output>] [--zip-file=<zip-file>]
+    kegg_pull entry-ids from-database <database-name> [--output=<output>]
+    kegg_pull entry-ids from-file <file-path> [--output=<output>]
+    kegg_pull entry-ids from-keywords <database-name> <keywords> [--output=<output>]
+    kegg_pull entry-ids from-molecular-attribute <database-name> (--formula=<formula>|--exact-mass=<exact-mass>...|--molecular-weight=<molecular-weight>...) [--output=<output>]
 
 Options:
     -h --help                               Show this help message.
     from-database                           Pulls all the entry IDs within a given database.
     <database-name>                         The KEGG database from which to pull a list of entry IDs.
-    --output=<output>                       Path to the file to store the output (1 entry ID per line). Prints to the console if not specified. If ends in ".zip", saves file to a zip archive.
-    --zip-file=<zip-file>                   The name of the file to store in a zip archive. If not set, defaults to saving a file with the same name as the zip archive minus the .zip extension. Ignored if --output does not end in ".zip".
+    --output=<output>                       Path to the file (either in a directory or ZIP archive) to store the output (1 entry ID per line). Prints to the console if not specified. If a ZIP archive, the file path must be in the form of /path/to/zip-archive.zip:/path/to/file (e.g. ./archive.zip:file.txt).
     from-file                               Loads the entry IDs from a file.
     <file-path>                             Path to a file containing a list of entry IDs with one entry ID on each line.
     from-keywords                           Searches for entries within a database based on provided keywords.
@@ -22,7 +21,6 @@ Options:
     --molecular-weight=<molecular-weight>   Same as --exact-mass but searches based on the molecular weight.
 """
 import docopt as d
-import zipfile as zf
 
 from . import entry_ids as ei
 from . import _utils as u
@@ -49,14 +47,5 @@ def main():
             database_name=database_name, formula=formula, exact_mass=exact_mass, molecular_weight=molecular_weight
         )
 
-    output: str = args['--output']
     entry_ids: str = '\n'.join(entry_ids)
-
-    if output is not None:
-        if output.endswith('.zip'):
-            u.save_to_zip_archive(zip_archive_path=output, zip_file_name=args['--zip-file'], file_content=entry_ids)
-        else:
-            with open(output, 'w') as file:
-                file.write(entry_ids)
-    else:
-        print(entry_ids)
+    u.handle_cli_output(output=args['--output'], output_content=entry_ids)
