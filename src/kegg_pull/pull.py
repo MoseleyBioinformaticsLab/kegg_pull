@@ -8,7 +8,6 @@ import os
 import abc
 import typing as t
 import pickle as p
-import zipfile as zf
 import logging as l
 import json as j
 import tqdm
@@ -89,12 +88,16 @@ class SinglePull:
         self, output: str, kegg_rest: r.KEGGrest = None, entry_field: str = None, multiprocess_lock_save: bool = False
     ) -> None:
         """
-        :param output: Path to the location where entries are saved (treated like a zip file if ends in .zip, else a directory).
+        :param output: Path to the location where entries are saved (treated like a ZIP file if ends in ".zip", else a directory).
         :param kegg_rest: Optional KEGGrest object used to make the requests to the KEGG REST API (a KEGGrest object with the default settings is created if one is not provided).
         :param entry_field: Optional KEGG entry field to pull.
         :param multiprocess_lock_save: Whether to block the code that saves KEGG entries in order to be multiprocess safe. Should not be needed unless saving entries to a ZIP archive.
         """
         self._output = output
+
+        if not output.endswith('.zip') and not os.path.isdir(output):
+                os.makedirs(output)
+
         self._kegg_rest = kegg_rest if kegg_rest is not None else r.KEGGrest()
         self.entry_field = entry_field
         self._multiprocess_lock = mp.Lock() if multiprocess_lock_save else None
@@ -223,18 +226,17 @@ class SinglePull:
 
         :param entry_id: The entry ID (part of the file name).
         :param entry: The entry to save (contents of the file).
-        :param entry_field: The particular field of the entry (file extension).
+        :param entry_field: The particular field of the entry (file extension). If None, the file extension is ".txt" by default.
         """
         file_extension = 'txt' if entry_field is None else entry_field
         file_name = f'{entry_id}.{file_extension}'
-        save_type = 'wb' if type(entry) is bytes else 'w'
 
         if self._multiprocess_lock is not None:
             # Writing to a zip file is not multiprocess safe since multiple processes are writing to the same file.
             # So if another process is currently accessing the zip file, the code below is blocked.
             self._multiprocess_lock.acquire()
 
-        u.save_file(file_location=self._output, file_content=entry, file_name=file_name, save_type=save_type)
+        u.save_file(file_location=self._output, file_content=entry, file_name=file_name)
 
         if self._multiprocess_lock is not None:
             # Unblock other processes from accessing the above code.
