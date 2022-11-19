@@ -39,7 +39,8 @@ def main():
     kegg_rest = r.KEGGrest(n_tries=n_tries, time_out=time_out, sleep_time=sleep_time)
     output: str = args['--output'] if args['--output'] is not None else '.'
     entry_field: str = args['--entry-field']
-    puller = p.SinglePull(output=output, kegg_rest=kegg_rest, entry_field=entry_field)
+    multiprocess_lock_save: bool = args['--multi-process'] and output.endswith('.zip')
+    puller = p.SinglePull(output=output, kegg_rest=kegg_rest, entry_field=entry_field, multiprocess_lock_save=multiprocess_lock_save)
     database_name: str = args['--database-name']
     force_single_entry: bool = args['--force-single-entry']
 

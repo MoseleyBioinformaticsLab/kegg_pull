@@ -32,10 +32,12 @@ def test_multiprocess_locking(mocker, zip_file_path: str):
 
     get_mock: mocker.MagicMock = mocker.patch('kegg_pull.pull.r.KEGGrest.get', return_value=kegg_response_mock)
     lock_mock = mocker.MagicMock(acquire=mocker.MagicMock(), release=mocker.MagicMock())
-    single_pull = p.SinglePull(output=zip_file_path, multiprocessing_lock=lock_mock)
+    LockMock: mocker.MagicMock = mocker.patch('kegg_pull.pull.mp.Lock', return_value=lock_mock)
+    single_pull = p.SinglePull(output=zip_file_path, multiprocess_lock_save=True)
 
-    assert single_pull._entry_saver._multiprocessing_lock == lock_mock
+    assert single_pull._multiprocess_lock == lock_mock
 
+    LockMock.assert_called_once_with()
     pull_result: p.PullResult = single_pull.pull(entry_ids=entry_ids_mock)
     get_mock.assert_called_once_with(entry_ids=entry_ids_mock, entry_field=None)
     lock_mock.acquire.assert_called_once_with()
@@ -389,9 +391,6 @@ class PickleableSinglePullMock:
         setattr(single_pull_result, '_timed_out_entry_ids', ())
 
         return single_pull_result
-
-    def set_multiprocessing_lock(self):
-        return self
 
 
 def test_get_single_pull_result(mocker):
