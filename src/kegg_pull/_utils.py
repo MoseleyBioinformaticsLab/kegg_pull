@@ -2,6 +2,7 @@ import logging as l
 import typing as t
 import zipfile as zf
 import os
+import sys
 
 
 def split_comma_separated_list(list_string: str) -> list:
@@ -53,18 +54,54 @@ def _get_range_values(range_values: t.Union[int, float, tuple], value_type: type
         )
 
 
-def handle_cli_output(output: str, output_content: t.Union[str, bytes]) -> None:
-    if output is None:
+def handle_cli_input(input_source: str) -> list:
+    # TODO Use in pull_cli, rest_cli, and entry_ids_cli
+    if input_source.endswith('.txt'):
+        with open(input_source, 'r') as file:
+            lines: str = file.read()
+    elif input_source == '-':
+        lines: str = sys.stdin.read()
+    else:
+        # TODO: Remove split_comma_separated_list
+        comma_separated_strings: list = input_source.split(',')
+
+        if '' in comma_separated_strings:
+            l.warning(f'Blank items detected in the comma separated list: "{input_source}". Removing blanks...')
+            comma_separated_strings = [item for item in comma_separated_strings if item != '']
+
+        # If the items end up being an empty list
+        if not comma_separated_strings:
+            raise ValueError(f'ERROR - BAD INPUT: Empty list provided: "{input_source}"')
+
+        return comma_separated_strings
+
+    if lines == '':
+        raise ValueError(f'Input is empty')
+
+    lines: list = _split_lines(lines=lines)
+
+    return lines
+
+
+def _split_lines(lines: str) -> list:
+    lines: list = lines.strip().split('\n')
+    lines = [line.split('\t')[0].strip() for line in lines if line != '']
+
+    return lines
+
+
+def handle_cli_output(output_target: str, output_content: t.Union[str, bytes]) -> None:
+    if output_target is None:
         if type(output_content) is bytes:
             l.warning('Printing binary output...')
 
         print(output_content)
     else:
-        if '.zip:' in output:
-            [file_location, file_name] = output.split('.zip:')
+        if '.zip:' in output_target:
+            [file_location, file_name] = output_target.split('.zip:')
             file_location: str = file_location + '.zip'
         else:
-            file_location, file_name = os.path.split(output)
+            file_location, file_name = os.path.split(output_target)
             file_location = '.' if file_location == '' else file_location
 
         save_file(file_location=file_location, file_content=output_content, file_name=file_name)
