@@ -17,18 +17,19 @@ test_process_response_exception_data = [
 @pt.mark.parametrize('expected_message,status', test_process_response_exception_data)
 def test_process_response_exception(mocker, expected_message: str, status: r.KEGGresponse.Status):
     kegg_response_mock = mocker.MagicMock(kegg_url=mocker.MagicMock(url='url/mock'), status=status)
+    kegg_rest_mock = mocker.MagicMock(method=mocker.MagicMock(return_value=kegg_response_mock))
 
     with pt.raises(RuntimeError) as error:
-        ei.EntryIdsGetter._process_response(kegg_response=kegg_response_mock)
+        ei._process_response(method='method', kegg_rest=kegg_rest_mock)
 
     u.assert_expected_error_message(expected_message=expected_message, error=error)
 
 
 test_from_kegg_rest_data = [
-    (ei.EntryIdsGetter().from_database, 'list', {'database_name': 'compound'}),
-    (ei.EntryIdsGetter().from_keywords, 'keywords_find', {'database_name': 'compound', 'keywords': ['kw1', 'kw2']}),
+    (ei.from_database, 'list', {'database_name': 'compound'}),
+    (ei.from_keywords, 'keywords_find', {'database_name': 'compound', 'keywords': ['kw1', 'kw2']}),
     (
-        ei.EntryIdsGetter().from_molecular_attribute, 'molecular_find',
+        ei.from_molecular_attribute, 'molecular_find',
         {'database_name': 'compound', 'formula': 'M4O3C2K1', 'exact_mass': None, 'molecular_weight': None}
     )
 ]
@@ -49,10 +50,16 @@ def test_from_kegg_rest(mocker, get_entry_ids: t.Callable, rest_method: str, kwa
     cpd:C22514	2,3-Bis-O-(geranylfarnesyl)-sn-glycerol 1-phosphate
     '''
 
-    kegg_response_mock = mocker.MagicMock(text_body=text_body_mock, status=r.KEGGresponse.Status.SUCCESS)
-    rest_method_mock = mocker.patch(f'kegg_pull.entry_ids.r.KEGGrest.{rest_method}', return_value=kegg_response_mock)
+    rest_method_mock = mocker.MagicMock(
+        return_value=mocker.MagicMock(text_body=text_body_mock, status=r.KEGGresponse.Status.SUCCESS)
+    )
+
+    kegg_rest_mock = mocker.MagicMock()
+    kegg_rest_mock.__setattr__(rest_method, rest_method_mock)
+    KEGGrestMock = mocker.patch('kegg_pull.entry_ids.r.KEGGrest', return_value=kegg_rest_mock)
     actual_entry_ids: list = get_entry_ids(**kwargs)
     rest_method_mock.assert_called_once_with(**kwargs)
+    KEGGrestMock.assert_called_once_with()
 
     expected_entry_ids = [
         'cpd:C22501', 'cpd:C22502', 'cpd:C22500', 'cpd:C22504', 'cpd:C22506', 'cpd:C22507', 'cpd:C22509', 'cpd:C22510',
@@ -74,6 +81,7 @@ def file_mock(request):
         cpd:C22502
         cpd:C22500
         cpd:C22504
+        
         cpd:C22506
         cpd:C22507
         cpd:C22509
@@ -99,14 +107,14 @@ def test_from_file(file_info: str):
 
     if is_empty:
         with pt.raises(ValueError) as error:
-            ei.EntryIdsGetter.from_file(file_path=file_name)
+            ei.from_file(file_path=file_name)
 
         u.assert_expected_error_message(
             expected_message=f'Attempted to load entry IDs from {file_name}. But the file is empty',
             error=error
         )
     else:
-        actual_entry_ids: list = ei.EntryIdsGetter.from_file(file_path=file_name)
+        actual_entry_ids: list = ei.from_file(file_path=file_name)
 
         expected_entry_ids = [
             'cpd:C22501', 'cpd:C22502', 'cpd:C22500', 'cpd:C22504', 'cpd:C22506', 'cpd:C22507', 'cpd:C22509', 'cpd:C22510',

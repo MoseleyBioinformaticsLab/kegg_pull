@@ -174,4 +174,4 @@ def main():
         else:
             response_body: str = kegg_response.text_body
 
-        u.handle_cli_output(output=args['--output'], output_content=response_body)
+        u.handle_cli_output(output_target=args['--output'], output_content=response_body)

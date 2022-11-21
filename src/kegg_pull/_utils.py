@@ -53,18 +53,18 @@ def _get_range_values(range_values: t.Union[int, float, tuple], value_type: type
         )
 
 
-def handle_cli_output(output: str, output_content: t.Union[str, bytes]) -> None:
-    if output is None:
+def handle_cli_output(output_target: str, output_content: t.Union[str, bytes]) -> None:
+    if output_target is None:
         if type(output_content) is bytes:
             l.warning('Printing binary output...')
 
         print(output_content)
     else:
-        if '.zip:' in output:
-            [file_location, file_name] = output.split('.zip:')
+        if '.zip:' in output_target:
+            [file_location, file_name] = output_target.split('.zip:')
             file_location: str = file_location + '.zip'
         else:
-            file_location, file_name = os.path.split(output)
+            file_location, file_name = os.path.split(output_target)
             file_location = '.' if file_location == '' else file_location
 
         save_file(file_location=file_location, file_content=output_content, file_name=file_name)

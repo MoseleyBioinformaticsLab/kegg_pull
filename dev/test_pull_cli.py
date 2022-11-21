@@ -41,7 +41,7 @@ def test_main_single(mocker, _, args: list, kegg_rest_kwargs: dict, single_pull_
 
     if '--file-path=entry-ids.txt' in args:
         from_file_mock: mocker.MagicMock = mocker.patch(
-            'kegg_pull.pull_cli.ei.EntryIdsGetter.from_file', return_value=testing_entry_ids
+            'kegg_pull.pull_cli.ei.from_file', return_value=testing_entry_ids
         )
     else:
         from_file_mock = None
@@ -155,18 +155,18 @@ test_main_multiple_data = [
     )
 ]
 @pt.mark.parametrize(
-    'args,kegg_rest_kwargs,single_pull_kwargs,entry_ids_getter_method,entry_ids_getter_kwargs,multiple_pull_class,'
+    'args,kegg_rest_kwargs,single_pull_kwargs,entry_ids_method,entry_ids_kwargs,multiple_pull_class,'
     'multiple_pull_kwargs', test_main_multiple_data
 )
 def test_main_multiple(
-    mocker, _, args: list, kegg_rest_kwargs: dict, single_pull_kwargs: dict, entry_ids_getter_method: str,
-    entry_ids_getter_kwargs: dict, multiple_pull_class: str, multiple_pull_kwargs: dict
+    mocker, _, args: list, kegg_rest_kwargs: dict, single_pull_kwargs: dict, entry_ids_method: str,
+    entry_ids_kwargs: dict, multiple_pull_class: str, multiple_pull_kwargs: dict
 ):
     args = ['kegg_pull', 'pull', 'multiple'] + args
 
     def get_multiple_pull_mocks(single_pull_mock: mocker.MagicMock) -> t.Callable:
         entry_ids_getter_method_mock: mocker.MagicMock = mocker.patch(
-            f'kegg_pull.pull_cli.ei.EntryIdsGetter.{entry_ids_getter_method}', return_value=testing_entry_ids
+            f'kegg_pull.pull_cli.ei.{entry_ids_method}', return_value=testing_entry_ids
         )
 
         multiple_pull_mock = mocker.MagicMock(pull=single_pull_mock.pull)
@@ -178,7 +178,7 @@ def test_main_multiple(
         def assert_multiple_pull_mocks():
             MultiplePullMock.assert_called_once_with(single_pull=single_pull_mock, **multiple_pull_kwargs)
             multiple_pull_mock.pull.assert_called_once_with(entry_ids=testing_entry_ids)
-            entry_ids_getter_method_mock.assert_called_with(**entry_ids_getter_kwargs)
+            entry_ids_getter_method_mock.assert_called_with(**entry_ids_kwargs)
 
         return assert_multiple_pull_mocks
 
