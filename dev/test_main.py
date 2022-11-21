@@ -53,7 +53,6 @@ def print_output_fixture(request):
 
 test_main_entry_ids_data = [
     (['from-database', 'brite'], 'dev/test_data/all-brite-entry-ids.txt'),
-    (['from-file', 'dev/test_data/all-brite-entry-ids.txt'], 'dev/test_data/all-brite-entry-ids.txt'),
     (['from-keywords', 'module', 'Guanine,ribonucleotide'], 'dev/test_data/module-entry-ids.txt'),
     (['from-molecular-attribute', 'drug', '--exact-mass=420', '--exact-mass=440'], 'dev/test_data/drug-entry-ids.txt')
 ]

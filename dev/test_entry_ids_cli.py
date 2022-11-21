@@ -13,7 +13,6 @@ def test_main_help(mocker):
 
 test_main_data = [
     (['from-database', 'compound'], 'from_database', {'database_name': 'compound'}),
-    (['from-file', 'file.txt'], 'from_file', {'file_path': 'file.txt'}),
     (['from-keywords', 'pathway', 'k1,k2'], 'from_keywords', {'database_name': 'pathway', 'keywords': ['k1', 'k2']}),
     (
         ['from-molecular-attribute', 'drug', '--formula=CO2'], 'from_molecular_attribute',
@@ -51,7 +50,7 @@ def _test_main(mocker, args: list, method: str, kwargs: dict) -> list:
     entry_ids_mock = ['a', 'b']
 
     get_entry_ids_mock: mocker.MagicMock = mocker.patch(
-        f'kegg_pull.entry_ids.EntryIdsGetter.{method}', return_value=entry_ids_mock
+        f'kegg_pull.entry_ids_cli.ei.{method}', return_value=entry_ids_mock
     )
 
     ei_cli.main()

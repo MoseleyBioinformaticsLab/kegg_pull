@@ -48,11 +48,10 @@ def main():
         if database_name == 'brite':
             force_single_entry = True
 
-        entry_ids_getter = ei.EntryIdsGetter(kegg_rest=kegg_rest)
-        entry_ids: list = entry_ids_getter.from_database(database_name=database_name)
+        entry_ids: list = ei.from_database(database_name=database_name)
     elif args['--file-path'] is not None:
         file_path: str = args['--file-path']
-        entry_ids: list = ei.EntryIdsGetter.from_file(file_path=file_path)
+        entry_ids: list = ei.from_file(file_path=file_path)
     else:
         entry_ids_string: str = args['--entry-ids']
         entry_ids: list = u.split_comma_separated_list(list_string=entry_ids_string)
