@@ -146,7 +146,6 @@ Options:
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Usage:
     kegg_pull entry-ids -h | --help
     kegg_pull entry-ids from-database &lt;database-name&gt; [--output=&lt;output&gt;]
-    kegg_pull entry-ids from-file &lt;file-path&gt; [--output=&lt;output&gt;]
     kegg_pull entry-ids from-keywords &lt;database-name&gt; &lt;keywords&gt; [--output=&lt;output&gt;]
     kegg_pull entry-ids from-molecular-attribute &lt;database-name&gt; (--formula=&lt;formula&gt;|--exact-mass=&lt;exact-mass&gt;...|--molecular-weight=&lt;molecular-weight&gt;...) [--output=&lt;output&gt;]
 
@@ -155,8 +154,6 @@ Options:
     from-database                           Pulls all the entry IDs within a given database.
     &lt;database-name&gt;                         The KEGG database from which to pull a list of entry IDs.
     --output=&lt;output&gt;                       Path to the file (either in a directory or ZIP archive) to store the output (1 entry ID per line). Prints to the console if not specified. If a ZIP archive, the file path must be in the form of /path/to/zip-archive.zip:/path/to/file (e.g. ./archive.zip:file.txt).
-    from-file                               Loads the entry IDs from a file.
-    &lt;file-path&gt;                             Path to a file containing a list of entry IDs with one entry ID on each line.
     from-keywords                           Searches for entries within a database based on provided keywords.
     &lt;keywords&gt;                              Comma separated list of keywords to search within entries (e.g. --keywords=kw1,k2w,kw3 etc.).
     from-molecular-attribute                Searches a database of molecule-type KEGG entries by molecular attributes.
