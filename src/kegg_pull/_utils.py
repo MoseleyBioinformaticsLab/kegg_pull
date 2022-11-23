@@ -5,20 +5,6 @@ import os
 import sys
 
 
-def split_comma_separated_list(list_string: str) -> list:
-    items: list = list_string.split(',')
-
-    if '' in items:
-        l.warning(f'Blank items detected in the comma separated list: "{list_string}". Removing blanks...')
-        items = [item for item in items if item != '']
-
-    # If the items end up being an empty list
-    if not items:
-        raise RuntimeError(f'ERROR - BAD INPUT: Empty list provided: "{list_string}"')
-
-    return items
-
-
 def get_molecular_attribute_args(args: dict) -> tuple:
     formula: str = args['--formula']
     exact_mass: list = args['--exact-mass']
@@ -55,39 +41,22 @@ def _get_range_values(range_values: t.Union[int, float, tuple], value_type: type
 
 
 def handle_cli_input(input_source: str) -> list:
-    # TODO Use in pull_cli, rest_cli, and entry_ids_cli
-    if input_source.endswith('.txt'):
-        with open(input_source, 'r') as file:
-            lines: str = file.read()
-    elif input_source == '-':
-        lines: str = sys.stdin.read()
+    if input_source == '-':
+        # Read from standard input
+        inputs: str = sys.stdin.read()
+        inputs: list = inputs.strip().split('\n')
     else:
-        # TODO: Remove split_comma_separated_list
-        comma_separated_strings: list = input_source.split(',')
+        # Split a comma separated list
+        inputs: list = input_source.split(',')
 
-        if '' in comma_separated_strings:
-            l.warning(f'Blank items detected in the comma separated list: "{input_source}". Removing blanks...')
-            comma_separated_strings = [item for item in comma_separated_strings if item != '']
+    inputs: list = [input_string.strip() for input_string in inputs if input_string.strip() != '']
 
-        # If the items end up being an empty list
-        if not comma_separated_strings:
-            raise ValueError(f'ERROR - BAD INPUT: Empty list provided: "{input_source}"')
+    # If the inputs end up being an empty list
+    if not inputs:
+        input_source = 'standard input' if input_source == '-' else f'comma separated list: "{input_source}"'
+        raise ValueError(f'Empty list provided from {input_source}')
 
-        return comma_separated_strings
-
-    if lines == '':
-        raise ValueError(f'Input is empty')
-
-    lines: list = _split_lines(lines=lines)
-
-    return lines
-
-
-def _split_lines(lines: str) -> list:
-    lines: list = lines.strip().split('\n')
-    lines = [line.split('\t')[0].strip() for line in lines if line != '']
-
-    return lines
+    return inputs
 
 
 def handle_cli_output(output_target: str, output_content: t.Union[str, bytes]) -> None:

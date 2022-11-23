@@ -3,7 +3,6 @@ Usage:
     kegg_pull pull -h | --help
     kegg_pull pull database <database-name> [--force-single-entry] [--multi-process] [--n-workers=<n-workers>] [--output=<output>] [--entry-field=<entry-field>] [--n-tries=<n-tries>] [--time-out=<time-out>] [--sleep-time=<sleep-time>] [--ut=<unsuccessful-threshold>]
     kegg_pull pull entry-ids <entry-ids> [--force-single-entry] [--multi-process] [--n-workers=<n-workers>] [--output=<output>] [--entry-field=<entry-field>] [--n-tries=<n-tries>] [--time-out=<time-out>] [--sleep-time=<sleep-time>] [--ut=<unsuccessful-threshold>]
-    kegg_pull pull file <entry-ids-file-path> [--force-single-entry] [--multi-process] [--n-workers=<n-workers>] [--output=<output>] [--entry-field=<entry-field>] [--n-tries=<n-tries>] [--time-out=<time-out>] [--sleep-time=<sleep-time>] [--ut=<unsuccessful-threshold>]
 
 Options:
     -h --help                       Show this help message.
@@ -18,10 +17,8 @@ Options:
     --time-out=<time-out>           The number of seconds to wait for a KEGG request before marking it as timed out. Defaults to 60.
     --sleep-time=<sleep-time>       The amount of time to wait after a KEGG request times out (or potentially blacklists with a 403 error code) before attempting it again. Defaults to 5.0.
     --ut=<unsuccessful-threshold>   If set, the ratio of unsuccessful entry IDs (failed or timed out) to total entry IDs at which kegg_pull quits. Valid values are between 0.0 and 1.0 non-inclusive.
-    entry-ids                       Pulls entries specified by a comma separated list of entry IDs. Will likely need to set --force-single-entry if any of the entries are from the brite database.
-    <entry-ids>                     Comma separated list of entry IDs to pull (e.g. id1,id2,id3 etc.).
-    file                            Pulls the entries of IDs in a file or from standard input. Will likely need to set --force-single-entry if any of the entries are from the brite database.
-    <entry-ids-file-path>           Path to a file containing a list of entry IDs to pull, with one entry ID on each line. If equal to '-', will read entry IDs from standard input.
+    entry-ids                       Pulls entries specified by a comma separated list. Or from standard input: one entry ID per line; Press CTRL+D to finalize input or pipe (e.g. cat file.txt | kegg_pull pull entry-ids - ...).
+    <entry-ids>                     Comma separated list of entry IDs to pull (e.g. id1,id2,id3 etc.). Or if equal to "-", entry IDs are read from standard input. Will likely need to set --force-single-entry if any of the entries are from the brite database.
 """
 import docopt as d
 import json as j
@@ -51,19 +48,9 @@ def main():
         if database_name == 'brite':
             force_single_entry = True
 
-        entry_ids_getter = ei.EntryIdsGetter(kegg_rest=kegg_rest)
-        entry_ids: list = entry_ids_getter.from_database(database_name=database_name)
-    elif args['entry-ids']:
-        entry_ids_string: str = args['<entry-ids>']
-        entry_ids: list = u.split_comma_separated_list(list_string=entry_ids_string)
+        entry_ids: list = ei.from_database(database_name=database_name)
     else:
-        file_path: str = args['<entry-ids-file-path>']
-
-        if file_path == '-':
-            # TODO Read entry IDs from standard input
-            pass
-
-        entry_ids: list = ei.EntryIdsGetter.from_file(file_path=file_path)
+        entry_ids: list = u.handle_cli_input(input_source=args['<entry-ids>'])
 
     unsuccessful_threshold: float = float(args['--ut']) if args['--ut'] is not None else None
 
@@ -79,9 +66,9 @@ def main():
             single_pull=single_pull, force_single_entry=force_single_entry, unsuccessful_threshold=unsuccessful_threshold
         )
 
-    t1: float = _testable_time()
+    time1: float = _testable_time()
     pull_result: p.PullResult = multiple_pull.pull(entry_ids=entry_ids)
-    t2: float = _testable_time()
+    time2: float = _testable_time()
 
     n_total_entry_ids: int = len(pull_result.successful_entry_ids) + len(pull_result.failed_entry_ids)
     n_total_entry_ids += len(pull_result.timed_out_entry_ids)
@@ -89,7 +76,7 @@ def main():
 
     pull_results = {
         'percent-success': float(f'{percent_success:.2f}'),
-        'pull-minutes': float(f'{(t2 - t1) / 60:.2f}'),
+        'pull-minutes': float(f'{(time2 - time1) / 60:.2f}'),
         'num-successful': len(pull_result.successful_entry_ids),
         'num-failed': len(pull_result.failed_entry_ids),
         'num-timed-out': len(pull_result.timed_out_entry_ids),
