@@ -52,10 +52,9 @@ def print_output_fixture(request):
 
 
 test_main_entry_ids_data = [
-    (['from-database', 'brite'], 'dev/test_data/all-brite-entry-ids.txt'),
-    (['from-file', 'dev/test_data/all-brite-entry-ids.txt'], 'dev/test_data/all-brite-entry-ids.txt'),
-    (['from-keywords', 'module', 'Guanine,ribonucleotide'], 'dev/test_data/module-entry-ids.txt'),
-    (['from-molecular-attribute', 'drug', '--exact-mass=420', '--exact-mass=440'], 'dev/test_data/drug-entry-ids.txt')
+    (['database', 'brite'], 'dev/test_data/all-brite-entry-ids.txt'),
+    (['keywords', 'module', 'Guanine,ribonucleotide'], 'dev/test_data/module-entry-ids.txt'),
+    (['molecular-attribute', 'drug', '--em=420', '--em=440'], 'dev/test_data/drug-entry-ids.txt')
 ]
 @pt.mark.parametrize('args,expected_output', test_main_entry_ids_data)
 def test_main_entry_ids(mocker, args: list, expected_output: str, print_output: bool):
@@ -114,11 +113,21 @@ def pull_output(request):
 
 
 test_main_pull_data = [
-    ['--file-path=dev/test_data/brite-entry-ids.txt', '--force-single-entry', '--multi-process', '--n-workers=2'],
-    ['--file-path=dev/test_data/brite-entry-ids.txt', '--force-single-entry']
+    ['--force-single-entry', '--multi-process', '--n-workers=2'],
+    ['--force-single-entry']
 ]
 @pt.mark.parametrize('args', test_main_pull_data)
 def test_main_pull(mocker, args: list, output: str):
+    stdin_mock = """
+        br:br08005
+        br:br08902
+        
+        br:br03220
+        br:br03222
+    """
+
+    stdin_mock: mocker.MagicMock = mocker.patch('kegg_pull._utils.sys.stdin.read', return_value=stdin_mock)
+
     successful_entry_ids = [
         'br:br08005',
         'br:br08902'
@@ -136,10 +145,11 @@ def test_main_pull(mocker, args: list, output: str):
         'pull-minutes': 1.0
     }
 
-    args: list = ['kegg_pull', 'pull', 'multiple'] + args + [f'--output={output}']
+    args: list = ['kegg_pull', 'pull', 'entry-ids', '-'] + args + [f'--output={output}']
     mocker.patch('sys.argv', args)
     time_mock: mocker.MagicMock = mocker.patch('kegg_pull.pull_cli._testable_time', side_effect=[30, 90])
     m.main()
+    stdin_mock.assert_called_once_with()
 
     assert time_mock.call_count == 2
 
