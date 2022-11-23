@@ -5,7 +5,7 @@ Usage:
     kegg_pull rest list <database-name> [--test] [--output=<output>]
     kegg_pull rest get <entry-ids> [--entry-field=<entry-field>] [--test] [--output=<output>]
     kegg_pull rest find <database-name> <keywords> [--test] [--output=<output>]
-    kegg_pull rest find <database-name> (--formula=<formula>|--exact-mass=<exact-mass>...|--molecular-weight=<molecular-weight>...) [--test] [--output=<output>]
+    kegg_pull rest find <database-name> (--formula=<formula>|--em=<exact-mass>...|--mw=<molecular-weight>...) [--test] [--output=<output>]
     kegg_pull rest conv <kegg-database-name> <outside-database-name> [--test] [--output=<output>]
     kegg_pull rest conv --conv-target=<target-database-name> <entry-ids> [--test] [--output=<output>]
     kegg_pull rest link <target-database-name> <source-database-name> [--test] [--output=<output>]
@@ -25,8 +25,8 @@ Options:
     find                                    Executes the "find" KEGG API operation, finding entry IDs based on provided queries.
     <keywords>                              Comma separated list of keywords to search entries with (e.g. kw1,kw2,kw3 etc.). Or if equal to "-", keywords are read from standard input, one keyword per line; Press CTRL+D to finalize input or pipe (e.g. cat file.txt | kegg_pull rest find brite - ...).
     --formula=<formula>                     Sequence of atoms in a chemical formula format to search for (e.g. "O5C7" searchers for molecule entries containing 5 oxygen atoms and/or 7 carbon atoms).
-    --exact-mass=<exact-mass>               Either a single number (e.g. --exact-mass=155.5) or two numbers (e.g. --exact-mass=155.5 --exact-mass=244.4). If a single number, searches for molecule entries with an exact mass equal to that value rounded by the last decimal point. If two numbers, searches for molecule entries with an exact mass within the two values (a range).
-    --molecular-weight=<molecular-weight>   Same as --exact-mass but searches based on the molecular weight.
+    --em=<exact-mass>                       Either a single number (e.g. --em=155.5) or two numbers (e.g. --em=155.5 --em=244.4). If a single number, searches for molecule entries with an exact mass equal to that value rounded by the last decimal point. If two numbers, searches for molecule entries with an exact mass within the two values (a range).
+    --mw=<molecular-weight>                 Same as --em but searches based on the molecular weight.
     conv                                    Executes the "conv" KEGG API operation, converting entry IDs from an outside database to those of a KEGG database and vice versa.
     <kegg-database-name>                    The name of the KEGG database from which to view equivalent outside database entry IDs.
     <outside-database-name>                 The name of the non-KEGG database from which to view equivalent KEGG database entry IDs.

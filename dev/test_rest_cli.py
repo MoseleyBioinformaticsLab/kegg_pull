@@ -36,9 +36,9 @@ def test_main_exception(mocker, expected_message: str, status):
 
 test_main_args = [
     ['info', 'ligand'], ['list', 'module'], ['get', 'x,y,z'], ['get', ',,,a', '--entry-field=image'],
-    ['find', 'pathway', 'a,b,c,,,'], ['find', 'drug', '--formula=CO2'], ['find', 'drug', '--exact-mass=20.2'],
-    ['find', 'drug', '--molecular-weight=202'], ['find', 'drug', '--exact-mass=20.2', '--exact-mass=30.3'],
-    ['find', 'drug', '--molecular-weight=202', '--molecular-weight=303'], ['conv', 'kegg-db', 'out-db'],
+    ['find', 'pathway', 'a,b,c,,,'], ['find', 'drug', '--formula=CO2'], ['find', 'drug', '--em=20.2'],
+    ['find', 'drug', '--mw=202'], ['find', 'drug', '--em=20.2', '--em=30.3'],
+    ['find', 'drug', '--mw=202', '--mw=303'], ['conv', 'kegg-db', 'out-db'],
     ['conv', '--conv-target=genes', 'eid1,eid2'], ['link', 'target-db', 'source-db'],
     ['link', '--link-target=target-db', ',x,,,y'], ['ddi', 'de1,de2,de3'], ['get', '-'], ['find', 'pathway', '-'],
     ['conv', '--conv-target=genes', '-'], ['link', '--link-target=target-db', '-'], ['ddi', '-']

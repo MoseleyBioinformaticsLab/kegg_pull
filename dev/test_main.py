@@ -52,9 +52,9 @@ def print_output_fixture(request):
 
 
 test_main_entry_ids_data = [
-    (['from-database', 'brite'], 'dev/test_data/all-brite-entry-ids.txt'),
-    (['from-keywords', 'module', 'Guanine,ribonucleotide'], 'dev/test_data/module-entry-ids.txt'),
-    (['from-molecular-attribute', 'drug', '--exact-mass=420', '--exact-mass=440'], 'dev/test_data/drug-entry-ids.txt')
+    (['database', 'brite'], 'dev/test_data/all-brite-entry-ids.txt'),
+    (['keywords', 'module', 'Guanine,ribonucleotide'], 'dev/test_data/module-entry-ids.txt'),
+    (['molecular-attribute', 'drug', '--em=420', '--em=440'], 'dev/test_data/drug-entry-ids.txt')
 ]
 @pt.mark.parametrize('args,expected_output', test_main_entry_ids_data)
 def test_main_entry_ids(mocker, args: list, expected_output: str, print_output: bool):

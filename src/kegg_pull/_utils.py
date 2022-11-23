@@ -7,8 +7,8 @@ import sys
 
 def get_molecular_attribute_args(args: dict) -> tuple:
     formula: str = args['--formula']
-    exact_mass: list = args['--exact-mass']
-    molecular_weight: list = args['--molecular-weight']
+    exact_mass: list = args['--em']
+    molecular_weight: list = args['--mw']
 
     # exact_mass and molecular_weight will be [] (empty list) if not specified in the commandline args
     if exact_mass:

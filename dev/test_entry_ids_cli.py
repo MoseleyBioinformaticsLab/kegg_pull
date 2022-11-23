@@ -11,30 +11,30 @@ def test_main_help(mocker):
     u.assert_main_help(mocker=mocker, module=ei_cli, subcommand='entry-ids')
 
 test_main_data = [
-    (['from-database', 'compound'], 'from_database', {'database_name': 'compound'}, None),
-    (['from-keywords', 'pathway', 'k1,,k2'], 'from_keywords', {'database_name': 'pathway', 'keywords': ['k1', 'k2']}, None),
+    (['database', 'compound'], 'from_database', {'database_name': 'compound'}, None),
+    (['keywords', 'pathway', 'k1,,k2'], 'from_keywords', {'database_name': 'pathway', 'keywords': ['k1', 'k2']}, None),
     (
-        ['from-molecular-attribute', 'drug', '--formula=CO2'], 'from_molecular_attribute',
+        ['molecular-attribute', 'drug', '--formula=CO2'], 'from_molecular_attribute',
         {'database_name': 'drug', 'formula': 'CO2', 'exact_mass': None, 'molecular_weight': None}, None
     ),
     (
-        ['from-molecular-attribute', 'drug', '--exact-mass=20.2'], 'from_molecular_attribute',
+        ['molecular-attribute', 'drug', '--em=20.2'], 'from_molecular_attribute',
         {'database_name': 'drug', 'formula': None, 'exact_mass': 20.2, 'molecular_weight': None}, None
     ),
     (
-        ['from-molecular-attribute', 'drug', '--molecular-weight=202'], 'from_molecular_attribute',
+        ['molecular-attribute', 'drug', '--mw=202'], 'from_molecular_attribute',
         {'database_name': 'drug', 'formula': None, 'exact_mass': None, 'molecular_weight': 202}, None
     ),
     (
-        ['from-molecular-attribute', 'drug', '--exact-mass=20.2', '--exact-mass=30.3'], 'from_molecular_attribute',
+        ['molecular-attribute', 'drug', '--em=20.2', '--em=30.3'], 'from_molecular_attribute',
         {'database_name': 'drug', 'formula': None, 'exact_mass': (20.2, 30.3), 'molecular_weight': None}, None
     ),
     (
-        ['from-molecular-attribute', 'drug', '--molecular-weight=202', '--molecular-weight=303'],
+        ['molecular-attribute', 'drug', '--mw=202', '--mw=303'],
         'from_molecular_attribute',
         {'database_name': 'drug', 'formula': None, 'exact_mass': None, 'molecular_weight': (202, 303)}, None
     ),
-    (['from-keywords', 'pathway', '-'], 'from_keywords', {'database_name': 'pathway', 'keywords': ['k1', 'k2']}, 'k1\nk2')
+    (['keywords', 'pathway', '-'], 'from_keywords', {'database_name': 'pathway', 'keywords': ['k1', 'k2']}, 'k1\nk2')
 ]
 @pt.mark.parametrize('args,method,kwargs,stdin_mock', test_main_data)
 def test_main_print(mocker, args: list, method: str, kwargs: dict, stdin_mock: str):
