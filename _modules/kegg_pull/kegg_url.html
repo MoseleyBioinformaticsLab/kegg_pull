@@ -90,6 +90,7 @@
 
 <div class="viewcode-block" id="AbstractKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.AbstractKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">AbstractKEGGurl</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Abstract class which validates and constructs URLs for accessing the KEGG REST API and contains the base data and functionality for all KEGG URL classes.&quot;&quot;&quot;</span>
+    <span class="n">_URL_LENGTH_LIMIT</span> <span class="o">=</span> <span class="mi">4000</span>
 
     <span class="n">_valid_kegg_databases</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;pathway&#39;</span><span class="p">,</span> <span class="s1">&#39;brite&#39;</span><span class="p">,</span> <span class="s1">&#39;module&#39;</span><span class="p">,</span> <span class="s1">&#39;ko&#39;</span><span class="p">,</span> <span class="s1">&#39;genome&#39;</span><span class="p">,</span> <span class="s1">&#39;vg&#39;</span><span class="p">,</span> <span class="s1">&#39;vp&#39;</span><span class="p">,</span> <span class="s1">&#39;ag&#39;</span><span class="p">,</span> <span class="s1">&#39;compound&#39;</span><span class="p">,</span> <span class="s1">&#39;glycan&#39;</span><span class="p">,</span> <span class="s1">&#39;reaction&#39;</span><span class="p">,</span> <span class="s1">&#39;rclass&#39;</span><span class="p">,</span>
@@ -112,6 +113,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="n">url_options</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_rest_options</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_url</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">rest_operation</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">url_options</span><span class="si">}</span><span class="s1">&#39;</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_url</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">AbstractKEGGurl</span><span class="o">.</span><span class="n">_URL_LENGTH_LIMIT</span><span class="p">:</span>
+           <span class="n">AbstractKEGGurl</span><span class="o">.</span><span class="n">_raise_error</span><span class="p">(</span>
+               <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;The KEGG URL length of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_url</span><span class="p">)</span><span class="si">}</span><span class="s1"> exceeds the limit of </span><span class="si">{</span><span class="n">AbstractKEGGurl</span><span class="o">.</span><span class="n">_URL_LENGTH_LIMIT</span><span class="si">}</span><span class="s1">&#39;</span>
+           <span class="p">)</span>
 
     <span class="c1"># noinspection PyMethodParameters</span>
     <span class="nd">@u</span><span class="o">.</span><span class="n">staticproperty</span>

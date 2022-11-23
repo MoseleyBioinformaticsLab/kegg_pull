@@ -118,25 +118,24 @@
 <p><strong>timed-out-entry-ids:</strong> The IDs of the timed out entries.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Usage:
     kegg_pull pull -h | --help
-    kegg_pull pull multiple (--database-name=&lt;database-name&gt;|--file-path=&lt;file-path&gt;) [--force-single-entry] [--multi-process] [--n-workers=&lt;n-workers&gt;] [--output=&lt;output&gt;] [--entry-field=&lt;entry-field&gt;] [--n-tries=&lt;n-tries&gt;] [--time-out=&lt;time-out&gt;] [--sleep-time=&lt;sleep-time&gt;] [--ut=&lt;unsuccessful-threshold&gt;]
-    kegg_pull pull single (--entry-ids=&lt;entry-ids&gt;|--file-path=&lt;file-path&gt;) [--output=&lt;output&gt;] [--entry-field=&lt;entry-field&gt;] [--n-tries=&lt;n-tries&gt;] [--time-out=&lt;time-out&gt;] [--sleep-time=&lt;sleep-time&gt;]
+    kegg_pull pull database &lt;database-name&gt; [--force-single-entry] [--multi-process] [--n-workers=&lt;n-workers&gt;] [--output=&lt;output&gt;] [--entry-field=&lt;entry-field&gt;] [--n-tries=&lt;n-tries&gt;] [--time-out=&lt;time-out&gt;] [--sleep-time=&lt;sleep-time&gt;] [--ut=&lt;unsuccessful-threshold&gt;]
+    kegg_pull pull entry-ids &lt;entry-ids&gt; [--force-single-entry] [--multi-process] [--n-workers=&lt;n-workers&gt;] [--output=&lt;output&gt;] [--entry-field=&lt;entry-field&gt;] [--n-tries=&lt;n-tries&gt;] [--time-out=&lt;time-out&gt;] [--sleep-time=&lt;sleep-time&gt;] [--ut=&lt;unsuccessful-threshold&gt;]
 
 Options:
-    -h --help                           Show this help message.
-    multiple                            Pull, separate, and store as many entries as requested via multiple automated requests to the KEGG web API. Useful when the number of entries requested is well above the maximum that KEGG allows for a single request.
-    --database-name=&lt;database-name&gt;     The KEGG database from which to pull a list of IDs of entries to then pull.
-    --file-path=&lt;file-path&gt;             Path to a file containing a list of entry IDs to pull, with one entry ID on each line. Will likely need to set --force-single-entry if any of the entries are from the brite database.
-    --force-single-entry                Forces pulling only one entry at a time for every request to the KEGG web API. This flag is automatically set if --database-name is &quot;brite&quot;.
-    --multi-process                     If set, the entries are pulled across multiple processes to increase speed. Otherwise, the entries are pulled sequentially in a single process.
-    --n-workers=&lt;n-workers&gt;             The number of sub-processes to create when pulling. Defaults to the number of cores available. Ignored if --multi-process is not set.
-    --output=&lt;output&gt;                   The directory where the pulled KEGG entries will be stored. Defaults to the current working directory. If ends in .zip, entries are saved to a zip archive instead of a directory.
-    --entry-field=&lt;entry-field&gt;         Optional field to extract from the entries pulled rather than the standard flat file format (or &quot;htext&quot; in the case of brite entries).
-    --n-tries=&lt;n-tries&gt;                 The number of times to attempt a KEGG request before marking it as timed out or failed. Defaults to 3.
-    --time-out=&lt;time-out&gt;               The number of seconds to wait for a KEGG request before marking it as timed out. Defaults to 60.
-    --sleep-time=&lt;sleep-time&gt;           The amount of time to wait after a KEGG request times out (or potentially blacklists with a 403 error code) before attempting it again. Defaults to 5.0.
-    --ut=&lt;unsuccessful-threshold&gt;       If set, the ratio of unsuccessful entry IDs (failed or timed out) to total entry IDs at which kegg_pull quits. Valid values are between 0.0 and 1.0 non-inclusive.
-    single                              Pull, separate, and store one or more KEGG entries via a single request to the KEGG web API. Useful when the number of entries requested is less than or equal to the maximum that KEGG allows for a single request.
-    --entry-ids=&lt;entry-ids&gt;             Comma separated list of entry IDs to pull in a single request (e.g. --entry-ids=id1,id2,id3 etc.).
+    -h --help                       Show this help message.
+    database                        Pulls all the entries in a KEGG database.
+    &lt;database-name&gt;                 The KEGG database from which to pull entries.
+    --force-single-entry            Forces pulling only one entry at a time for every request to the KEGG web API. This flag is automatically set if &lt;database-name&gt; is &quot;brite&quot;.
+    --multi-process                 If set, the entries are pulled across multiple processes to increase speed. Otherwise, the entries are pulled sequentially in a single process.
+    --n-workers=&lt;n-workers&gt;         The number of sub-processes to create when pulling. Defaults to the number of cores available. Ignored if --multi-process is not set.
+    --output=&lt;output&gt;               The directory where the pulled KEGG entries will be stored. Defaults to the current working directory. If ends in &quot;.zip&quot;, entries are saved to a ZIP archive instead of a directory.
+    --entry-field=&lt;entry-field&gt;     Optional field to extract from the entries pulled rather than the standard flat file format (or &quot;htext&quot; in the case of brite entries).
+    --n-tries=&lt;n-tries&gt;             The number of times to attempt a KEGG request before marking it as timed out or failed. Defaults to 3.
+    --time-out=&lt;time-out&gt;           The number of seconds to wait for a KEGG request before marking it as timed out. Defaults to 60.
+    --sleep-time=&lt;sleep-time&gt;       The amount of time to wait after a KEGG request times out (or potentially blacklists with a 403 error code) before attempting it again. Defaults to 5.0.
+    --ut=&lt;unsuccessful-threshold&gt;   If set, the ratio of unsuccessful entry IDs (failed or timed out) to total entry IDs at which kegg_pull quits. Valid values are between 0.0 and 1.0 non-inclusive.
+    entry-ids                       Pulls entries specified by a comma separated list. Or from standard input: one entry ID per line; Press CTRL+D to finalize input or pipe (e.g. cat file.txt | kegg_pull pull entry-ids - ...).
+    &lt;entry-ids&gt;                     Comma separated list of entry IDs to pull (e.g. id1,id2,id3 etc.). Or if equal to &quot;-&quot;, entry IDs are read from standard input. Will likely need to set --force-single-entry if any of the entries are from the brite database.
 </pre></div>
 </div>
 </div>
@@ -145,21 +144,21 @@ Options:
 <p>Functionality for getting lists of KEGG entry IDs from the KEGG REST API.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Usage:
     kegg_pull entry-ids -h | --help
-    kegg_pull entry-ids from-database &lt;database-name&gt; [--output=&lt;output&gt;]
-    kegg_pull entry-ids from-keywords &lt;database-name&gt; &lt;keywords&gt; [--output=&lt;output&gt;]
-    kegg_pull entry-ids from-molecular-attribute &lt;database-name&gt; (--formula=&lt;formula&gt;|--exact-mass=&lt;exact-mass&gt;...|--molecular-weight=&lt;molecular-weight&gt;...) [--output=&lt;output&gt;]
+    kegg_pull entry-ids database &lt;database-name&gt; [--output=&lt;output&gt;]
+    kegg_pull entry-ids keywords &lt;database-name&gt; &lt;keywords&gt; [--output=&lt;output&gt;]
+    kegg_pull entry-ids molecular-attribute &lt;database-name&gt; (--formula=&lt;formula&gt;|--em=&lt;exact-mass&gt;...|--mw=&lt;molecular-weight&gt;...) [--output=&lt;output&gt;]
 
 Options:
-    -h --help                               Show this help message.
-    from-database                           Pulls all the entry IDs within a given database.
-    &lt;database-name&gt;                         The KEGG database from which to pull a list of entry IDs.
-    --output=&lt;output&gt;                       Path to the file (either in a directory or ZIP archive) to store the output (1 entry ID per line). Prints to the console if not specified. If a ZIP archive, the file path must be in the form of /path/to/zip-archive.zip:/path/to/file (e.g. ./archive.zip:file.txt).
-    from-keywords                           Searches for entries within a database based on provided keywords.
-    &lt;keywords&gt;                              Comma separated list of keywords to search within entries (e.g. --keywords=kw1,k2w,kw3 etc.).
-    from-molecular-attribute                Searches a database of molecule-type KEGG entries by molecular attributes.
-    --formula=&lt;formula&gt;                     Sequence of atoms in a chemical formula format to search for (e.g. &quot;O5C7&quot; searchers for molecule entries containing 5 oxygen atoms and/or 7 carbon atoms).
-    --exact-mass=&lt;exact-mass&gt;               Either a single number (e.g. --exact-mass=155.5) or two numbers (e.g. --exact-mass=155.5 --exact-mass=244.4). If a single number, searches for molecule entries with an exact mass equal to that value rounded by the last decimal point. If two numbers, searches for molecule entries with an exact mass within the two values (a range).
-    --molecular-weight=&lt;molecular-weight&gt;   Same as --exact-mass but searches based on the molecular weight.
+    -h --help               Show this help message.
+    database                Pulls all the entry IDs within a given database.
+    &lt;database-name&gt;         The KEGG database from which to pull a list of entry IDs.
+    --output=&lt;output&gt;       Path to the file (either in a directory or ZIP archive) to store the output (1 entry ID per line). Prints to the console if not specified. If a ZIP archive, the file path must be in the form of /path/to/zip-archive.zip:/path/to/file (e.g. ./archive.zip:file.txt).
+    keywords                Searches for entries within a database based on provided keywords.
+    &lt;keywords&gt;              Comma separated list of keywords to search entries with (e.g. kw1,kw2,kw3 etc.). Or if equal to &quot;-&quot;, keywords are read from standard input, one keyword per line; Press CTRL+D to finalize input or pipe (e.g. cat file.txt | kegg_pull rest find brite - ...).
+    molecular-attribute     Searches a database of molecule-type KEGG entries by molecular attributes.
+    --formula=&lt;formula&gt;     Sequence of atoms in a chemical formula format to search for (e.g. &quot;O5C7&quot; searchers for molecule entries containing 5 oxygen atoms and/or 7 carbon atoms).
+    --em=&lt;exact-mass&gt;       Either a single number (e.g. &quot;--em=155.5&quot;) or two numbers (e.g. &quot;--em=155.5 --em=244.4&quot;). If a single number, searches for molecule entries with an exact mass equal to that value rounded by the last decimal point. If two numbers, searches for molecule entries with an exact mass within the two values (a range).
+    --mw=&lt;molecular-weight&gt; Same as &quot;--em=&lt;exact-mass&gt;&quot; but searches based on the molecular weight.
 </pre></div>
 </div>
 </div>
@@ -172,7 +171,7 @@ Options:
     kegg_pull rest list &lt;database-name&gt; [--test] [--output=&lt;output&gt;]
     kegg_pull rest get &lt;entry-ids&gt; [--entry-field=&lt;entry-field&gt;] [--test] [--output=&lt;output&gt;]
     kegg_pull rest find &lt;database-name&gt; &lt;keywords&gt; [--test] [--output=&lt;output&gt;]
-    kegg_pull rest find &lt;database-name&gt; (--formula=&lt;formula&gt;|--exact-mass=&lt;exact-mass&gt;...|--molecular-weight=&lt;molecular-weight&gt;...) [--test] [--output=&lt;output&gt;]
+    kegg_pull rest find &lt;database-name&gt; (--formula=&lt;formula&gt;|--em=&lt;exact-mass&gt;...|--mw=&lt;molecular-weight&gt;...) [--test] [--output=&lt;output&gt;]
     kegg_pull rest conv &lt;kegg-database-name&gt; &lt;outside-database-name&gt; [--test] [--output=&lt;output&gt;]
     kegg_pull rest conv --conv-target=&lt;target-database-name&gt; &lt;entry-ids&gt; [--test] [--output=&lt;output&gt;]
     kegg_pull rest link &lt;target-database-name&gt; &lt;source-database-name&gt; [--test] [--output=&lt;output&gt;]
@@ -187,13 +186,13 @@ Options:
     --output=&lt;output&gt;                       Path to the file (either in a directory or ZIP archive) to store the response body from the KEGG web API operation. Prints to the console if not specified. If a ZIP archive, the file path must be in the form of /path/to/zip-archive.zip:/path/to/file (e.g. ./archive.zip:file.txt).
     list                                    Executes the &quot;list&quot; KEGG API operation, pulling the entry IDs of the provided database.
     get                                     Executes the &quot;get&quot; KEGG API operation, pulling the entries of the provided entry IDs.
-    &lt;entry-ids&gt;                             Comma separated list of entry IDs.
+    &lt;entry-ids&gt;                             Comma separated list of entry IDs (e.g. id1,id2,id3 etc.). Or if equal to &quot;-&quot;, entry IDs are read from standard input, one entry ID per line; Press CTRL+D to finalize input or pipe (e.g. cat file.txt | kegg_pull rest get - ...).
     --entry-field=&lt;entry-field&gt;             Optional field to extract from an entry instead of the default entry info (i.e. flat file or htext in the case of brite entries).
     find                                    Executes the &quot;find&quot; KEGG API operation, finding entry IDs based on provided queries.
-    &lt;keywords&gt;                              Comma separated list of keywords to search entries with.
+    &lt;keywords&gt;                              Comma separated list of keywords to search entries with (e.g. kw1,kw2,kw3 etc.). Or if equal to &quot;-&quot;, keywords are read from standard input, one keyword per line; Press CTRL+D to finalize input or pipe (e.g. cat file.txt | kegg_pull rest find brite - ...).
     --formula=&lt;formula&gt;                     Sequence of atoms in a chemical formula format to search for (e.g. &quot;O5C7&quot; searchers for molecule entries containing 5 oxygen atoms and/or 7 carbon atoms).
-    --exact-mass=&lt;exact-mass&gt;               Either a single number (e.g. --exact-mass=155.5) or two numbers (e.g. --exact-mass=155.5 --exact-mass=244.4). If a single number, searches for molecule entries with an exact mass equal to that value rounded by the last decimal point. If two numbers, searches for molecule entries with an exact mass within the two values (a range).
-    --molecular-weight=&lt;molecular-weight&gt;   Same as --exact-mass but searches based on the molecular weight.
+    --em=&lt;exact-mass&gt;                       Either a single number (e.g. --em=155.5) or two numbers (e.g. --em=155.5 --em=244.4). If a single number, searches for molecule entries with an exact mass equal to that value rounded by the last decimal point. If two numbers, searches for molecule entries with an exact mass within the two values (a range).
+    --mw=&lt;molecular-weight&gt;                 Same as --em but searches based on the molecular weight.
     conv                                    Executes the &quot;conv&quot; KEGG API operation, converting entry IDs from an outside database to those of a KEGG database and vice versa.
     &lt;kegg-database-name&gt;                    The name of the KEGG database from which to view equivalent outside database entry IDs.
     &lt;outside-database-name&gt;                 The name of the non-KEGG database from which to view equivalent KEGG database entry IDs.
@@ -203,7 +202,7 @@ Options:
     &lt;source-database-name&gt;                  The name of the database from which cross-references are found in the target database.
     --link-target-&lt;target-database-name&gt;    The name of the database to find cross-references in the provided entry IDs.
     ddi                                     Executes the &quot;ddi&quot; KEGG API operation, searching for drug to drug interactions. Providing one entry ID reports all known interactions, while providing multiple checks if any drug pair in a given set of drugs is CI or P. If providing multiple, all entries must belong to the same database.
-    &lt;drug-entry-ids&gt;                        Comma separated list of drug entry IDs from the following databases: drug, ndc, or yj
+    &lt;drug-entry-ids&gt;                        Comma separated list of drug entry IDs from the following databases: drug, ndc, or yj (e.g. id1,id2,id3 etc.). Or if equal to &quot;-&quot;, entry IDs are read from standard input, one entry ID per line; Press CTRL+D to finalize input or pipe (e.g. cat file.txt | kegg_pull rest ddi - ...).
 </pre></div>
 </div>
 </div>
