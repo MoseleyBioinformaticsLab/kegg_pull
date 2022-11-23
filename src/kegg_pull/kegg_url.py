@@ -15,6 +15,7 @@ BASE_URL: str = 'https://rest.kegg.jp'
 
 class AbstractKEGGurl(abc.ABC):
     """Abstract class which validates and constructs URLs for accessing the KEGG REST API and contains the base data and functionality for all KEGG URL classes."""
+    _URL_LENGTH_LIMIT = 4000
 
     _valid_kegg_databases = {
         'pathway', 'brite', 'module', 'ko', 'genome', 'vg', 'vp', 'ag', 'compound', 'glycan', 'reaction', 'rclass',
@@ -37,6 +38,11 @@ class AbstractKEGGurl(abc.ABC):
         self._validate(**kwargs)
         url_options: str = self._create_rest_options(**kwargs)
         self._url = f'{base_url}/{rest_operation}/{url_options}'
+
+        if len(self._url) > AbstractKEGGurl._URL_LENGTH_LIMIT:
+           AbstractKEGGurl._raise_error(
+               reason=f'The KEGG URL length of {len(self._url)} exceeds the limit of {AbstractKEGGurl._URL_LENGTH_LIMIT}'
+           )
 
     # noinspection PyMethodParameters
     @u.staticproperty

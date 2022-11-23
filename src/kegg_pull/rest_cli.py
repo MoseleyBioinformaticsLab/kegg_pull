@@ -5,7 +5,7 @@ Usage:
     kegg_pull rest list <database-name> [--test] [--output=<output>]
     kegg_pull rest get <entry-ids> [--entry-field=<entry-field>] [--test] [--output=<output>]
     kegg_pull rest find <database-name> <keywords> [--test] [--output=<output>]
-    kegg_pull rest find <database-name> (--formula=<formula>|--exact-mass=<exact-mass>...|--molecular-weight=<molecular-weight>...) [--test] [--output=<output>]
+    kegg_pull rest find <database-name> (--formula=<formula>|--em=<exact-mass>...|--mw=<molecular-weight>...) [--test] [--output=<output>]
     kegg_pull rest conv <kegg-database-name> <outside-database-name> [--test] [--output=<output>]
     kegg_pull rest conv --conv-target=<target-database-name> <entry-ids> [--test] [--output=<output>]
     kegg_pull rest link <target-database-name> <source-database-name> [--test] [--output=<output>]
@@ -20,13 +20,13 @@ Options:
     --output=<output>                       Path to the file (either in a directory or ZIP archive) to store the response body from the KEGG web API operation. Prints to the console if not specified. If a ZIP archive, the file path must be in the form of /path/to/zip-archive.zip:/path/to/file (e.g. ./archive.zip:file.txt).
     list                                    Executes the "list" KEGG API operation, pulling the entry IDs of the provided database.
     get                                     Executes the "get" KEGG API operation, pulling the entries of the provided entry IDs.
-    <entry-ids>                             Comma separated list of entry IDs.
+    <entry-ids>                             Comma separated list of entry IDs (e.g. id1,id2,id3 etc.). Or if equal to "-", entry IDs are read from standard input, one entry ID per line; Press CTRL+D to finalize input or pipe (e.g. cat file.txt | kegg_pull rest get - ...).
     --entry-field=<entry-field>             Optional field to extract from an entry instead of the default entry info (i.e. flat file or htext in the case of brite entries).
     find                                    Executes the "find" KEGG API operation, finding entry IDs based on provided queries.
-    <keywords>                              Comma separated list of keywords to search entries with.
+    <keywords>                              Comma separated list of keywords to search entries with (e.g. kw1,kw2,kw3 etc.). Or if equal to "-", keywords are read from standard input, one keyword per line; Press CTRL+D to finalize input or pipe (e.g. cat file.txt | kegg_pull rest find brite - ...).
     --formula=<formula>                     Sequence of atoms in a chemical formula format to search for (e.g. "O5C7" searchers for molecule entries containing 5 oxygen atoms and/or 7 carbon atoms).
-    --exact-mass=<exact-mass>               Either a single number (e.g. --exact-mass=155.5) or two numbers (e.g. --exact-mass=155.5 --exact-mass=244.4). If a single number, searches for molecule entries with an exact mass equal to that value rounded by the last decimal point. If two numbers, searches for molecule entries with an exact mass within the two values (a range).
-    --molecular-weight=<molecular-weight>   Same as --exact-mass but searches based on the molecular weight.
+    --em=<exact-mass>                       Either a single number (e.g. --em=155.5) or two numbers (e.g. --em=155.5 --em=244.4). If a single number, searches for molecule entries with an exact mass equal to that value rounded by the last decimal point. If two numbers, searches for molecule entries with an exact mass within the two values (a range).
+    --mw=<molecular-weight>                 Same as --em but searches based on the molecular weight.
     conv                                    Executes the "conv" KEGG API operation, converting entry IDs from an outside database to those of a KEGG database and vice versa.
     <kegg-database-name>                    The name of the KEGG database from which to view equivalent outside database entry IDs.
     <outside-database-name>                 The name of the non-KEGG database from which to view equivalent KEGG database entry IDs.
@@ -36,7 +36,7 @@ Options:
     <source-database-name>                  The name of the database from which cross-references are found in the target database.
     --link-target-<target-database-name>    The name of the database to find cross-references in the provided entry IDs.
     ddi                                     Executes the "ddi" KEGG API operation, searching for drug to drug interactions. Providing one entry ID reports all known interactions, while providing multiple checks if any drug pair in a given set of drugs is CI or P. If providing multiple, all entries must belong to the same database.
-    <drug-entry-ids>                        Comma separated list of drug entry IDs from the following databases: drug, ndc, or yj
+    <drug-entry-ids>                        Comma separated list of drug entry IDs from the following databases: drug, ndc, or yj (e.g. id1,id2,id3 etc.). Or if equal to "-", entry IDs are read from standard input, one entry ID per line; Press CTRL+D to finalize input or pipe (e.g. cat file.txt | kegg_pull rest ddi - ...).
 """
 import docopt as d
 
@@ -66,7 +66,7 @@ def main():
         else:
             kegg_response: r.KEGGresponse = kegg_rest.list(database_name=database_name)
     elif args['get']:
-        entry_ids: list = u.split_comma_separated_list(list_string=entry_ids)
+        entry_ids: list = u.handle_cli_input(input_source=entry_ids)
         entry_field: str = args['--entry-field']
 
         if test:
@@ -78,7 +78,7 @@ def main():
             kegg_response: r.KEGGresponse = kegg_rest.get(entry_ids=entry_ids, entry_field=entry_field)
     elif args['find']:
         if args['<keywords>']:
-            keywords: list = u.split_comma_separated_list(list_string=args['<keywords>'])
+            keywords: list = u.handle_cli_input(input_source=args['<keywords>'])
 
             if test:
                 test_result: bool = kegg_rest.test(
@@ -101,7 +101,7 @@ def main():
     elif args['conv']:
         if args['--conv-target']:
             target_database_name: str = args['--conv-target']
-            entry_ids: list = u.split_comma_separated_list(list_string=entry_ids)
+            entry_ids: list = u.handle_cli_input(input_source=entry_ids)
 
             if test:
                 test_result: bool = kegg_rest.test(KEGGurl=ku.EntriesConvKEGGurl, target_database_name=target_database_name, entry_ids=entry_ids)
@@ -125,7 +125,7 @@ def main():
     elif args['link']:
         if args['--link-target']:
             target_database_name: str = args['--link-target']
-            entry_ids: list = u.split_comma_separated_list(list_string=entry_ids)
+            entry_ids: list = u.handle_cli_input(input_source=entry_ids)
 
             if test:
                 test_result: bool = kegg_rest.test(
@@ -149,8 +149,7 @@ def main():
                     target_database_name=target_database_name, source_database_name=source_database_name
                 )
     else:
-        drug_entry_ids: str = args['<drug-entry-ids>']
-        drug_entry_ids: list = u.split_comma_separated_list(list_string=drug_entry_ids)
+        drug_entry_ids: list = u.handle_cli_input(input_source=args['<drug-entry-ids>'])
 
         if test:
             test_result: bool = kegg_rest.test(KEGGurl=ku.DdiKEGGurl, drug_entry_ids=drug_entry_ids)

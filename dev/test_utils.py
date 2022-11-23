@@ -3,21 +3,24 @@ import pytest as pt
 import kegg_pull._utils as utils
 import dev.utils as u
 
-def test_split_comma_separated_list_warning(caplog):
-    comma_separated_list = 'a,,b'
-    items: list = utils.split_comma_separated_list(list_string=comma_separated_list)
-    warning = f'Blank items detected in the comma separated list: "{comma_separated_list}". Removing blanks...'
-    u.assert_warning(message=warning, caplog=caplog)
-
-    assert items == ['a', 'b']
-
-
 @pt.mark.parametrize('comma_separated_list', [',,', ',', ''])
-def test_split_comma_separated_list_exception(comma_separated_list: str):
-    with pt.raises(RuntimeError) as error:
-        utils.split_comma_separated_list(list_string=comma_separated_list)
+def test_handle_cli_input_comma_exception(comma_separated_list: str):
+    with pt.raises(ValueError) as error:
+        utils.handle_cli_input(input_source=comma_separated_list)
 
-    expected_message = f'ERROR - BAD INPUT: Empty list provided: "{comma_separated_list}"'
+    expected_message = f'Empty list provided from comma separated list: "{comma_separated_list}"'
+    u.assert_expected_error_message(expected_message=expected_message, error=error)
+
+
+@pt.mark.parametrize('stdin_input', ['', '\n', '\t\t', '\n\n', '\t \n \t', ' \n \n\t\t \t\n'])
+def test_handle_cli_input_stdin_exception(mocker, stdin_input: str):
+    stdin_mock: mocker.MagicMock = mocker.patch('kegg_pull._utils.sys.stdin.read', return_value=stdin_input)
+
+    with pt.raises(ValueError) as error:
+        utils.handle_cli_input(input_source='-')
+
+    stdin_mock.assert_called_once_with()
+    expected_message = 'Empty list provided from standard input'
     u.assert_expected_error_message(expected_message=expected_message, error=error)
 
 

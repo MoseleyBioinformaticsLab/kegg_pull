@@ -7,6 +7,10 @@ import dev.utils as u
 
 test_validate_exception_data = [
     (
+        ku.KeywordsFindKEGGurl, {'database_name': 'ko', 'keywords': ['keyword'] * 500},
+        'The KEGG URL length of 4028 exceeds the limit of 4000'
+    ),
+    (
         ku.ListKEGGurl, {'database_name': 'ligand'},
         'Invalid database name: "ligand". Valid values are: <org>, ag, atc, brite, brite_ja, compound, compound_ja, '
         'dgroup, dgroup_ja, disease, disease_ja, drug, drug_ja, enzyme, genome, glycan, jtc, ko, module, ndc, network, '

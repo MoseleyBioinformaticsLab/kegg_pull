@@ -58,7 +58,6 @@ class KEGGresponse:
 
 class KEGGrest:
     """Class containing methods for making requests to the KEGG REST API, including all the KEGG REST API operations."""
-
     def __init__(self, n_tries: int = 3, time_out: int = 60, sleep_time: float = 5.0):
         """
         :param n_tries: The number of times to try to make a request (can succeed the first time, or any of n_tries, or none of the tries).

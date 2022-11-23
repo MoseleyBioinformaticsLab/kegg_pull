@@ -2,26 +2,13 @@ import logging as l
 import typing as t
 import zipfile as zf
 import os
-
-
-def split_comma_separated_list(list_string: str) -> list:
-    items: list = list_string.split(',')
-
-    if '' in items:
-        l.warning(f'Blank items detected in the comma separated list: "{list_string}". Removing blanks...')
-        items = [item for item in items if item != '']
-
-    # If the items end up being an empty list
-    if not items:
-        raise RuntimeError(f'ERROR - BAD INPUT: Empty list provided: "{list_string}"')
-
-    return items
+import sys
 
 
 def get_molecular_attribute_args(args: dict) -> tuple:
     formula: str = args['--formula']
-    exact_mass: list = args['--exact-mass']
-    molecular_weight: list = args['--molecular-weight']
+    exact_mass: list = args['--em']
+    molecular_weight: list = args['--mw']
 
     # exact_mass and molecular_weight will be [] (empty list) if not specified in the commandline args
     if exact_mass:
@@ -51,6 +38,25 @@ def _get_range_values(range_values: t.Union[int, float, tuple], value_type: type
             f'Range can only be specified by two values but {len(range_values)} values were provided: '
             f'{", ".join(str(range_value) for range_value in range_values)}'
         )
+
+
+def handle_cli_input(input_source: str) -> list:
+    if input_source == '-':
+        # Read from standard input
+        inputs: str = sys.stdin.read()
+        inputs: list = inputs.strip().split('\n')
+    else:
+        # Split a comma separated list
+        inputs: list = input_source.split(',')
+
+    inputs: list = [input_string.strip() for input_string in inputs if input_string.strip() != '']
+
+    # If the inputs end up being an empty list
+    if not inputs:
+        input_source = 'standard input' if input_source == '-' else f'comma separated list: "{input_source}"'
+        raise ValueError(f'Empty list provided from {input_source}')
+
+    return inputs
 
 
 def handle_cli_output(output_target: str, output_content: t.Union[str, bytes]) -> None:
