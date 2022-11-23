@@ -75,7 +75,7 @@ def test_request_and_test_failed(mocker):
     failed_status_code = 403
     response_mock = mocker.MagicMock(text='', content=b'', status_code=failed_status_code)
     get_mock: mocker.MagicMock = mocker.patch('kegg_pull.rest.rq.get', return_value=response_mock)
-    sleep_mock: mocker.MagicMock = mocker.patch('kegg_pull.rest.t.sleep')
+    sleep_mock: mocker.MagicMock = mocker.patch('kegg_pull.rest.time.sleep')
     kegg_response: r.KEGGresponse = kegg_rest.request(kegg_url=kegg_url_mock)
     get_mock.assert_has_calls(mocker.call(url=url_mock, timeout=60) for _ in range(n_tries))
     sleep_mock.assert_has_calls(mocker.call(5.0) for _ in range(n_tries))
@@ -100,7 +100,7 @@ def test_request_and_test_timeout(mocker):
     url_mock = 'url mock'
     kegg_url_mock = mocker.MagicMock(url=url_mock)
     get_mock: mocker.MagicMock = mocker.patch('kegg_pull.rest.rq.get', side_effect=rq.exceptions.Timeout())
-    sleep_mock: mocker.MagicMock = mocker.patch('kegg_pull.rest.t.sleep')
+    sleep_mock: mocker.MagicMock = mocker.patch('kegg_pull.rest.time.sleep')
     kegg_response: r.KEGGresponse = kegg_rest.request(kegg_url=kegg_url_mock)
     get_mock.assert_has_calls(mocker.call(url=url_mock, timeout=time_out) for _ in range(n_tries))
     sleep_mock.assert_has_calls(mocker.call(sleep_time) for _ in range(n_tries))
