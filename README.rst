@@ -30,7 +30,7 @@ Dependencies
 ------------
 Note, the ``pip`` command will install dependencies automatically.
 
-.. literalinclude:: ../requirements.txt
+.. literalinclude:: ./requirements.txt
 
 Get the source code
 -------------------
