@@ -79,7 +79,7 @@ def from_file(file_path: str) -> list:
 
 
 def from_keywords(database_name: str, keywords: list, kegg_rest: r.KEGGrest = None) -> list:
-    """ Pulls entry IDs from a database based on keywords searched in the entries.
+    """ Pulls entry IDs from a KEGG database based on keywords searched in the entries.
 
     :param database_name: The name of the database to pull entry IDs from.
     :param keywords: The keywords to search entries in the database with.
@@ -94,7 +94,7 @@ def from_molecular_attribute(
     database_name: str, formula: str = None, exact_mass: t.Union[float, tuple] = None, molecular_weight: t.Union[int, tuple] = None,
     kegg_rest: r.KEGGrest = None
 ) -> list:
-    """ Pulls entry IDs from a database containing chemical entries based on one (and only one) of three molecular attributes of the entries.
+    """ Pulls entry IDs from a KEGG database containing chemical entries based on one (and only one) of three molecular attributes of the entries.
 
     :param database_name: The name of the database containing chemical entries.
     :param formula: The chemical formula to search for.

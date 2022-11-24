@@ -1,7 +1,7 @@
 CLI
 ===
 
-KEGG pull Commandline Interface
+kegg_pull Commandline Interface
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Top-level commandline interface.
 
@@ -32,9 +32,9 @@ Functionality for getting KEGG entries from the KEGG REST API, parsing them, and
 
 **timed-out-entry-ids:** The list of timed out entry IDs.
 
-If the --unsuccessful-threshold option is set and surpassed, an ``aborted-pull-results.json`` file is instead output with the following fields:
+If the ``--unsuccessful-threshold`` option is set and surpassed, an ``aborted-pull-results.json`` file is instead output with the following fields:
 
-**num-remaining-entry-ids:** The number of requested entries remaining after the process aborted. The process aborted before kegg_pull could even try to pull these entries.
+**num-remaining-entry-ids:** The number of requested entries remaining after the process aborted. The process aborted before ``kegg_pull`` could even try to pull these entries.
 
 **num-successful:** The number of entries that were successfully pulled before the process aborted.
 

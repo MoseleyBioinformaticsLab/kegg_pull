@@ -7,16 +7,21 @@ API
 Single Pull
 ~~~~~~~~~~~
 
-You can pull (request and save to the file system within ``output_dir``)
-a single KEGG entry using the ``SinglePull`` class, inputting the list
-of entry IDs. The ``PullResult`` object that’s returned tells you which
-of the entry IDs succeed, which failed, and which timed out. In this
-example, the entry ID succeeds.
+You can pull (request and save to the file system) a limited number of
+KEGG entries using the ``SinglePull`` class with the list of entry IDs
+as input. The number of entries is limited because only one request is
+made to the KEGG REST API and KEGG places a limit on the number of
+entries that can be pulled with a single request. The ``output``
+parameter in the constructor is where the entries are saved where
+``output`` is either a directory or ZIP archive if it ends in “.zip”.
+The ``PullResult`` object that’s returned tells you which of the entry
+IDs succeeded, which failed, and which timed out. In this example, the
+entry ID succeeds.
 
 .. code:: ipython3
 
     import kegg_pull.pull as p
-    single_pull = p.SinglePull(output_dir='pull-entries/')
+    single_pull = p.SinglePull(output='pull-entries/')
     entry_ids = ['br:br08902']
     pull_result: p.PullResult = single_pull.pull(entry_ids=entry_ids)
     print(pull_result)
@@ -46,9 +51,8 @@ In this example, the entry ID fails.
 
 
 
-``SinglePull`` can pull multiple entries at a time. They will
-automatically be separated from one another and saved in individual
-files.
+When ``SinglePull`` pulls multiple entries at a time, they are
+automatically separated from one another and saved in individual files.
 
 .. code:: ipython3
 
@@ -71,12 +75,12 @@ An exception is thrown if you attempt to provide more entry IDs to the
 Multiple Pull
 ~~~~~~~~~~~~~
 
-To get around the limit on the number of entries that can be pulled at a
-time, we have two classes capable of pulling an unlimited number of
+To get past the limit on the number of entries that can be pulled at a
+time, we have two classes capable of pulling an arbitrary number of
 entries. There’s the ``SingleProcessMultiplePull`` and
-``MultiProcessMultiplePull``. ``MultiProcessMultiplePull`` may be faster
-since it pulls within multiple processes. Like ``SinglePull``, a pull
-result is returned.
+``MultiProcessMultiplePull``. ``MultiProcessMultiplePull`` will likely
+pull faster since it pulls within multiple processes but it requires
+multiple cores. Like ``SinglePull``, a ``PullResult`` is returned.
 
 .. code:: ipython3
 
@@ -99,6 +103,11 @@ result is returned.
     multiple_pull.pull(entry_ids)
 
 
+.. parsed-literal::
+
+    100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 11/11 [00:02<00:00,  4.04it/s]
+
+
 
 
 .. parsed-literal::
@@ -119,6 +128,11 @@ defaults to the number of cores available.
     multiple_pull.pull(entry_ids)
 
 
+.. parsed-literal::
+
+    100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 11/11 [00:01<00:00,  6.22it/s]
+
+
 
 
 .. parsed-literal::
@@ -132,20 +146,19 @@ defaults to the number of cores available.
 Entry IDs
 ~~~~~~~~~
 
-The ``EntryIdsGetter`` class provides a number of different ways to pull
-a list of KEGG entry IDs.
+The ``entry_ids`` module provides a number of different ways to pull a
+list of KEGG entry IDs.
 
 .. code:: ipython3
 
     import kegg_pull.entry_ids as ei
-    entry_ids_getter = ei.EntryIdsGetter()
-    entry_ids: list = entry_ids_getter.from_database('brite')
+    entry_ids: list = ei.from_database('brite')
     print(entry_ids)
 
 
 .. parsed-literal::
 
-    ['br:br08901', 'br:br08902', 'br:br08904', 'br:ko00001', 'br:ko00002', 'br:ko00003', 'br:br08907', 'br:ko01000', 'br:ko01001', 'br:ko01009', 'br:ko01002', 'br:ko01003', 'br:ko01005', 'br:ko01011', 'br:ko01004', 'br:ko01008', 'br:ko01006', 'br:ko01007', 'br:ko00199', 'br:ko00194', 'br:ko03000', 'br:ko03021', 'br:ko03019', 'br:ko03041', 'br:ko03011', 'br:ko03009', 'br:ko03016', 'br:ko03012', 'br:ko03110', 'br:ko04131', 'br:ko04121', 'br:ko03051', 'br:ko03032', 'br:ko03036', 'br:ko03400', 'br:ko03029', 'br:ko02000', 'br:ko02044', 'br:ko02042', 'br:ko02022', 'br:ko02035', 'br:ko03037', 'br:ko04812', 'br:ko04147', 'br:ko02048', 'br:ko04030', 'br:ko04050', 'br:ko04054', 'br:ko03310', 'br:ko04040', 'br:ko04031', 'br:ko04052', 'br:ko04515', 'br:ko04090', 'br:ko01504', 'br:ko00535', 'br:ko00536', 'br:ko00537', 'br:ko04091', 'br:ko04990', 'br:ko03200', 'br:ko03210', 'br:ko03100', 'br:br08001', 'br:br08002', 'br:br08003', 'br:br08005', 'br:br08006', 'br:br08007', 'br:br08009', 'br:br08021', 'br:br08201', 'br:br08202', 'br:br08204', 'br:br08203', 'br:br08303', 'br:br08302', 'br:br08301', 'br:br08313', 'br:br08312', 'br:br08304', 'br:br08305', 'br:br08331', 'br:br08330', 'br:br08332', 'br:br08310', 'br:br08307', 'br:br08327', 'br:br08311', 'br:br08402', 'br:br08401', 'br:br08403', 'br:br08411', 'br:br08410', 'br:br08420', 'br:br08601', 'br:br08610', 'br:br08611', 'br:br08612', 'br:br08613', 'br:br08614', 'br:br08615', 'br:br08620', 'br:br08621', 'br:br08605', 'br:br03220', 'br:br03222', 'br:br01610', 'br:br01611', 'br:br01612', 'br:br01613', 'br:br01601', 'br:br01602', 'br:br01600', 'br:br01620', 'br:br01553', 'br:br01554', 'br:br01556', 'br:br01555', 'br:br01557', 'br:br01800', 'br:br01810', 'br:br08020', 'br:br08120', 'br:br08319', 'br:br08329', 'br:br08318', 'br:br08328', 'br:br08309', 'br:br08341', 'br:br08324', 'br:br08317', 'br:br08315', 'br:br08314', 'br:br08442', 'br:br08441', 'br:br08431']
+    ['br:br08901', 'br:br08902', 'br:br08904', 'br:ko00001', 'br:ko00002', 'br:ko00003', 'br:br08907', 'br:ko01000', 'br:ko01001', 'br:ko01009', 'br:ko01002', 'br:ko01003', 'br:ko01005', 'br:ko01011', 'br:ko01004', 'br:ko01008', 'br:ko01006', 'br:ko01007', 'br:ko00199', 'br:ko00194', 'br:ko03000', 'br:ko03021', 'br:ko03019', 'br:ko03041', 'br:ko03011', 'br:ko03009', 'br:ko03016', 'br:ko03012', 'br:ko03110', 'br:ko04131', 'br:ko04121', 'br:ko03051', 'br:ko03032', 'br:ko03036', 'br:ko03400', 'br:ko03029', 'br:ko02000', 'br:ko02044', 'br:ko02042', 'br:ko02022', 'br:ko02035', 'br:ko03037', 'br:ko04812', 'br:ko04147', 'br:ko02048', 'br:ko04030', 'br:ko04050', 'br:ko04054', 'br:ko03310', 'br:ko04040', 'br:ko04031', 'br:ko04052', 'br:ko04515', 'br:ko04090', 'br:ko01504', 'br:ko00535', 'br:ko00536', 'br:ko00537', 'br:ko04091', 'br:ko04990', 'br:ko03200', 'br:ko03210', 'br:ko03100', 'br:br08001', 'br:br08002', 'br:br08003', 'br:br08005', 'br:br08006', 'br:br08007', 'br:br08009', 'br:br08021', 'br:br08201', 'br:br08202', 'br:br08204', 'br:br08203', 'br:br08303', 'br:br08302', 'br:br08301', 'br:br08313', 'br:br08312', 'br:br08304', 'br:br08305', 'br:br08331', 'br:br08330', 'br:br08332', 'br:br08310', 'br:br08307', 'br:br08327', 'br:br08311', 'br:br08402', 'br:br08401', 'br:br08403', 'br:br08411', 'br:br08410', 'br:br08420', 'br:br08601', 'br:br08610', 'br:br08611', 'br:br08612', 'br:br08613', 'br:br08614', 'br:br08615', 'br:br08620', 'br:br08621', 'br:br08605', 'br:br03220', 'br:br03222', 'br:br01610', 'br:br01611', 'br:br01612', 'br:br01613', 'br:br01601', 'br:br01602', 'br:br01600', 'br:br01620', 'br:br01553', 'br:br01554', 'br:br01556', 'br:br01555', 'br:br01557', 'br:br01800', 'br:br01810', 'br:br08011', 'br:br08020', 'br:br08120', 'br:br08319', 'br:br08329', 'br:br08318', 'br:br08328', 'br:br08309', 'br:br08341', 'br:br08324', 'br:br08317', 'br:br08315', 'br:br08314', 'br:br08442', 'br:br08441', 'br:br08431']
 
 
 Rest API
@@ -185,7 +198,7 @@ and the internal URL used to request from the KEGG REST API.
 
 .. parsed-literal::
 
-    'module           KEGG Module Database\nmd               Release 104.0+/10-05, Oct 22\n                 Kanehisa Laboratories\n                 536 entries\n\nlinked db        pathway\n                 ko\n                 <org>\n                 genome\n                 compound\n                 glycan\n                 reaction\n                 enzyme\n                 disease\n                 pubmed\n'
+    'module           KEGG Module Database\nmd               Release 104.0+/11-24, Nov 22\n                 Kanehisa Laboratories\n                 547 entries\n\nlinked db        pathway\n                 ko\n                 <org>\n                 genome\n                 compound\n                 glycan\n                 reaction\n                 enzyme\n                 disease\n                 pubmed\n'
 
 
 
@@ -211,12 +224,18 @@ and ``rest``
 pull
 ~~~~
 
-single
-^^^^^^
+From a user-specified list of entry IDs
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code:: ipython3
 
-    % kegg_pull pull single --entry-ids=cpd:C00001,cpd:C00002,cpd:C00003 --output=compound-entries/
+    % kegg_pull pull entry-ids cpd:C00001,cpd:C00002,cpd:C00003 --output=compound-entries/
+
+
+.. parsed-literal::
+
+    100%|█████████████████████████████████████████████| 3/3 [00:01<00:00,  2.11it/s]
+
 
 .. code:: ipython3
 
@@ -280,12 +299,38 @@ Below is what the ``pull-results.json`` file contents look like:
     "timed-out-entry-ids": []
     }
 
-multiple
-^^^^^^^^
+Entry IDs can also be passed in from standard input when the
+``<entry-ids>`` option is equal to ``-`` rather than a comma-separated
+list. This example saves the entries to a ZIP archive.
 
 .. code:: ipython3
 
-    % kegg_pull pull multiple --database-name=brite --multi-process --n-workers=11 --output=brite-entries/
+    standard_input = """
+    cpd:C00001
+    cpd:C00002 
+    cpd:C00003
+    """
+    
+    % echo "{standard_input}" | kegg_pull pull entry-ids - --output=compound-entries.zip
+
+
+.. parsed-literal::
+
+    100%|█████████████████████████████████████████████| 3/3 [00:01<00:00,  2.36it/s]
+
+
+From a database
+^^^^^^^^^^^^^^^
+
+.. code:: ipython3
+
+    % kegg_pull pull database brite --multi-process --n-workers=11 --output=brite-entries/
+
+
+.. parsed-literal::
+
+    100%|█████████████████████████████████████████| 138/138 [00:24<00:00,  5.52it/s]
+
 
 .. code:: ipython3
 
@@ -328,12 +373,12 @@ multiple
 .. parsed-literal::
 
     {
-    "percent-success": 86.13,
-    "pull-minutes": 0.52,
+    "percent-success": 85.51,
+    "pull-minutes": 0.42,
     "num-successful": 118,
-    "num-failed": 19,
+    "num-failed": 20,
     "num-timed-out": 0,
-    "num-total": 137,
+    "num-total": 138,
     "successful-entry-ids": [
     "br:br08901",
     "br:br08902",
@@ -344,7 +389,7 @@ entry-ids
 
 .. code:: ipython3
 
-    % kegg_pull entry-ids from-molecular-attribute drug --exact-mass=433 --exact-mass=434
+    % kegg_pull entry-ids molecular-attribute drug --em=433 --em=434
 
 
 .. parsed-literal::

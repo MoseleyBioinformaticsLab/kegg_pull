@@ -5,7 +5,8 @@ Interface for the KEGG REST API including all its operations.
 """
 import enum as e
 import requests as rq
-import time as t
+import time
+import typing as t
 import inspect as ins
 import logging as l
 
@@ -97,10 +98,10 @@ class KEGGrest:
                 if response.status_code == 403:
                     # 403 forbidden. KEGG may have blocked the request due to too many requests in too little time.
                     # In case blacklisting, sleep to allow time for KEGG to unblock further requests.
-                    t.sleep(self._sleep_time)
+                    time.sleep(self._sleep_time)
             except rq.exceptions.Timeout:
                 status = KEGGresponse.Status.TIMEOUT
-                t.sleep(self._sleep_time)
+                time.sleep(self._sleep_time)
 
         return KEGGresponse(status=status, kegg_url=kegg_url)
 
@@ -155,7 +156,7 @@ class KEGGrest:
                 if response.status_code == 200:
                     return True
             except rq.exceptions.Timeout:
-                t.sleep(self._sleep_time)
+                time.sleep(self._sleep_time)
 
         return False
 
@@ -194,7 +195,8 @@ class KEGGrest:
         return self.request(KEGGurl=ku.KeywordsFindKEGGurl, database_name=database_name, keywords=keywords)
 
     def molecular_find(
-        self, database_name: str, formula: str = None, exact_mass: float = None, molecular_weight: int = None
+        self, database_name: str, formula: str = None, exact_mass: t.Union[float, tuple] = None,
+        molecular_weight: t.Union[int, tuple] = None
     ) -> KEGGresponse:
         """ Executes the "find" KEGG API operation, finding entry IDs in chemical databases based on one (and only one) choice of three molecular attributes of the entries.
 
