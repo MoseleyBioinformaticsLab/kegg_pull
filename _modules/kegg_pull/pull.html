@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kegg_pull.pull &mdash; kegg_pull 1.4.1 documentation</title>
+  <title>kegg_pull.pull &mdash; kegg_pull 2.0.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
             <a href="../../index.html" class="icon icon-home"> kegg_pull
           </a>
               <div class="version">
-                1.4.1
+                2.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -166,7 +166,7 @@
 <span class="sd">        :param output: Path to the location where entries are saved (treated like a ZIP file if ends in &quot;.zip&quot;, else a directory).</span>
 <span class="sd">        :param kegg_rest: Optional KEGGrest object used to make the requests to the KEGG REST API (a KEGGrest object with the default settings is created if one is not provided).</span>
 <span class="sd">        :param entry_field: Optional KEGG entry field to pull.</span>
-<span class="sd">        :param multiprocess_lock_save: Whether to block the code that saves KEGG entries in order to be multiprocess safe. Should not be needed unless saving entries to a ZIP archive.</span>
+<span class="sd">        :param multiprocess_lock_save: Whether to block the code that saves KEGG entries in order to be multiprocess safe. Should not be needed unless saving entries to a ZIP archive across multiple processes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_output</span> <span class="o">=</span> <span class="n">output</span>
 
@@ -352,7 +352,7 @@
 
 
 <div class="viewcode-block" id="AbstractMultiplePull"><a class="viewcode-back" href="../../api.html#kegg_pull.pull.AbstractMultiplePull">[docs]</a><span class="k">class</span> <span class="nc">AbstractMultiplePull</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Abstract class that makes multiple requests to the KEGG REST API to pull and save entries of an unlimited amount.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Abstract class that makes multiple requests to the KEGG REST API to pull and save entries of an arbitrary amount.&quot;&quot;&quot;</span>
 
     <span class="n">ABORTED_PULL_RESULTS_PATH</span> <span class="o">=</span> <span class="s1">&#39;aborted-pull-results.json&#39;</span>
 
@@ -361,7 +361,7 @@
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param single_pull: The SinglePull object used for each pull.</span>
-<span class="sd">        :param force_single_entry: Determines whether to pull only one entry at a time regardless of the entry field specified in the SinglePull argument.</span>
+<span class="sd">        :param force_single_entry: Whether to pull only one entry at a time regardless of the entry field specified in the SinglePull argument.</span>
 <span class="sd">        :param unsuccessful_threshold: If set, the ratio of unsuccessful entry IDs to total entry IDs at which execution stops. Details of the aborted process are logged.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_single_pull</span> <span class="o">=</span> <span class="n">single_pull</span>
@@ -377,11 +377,11 @@
 <div class="viewcode-block" id="AbstractMultiplePull.pull"><a class="viewcode-back" href="../../api.html#kegg_pull.pull.AbstractMultiplePull.pull">[docs]</a>    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">entry_field</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">force_single_entry</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PullResult</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Makes multiple requests to the KEGG REST API for an unlimited amount of entry IDs.</span>
+        <span class="sd">&quot;&quot;&quot; Makes multiple requests to the KEGG REST API for an arbitrary amount of entry IDs.</span>
 
 <span class="sd">        :param entry_ids: The IDs of the entries that are split into multiple pulls.</span>
-<span class="sd">        :param entry_field: An optional field of the entries to pull.</span>
-<span class="sd">        :param force_single_entry: If provided, updates the force_single_single_entry value of this AbstractMultiplePull object for this call of pull.</span>
+<span class="sd">        :param entry_field: An optional field of the entries to pull. If specified, updates the underlying SinglePull class&#39;s entry_field member.</span>
+<span class="sd">        :param force_single_entry: If provided, updates the force_single_single_entry value of this AbstractMultiplePull object just for this call of pull.</span>
 <span class="sd">        :return: The pull result.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">force_single_entry</span> <span class="o">=</span> <span class="n">force_single_entry</span> <span class="k">if</span> <span class="n">force_single_entry</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_force_single_entry</span>
@@ -506,13 +506,13 @@
     <span class="sd">&quot;&quot;&quot;Class that makes multiple requests to the KEGG REST API to pull entries within multiple processes.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">single_pull</span><span class="p">:</span> <span class="n">SinglePull</span><span class="p">,</span> <span class="n">n_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">(),</span> <span class="n">force_single_entry</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">single_pull</span><span class="p">:</span> <span class="n">SinglePull</span><span class="p">,</span> <span class="n">n_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">force_single_entry</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">unsuccessful_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param single_pull: The SinglePull object used for each pull. If saving to a ZIP archive, must be instantiated with multiprocess_lock_save set to True.</span>
-<span class="sd">        :param force_single_entry: Determines whether to pull only one entry at a time despite the entry field specified in the SinglePull argument.</span>
-<span class="sd">        :param n_workers: The number of processes to use.</span>
+<span class="sd">        :param force_single_entry: Whether to pull only one entry at a time despite the entry field specified in the SinglePull argument.</span>
+<span class="sd">        :param n_workers: The number of processes to use. If None, defaults to the number of cores available.</span>
 <span class="sd">        :param unsuccessful_threshold: If set, the ratio of unsuccessful entry IDs to total entry IDs at which execution stops. Details of the aborted process are logged.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">MultiProcessMultiplePull</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>

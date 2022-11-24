@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kegg_pull.rest &mdash; kegg_pull 1.4.1 documentation</title>
+  <title>kegg_pull.rest &mdash; kegg_pull 2.0.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
             <a href="../../index.html" class="icon icon-home"> kegg_pull
           </a>
               <div class="version">
-                1.4.1
+                2.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -80,7 +80,8 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">import</span> <span class="nn">enum</span> <span class="k">as</span> <span class="nn">e</span>
 <span class="kn">import</span> <span class="nn">requests</span> <span class="k">as</span> <span class="nn">rq</span>
-<span class="kn">import</span> <span class="nn">time</span> <span class="k">as</span> <span class="nn">t</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
 <span class="kn">import</span> <span class="nn">inspect</span> <span class="k">as</span> <span class="nn">ins</span>
 <span class="kn">import</span> <span class="nn">logging</span> <span class="k">as</span> <span class="nn">l</span>
 
@@ -172,10 +173,10 @@
                 <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">403</span><span class="p">:</span>
                     <span class="c1"># 403 forbidden. KEGG may have blocked the request due to too many requests in too little time.</span>
                     <span class="c1"># In case blacklisting, sleep to allow time for KEGG to unblock further requests.</span>
-                    <span class="n">t</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sleep_time</span><span class="p">)</span>
+                    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sleep_time</span><span class="p">)</span>
             <span class="k">except</span> <span class="n">rq</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">Timeout</span><span class="p">:</span>
                 <span class="n">status</span> <span class="o">=</span> <span class="n">KEGGresponse</span><span class="o">.</span><span class="n">Status</span><span class="o">.</span><span class="n">TIMEOUT</span>
-                <span class="n">t</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sleep_time</span><span class="p">)</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sleep_time</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">KEGGresponse</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">,</span> <span class="n">kegg_url</span><span class="o">=</span><span class="n">kegg_url</span><span class="p">)</span></div>
 
@@ -230,7 +231,7 @@
                 <span class="k">if</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
                     <span class="k">return</span> <span class="kc">True</span>
             <span class="k">except</span> <span class="n">rq</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">Timeout</span><span class="p">:</span>
-                <span class="n">t</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sleep_time</span><span class="p">)</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sleep_time</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="kc">False</span></div>
 
@@ -269,7 +270,8 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">KEGGurl</span><span class="o">=</span><span class="n">ku</span><span class="o">.</span><span class="n">KeywordsFindKEGGurl</span><span class="p">,</span> <span class="n">database_name</span><span class="o">=</span><span class="n">database_name</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="KEGGrest.molecular_find"><a class="viewcode-back" href="../../api.html#kegg_pull.rest.KEGGrest.molecular_find">[docs]</a>    <span class="k">def</span> <span class="nf">molecular_find</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">formula</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">exact_mass</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">molecular_weight</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">formula</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">exact_mass</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">molecular_weight</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGresponse</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; Executes the &quot;find&quot; KEGG API operation, finding entry IDs in chemical databases based on one (and only one) choice of three molecular attributes of the entries.</span>
 

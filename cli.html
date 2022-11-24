@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CLI &mdash; kegg_pull 1.4.1 documentation</title>
+  <title>CLI &mdash; kegg_pull 2.0.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -31,7 +31,7 @@
             <a href="index.html" class="icon icon-home"> kegg_pull
           </a>
               <div class="version">
-                1.4.1
+                2.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -46,7 +46,7 @@
 <li class="toctree-l1"><a class="reference internal" href="guide.html">Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">CLI</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#kegg-pull-commandline-interface">KEGG pull Commandline Interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kegg-pull-commandline-interface">kegg_pull Commandline Interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#pulling-parsing-and-saving-kegg-entries">Pulling, Parsing, and Saving KEGG Entries</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#getting-lists-of-kegg-entry-ids">Getting Lists of KEGG Entry IDs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#kegg-rest-api-operations">KEGG REST API Operations</a></li>
@@ -83,7 +83,7 @@
   <div class="section" id="cli">
 <h1>CLI<a class="headerlink" href="#cli" title="Permalink to this heading"></a></h1>
 <div class="section" id="kegg-pull-commandline-interface">
-<h2>KEGG pull Commandline Interface<a class="headerlink" href="#kegg-pull-commandline-interface" title="Permalink to this heading"></a></h2>
+<h2>kegg_pull Commandline Interface<a class="headerlink" href="#kegg-pull-commandline-interface" title="Permalink to this heading"></a></h2>
 <p>Top-level commandline interface.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Usage:
     kegg_pull -h | --help       Show this help message.
@@ -107,8 +107,8 @@
 <p><strong>successful-entry-ids:</strong> The list of successful entry IDs.</p>
 <p><strong>failed-entry-ids:</strong> The list of failed entry IDs.</p>
 <p><strong>timed-out-entry-ids:</strong> The list of timed out entry IDs.</p>
-<p>If the –unsuccessful-threshold option is set and surpassed, an <code class="docutils literal notranslate"><span class="pre">aborted-pull-results.json</span></code> file is instead output with the following fields:</p>
-<p><strong>num-remaining-entry-ids:</strong> The number of requested entries remaining after the process aborted. The process aborted before kegg_pull could even try to pull these entries.</p>
+<p>If the <code class="docutils literal notranslate"><span class="pre">--unsuccessful-threshold</span></code> option is set and surpassed, an <code class="docutils literal notranslate"><span class="pre">aborted-pull-results.json</span></code> file is instead output with the following fields:</p>
+<p><strong>num-remaining-entry-ids:</strong> The number of requested entries remaining after the process aborted. The process aborted before <code class="docutils literal notranslate"><span class="pre">kegg_pull</span></code> could even try to pull these entries.</p>
 <p><strong>num-successful:</strong> The number of entries that were successfully pulled before the process aborted.</p>
 <p><strong>num-failed:</strong> The number of entries that failed by the time the process aborted.</p>
 <p><strong>num-timed-out:</strong> The number of entries that timed out by the time the process aborted.</p>
@@ -156,7 +156,7 @@ Options:
     keywords                Searches for entries within a database based on provided keywords.
     &lt;keywords&gt;              Comma separated list of keywords to search entries with (e.g. kw1,kw2,kw3 etc.). Or if equal to &quot;-&quot;, keywords are read from standard input, one keyword per line; Press CTRL+D to finalize input or pipe (e.g. cat file.txt | kegg_pull rest find brite - ...).
     molecular-attribute     Searches a database of molecule-type KEGG entries by molecular attributes.
-    --formula=&lt;formula&gt;     Sequence of atoms in a chemical formula format to search for (e.g. &quot;O5C7&quot; searchers for molecule entries containing 5 oxygen atoms and/or 7 carbon atoms).
+    --formula=&lt;formula&gt;     Sequence of atoms in a chemical formula format to search for (e.g. &quot;O5C7&quot; searches for molecule entries containing 5 oxygen atoms and/or 7 carbon atoms).
     --em=&lt;exact-mass&gt;       Either a single number (e.g. &quot;--em=155.5&quot;) or two numbers (e.g. &quot;--em=155.5 --em=244.4&quot;). If a single number, searches for molecule entries with an exact mass equal to that value rounded by the last decimal point. If two numbers, searches for molecule entries with an exact mass within the two values (a range).
     --mw=&lt;molecular-weight&gt; Same as &quot;--em=&lt;exact-mass&gt;&quot; but searches based on the molecular weight.
 </pre></div>
@@ -190,7 +190,7 @@ Options:
     --entry-field=&lt;entry-field&gt;             Optional field to extract from an entry instead of the default entry info (i.e. flat file or htext in the case of brite entries).
     find                                    Executes the &quot;find&quot; KEGG API operation, finding entry IDs based on provided queries.
     &lt;keywords&gt;                              Comma separated list of keywords to search entries with (e.g. kw1,kw2,kw3 etc.). Or if equal to &quot;-&quot;, keywords are read from standard input, one keyword per line; Press CTRL+D to finalize input or pipe (e.g. cat file.txt | kegg_pull rest find brite - ...).
-    --formula=&lt;formula&gt;                     Sequence of atoms in a chemical formula format to search for (e.g. &quot;O5C7&quot; searchers for molecule entries containing 5 oxygen atoms and/or 7 carbon atoms).
+    --formula=&lt;formula&gt;                     Sequence of atoms in a chemical formula format to search for (e.g. &quot;O5C7&quot; searches for molecule entries containing 5 oxygen atoms and/or 7 carbon atoms).
     --em=&lt;exact-mass&gt;                       Either a single number (e.g. --em=155.5) or two numbers (e.g. --em=155.5 --em=244.4). If a single number, searches for molecule entries with an exact mass equal to that value rounded by the last decimal point. If two numbers, searches for molecule entries with an exact mass within the two values (a range).
     --mw=&lt;molecular-weight&gt;                 Same as --em but searches based on the molecular weight.
     conv                                    Executes the &quot;conv&quot; KEGG API operation, converting entry IDs from an outside database to those of a KEGG database and vice versa.
