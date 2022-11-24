@@ -91,7 +91,7 @@ class SinglePull:
         :param output: Path to the location where entries are saved (treated like a ZIP file if ends in ".zip", else a directory).
         :param kegg_rest: Optional KEGGrest object used to make the requests to the KEGG REST API (a KEGGrest object with the default settings is created if one is not provided).
         :param entry_field: Optional KEGG entry field to pull.
-        :param multiprocess_lock_save: Whether to block the code that saves KEGG entries in order to be multiprocess safe. Should not be needed unless saving entries to a ZIP archive.
+        :param multiprocess_lock_save: Whether to block the code that saves KEGG entries in order to be multiprocess safe. Should not be needed unless saving entries to a ZIP archive across multiple processes.
         """
         self._output = output
 
@@ -277,7 +277,7 @@ class SinglePull:
 
 
 class AbstractMultiplePull(abc.ABC):
-    """Abstract class that makes multiple requests to the KEGG REST API to pull and save entries of an unlimited amount."""
+    """Abstract class that makes multiple requests to the KEGG REST API to pull and save entries of an arbitrary amount."""
 
     ABORTED_PULL_RESULTS_PATH = 'aborted-pull-results.json'
 
@@ -286,7 +286,7 @@ class AbstractMultiplePull(abc.ABC):
     ) -> None:
         """
         :param single_pull: The SinglePull object used for each pull.
-        :param force_single_entry: Determines whether to pull only one entry at a time regardless of the entry field specified in the SinglePull argument.
+        :param force_single_entry: Whether to pull only one entry at a time regardless of the entry field specified in the SinglePull argument.
         :param unsuccessful_threshold: If set, the ratio of unsuccessful entry IDs to total entry IDs at which execution stops. Details of the aborted process are logged.
         """
         self._single_pull = single_pull
@@ -302,11 +302,11 @@ class AbstractMultiplePull(abc.ABC):
     def pull(
         self, entry_ids: list, entry_field: t.Optional[str] = '', force_single_entry: t.Optional[bool] = None
     ) -> PullResult:
-        """ Makes multiple requests to the KEGG REST API for an unlimited amount of entry IDs.
+        """ Makes multiple requests to the KEGG REST API for an arbitrary amount of entry IDs.
 
         :param entry_ids: The IDs of the entries that are split into multiple pulls.
-        :param entry_field: An optional field of the entries to pull.
-        :param force_single_entry: If provided, updates the force_single_single_entry value of this AbstractMultiplePull object for this call of pull.
+        :param entry_field: An optional field of the entries to pull. If specified, updates the underlying SinglePull class's entry_field member.
+        :param force_single_entry: If provided, updates the force_single_single_entry value of this AbstractMultiplePull object just for this call of pull.
         :return: The pull result.
         """
         force_single_entry = force_single_entry if force_single_entry is not None else self._force_single_entry
@@ -431,13 +431,13 @@ class MultiProcessMultiplePull(AbstractMultiplePull):
     """Class that makes multiple requests to the KEGG REST API to pull entries within multiple processes."""
 
     def __init__(
-        self, single_pull: SinglePull, n_workers: int = os.cpu_count(), force_single_entry: bool = False,
+        self, single_pull: SinglePull, n_workers: int = None, force_single_entry: bool = False,
         unsuccessful_threshold: float = None
     ):
         """
         :param single_pull: The SinglePull object used for each pull. If saving to a ZIP archive, must be instantiated with multiprocess_lock_save set to True.
-        :param force_single_entry: Determines whether to pull only one entry at a time despite the entry field specified in the SinglePull argument.
-        :param n_workers: The number of processes to use.
+        :param force_single_entry: Whether to pull only one entry at a time despite the entry field specified in the SinglePull argument.
+        :param n_workers: The number of processes to use. If None, defaults to the number of cores available.
         :param unsuccessful_threshold: If set, the ratio of unsuccessful entry IDs to total entry IDs at which execution stops. Details of the aborted process are logged.
         """
         super(MultiProcessMultiplePull, self).__init__(
