@@ -45,4 +45,3 @@ Once you have a copy of the source, you can embed it in your own Python package,
 
 .. parsed-literal::
    python3 setup.py install
-
