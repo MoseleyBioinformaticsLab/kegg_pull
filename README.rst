@@ -30,7 +30,10 @@ Dependencies
 ------------
 Note, the ``pip`` command will install dependencies automatically.
 
-.. literalinclude:: ./requirements.txt
+.. parsed-literal::
+   docopt
+   requests
+   tqdm
 
 Get the source code
 -------------------
