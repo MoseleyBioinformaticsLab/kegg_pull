@@ -6,6 +6,7 @@ Functionality for pulling lists of KEGG entry IDs from the KEGG REST API.
 import typing as t
 
 from . import rest as r
+from . import kegg_url as ku
 
 
 def from_database(database_name: str, kegg_rest: r.KEGGrest = None) -> list:
@@ -16,33 +17,20 @@ def from_database(database_name: str, kegg_rest: r.KEGGrest = None) -> list:
     :return: The list of resulting entry IDs.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
-    return _process_response(method='list', kegg_rest=kegg_rest, database_name=database_name)
+    return _process_response(KEGGurl=ku.ListKEGGurl, kegg_rest=kegg_rest, database_name=database_name)
 
 
-def _process_response(method: str, kegg_rest: t.Union[r.KEGGrest, None], **kwargs) -> list:
+def _process_response(KEGGurl: type, kegg_rest: t.Union[r.KEGGrest, None], **kwargs) -> list:
     """ Extracts the entry IDs from a KEGG response if successful, else raises an exception. The KEGG response arrives from calling
     an entry IDs related method on a KEGGrest object.
 
-    :param method: The method to call on the KEGGrest object.
+    :param KEGGurl: The method to call on the KEGGrest object.
     :param kegg_rest: The KEGGrest object to call the method on. If None, one is created with the default parameters.
     :param kwargs: The arguments to pass into the KEGGrest method.
     :return: The list of KEGG entry IDs.
     :raises RuntimeError: Raised if the KEGG response indicates a failure or time out.
     """
-    kegg_rest = kegg_rest if kegg_rest is not None else r.KEGGrest()
-    method: t.Callable = kegg_rest.__getattribute__(method)
-    kegg_response: r.KEGGresponse = method(**kwargs)
-
-    if kegg_response.status == r.KEGGresponse.Status.FAILED:
-        raise RuntimeError(
-            f'The KEGG request failed to pull the entry IDs from the following URL: {kegg_response.kegg_url.url}'
-        )
-    elif kegg_response.status == r.KEGGresponse.Status.TIMEOUT:
-        raise RuntimeError(
-            f'The KEGG request timed out while trying to pull the entry IDs from the following URL: '
-            f'{kegg_response.kegg_url.url}'
-        )
-
+    kegg_response: r.KEGGresponse = r.request_and_check_error(kegg_rest=kegg_rest, KEGGurl=KEGGurl, **kwargs)
     entry_ids: list = _parse_entry_ids_string(entry_ids_string=kegg_response.text_body)
 
     return entry_ids
@@ -87,7 +75,7 @@ def from_keywords(database_name: str, keywords: list, kegg_rest: r.KEGGrest = No
     :return: The list of entry IDs.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
-    return _process_response(method='keywords_find', kegg_rest=kegg_rest, database_name=database_name, keywords=keywords)
+    return _process_response(KEGGurl=ku.KeywordsFindKEGGurl, kegg_rest=kegg_rest, database_name=database_name, keywords=keywords)
 
 
 def from_molecular_attribute(
@@ -105,6 +93,6 @@ def from_molecular_attribute(
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
     return _process_response(
-        method='molecular_find', kegg_rest=kegg_rest, database_name=database_name, formula=formula, exact_mass=exact_mass,
+        KEGGurl=ku.MolecularFindKEGGurl, kegg_rest=kegg_rest, database_name=database_name, formula=formula, exact_mass=exact_mass,
         molecular_weight=molecular_weight
     )

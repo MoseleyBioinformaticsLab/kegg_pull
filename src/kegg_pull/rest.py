@@ -264,3 +264,25 @@ class KEGGrest:
         :return: The KEGG response
         """
         return self.request(KEGGurl=ku.DdiKEGGurl, drug_entry_ids=drug_entry_ids)
+
+
+def request_and_check_error(kegg_rest: KEGGrest = None, KEGGurl: type = None, kegg_url: ku.AbstractKEGGurl = None, **kwargs) -> KEGGresponse:
+    """ Makes a general request to the KEGG REST API using a KEGGrest object. Creates the KEGGrest object if one is not provided.
+    Additionally, raises an exception if the request is not successful, specifying the URL that was unsuccessful.
+
+    :param kegg_rest: The KEGGrest object to perform the request. If None, one is created with the default parameters.
+    :param KEGGurl: Optional KEGG URL class (extended from AbstractKEGGurl) that's instantiated with provided keyword arguments.
+    :param kegg_url: Optional KEGGurl object that's already instantiated (used if KEGGurl class is not provided).
+    :param kwargs: The keyword arguments used to instantiate the KEGGurl class, if provided.
+    :return: The KEGG response
+    :raises RuntimeError: Raised if the request fails or times out.
+    """
+    kegg_rest = kegg_rest if kegg_rest is not None else KEGGrest()
+    kegg_response: KEGGresponse = kegg_rest.request(KEGGurl=KEGGurl, kegg_url=kegg_url, **kwargs)
+
+    if kegg_response.status == KEGGresponse.Status.FAILED:
+        raise RuntimeError(f'The KEGG request failed with the following URL: {kegg_response.kegg_url.url}')
+    elif kegg_response.status == KEGGresponse.Status.TIMEOUT:
+        raise RuntimeError(f'The KEGG request timed out with the following URL: {kegg_response.kegg_url.url}')
+
+    return kegg_response
