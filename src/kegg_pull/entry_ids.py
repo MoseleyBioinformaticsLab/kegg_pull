@@ -13,7 +13,7 @@ def from_database(database_name: str, kegg_rest: r.KEGGrest = None) -> list:
     """ Pulls the KEGG entry IDs of a given database.
 
     :param database_name: The KEGG database to pull the entry IDs from.
-    :param kegg_rest: Optional KEGGrest object. If None, one is created with the default parameters.
+    :param kegg_rest: The KEGGrest object to request the entry IDs. If None, one is created with the default parameters.
     :return: The list of resulting entry IDs.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
@@ -21,11 +21,11 @@ def from_database(database_name: str, kegg_rest: r.KEGGrest = None) -> list:
 
 
 def _process_response(KEGGurl: type, kegg_rest: t.Union[r.KEGGrest, None], **kwargs) -> list:
-    """ Extracts the entry IDs from a KEGG response if successful, else raises an exception. The KEGG response arrives from calling
-    an entry IDs related method on a KEGGrest object.
+    """ Extracts the entry IDs from a KEGG response if successful, else raises an exception. The KEGG response arrives from making
+    an entry IDs related request with a KEGGrest object.
 
-    :param KEGGurl: The method to call on the KEGGrest object.
-    :param kegg_rest: The KEGGrest object to call the method on. If None, one is created with the default parameters.
+    :param KEGGurl: The URL class for the request.
+    :param kegg_rest: The KEGGrest object to make the request with. If None, one is created with the default parameters.
     :param kwargs: The arguments to pass into the KEGGrest method.
     :return: The list of KEGG entry IDs.
     :raises RuntimeError: Raised if the KEGG response indicates a failure or time out.
@@ -71,7 +71,7 @@ def from_keywords(database_name: str, keywords: list, kegg_rest: r.KEGGrest = No
 
     :param database_name: The name of the database to pull entry IDs from.
     :param keywords: The keywords to search entries in the database with.
-    :param kegg_rest: Optional KEGGrest object. If None, one is created with the default parameters.
+    :param kegg_rest: The KEGGrest object to request the entry IDs. If None, one is created with the default parameters.
     :return: The list of entry IDs.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
@@ -88,7 +88,7 @@ def from_molecular_attribute(
     :param formula: The chemical formula to search for.
     :param exact_mass: The exact mass of the compound to search for (a single value or a range).
     :param molecular_weight: The molecular weight of the compound to search for (a single value or a range).
-    :param kegg_rest: Optional KEGGrest object. If None, one is created with the default parameters.
+    :param kegg_rest: The KEGGrest object to request the entry IDs. If None, one is created with the default parameters.
     :return: The list of entry IDs.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """

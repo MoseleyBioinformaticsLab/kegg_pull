@@ -1,27 +1,26 @@
 """
 Usage:
     kegg_pull link-to-dict -h | --help
-    kegg_pull link-to-dict <target-database-name> <source-database-name> [--output=<output>] [--file=<file-name>]
-    kegg_pull link-to-dict --link-target=<target-database-name> <entry-ids> [--output=<output>] [--file=<file-name>]
-    kegg_pull link-to-dict pathway-to-compound [--add-glycans] [--output=<output>] [--file=<file-name>]
-    kegg_pull link-to-dict reaction-to-compound [--add-glycans] [--output=<output>] [--file=<file-name>]
-    kegg_pull link-to-dict gene-to-compound [--add-glycans] [--output=<output>] [--file=<file-name>]
-    kegg_pull link-to-dict compound-to-pathway [--add-glycans] [--output=<output>] [--file=<file-name>]
-    kegg_pull link-to-dict compound-to-reaction [--add-glycans] [--output=<output>] [--file=<file-name>]
-    kegg_pull link-to-dict compound-to-gene [--add-glycans] [--output=<output>] [--file=<file-name>]
-    kegg_pull link-to-dict pathway-to-gene [--output=<output>] [--file=<file-name>]
-    kegg_pull link-to-dict pathway-to-reaction [--output=<output>] [--file=<file-name>]
-    kegg_pull link-to-dict gene-to-pathway [--output=<output>] [--file=<file-name>]
-    kegg_pull link-to-dict reaction-to-pathway [--output=<output>] [--file=<file-name>]
-    kegg_pull link-to-dict reaction-to-gene [--output=<output>] [--file=<file-name>]
-    kegg_pull link-to-dict gene-to-reaction [--output=<output>] [--file=<file-name>]
+    kegg_pull link-to-dict <target-database-name> <source-database-name> [--output=<output>]
+    kegg_pull link-to-dict --link-target=<target-database-name> <entry-ids> [--output=<output>]
+    kegg_pull link-to-dict pathway-to-compound [--add-glycans] [--output=<output>]
+    kegg_pull link-to-dict reaction-to-compound [--add-glycans] [--output=<output>]
+    kegg_pull link-to-dict gene-to-compound [--add-glycans] [--output=<output>]
+    kegg_pull link-to-dict compound-to-pathway [--add-glycans] [--output=<output>]
+    kegg_pull link-to-dict compound-to-reaction [--add-glycans] [--output=<output>]
+    kegg_pull link-to-dict compound-to-gene [--add-glycans] [--output=<output>]
+    kegg_pull link-to-dict pathway-to-gene [--output=<output>]
+    kegg_pull link-to-dict pathway-to-reaction [--output=<output>]
+    kegg_pull link-to-dict gene-to-pathway [--output=<output>]
+    kegg_pull link-to-dict reaction-to-pathway [--output=<output>]
+    kegg_pull link-to-dict reaction-to-gene [--output=<output>]
+    kegg_pull link-to-dict gene-to-reaction [--output=<output>]
 
 Options:
     -h --help                               Show this help message.
     <target-database-name>                  The name of the database to find cross-references in the source database.
     <source-database-name>                  The name of the database from which cross-references are found in the target database.
-    --output=<output>                       The location (either a directory or ZIP archive if ends in ".zip") of the JSON file to store the mapping. If not set, prints a JSON representation of the mapping to the console.
-    --file=<file-name>                      The name of the JSON file to store in the output location (specified by --output). If --output is set but --file is not set, defaults to file name of "mapping.json".
+    --output=<output>                       The location (either a directory or ZIP archive) of the JSON file to store the mapping. If not set, prints a JSON representation of the mapping to the console. If a ZIP archive, the file path must be in the form of /path/to/zip-archive.zip:/path/to/file (e.g. ./archive.zip:mapping.json).
     --link-target=<target-database-name>    The name of the database to find cross-references in the provided entry IDs.
     <entry-ids>                             Comma separated list of entry IDs (e.g. Id1,Id2,Id3 etc.). Or if equal to "-", entry IDs are read from standard input, one entry ID per line; Press CTRL+D to finalize input or pipe (e.g. cat file.txt | kegg_pull link-to-dict --link-target=drug - ...).
     pathway-to-compound                     Creates a specific mapping of KEGG entry IDs.

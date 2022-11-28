@@ -183,3 +183,20 @@ def test_get_kegg_url_warning(mocker, caplog):
     )
 
     assert kegg_url == kegg_url_mock
+
+
+test_request_and_check_error_data = [
+    ('The KEGG request failed with the following URL: url/mock', r.KEGGresponse.Status.FAILED),
+    ('The KEGG request timed out with the following URL: url/mock', r.KEGGresponse.Status.TIMEOUT)
+]
+@pt.mark.parametrize('expected_message,status', test_request_and_check_error_data)
+def test_request_and_check_error(mocker, expected_message: str, status: r.KEGGresponse.Status):
+    kegg_url_mock = mocker.MagicMock(url='url/mock')
+    kegg_response_mock = mocker.MagicMock(kegg_url=kegg_url_mock, status=status)
+    request_mock: mocker.MagicMock = mocker.patch('kegg_pull.rest.KEGGrest.request', return_value=kegg_response_mock)
+
+    with pt.raises(RuntimeError) as error:
+        r.request_and_check_error(kegg_url=kegg_url_mock, kwarg1='val1', kwarg2='val2')
+
+    request_mock.assert_called_once_with(KEGGurl=None, kegg_url=kegg_url_mock, kwarg1='val1', kwarg2='val2')
+    u.assert_expected_error_message(expected_message=expected_message, error=error)

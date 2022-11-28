@@ -15,7 +15,7 @@ def database_link(target_database_name: str, source_database_name: str, kegg_res
 
     :param target_database_name: One of the two KEGG databases to pull linked entries from.
     :param source_database_name: The other KEGG database to link entries from the target database.
-    :param kegg_rest: Optional KEGGrest object. If None, one is created with the default parameters.
+    :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
@@ -54,7 +54,7 @@ def entries_link(target_database_name: str, entry_ids: list, kegg_rest: r.KEGGre
 
     :param target_database_name: The KEGG database to find links to the provided entries.
     :param entry_ids: The IDs of the entries to link to entries in the target database.
-    :param kegg_rest: Optional KEGGrest object. If None, one is created with the default parameters.
+    :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
@@ -67,7 +67,7 @@ def compound_to_pathway(add_glycans: bool, kegg_rest: r.KEGGrest = None) -> dict
     """ Creates a dictionary that maps compound entry IDs to related pathway IDs.
 
     :param add_glycans: Whether to add the corresponding compound IDs of KEGG glycan entries.
-    :param kegg_rest: Optional KEGGrest object. If None, one is created with the default parameters.
+    :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
@@ -92,7 +92,7 @@ def reverse_mapping(mapping: dict) -> dict:
 def _add_to_dict(dictionary: dict, key: str, values: set) -> None:
     """ Adds a set of values to a set mapped from a given key in a dictionary.
 
-    :param dictionary: The dictionary mapping to sets, one of which the value will be added to.
+    :param dictionary: The dictionary mapping to sets, one of which the values will be added to.
     :param key: The key in the dictionary mapping to the set that the values will be added to.
     :param values: The values to add to the set mapped to by the key.
     """
@@ -106,7 +106,7 @@ def pathway_to_compound(add_glycans: bool, kegg_rest: r.KEGGrest = None) -> dict
     """ Creates a dictionary that maps pathway entry IDs to related compound IDs.
 
     :param add_glycans: Whether to add the corresponding compound IDs of KEGG glycan entries.
-    :param kegg_rest: Optional KEGGrest object. If None, one is created with the default parameters.
+    :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
@@ -118,7 +118,7 @@ def _database_to_compound(database: str, add_glycans, kegg_rest: t.Union[r.KEGGr
 
     :param database: The database with IDs to map to compound IDs.
     :param add_glycans: Whether to add the corresponding compound IDs of KEGG glycan entries.
-    :param kegg_rest: Optional KEGGrest object. If None, one is created with the default parameters.
+    :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
@@ -141,7 +141,7 @@ def compound_to_reaction(add_glycans: bool, kegg_rest: r.KEGGrest = None) -> dic
     """ Creates a dictionary that maps compound entry IDs to related reaction IDs.
 
     :param add_glycans: Whether to add the corresponding compound IDs of KEGG glycan entries.
-    :param kegg_rest: Optional KEGGrest object. If None, one is created with the default parameters.
+    :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
@@ -152,7 +152,7 @@ def reaction_to_compound(add_glycans: bool, kegg_rest: r.KEGGrest = None) -> dic
     """ Creates a dictionary that maps reaction entry IDs to related compound IDs.
 
     :param add_glycans: Whether to add the corresponding compound IDs of KEGG glycan entries.
-    :param kegg_rest: Optional KEGGrest object. If None, one is created with the default parameters.
+    :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
@@ -162,7 +162,7 @@ def compound_to_gene(add_glycans: bool, kegg_rest: r.KEGGrest = None) -> dict:
     """ Creates a dictionary that maps compound entry IDs to related gene IDs (from the KEGG ko database).
 
     :param add_glycans: Whether to add the corresponding compound IDs of KEGG glycan entries.
-    :param kegg_rest: Optional KEGGrest object. If None, one is created with the default parameters.
+    :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
@@ -172,7 +172,7 @@ def gene_to_compound(add_glycans: bool, kegg_rest: r.KEGGrest = None) -> dict:
     """ Creates a dictionary that maps gene entry IDs (from the KEGG ko database) to related compound IDs.
 
     :param add_glycans: Whether to add the corresponding compound IDs of KEGG glycan entries.
-    :param kegg_rest: Optional KEGGrest object. If None, one is created with the default parameters.
+    :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
@@ -192,7 +192,7 @@ def gene_to_compound(add_glycans: bool, kegg_rest: r.KEGGrest = None) -> dict:
 def reaction_to_pathway(kegg_rest: r.KEGGrest = None) -> dict:
     """ Creates a dictionary that maps reaction entry IDs to related pathway IDs.
 
-    :param kegg_rest: Optional KEGGrest object. If None, one is created with the default parameters.
+    :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
@@ -202,7 +202,7 @@ def reaction_to_pathway(kegg_rest: r.KEGGrest = None) -> dict:
 def pathway_to_reaction(kegg_rest: r.KEGGrest = None) -> dict:
     """ Creates a dictionary that maps pathway entry IDs to related reaction IDs.
 
-    :param kegg_rest: Optional KEGGrest object. If None, one is created with the default parameters.
+    :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
@@ -214,7 +214,7 @@ def _pathway_to_database(database: str, duplicate_prefix: str, kegg_rest: r.KEGG
 
     :param database: The database with IDs to be mapped to from pathway IDs.
     :param duplicate_prefix: The prefix of duplicate pathway IDs to remove from the mapping.
-    :param kegg_rest: Optional KEGGrest object. If None, one is created with the default parameters.
+    :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
@@ -236,7 +236,7 @@ def _pathway_to_database(database: str, duplicate_prefix: str, kegg_rest: r.KEGG
 def gene_to_pathway(kegg_rest: r.KEGGrest = None) -> dict:
     """ Creates a dictionary that maps gene entry IDs (from the KEGG ko database) to related pathway IDs.
 
-    :param kegg_rest: Optional KEGGrest object. If None, one is created with the default parameters.
+    :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
@@ -246,7 +246,7 @@ def gene_to_pathway(kegg_rest: r.KEGGrest = None) -> dict:
 def pathway_to_gene(kegg_rest: r.KEGGrest = None) -> dict:
     """ Creates a dictionary that maps pathway entry IDs to related gene IDs (from the KEGG ko database).
 
-    :param kegg_rest: Optional KEGGrest object. If None, one is created with the default parameters.
+    :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
@@ -256,7 +256,7 @@ def pathway_to_gene(kegg_rest: r.KEGGrest = None) -> dict:
 def reaction_to_gene(kegg_rest: r.KEGGrest = None) -> dict:
     """ Creates a dictionary that maps reaction entry IDs to related gene IDs (from the KEGG ko database).
 
-    :param kegg_rest: Optional KEGGrest object. If None, one is created with the default parameters.
+    :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
@@ -266,7 +266,7 @@ def reaction_to_gene(kegg_rest: r.KEGGrest = None) -> dict:
 def gene_to_reaction(kegg_rest: r.KEGGrest = None) -> dict:
     """ Creates a dictionary that maps gene entry IDs (from the KEGG ko database) to related reaction IDs.
 
-    :param kegg_rest: Optional KEGGrest object. If None, one is created with the default parameters.
+    :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
