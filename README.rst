@@ -26,6 +26,10 @@ Install on Windows
 
 See our PyPi page `here <https://pypi.org/project/kegg-pull/>`__.
 
+Questions, Feature Requests, and Bug Reports
+--------------------------------------------
+Please submit any questions or feature requests you may have and report any potential bugs/errors you observe on `our GitHub issues page <https://github.com/MoseleyBioinformaticsLab/kegg_pull/issues>`__.
+
 Dependencies
 ------------
 Note, the ``pip`` command will install dependencies automatically.
