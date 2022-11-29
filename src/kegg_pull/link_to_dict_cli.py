@@ -77,8 +77,8 @@ def main():
             target_database_name=args['<target-database-name>'], source_database_name=args['source-database-name']
         )
     else:
-        entry_ids: list = u.handle_cli_input(input_source=args['<entry-ids>'])
+        entry_ids: list = u.parse_input_sequence(input_source=args['<entry-ids>'])
         mapping: dict = ltd.entries_link(target_database_name=args['--link-target'], entry_ids=entry_ids)
 
     mapping: str = j.dumps(obj=mapping, indent=2)
-    u.handle_cli_output(output_target=args['--output'], output_content=mapping)
+    u.save_output(output_target=args['--output'], output_content=mapping)

@@ -66,7 +66,7 @@ def main():
         else:
             kegg_response: r.KEGGresponse = kegg_rest.list(database_name=database_name)
     elif args['get']:
-        entry_ids: list = u.handle_cli_input(input_source=entry_ids)
+        entry_ids: list = u.parse_input_sequence(input_source=entry_ids)
         entry_field: str = args['--entry-field']
 
         if test:
@@ -78,7 +78,7 @@ def main():
             kegg_response: r.KEGGresponse = kegg_rest.get(entry_ids=entry_ids, entry_field=entry_field)
     elif args['find']:
         if args['<keywords>']:
-            keywords: list = u.handle_cli_input(input_source=args['<keywords>'])
+            keywords: list = u.parse_input_sequence(input_source=args['<keywords>'])
 
             if test:
                 test_result: bool = kegg_rest.test(
@@ -101,7 +101,7 @@ def main():
     elif args['conv']:
         if args['--conv-target']:
             target_database_name: str = args['--conv-target']
-            entry_ids: list = u.handle_cli_input(input_source=entry_ids)
+            entry_ids: list = u.parse_input_sequence(input_source=entry_ids)
 
             if test:
                 test_result: bool = kegg_rest.test(KEGGurl=ku.EntriesConvKEGGurl, target_database_name=target_database_name, entry_ids=entry_ids)
@@ -125,7 +125,7 @@ def main():
     elif args['link']:
         if args['--link-target']:
             target_database_name: str = args['--link-target']
-            entry_ids: list = u.handle_cli_input(input_source=entry_ids)
+            entry_ids: list = u.parse_input_sequence(input_source=entry_ids)
 
             if test:
                 test_result: bool = kegg_rest.test(
@@ -149,7 +149,7 @@ def main():
                     target_database_name=target_database_name, source_database_name=source_database_name
                 )
     else:
-        drug_entry_ids: list = u.handle_cli_input(input_source=args['<drug-entry-ids>'])
+        drug_entry_ids: list = u.parse_input_sequence(input_source=args['<drug-entry-ids>'])
 
         if test:
             test_result: bool = kegg_rest.test(KEGGurl=ku.DdiKEGGurl, drug_entry_ids=drug_entry_ids)
@@ -173,4 +173,4 @@ def main():
         else:
             response_body: str = kegg_response.text_body
 
-        u.handle_cli_output(output_target=args['--output'], output_content=response_body)
+        u.save_output(output_target=args['--output'], output_content=response_body)

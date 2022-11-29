@@ -4,7 +4,9 @@ Flattening A Pathways Brite Hierarchy
 Contains classes for flattening a pathways Brite hierarchy (ID: 'br:br08901') into a collection of its nodes, mapping a node ID to information about it, enabling combinations with other KEGG data.
 """
 from . import rest as r
+from . import _utils as u
 
+import zipfile as zf
 import json as j
 import jsonschema as js
 import logging as l
@@ -136,14 +138,21 @@ class PathwayOrganizer:
         return j.dumps(self._hierarchy_nodes, indent=1)
 
     def load_from_json(self, file_path: str) -> None:
-        # TODO option to load from a zip file?
         """ Loads the hierarchy_nodes property from a JSON file. Re-creates the hierarchy_nodes via parse_from_kegg() if the JSON
         file doesn't follow the correct schema.
 
-        :param file_path: Path to the JSON file.
+        :param file_path: Path to the JSON file. If reading from a ZIP archive, the file path must be in the following format: /path/to/zip-archive.zip:/path/to/file (e.g. ./archive.zip:hierarchy-nodes.json).
         """
-        with open(file_path, 'r') as file:
-            hierarchy_nodes: dict = j.load(file)
+        if '.zip:' in file_path:
+            [file_location, file_name] = file_path.split('.zip:')
+            file_location: str = file_location + '.zip'
+
+            with zf.ZipFile(file_location, 'r') as zip_file:
+                hierarchy_nodes: str = zip_file.read(file_name)
+                hierarchy_nodes: dict = j.loads(s=hierarchy_nodes)
+        else:
+            with open(file_path, 'r') as file:
+                hierarchy_nodes: dict = j.load(file)
 
         schema = {
             'type': 'object',
@@ -183,12 +192,10 @@ class PathwayOrganizer:
     def save_to_json(self, file_path: str) -> None:
         """ Saves the hierarchy_nodes property to a JSON file.
 
-        :param file_path: The path to the JSON file to save the hierarchy_nodes mapping.
+        :param file_path: The path to the JSON file to save the hierarchy_nodes mapping. If saving in a ZIP archive, the file path must be in the following format: /path/to/zip-archive.zip:/path/to/file (e.g. ./archive.zip:hierarchy-nodes.json).
         """
         if self._hierarchy_nodes is None:
             self.load_from_kegg()
 
         json_string: str = str(self)
-
-        with open(file_path, 'w') as file:
-            file.write(json_string)
+        u.save_output(output_target=file_path, output_content=json_string)

@@ -40,7 +40,7 @@ def _get_range_values(range_values: t.Union[int, float, tuple], value_type: type
         )
 
 
-def handle_cli_input(input_source: str) -> list:
+def parse_input_sequence(input_source: str) -> list:
     if input_source == '-':
         # Read from standard input
         inputs: str = sys.stdin.read()
@@ -59,7 +59,7 @@ def handle_cli_input(input_source: str) -> list:
     return inputs
 
 
-def handle_cli_output(output_target: str, output_content: t.Union[str, bytes]) -> None:
+def save_output(output_target: str, output_content: t.Union[str, bytes]) -> None:
     if output_target is None:
         if type(output_content) is bytes:
             l.warning('Printing binary output...')
