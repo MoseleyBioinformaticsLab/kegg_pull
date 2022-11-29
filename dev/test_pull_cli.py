@@ -20,22 +20,22 @@ def teardown():
 test_main_data = [
     (
         ['entry-ids', '-'], {'n_tries': None, 'time_out': None, 'sleep_time': None},
-        {'output': '.', 'entry_field': None, 'multiprocess_lock_save': False}, 'u.handle_cli_input', {'input_source': '-'},
+        {'output': '.', 'entry_field': None, 'multiprocess_lock_save': False}, 'u.parse_input_sequence', {'input_source': '-'},
         'SingleProcessMultiplePull', {'force_single_entry': False, 'unsuccessful_threshold': None}
     ),
     (
         ['entry-ids', '1,2', '--output=out-dir/', '--sleep-time=10.1'], {'n_tries': None, 'time_out': None, 'sleep_time': 10.1},
-        {'output': 'out-dir/', 'entry_field': None, 'multiprocess_lock_save': False}, 'u.handle_cli_input', {'input_source': '1,2'},
+        {'output': 'out-dir/', 'entry_field': None, 'multiprocess_lock_save': False}, 'u.parse_input_sequence', {'input_source': '1,2'},
         'SingleProcessMultiplePull', {'force_single_entry': False, 'unsuccessful_threshold': None}
     ),
     (
         ['entry-ids', '1,2', '--n-tries=4', '--time-out=50', '--entry-field=mol'], {'n_tries': 4, 'time_out': 50, 'sleep_time': None},
-        {'output': '.', 'entry_field': 'mol', 'multiprocess_lock_save': False}, 'u.handle_cli_input', {'input_source': '1,2'},
+        {'output': '.', 'entry_field': 'mol', 'multiprocess_lock_save': False}, 'u.parse_input_sequence', {'input_source': '1,2'},
         'SingleProcessMultiplePull', {'force_single_entry': False, 'unsuccessful_threshold': None}
     ),
     (
         ['entry-ids', '-', '--entry-field=mol'], {'n_tries': None, 'time_out': None, 'sleep_time': None},
-        {'output': '.', 'entry_field': 'mol', 'multiprocess_lock_save': False}, 'u.handle_cli_input', {'input_source': '-'},
+        {'output': '.', 'entry_field': 'mol', 'multiprocess_lock_save': False}, 'u.parse_input_sequence', {'input_source': '-'},
         'SingleProcessMultiplePull', {'force_single_entry': False, 'unsuccessful_threshold': None}
     ),
     (
@@ -52,7 +52,7 @@ test_main_data = [
     ),
     (
         ['entry-ids', '-', '--ut=0.4'], {'n_tries': None, 'time_out': None, 'sleep_time': None},
-        {'output': '.', 'entry_field': None, 'multiprocess_lock_save': False}, 'u.handle_cli_input', {'input_source': '-'},
+        {'output': '.', 'entry_field': None, 'multiprocess_lock_save': False}, 'u.parse_input_sequence', {'input_source': '-'},
         'SingleProcessMultiplePull', {'force_single_entry': False, 'unsuccessful_threshold': 0.4}
     )
 ]

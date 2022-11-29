@@ -30,7 +30,7 @@ def main():
     if args['database']:
         entry_ids: list = ei.from_database(database_name=database_name)
     elif args['keywords']:
-        keywords: list = u.handle_cli_input(input_source=args['<keywords>'])
+        keywords: list = u.parse_input_sequence(input_source=args['<keywords>'])
         entry_ids: list = ei.from_keywords(database_name=database_name, keywords=keywords)
     else:
         formula, exact_mass, molecular_weight = u.get_molecular_attribute_args(args=args)
@@ -40,4 +40,4 @@ def main():
         )
 
     entry_ids: str = '\n'.join(entry_ids)
-    u.handle_cli_output(output_target=args['--output'], output_content=entry_ids)
+    u.save_output(output_target=args['--output'], output_content=entry_ids)

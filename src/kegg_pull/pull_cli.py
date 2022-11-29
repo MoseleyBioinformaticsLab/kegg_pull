@@ -50,7 +50,7 @@ def main():
 
         entry_ids: list = ei.from_database(database_name=database_name)
     else:
-        entry_ids: list = u.handle_cli_input(input_source=args['<entry-ids>'])
+        entry_ids: list = u.parse_input_sequence(input_source=args['<entry-ids>'])
 
     unsuccessful_threshold: float = float(args['--ut']) if args['--ut'] is not None else None
 
