@@ -4,37 +4,21 @@ import os
 
 import kegg_pull.rest as r
 import kegg_pull.entry_ids as ei
+import kegg_pull.kegg_url as ku
 import dev.utils as u
 
 
-test_process_response_exception_data = [
-    ('The KEGG request failed to pull the entry IDs from the following URL: url/mock', r.KEGGresponse.Status.FAILED),
-    (
-        'The KEGG request timed out while trying to pull the entry IDs from the following URL: url/mock',
-        r.KEGGresponse.Status.TIMEOUT
-    )
-]
-@pt.mark.parametrize('expected_message,status', test_process_response_exception_data)
-def test_process_response_exception(mocker, expected_message: str, status: r.KEGGresponse.Status):
-    kegg_response_mock = mocker.MagicMock(kegg_url=mocker.MagicMock(url='url/mock'), status=status)
-    kegg_rest_mock = mocker.MagicMock(method=mocker.MagicMock(return_value=kegg_response_mock))
-
-    with pt.raises(RuntimeError) as error:
-        ei._process_response(method='method', kegg_rest=kegg_rest_mock)
-
-    u.assert_expected_error_message(expected_message=expected_message, error=error)
-
-
 test_from_kegg_rest_data = [
-    (ei.from_database, 'list', {'database_name': 'compound'}),
-    (ei.from_keywords, 'keywords_find', {'database_name': 'compound', 'keywords': ['kw1', 'kw2']}),
+    (ei.from_database, ku.ListKEGGurl, {'database_name': 'compound'}, 'list/compound'),
+    (ei.from_keywords, ku.KeywordsFindKEGGurl, {'database_name': 'compound', 'keywords': ['kw1', 'kw2']}, 'find/compound/kw1+kw2'),
     (
-        ei.from_molecular_attribute, 'molecular_find',
-        {'database_name': 'compound', 'formula': 'M4O3C2K1', 'exact_mass': None, 'molecular_weight': None}
+        ei.from_molecular_attribute, ku.MolecularFindKEGGurl,
+        {'database_name': 'compound', 'formula': 'M4O3C2K1', 'exact_mass': None, 'molecular_weight': None},
+        'find/compound/M4O3C2K1/formula'
     )
 ]
-@pt.mark.parametrize('get_entry_ids,rest_method,kwargs', test_from_kegg_rest_data)
-def test_from_kegg_rest(mocker, get_entry_ids: t.Callable, rest_method: str, kwargs: dict):
+@pt.mark.parametrize('get_entry_ids,KEGGurl,kwargs,url', test_from_kegg_rest_data)
+def test_from_kegg_rest(mocker, get_entry_ids: t.Callable, KEGGurl: type, kwargs: dict, url: str):
     text_body_mock = '''
     cpd:C22501	alpha-D-Xylulofuranose
     cpd:C22502	alpha-D-Fructofuranose; alpha-D-Fructose
@@ -50,16 +34,16 @@ def test_from_kegg_rest(mocker, get_entry_ids: t.Callable, rest_method: str, kwa
     cpd:C22514	2,3-Bis-O-(geranylfarnesyl)-sn-glycerol 1-phosphate
     '''
 
-    rest_method_mock = mocker.MagicMock(
-        return_value=mocker.MagicMock(text_body=text_body_mock, status=r.KEGGresponse.Status.SUCCESS)
+    get_mock: mocker.MagicMock = mocker.patch(
+        'kegg_pull.rest.rq.get',
+        return_value=mocker.MagicMock(text=text_body_mock, status_code=200)
     )
 
-    kegg_rest_mock = mocker.MagicMock()
-    kegg_rest_mock.__setattr__(rest_method, rest_method_mock)
-    KEGGrestMock = mocker.patch('kegg_pull.entry_ids.r.KEGGrest', return_value=kegg_rest_mock)
+    request_and_check_error_spy: mocker.MagicMock = mocker.spy(r, 'request_and_check_error')
     actual_entry_ids: list = get_entry_ids(**kwargs)
-    rest_method_mock.assert_called_once_with(**kwargs)
-    KEGGrestMock.assert_called_once_with()
+    request_and_check_error_spy.assert_called_once_with(kegg_rest=None, KEGGurl=KEGGurl, **kwargs)
+    url = f'{ku.BASE_URL}/{url}'
+    get_mock.assert_called_once_with(url=url, timeout=60)
 
     expected_entry_ids = [
         'cpd:C22501', 'cpd:C22502', 'cpd:C22500', 'cpd:C22504', 'cpd:C22506', 'cpd:C22507', 'cpd:C22509', 'cpd:C22510',
