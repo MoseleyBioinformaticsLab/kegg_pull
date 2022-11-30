@@ -3,7 +3,7 @@ Usage:
     kegg_pull link-to-dict -h | --help
     kegg_pull link-to-dict <target-database-name> <source-database-name> [--output=<output>]
     kegg_pull link-to-dict --link-target=<target-database-name> <entry-ids> [--output=<output>]
-    kegg_pull link-to-dict pathway-to-compound [--add-glycans] [--output=<output>]
+    kegg_pull link-to-dict pathway-to-compound [--add-glycans] [--add-drugs] [--output=<output>]
     kegg_pull link-to-dict reaction-to-compound [--add-glycans] [--output=<output>]
     kegg_pull link-to-dict gene-to-compound [--add-glycans] [--output=<output>]
     kegg_pull link-to-dict compound-to-pathway [--add-glycans] [--output=<output>]
@@ -25,6 +25,7 @@ Options:
     <entry-ids>                             Comma separated list of entry IDs (e.g. Id1,Id2,Id3 etc.). Or if equal to "-", entry IDs are read from standard input, one entry ID per line; Press CTRL+D to finalize input or pipe (e.g. cat file.txt | kegg_pull link-to-dict --link-target=drug - ...).
     pathway-to-compound                     Creates a specific mapping of KEGG entry IDs.
     --add-glycans                           Whether to add the compound IDs corresponding to KEGG glycan entries.
+    --add-drugs                             Whether to add the compound IDs corresponding to KEGG drug entries.
     reaction-to-compound                    Creates a specific mapping of KEGG entry IDs.
     gene-to-compound                        Creates a specific mapping of KEGG entry IDs.
     compound-to-pathway                     Creates a specific mapping of KEGG entry IDs.
@@ -47,19 +48,20 @@ from . import _utils as u
 def main():
     args: dict = d.docopt(__doc__)
     add_glycans: bool = args['--add-glycans']
+    add_drugs: bool = args['--add-drugs']
 
     if args['pathway-to-compound']:
-        mapping: dict = ltd.pathway_to_compound(add_glycans=add_glycans)
+        mapping: dict = ltd.pathway_to_compound(add_glycans=add_glycans, add_drugs=add_drugs)
     elif args['reaction-to-compound']:
-        mapping: dict = ltd.reaction_to_compound(add_glycans=add_glycans)
+        mapping: dict = ltd.reaction_to_compound(add_glycans=add_glycans, add_drugs=add_drugs)
     elif args['gene-to-compound']:
-        mapping: dict = ltd.gene_to_compound(add_glycans=add_glycans)
+        mapping: dict = ltd.gene_to_compound(add_glycans=add_glycans, add_drugs=add_drugs)
     elif args['compound-to-pathway']:
-        mapping: dict = ltd.compound_to_pathway(add_glycans=add_glycans)
+        mapping: dict = ltd.compound_to_pathway(add_glycans=add_glycans, add_drugs=add_drugs)
     elif args['compound-to-reaction']:
-        mapping: dict = ltd.compound_to_reaction(add_glycans=add_glycans)
+        mapping: dict = ltd.compound_to_reaction(add_glycans=add_glycans, add_drugs=add_drugs)
     elif args['compound-to-gene']:
-        mapping: dict = ltd.compound_to_gene(add_glycans=add_glycans)
+        mapping: dict = ltd.compound_to_gene(add_glycans=add_glycans, add_drugs=add_drugs)
     elif args['pathway-to-gene']:
         mapping: dict = ltd.pathway_to_gene()
     elif args['pathway-to-reaction']:
