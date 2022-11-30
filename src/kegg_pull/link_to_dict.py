@@ -63,15 +63,16 @@ def entries_link(target_database_name: str, entry_ids: list, kegg_rest: r.KEGGre
     )
 
 
-def compound_to_pathway(add_glycans: bool, kegg_rest: r.KEGGrest = None) -> dict:
+def compound_to_pathway(add_glycans: bool, add_drugs: bool, kegg_rest: r.KEGGrest = None) -> dict:
     """ Creates a dictionary that maps compound entry IDs to related pathway IDs.
 
     :param add_glycans: Whether to add the corresponding compound IDs of KEGG glycan entries.
+    :param add_drugs: Whether to add the corresponding compound IDs of KEGG drug entries.
     :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
-    return reverse_mapping(mapping=pathway_to_compound(add_glycans=add_glycans, kegg_rest=kegg_rest))
+    return reverse_mapping(mapping=pathway_to_compound(add_glycans=add_glycans, add_drugs=add_drugs, kegg_rest=kegg_rest))
 
 
 def reverse_mapping(mapping: dict) -> dict:
@@ -102,82 +103,99 @@ def _add_to_dict(dictionary: dict, key: str, values: set) -> None:
         dictionary[key] = values
 
 
-def pathway_to_compound(add_glycans: bool, kegg_rest: r.KEGGrest = None) -> dict:
+def pathway_to_compound(add_glycans: bool, add_drugs: bool, kegg_rest: r.KEGGrest = None) -> dict:
     """ Creates a dictionary that maps pathway entry IDs to related compound IDs.
 
     :param add_glycans: Whether to add the corresponding compound IDs of KEGG glycan entries.
+    :param add_drugs: Whether to add the corresponding compound IDs of KEGG drug entries.
     :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
-    return _database_to_compound(database='pathway', add_glycans=add_glycans, kegg_rest=kegg_rest)
+    return _database_to_compound(database='pathway', add_glycans=add_glycans, add_drugs=add_drugs, kegg_rest=kegg_rest)
 
 
-def _database_to_compound(database: str, add_glycans, kegg_rest: t.Union[r.KEGGrest, None]) -> dict:
+def _database_to_compound(database: str, add_glycans: bool, add_drugs: bool, kegg_rest: t.Union[r.KEGGrest, None]) -> dict:
     """ Creates a dictionary that maps the entry IDs of a given KEGG database to related compound IDs.
 
     :param database: The database with IDs to map to compound IDs.
     :param add_glycans: Whether to add the corresponding compound IDs of KEGG glycan entries.
+    :param add_drugs: Whether to add the corresponding compound IDs of KEGG drug entries.
     :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
     database_to_compound: dict = database_link(target_database_name='compound', source_database_name=database, kegg_rest=kegg_rest)
 
-    if add_glycans:
-        database_to_glycan: dict = database_link(target_database_name='glycan', source_database_name=database, kegg_rest=kegg_rest)
-        glycan_to_compound: dict = database_link(target_database_name='compound', source_database_name='glycan', kegg_rest=kegg_rest)
+    def add_compound_database(compound_database: str) -> None:
+        database_to_compound_database: dict = database_link(
+            target_database_name=compound_database, source_database_name=database, kegg_rest=kegg_rest
+        )
 
-        for entry_id, glycan_ids in database_to_glycan.items():
-            for glycan_id in glycan_ids:
-                if glycan_id in glycan_to_compound.keys():
-                    glycan_compound_ids: set = glycan_to_compound[glycan_id]
-                    _add_to_dict(dictionary=database_to_compound, key=entry_id, values=glycan_compound_ids)
+        compound_database_to_compound: dict = database_link(
+            target_database_name='compound', source_database_name=compound_database, kegg_rest=kegg_rest
+        )
+
+        for entry_id, compound_database_ids in database_to_compound_database.items():
+            for compound_database_id in compound_database_ids:
+                if compound_database_id in compound_database_to_compound.keys():
+                    compound_ids: set = compound_database_to_compound[compound_database_id]
+                    _add_to_dict(dictionary=database_to_compound, key=entry_id, values=compound_ids)
+
+    if add_glycans:
+        add_compound_database(compound_database='glycan')
+
+    if add_drugs:
+        add_compound_database(compound_database='drug')
 
     return database_to_compound
 
 
-def compound_to_reaction(add_glycans: bool, kegg_rest: r.KEGGrest = None) -> dict:
+def compound_to_reaction(add_glycans: bool, add_drugs: bool, kegg_rest: r.KEGGrest = None) -> dict:
     """ Creates a dictionary that maps compound entry IDs to related reaction IDs.
 
     :param add_glycans: Whether to add the corresponding compound IDs of KEGG glycan entries.
+    :param add_drugs: Whether to add the corresponding compound IDs of KEGG drug entries.
     :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
-    return reverse_mapping(mapping=reaction_to_compound(add_glycans=add_glycans, kegg_rest=kegg_rest))
+    return reverse_mapping(mapping=reaction_to_compound(add_glycans=add_glycans, add_drugs=add_drugs, kegg_rest=kegg_rest))
 
 
-def reaction_to_compound(add_glycans: bool, kegg_rest: r.KEGGrest = None) -> dict:
+def reaction_to_compound(add_glycans: bool, add_drugs: bool, kegg_rest: r.KEGGrest = None) -> dict:
     """ Creates a dictionary that maps reaction entry IDs to related compound IDs.
 
     :param add_glycans: Whether to add the corresponding compound IDs of KEGG glycan entries.
+    :param add_drugs: Whether to add the corresponding compound IDs of KEGG drug entries.
     :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
-    return _database_to_compound(database='reaction', add_glycans=add_glycans, kegg_rest=kegg_rest)
+    return _database_to_compound(database='reaction', add_glycans=add_glycans, add_drugs=add_drugs, kegg_rest=kegg_rest)
 
-def compound_to_gene(add_glycans: bool, kegg_rest: r.KEGGrest = None) -> dict:
+def compound_to_gene(add_glycans: bool, add_drugs: bool, kegg_rest: r.KEGGrest = None) -> dict:
     """ Creates a dictionary that maps compound entry IDs to related gene IDs (from the KEGG ko database).
 
     :param add_glycans: Whether to add the corresponding compound IDs of KEGG glycan entries.
+    :param add_drugs: Whether to add the corresponding compound IDs of KEGG drug entries.
     :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
-    return reverse_mapping(mapping=gene_to_compound(add_glycans=add_glycans, kegg_rest=kegg_rest))
+    return reverse_mapping(mapping=gene_to_compound(add_glycans=add_glycans, add_drugs=add_drugs, kegg_rest=kegg_rest))
 
-def gene_to_compound(add_glycans: bool, kegg_rest: r.KEGGrest = None) -> dict:
+def gene_to_compound(add_glycans: bool, add_drugs: bool, kegg_rest: r.KEGGrest = None) -> dict:
     """ Creates a dictionary that maps gene entry IDs (from the KEGG ko database) to related compound IDs.
 
     :param add_glycans: Whether to add the corresponding compound IDs of KEGG glycan entries.
+    :param add_drugs: Whether to add the corresponding compound IDs of KEGG drug entries.
     :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
     gene_to_reaction_: dict = database_link(target_database_name='reaction', source_database_name='ko', kegg_rest=kegg_rest)
-    reaction_to_compound_: dict = reaction_to_compound(add_glycans=add_glycans, kegg_rest=kegg_rest)
+    reaction_to_compound_: dict = reaction_to_compound(add_glycans=add_glycans, add_drugs=add_drugs, kegg_rest=kegg_rest)
     gene_to_compound_: dict = {}
 
     for gene_id, reaction_ids in gene_to_reaction_.items():
