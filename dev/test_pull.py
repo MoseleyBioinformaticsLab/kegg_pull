@@ -149,10 +149,7 @@ def test_pull_separate_entries(mocker, output_dir: str):
         {'entry_ids': [success_entry_id], 'entry_field': None}, {'entry_ids': [time_out_entry_id], 'entry_field': None}
     ]
 
-    for call, expected_kwargs in zip(get_mock.call_args_list, expected_get_call_kwargs):
-        actual_kwargs: dict = call.kwargs
-
-        assert actual_kwargs == expected_kwargs
+    u.assert_call_args(function_mock=get_mock, expected_call_args_list=expected_get_call_kwargs, do_kwargs=True)
 
     assert pull_result.successful_entry_ids == (success_entry_id,)
     assert pull_result.failed_entry_ids == (failed_entry_id,)
@@ -254,10 +251,7 @@ def test_not_all_requested_entries(mocker, entry_field: str):
         {'entry_ids': [entry_id1], 'entry_field': entry_field}, {'entry_ids': [entry_id2], 'entry_field': entry_field}
     ]
 
-    for call, expected_kwargs in zip(get_mock.call_args_list, expected_get_call_kwargs):
-        actual_kwargs: dict = call.kwargs
-
-        assert actual_kwargs == expected_kwargs
+    u.assert_call_args(function_mock=get_mock, expected_call_args_list=expected_get_call_kwargs, do_kwargs=True)
 
     for entry_id, expected_file_content in zip([entry_id1, entry_id2], [separate_text_body1, separate_text_body2]):
         file_name = f'{entry_id}.{entry_field}'
@@ -300,11 +294,10 @@ def test_multiple_pull(mocker, MultiplePull: type, kwargs: dict, caplog, _):
         with pt.raises(SystemExit) as error:
             multiple_pull.pull(entry_ids=entry_ids_mock)
 
-        [record] = caplog.records
-
-        assert record.levelname == 'ERROR'
-        assert record.message == f'Unsuccessful threshold of {kwargs["unsuccessful_threshold"]} met. Aborting. ' \
+        error_message = f'Unsuccessful threshold of {kwargs["unsuccessful_threshold"]} met. Aborting. ' \
                                  f'Details saved at {p.AbstractMultiplePull.ABORTED_PULL_RESULTS_PATH}'
+
+        u.assert_error(message=error_message, caplog=caplog)
 
         assert error.value.args == (1,)
 
@@ -342,10 +335,8 @@ def test_multiple_pull(mocker, MultiplePull: type, kwargs: dict, caplog, _):
         assert multiple_pull_result.timed_out_entry_ids == expected_timed_out_entry_ids
 
         if MultiplePull is p.SingleProcessMultiplePull:
-            actual_pull_calls = getattr(single_pull_mock.pull, 'call_args_list')
-
-            for actual_calls, expected_calls in zip(actual_pull_calls, expected_pull_calls):
-                assert actual_calls.kwargs == {'entry_ids': expected_calls}
+            expected_call_args_list = [{'entry_ids': expected_pull_call} for expected_pull_call in expected_pull_calls]
+            u.assert_call_args(function_mock=single_pull_mock.pull, expected_call_args_list=expected_call_args_list, do_kwargs=True)
 
 
 @pt.mark.parametrize('MultiplePull,kwargs', test_multiple_pull_data)

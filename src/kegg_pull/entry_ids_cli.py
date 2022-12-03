@@ -40,4 +40,4 @@ def main():
         )
 
     entry_ids: str = '\n'.join(entry_ids)
-    u.save_output(output_target=args['--output'], output_content=entry_ids)
+    u.print_or_save(output_target=args['--output'], output_content=entry_ids)

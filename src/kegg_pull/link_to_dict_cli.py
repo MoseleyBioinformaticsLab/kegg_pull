@@ -39,7 +39,6 @@ Options:
     gene-to-reaction                        Creates a specific mapping of KEGG entry IDs.
 """
 import docopt as d
-import json as j
 
 from . import link_to_dict as ltd
 from . import _utils as u
@@ -74,7 +73,7 @@ def main():
         mapping: dict = ltd.reaction_to_gene()
     elif args['gene-to-reaction']:
         mapping: dict = ltd.gene_to_reaction()
-    elif args['<target-database-name']:
+    elif args['<target-database-name>']:
         mapping: dict = ltd.database_link(
             target_database_name=args['<target-database-name>'], source_database_name=args['source-database-name']
         )
@@ -82,5 +81,5 @@ def main():
         entry_ids: list = u.parse_input_sequence(input_source=args['<entry-ids>'])
         mapping: dict = ltd.entries_link(target_database_name=args['--link-target'], entry_ids=entry_ids)
 
-    mapping: str = j.dumps(obj=mapping, indent=2)
-    u.save_output(output_target=args['--output'], output_content=mapping)
+    mapping: str = ltd.to_json_string(mapping=mapping)
+    u.print_or_save(output_target=args['--output'], output_content=mapping)

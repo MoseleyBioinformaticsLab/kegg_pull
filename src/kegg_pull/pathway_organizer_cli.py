@@ -39,4 +39,4 @@ def main():
     pathway_organizer = po.PathwayOrganizer()
     pathway_organizer.load_from_kegg(top_level_nodes=top_level_nodes, filter_nodes=filter_nodes)
     hierarchy_nodes_json_string = str(pathway_organizer)
-    u.save_output(output_location=args['--output'], output_content=hierarchy_nodes_json_string)
+    u.print_or_save(output_location=args['--output'], output_content=hierarchy_nodes_json_string)

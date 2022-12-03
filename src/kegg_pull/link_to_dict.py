@@ -4,9 +4,11 @@ Creating Dictionaries From KEGG Link Requests
 Functionality for converting the output from the KEGG "link" REST operation into dictionaries linking the entry IDs from one database to the IDs of related entries.
 """
 import typing as t
+import json as j
 
 from . import rest as r
 from . import kegg_url as ku
+from . import _utils as u
 
 
 def database_link(target_database_name: str, source_database_name: str, kegg_rest: r.KEGGrest = None) -> dict:
@@ -38,7 +40,7 @@ def _to_dict(kegg_rest: t.Union[r.KEGGrest, None], KEGGurl: type, **kwargs) -> d
     linked_ids = {}
 
     for link in kegg_response.text_body.strip().split('\n'):
-        [link_from_id, link_to_id] = link.split('\t')
+        [link_from_id, link_to_id] = link.strip().split('\t')
 
         if link_from_id in linked_ids.keys():
             linked_ids[link_from_id].add(link_to_id)
@@ -136,11 +138,10 @@ def _database_to_compound(database: str, add_glycans: bool, add_drugs: bool, keg
             target_database_name='compound', source_database_name=compound_database, kegg_rest=kegg_rest
         )
 
-        for entry_id, compound_database_ids in database_to_compound_database.items():
-            for compound_database_id in compound_database_ids:
-                if compound_database_id in compound_database_to_compound.keys():
-                    compound_ids: set = compound_database_to_compound[compound_database_id]
-                    _add_to_dict(dictionary=database_to_compound, key=entry_id, values=compound_ids)
+        _add_indirect_mappings(
+            database1_to_database3=database_to_compound, database1_to_database2=database_to_compound_database,
+            database2_to_database3=compound_database_to_compound
+        )
 
     if add_glycans:
         add_compound_database(compound_database='glycan')
@@ -149,6 +150,20 @@ def _database_to_compound(database: str, add_glycans: bool, add_drugs: bool, keg
         add_compound_database(compound_database='drug')
 
     return database_to_compound
+
+
+def _add_indirect_mappings(database1_to_database3: dict, database1_to_database2: dict, database2_to_database3: dict) -> None:
+    """ Adds indirect mappings to a dictionary using an intermediary dictionary.
+
+    :param database1_to_database3: The dictionary to add indirect mappings to.
+    :param database1_to_database2: The intermediary dictionary.
+    :param database2_to_database3: The dictionary with mapped values to add.
+    """
+    for entry_id1, entry_ids2 in database1_to_database2.items():
+        for entry_id2 in entry_ids2:
+            if entry_id2 in database2_to_database3.keys():
+                entry_ids3: set = database2_to_database3[entry_id2]
+                _add_to_dict(dictionary=database1_to_database3, key=entry_id1, values=entry_ids3)
 
 
 def compound_to_reaction(add_glycans: bool, add_drugs: bool, kegg_rest: r.KEGGrest = None) -> dict:
@@ -198,11 +213,10 @@ def gene_to_compound(add_glycans: bool, add_drugs: bool, kegg_rest: r.KEGGrest =
     reaction_to_compound_: dict = reaction_to_compound(add_glycans=add_glycans, add_drugs=add_drugs, kegg_rest=kegg_rest)
     gene_to_compound_: dict = {}
 
-    for gene_id, reaction_ids in gene_to_reaction_.items():
-        for reaction_id in reaction_ids:
-            if reaction_id in reaction_to_compound_.keys():
-                compound_ids: set = reaction_to_compound_[reaction_id]
-                _add_to_dict(dictionary=gene_to_compound_, key=gene_id, values=compound_ids)
+    _add_indirect_mappings(
+        database1_to_database3=gene_to_compound_, database1_to_database2=gene_to_reaction_,
+        database2_to_database3=reaction_to_compound_
+    )
 
     return gene_to_compound_
 
@@ -289,3 +303,70 @@ def gene_to_reaction(kegg_rest: r.KEGGrest = None) -> dict:
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
     return database_link(target_database_name='reaction', source_database_name='ko', kegg_rest=kegg_rest)
+
+
+_mapping_schema = {
+    'type': 'object',
+    'minProperties': 1,
+    'additionalProperties': False,
+    'patternProperties': {
+        '^.+$': {
+            'type': 'array',
+            'minItems': 1,
+            'items': {
+                'type': 'string',
+                'minLength': 1
+            }
+        }
+    }
+}
+
+
+_validation_error_message = 'The mapping must be a dictionary of KEGG entry IDs (strings) mapped to a set of KEGG entry IDs'
+
+
+def to_json_string(mapping: dict) -> str:
+    """ Converts a mapping of linked KEGG entry IDs (dictionary created with this link_to_dict module) to a JSON string.
+
+    :param mapping: The dictionary to convert.
+    :return: The JSON string.
+    :raises ValidationError: Raised if the mapping does not follow the correct JSON schema. Should follow the correct schema if the dictionary was created with this link_to_dict module.
+    """
+    mapping_to_convert = {}
+
+    for entry_id, entry_ids in mapping.items():
+        mapping_to_convert[entry_id] = sorted(entry_ids)
+
+    u.validate_json_object(
+        json_object=mapping_to_convert, json_schema=_mapping_schema, validation_error_message=_validation_error_message
+    )
+
+    return j.dumps(mapping_to_convert, indent=2)
+
+
+def save_to_json(mapping: dict, file_path: str) -> None:
+    """ Saves a mapping of linked KEGG entry IDs (dictionary created with this link_to_dict module) to a JSON file, either in a
+    regular directory or ZIP archive.
+
+    :param mapping: The mapping to save.
+    :param file_path: The path to the JSON file. If in a ZIP archive, the file path must be in the following format: /path/to/zip-archive.zip:/path/to/file (e.g. ./archive.zip:mapping.json).
+    :raises ValidationError: Raised if the mapping does not follow the correct JSON schema. Should follow the correct schema if the dictionary was created with this link_to_dict module.
+    """
+    mapping: str = to_json_string(mapping=mapping)
+    u.save_output(output_target=file_path, output_content=mapping)
+
+
+def load_from_json(file_path: str) -> dict:
+    """ Loads a mapping of linked KEGG entry IDs (dictionary created with this link_to_dict module) to a JSON file, either in a
+    regular directory or ZIP archive.
+
+    :param file_path: The path to the JSON file. If in a ZIP archive, the file path must be in the following format: /path/to/zip-archive.zip:/path/to/file (e.g. ./archive.zip:mapping.json).
+    :return: The mapping.
+    :raises ValidationError: Raised if the mapping does not follow the correct JSON schema. Should follow the correct schema if the dictionary was created with this link_to_dict module.
+    """
+    mapping: dict = u.load_json_file(file_path=file_path, json_schema=_mapping_schema, validation_error_message=_validation_error_message)
+
+    for entry_id, entry_ids in mapping.items():
+        mapping[entry_id] = set(entry_ids)
+
+    return mapping

@@ -6,9 +6,7 @@ Contains classes for flattening a pathways Brite hierarchy (ID: 'br:br08901') in
 from . import rest as r
 from . import _utils as u
 
-import zipfile as zf
 import json as j
-import jsonschema as js
 import logging as l
 
 
@@ -124,13 +122,17 @@ class PathwayOrganizer:
 
         return key
 
+    def _check_hierarchy_nodes_loaded(self) -> None:
+        """ Determines if the hierarchy nodes have been loaded and raises an exception otherwise."""
+        if self._hierarchy_nodes is None:
+            raise ValueError('The hierarchy nodes have node been loaded yet. Use either load_from_kegg or load_from_json')
+
     def __str__(self) -> str:
         """ Converts the hierarchy nodes to a JSON string.
 
         :return: The JSON string version of the hierarchy nodes.
         """
-        if self._hierarchy_nodes is None:
-            self.load_from_kegg()
+        self._check_hierarchy_nodes_loaded()
 
         for node_key, node in self._hierarchy_nodes.items():
             node['children'] = sorted(node['children'])
@@ -143,59 +145,53 @@ class PathwayOrganizer:
 
         :param file_path: Path to the JSON file. If reading from a ZIP archive, the file path must be in the following format: /path/to/zip-archive.zip:/path/to/file (e.g. ./archive.zip:hierarchy-nodes.json).
         """
-        if '.zip:' in file_path:
-            [file_location, file_name] = file_path.split('.zip:')
-            file_location: str = file_location + '.zip'
-
-            with zf.ZipFile(file_location, 'r') as zip_file:
-                hierarchy_nodes: str = zip_file.read(file_name)
-                hierarchy_nodes: dict = j.loads(s=hierarchy_nodes)
-        else:
-            with open(file_path, 'r') as file:
-                hierarchy_nodes: dict = j.load(file)
-
         schema = {
             'type': 'object',
+            'minProperties': 1,
+            'additionalProperties': False,
             'patternProperties': {
-                '^.*$': {
+                '^.+$': {
                     'type': 'object',
                     'required': ['name', 'level', 'parent', 'children', 'entry-id'],
                     'additionalProperties': False,
                     'properties': {
                         'name': {
-                            'type': 'string'
+                            'type': 'string',
+                            'minLength': 1
                         },
                         'level': {
-                            'type': 'number'
+                            'type': 'integer',
+                            'minimum': 1
                         },
                         'parent': {
-                            'type': ['string', 'null']
+                            'type': ['string', 'null'],
+                            'minLength': 1
                         },
                         'children': {
+                            'minItems': 1,
                             'type': ['array', 'null']
                         },
                         'entry-id': {
-                            'type': ['string', 'null']
+                            'type': ['string', 'null'],
+                            'minLength': 1
                         }
                     }
                 }
             }
         }
 
-        try:
-            js.validate(instance=hierarchy_nodes, schema=schema)
-            self._hierarchy_nodes = hierarchy_nodes
-        except js.exceptions.ValidationError:
-            l.error(f'The pathway organizer JSON file at {file_path} is corrupted. Re-creating hierarchy nodes...')
-            self.load_from_kegg()
+        hierarchy_nodes: dict = u.load_json_file(
+            file_path=file_path, json_schema=schema,
+            validation_error_message=f'Failed to load the hierarchy nodes. The pathway organizer JSON file at {file_path} is corrupted and will need to be re-created.'
+        )
+
+        self._hierarchy_nodes = hierarchy_nodes
 
     def save_to_json(self, file_path: str) -> None:
         """ Saves the hierarchy_nodes property to a JSON file.
 
         :param file_path: The path to the JSON file to save the hierarchy_nodes mapping. If saving in a ZIP archive, the file path must be in the following format: /path/to/zip-archive.zip:/path/to/file (e.g. ./archive.zip:hierarchy-nodes.json).
         """
-        if self._hierarchy_nodes is None:
-            self.load_from_kegg()
-
+        self._check_hierarchy_nodes_loaded()
         json_string: str = str(self)
         u.save_output(output_target=file_path, output_content=json_string)
