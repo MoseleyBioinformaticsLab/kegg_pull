@@ -8,24 +8,31 @@ import kegg_pull.__main__ as m
 import kegg_pull.entry_ids_cli as ei_cli
 import kegg_pull.rest_cli as r_cli
 import kegg_pull.pull_cli as p_cli
+import kegg_pull.link_to_dict_cli as ltd_cli
+import kegg_pull.pathway_organizer_cli as po_cli
+import dev.utils as u
 
 
 def test_main_help(mocker):
     mocker.patch('sys.argv', ['kegg_pull', '--full-help'])
     print_mock: mocker.MagicMock = mocker.patch('builtins.print')
     m.main()
-    print_mock.assert_any_call(m.__doc__)
-    print_mock.assert_any_call(p_cli.__doc__)
-    print_mock.assert_any_call(ei_cli.__doc__)
-    print_mock.assert_any_call(r_cli.__doc__)
-    mocker.patch('sys.argv', ['kegg_pull', '--help'])
-    print_mock.reset_mock()
-    m.main()
-    print_mock.assert_called_once_with(m.__doc__)
-    print_mock.reset_mock()
-    mocker.patch('sys.argv', ['kegg_pull'])
-    m.main()
-    print_mock.assert_called_once_with(m.__doc__)
+    delimiter: str = '-'*80
+
+    expected_print_call_args = [
+        (m.__doc__,), (delimiter,), (p_cli.__doc__,), (delimiter,), (ei_cli.__doc__,), (delimiter,), (ltd_cli.__doc__,),
+        (delimiter,), (po_cli.__doc__,), (delimiter,), (r_cli.__doc__,)
+    ]
+
+    u.assert_call_args(function_mock=print_mock, expected_call_args_list=expected_print_call_args, do_kwargs=False)
+
+    for help_arg in (['--help'], ['-h'], []):
+        help_args = ['kegg_pull']
+        help_args.extend(help_arg)
+        mocker.patch('sys.argv', help_args)
+        print_mock.reset_mock()
+        m.main()
+        print_mock.assert_called_once_with(m.__doc__)
 
 
 def test_main_version(mocker):
@@ -174,3 +181,40 @@ def test_main_pull(mocker, args: list, output: str):
         actual_pull_results: dict = j.load(file)
 
     assert actual_pull_results == expected_pull_results
+
+
+# TODO Uncomment
+#
+# def remove_mapping_file(name='mapping_path'):
+#     mapping_path = 'mapping.zip'
+#
+#     yield mapping_path
+#
+#     os.remove(mapping_path)
+#
+#
+# def test_main_link_to_dict(mocker, mapping_path):
+#     args: list = ['kegg_pull', 'link-to-dict', '--link-target=module', '-', '--output=mapping.zip:subdir/mapping.json']
+#     mocker.patch('sys.argv', args)
+#
+#     stdin_mock = """
+#         K12696
+#         K22365
+#         K22435
+#     """
+#
+#     stdin_mock: mocker.MagicMock = mocker.patch('kegg_pull._utils.sys.stdin.read', return_value=stdin_mock)
+#     m.main()
+#     stdin_mock.assert_called_once_with()
+#
+#     with open('dev/test_data/link-to-dict.json', 'r') as f:
+#         expected_mapping: dict = j.load(f)
+#
+#     with zf.ZipFile(mapping_path, 'r') as zip_file:
+#         actual_mapping: bytes = zip_file.read('subdir/mapping.json')
+#         actual_mapping: dict = j.loads(s=actual_mapping)
+#
+#     assert actual_mapping == expected_mapping
+
+
+# TODO test pathway organizer with metabolism nodes and filtering the overview node (same as for machine learning project)

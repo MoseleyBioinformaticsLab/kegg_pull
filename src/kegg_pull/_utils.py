@@ -3,6 +3,8 @@ import typing as t
 import zipfile as zf
 import os
 import sys
+import json as j
+import jsonschema as js
 
 
 def get_molecular_attribute_args(args: dict) -> tuple:
@@ -40,6 +42,32 @@ def _get_range_values(range_values: t.Union[int, float, tuple], value_type: type
         )
 
 
+def load_json_file(file_path: str, json_schema: dict, validation_error_message: str) -> dict:
+    if '.zip:' in file_path:
+        [file_location, file_name] = file_path.split('.zip:')
+        file_location: str = file_location + '.zip'
+
+        with zf.ZipFile(file_location, 'r') as zip_file:
+            json_object: bytes = zip_file.read(file_name)
+            json_object: dict = j.loads(s=json_object)
+    else:
+        with open(file_path, 'r') as file:
+            json_object: dict = j.load(file)
+
+    validate_json_object(json_object=json_object, json_schema=json_schema, validation_error_message=validation_error_message)
+
+    return json_object
+
+
+def validate_json_object(json_object: dict, json_schema: dict, validation_error_message: str) -> None:
+    try:
+        js.validate(json_object, json_schema)
+    except js.exceptions.ValidationError as e:
+        l.error(validation_error_message)
+
+        raise e
+
+
 def parse_input_sequence(input_source: str) -> list:
     if input_source == '-':
         # Read from standard input
@@ -59,21 +87,25 @@ def parse_input_sequence(input_source: str) -> list:
     return inputs
 
 
-def save_output(output_target: str, output_content: t.Union[str, bytes]) -> None:
+def print_or_save(output_target: str, output_content: t.Union[str, bytes]) -> None:
     if output_target is None:
         if type(output_content) is bytes:
             l.warning('Printing binary output...')
 
         print(output_content)
     else:
-        if '.zip:' in output_target:
-            [file_location, file_name] = output_target.split('.zip:')
-            file_location: str = file_location + '.zip'
-        else:
-            file_location, file_name = os.path.split(output_target)
-            file_location = '.' if file_location == '' else file_location
+        save_output(output_target=output_target, output_content=output_content)
 
-        save_file(file_location=file_location, file_content=output_content, file_name=file_name)
+
+def save_output(output_target: str, output_content: t.Union[str, bytes]) -> None:
+    if '.zip:' in output_target:
+        [file_location, file_name] = output_target.split('.zip:')
+        file_location: str = file_location + '.zip'
+    else:
+        file_location, file_name = os.path.split(output_target)
+        file_location = '.' if file_location == '' else file_location
+
+    save_file(file_location=file_location, file_content=output_content, file_name=file_name)
 
 
 def save_file(file_location: str, file_content: t.Union[str, bytes], file_name: str) -> None:

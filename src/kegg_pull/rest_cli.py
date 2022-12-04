@@ -173,4 +173,4 @@ def main():
         else:
             response_body: str = kegg_response.text_body
 
-        u.save_output(output_target=args['--output'], output_content=response_body)
+        u.print_or_save(output_target=args['--output'], output_content=response_body)
