@@ -1,9 +1,5 @@
 import pytest as pt
-import unittest.mock as mock
-import os
-import shutil as sh
 import typing as t
-import zipfile as zf
 
 import kegg_pull.rest as r
 import kegg_pull.rest_cli as r_cli
@@ -35,13 +31,14 @@ def test_main_exception(mocker, expected_message: str, status):
 
 
 test_main_args = [
-    ['info', 'ligand'], ['list', 'module'], ['get', 'x,y,z'], ['get', ',,,a', '--entry-field=image'],
-    ['find', 'pathway', 'a,b,c,,,'], ['find', 'drug', '--formula=CO2'], ['find', 'drug', '--em=20.2'],
-    ['find', 'drug', '--mw=202'], ['find', 'drug', '--em=20.2', '--em=30.3'],
-    ['find', 'drug', '--mw=202', '--mw=303'], ['conv', 'kegg-db', 'out-db'],
-    ['conv', '--conv-target=genes', 'eid1,eid2'], ['link', 'target-db', 'source-db'],
-    ['link', '--link-target=target-db', ',x,,,y'], ['ddi', 'de1,de2,de3'], ['get', '-'], ['find', 'pathway', '-'],
-    ['conv', '--conv-target=genes', '-'], ['link', '--link-target=target-db', '-'], ['ddi', '-']
+    ['rest', 'info', 'ligand'], ['rest', 'list', 'module'], ['rest', 'get', 'x,y,z'], ['rest', 'get', ',,,a', '--entry-field=image'],
+    ['rest', 'find', 'pathway', 'a,b,c,,,'], ['rest', 'find', 'drug', '--formula=CO2'], ['rest', 'find', 'drug', '--em=20.2'],
+    ['rest', 'find', 'drug', '--mw=202'], ['rest', 'find', 'drug', '--em=20.2', '--em=30.3'],
+    ['rest', 'find', 'drug', '--mw=202', '--mw=303'], ['rest', 'conv', 'kegg-db', 'out-db'],
+    ['rest', 'conv', '--conv-target=genes', 'eid1,eid2'], ['rest', 'link', 'target-db', 'source-db'],
+    ['rest', 'link', '--link-target=target-db', ',x,,,y'], ['rest', 'ddi', 'de1,de2,de3'], ['rest', 'get', '-'],
+    ['rest', 'find', 'pathway', '-'], ['rest', 'conv', '--conv-target=genes', '-'], ['rest', 'link', '--link-target=target-db', '-'],
+    ['rest', 'ddi', '-']
 ]
 
 test_main_kwargs = [
@@ -59,92 +56,60 @@ test_main_kwargs = [
 ]
 
 test_main_data = [
-    ('info', test_main_args[0], test_main_kwargs[0], False, None),
-    ('list', test_main_args[1], test_main_kwargs[1], False, None),
-    ('get', test_main_args[2], test_main_kwargs[2], False, None),
-    ('get', test_main_args[3], test_main_kwargs[3], True, None),
-    ('keywords_find', test_main_args[4], test_main_kwargs[4], False, None),
-    ('molecular_find', test_main_args[5], test_main_kwargs[5], False, None),
-    ('molecular_find', test_main_args[6], test_main_kwargs[6], False, None),
-    ('molecular_find', test_main_args[7], test_main_kwargs[7], False, None),
-    ('molecular_find', test_main_args[8], test_main_kwargs[8], False, None),
-    ('molecular_find', test_main_args[9], test_main_kwargs[9], False, None),
-    ('database_conv', test_main_args[10], test_main_kwargs[10], False, None),
-    ('entries_conv', test_main_args[11], test_main_kwargs[11], False, None),
-    ('database_link', test_main_args[12], test_main_kwargs[12], False, None),
-    ('entries_link', test_main_args[13], test_main_kwargs[13], False, None),
-    ('ddi', test_main_args[14], test_main_kwargs[14], False, None),
-    ('get', test_main_args[15], test_main_kwargs[2], False, '\tx\ny\t\n z '),
-    ('keywords_find', test_main_args[16], test_main_kwargs[4], False, '\t a\n \tb\nc  \n '),
-    ('entries_conv', test_main_args[17], test_main_kwargs[11], False, 'eid1\neid2'),
-    ('entries_link', test_main_args[18], test_main_kwargs[13], False, '\nx\n y \n'),
-    ('ddi', test_main_args[19], test_main_kwargs[14], False, '\t\n\t\tde1\nde2\nde3\n\n  \n  ')
+    ('rest_cli.r.KEGGrest.info', test_main_args[0], test_main_kwargs[0], False, None),
+    ('rest_cli.r.KEGGrest.list', test_main_args[1], test_main_kwargs[1], False, None),
+    ('rest_cli.r.KEGGrest.get', test_main_args[2], test_main_kwargs[2], False, None),
+    ('rest_cli.r.KEGGrest.get', test_main_args[3], test_main_kwargs[3], True, None),
+    ('rest_cli.r.KEGGrest.keywords_find', test_main_args[4], test_main_kwargs[4], False, None),
+    ('rest_cli.r.KEGGrest.molecular_find', test_main_args[5], test_main_kwargs[5], False, None),
+    ('rest_cli.r.KEGGrest.molecular_find', test_main_args[6], test_main_kwargs[6], False, None),
+    ('rest_cli.r.KEGGrest.molecular_find', test_main_args[7], test_main_kwargs[7], False, None),
+    ('rest_cli.r.KEGGrest.molecular_find', test_main_args[8], test_main_kwargs[8], False, None),
+    ('rest_cli.r.KEGGrest.molecular_find', test_main_args[9], test_main_kwargs[9], False, None),
+    ('rest_cli.r.KEGGrest.database_conv', test_main_args[10], test_main_kwargs[10], False, None),
+    ('rest_cli.r.KEGGrest.entries_conv', test_main_args[11], test_main_kwargs[11], False, None),
+    ('rest_cli.r.KEGGrest.database_link', test_main_args[12], test_main_kwargs[12], False, None),
+    ('rest_cli.r.KEGGrest.entries_link', test_main_args[13], test_main_kwargs[13], False, None),
+    ('rest_cli.r.KEGGrest.ddi', test_main_args[14], test_main_kwargs[14], False, None),
+    ('rest_cli.r.KEGGrest.get', test_main_args[15], test_main_kwargs[2], False, '\tx\ny\t\n z '),
+    ('rest_cli.r.KEGGrest.keywords_find', test_main_args[16], test_main_kwargs[4], False, '\t a\n \tb\nc  \n '),
+    ('rest_cli.r.KEGGrest.entries_conv', test_main_args[17], test_main_kwargs[11], False, 'eid1\neid2'),
+    ('rest_cli.r.KEGGrest.entries_link', test_main_args[18], test_main_kwargs[13], False, '\nx\n y \n'),
+    ('rest_cli.r.KEGGrest.ddi', test_main_args[19], test_main_kwargs[14], False, '\t\n\t\tde1\nde2\nde3\n\n  \n  ')
 ]
 @pt.mark.parametrize('rest_method,args,kwargs,is_binary,stdin_mock', test_main_data)
 def test_main_print(mocker, rest_method: str, args: list, kwargs: dict, is_binary: bool, stdin_mock: str, caplog):
-    print_mock: mocker.MagicMock = mocker.patch('builtins.print')
+    kegg_response_mock, expected_output = _get_kegg_response_mock_and_expected_output(mocker=mocker, is_binary=is_binary)
 
-    kegg_response_mock: mocker.MagicMock = _test_main(
-        mocker=mocker, rest_method=rest_method, args=args, kwargs=kwargs, stdin_mock=stdin_mock
+    u.test_main_print(
+        mocker=mocker, argv_mock=args, stdin_mock=stdin_mock, method=rest_method, method_return_value=kegg_response_mock,
+        method_kwargs=kwargs, module=r_cli, expected_output=expected_output, is_binary=is_binary, caplog=caplog
     )
 
-    if is_binary:
-        u.assert_warning(message='Printing binary output...', caplog=caplog)
-        print_mock.assert_called_once_with(kegg_response_mock.binary_body)
-    else:
-        print_mock.assert_called_once_with(kegg_response_mock.text_body)
 
-
-def _test_main(mocker, rest_method: str, args: list, kwargs: dict, stdin_mock: str) -> mock.MagicMock:
-    argv_mock = ['kegg_pull', 'rest']
-    argv_mock.extend(args)
-    mocker.patch('sys.argv', argv_mock)
-
-    kegg_response_mock = mocker.MagicMock(
+def _get_kegg_response_mock_and_expected_output(mocker, is_binary: bool) -> tuple:
+    kegg_response_mock: mocker.MagicMock = mocker.MagicMock(
         status=r.KEGGresponse.Status.SUCCESS, text_body='text body mock', binary_body=b'binary body mock'
     )
 
-    rest_method_mock: mocker.MagicMock = mocker.patch(
-        f'kegg_pull.rest.KEGGrest.{rest_method}', return_value=kegg_response_mock
-    )
+    if is_binary:
+        expected_output: bytes = kegg_response_mock.binary_body
+    else:
+        expected_output: str = kegg_response_mock.text_body
 
-    std_in_mock: mocker.MagicMock = mocker.patch('kegg_pull._utils.sys.stdin.read', return_value=stdin_mock) if stdin_mock else None
-    r_cli.main()
-    rest_method_mock.assert_called_once_with(**kwargs)
-
-    if std_in_mock:
-        std_in_mock.assert_called_once_with()
-
-    return kegg_response_mock
-
-
-@pt.fixture(name='output_file', params=['dir/subdir/file.txt', 'dir/file.txt', './file.txt', 'file.txt'])
-def output_file_mock(request):
-    output_file: str = request.param
-
-    yield output_file
-
-    os.remove(output_file)
-    sh.rmtree('dir', ignore_errors=True)
+    return kegg_response_mock, expected_output
 
 
 @pt.mark.parametrize('rest_method,args,kwargs,is_binary,stdin_mock', test_main_data)
 def test_main_file(mocker, rest_method: str, args: list, kwargs: dict, is_binary: bool, output_file: str, stdin_mock: str):
-    args: list = args.copy()
-    args.append(f'--output={output_file}')
-    kegg_response: mocker.MagicMock = _test_main(mocker=mocker, rest_method=rest_method, args=args, kwargs=kwargs, stdin_mock=stdin_mock)
+    kegg_response_mock, expected_output = _get_kegg_response_mock_and_expected_output(mocker=mocker, is_binary=is_binary)
 
-    if is_binary:
-        read_type = 'rb'
-        expected_file_contents: bytes = kegg_response.binary_body
-    else:
-        read_type = 'r'
-        expected_file_contents: str = kegg_response.text_body
+    u.test_main_file(
+        mocker=mocker, argv_mock=args, output_file=output_file, stdin_mock=stdin_mock, method=rest_method,
+        method_return_value=kegg_response_mock, method_kwargs=kwargs, module=r_cli, expected_output=expected_output,
+        is_binary=is_binary
+    )
 
-    with open(output_file, read_type) as file:
-        actual_file_contents: t.Union[str, bytes] = file.read()
-
-        assert actual_file_contents == expected_file_contents
 
 @pt.fixture(name='test_result', params=[True, False])
 def get_test_result(request):
@@ -171,9 +136,7 @@ test_main_test_data = [
 @pt.mark.parametrize('KEGGurl,args,kwargs', test_main_test_data)
 def test_main_test(mocker, KEGGurl: t.Type, args: list, kwargs: dict, test_result: bool):
     test_mock: mocker.MagicMock = mocker.patch('kegg_pull.rest_cli.r.KEGGrest.test', return_value=test_result)
-    argv_mock = ['kegg_pull', 'rest']
-    argv_mock.extend(args)
-    argv_mock.append('--test')
+    argv_mock: list = ['kegg_pull'] + args + ['--test']
     mocker.patch('sys.argv', argv_mock)
     print_mock: mocker.MagicMock = mocker.patch('builtins.print')
     r_cli.main()
@@ -181,30 +144,12 @@ def test_main_test(mocker, KEGGurl: t.Type, args: list, kwargs: dict, test_resul
     print_mock.assert_called_once_with(test_result)
 
 
-@pt.fixture(name='zip_archive_data', params=['rest.txt', 'directory/rest.txt', '/rest.txt', '/directory/rest.txt'])
-def remove_zip_archive(request):
-    zip_file_name: str = request.param
-    zip_archive_path = 'kegg-response.zip'
-
-    yield zip_archive_path, zip_file_name
-
-    os.remove(zip_archive_path)
-
-
 @pt.mark.parametrize('rest_method,args,kwargs,is_binary,stdin_mock', test_main_data)
 def test_main_zip_archive(mocker, rest_method: str, args: list, kwargs: dict, is_binary: bool, zip_archive_data: tuple, stdin_mock: str):
-    zip_archive_path, zip_file_name = zip_archive_data
-    args: list = args.copy()
-    args.append(f'--output={zip_archive_path}:{zip_file_name}')
-    kegg_response: mocker.MagicMock = _test_main(mocker=mocker, rest_method=rest_method, args=args, kwargs=kwargs, stdin_mock=stdin_mock)
+    kegg_response_mock, expected_output = _get_kegg_response_mock_and_expected_output(mocker=mocker, is_binary=is_binary)
 
-    with zf.ZipFile(zip_archive_path, 'r') as zip_file:
-        actual_file_contents: bytes = zip_file.read(zip_file_name)
-
-        if not is_binary:
-            actual_file_contents: str = actual_file_contents.decode()
-            expected_file_contents: str = kegg_response.text_body
-        else:
-            expected_file_contents: bytes = kegg_response.binary_body
-
-    assert actual_file_contents == expected_file_contents
+    u.test_main_zip_archive(
+        mocker=mocker, argv_mock=args, zip_archive_data=zip_archive_data, stdin_mock=stdin_mock, method=rest_method,
+        method_return_value=kegg_response_mock, method_kwargs=kwargs, module=r_cli, expected_output=expected_output,
+        is_binary=is_binary
+    )

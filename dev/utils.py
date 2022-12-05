@@ -1,4 +1,7 @@
 import pytest as pt
+import zipfile as zf
+import typing as t
+
 
 def assert_expected_error_message(expected_message: str, error: pt.ExceptionInfo):
     actual_message = str(error.value)
@@ -38,3 +41,76 @@ def assert_call_args(function_mock, expected_call_args_list: list, do_kwargs: bo
             assert actual_call_args.kwargs == expected_call_args
         else:
             assert actual_call_args.args == expected_call_args
+
+
+def _test_main(mocker, argv_mock: list, stdin_mock: str, method: str, method_return_value: object, method_kwargs: dict, module):
+    argv_mock: list = ['kegg_pull'] + argv_mock
+    mocker.patch('sys.argv', argv_mock)
+    stdin_mock: mocker.MagicMock = mocker.patch('kegg_pull._utils.sys.stdin.read', return_value=stdin_mock) if stdin_mock else None
+
+    method_mock: mocker.MagicMock = mocker.patch(
+        f'kegg_pull.{method}', return_value=method_return_value
+    )
+
+    module.main()
+    method_mock.assert_called_once_with(**method_kwargs)
+
+    if stdin_mock:
+        stdin_mock.assert_called_once_with()
+
+
+def test_main_print(
+    mocker, argv_mock: list, stdin_mock: str, method: str, method_return_value: object, method_kwargs: dict, module,
+    expected_output: t.Union[str, bytes], is_binary: bool = False, caplog = None
+):
+    print_mock: mocker.MagicMock = mocker.patch('builtins.print')
+
+    _test_main(
+        mocker=mocker, argv_mock=argv_mock, stdin_mock=stdin_mock, method=method, method_return_value=method_return_value,
+        method_kwargs=method_kwargs, module=module
+    )
+
+    if is_binary:
+        assert_warning(message='Printing binary output...', caplog=caplog)
+
+    print_mock.assert_called_once_with(expected_output)
+
+
+def test_main_file(
+    mocker, argv_mock: list, output_file: str, stdin_mock: str, method: str, method_return_value: object, method_kwargs: dict, module,
+    expected_output: t.Union[str, bytes], is_binary: bool = False
+):
+    argv_mock: list = argv_mock + [f'--output={output_file}']
+
+    _test_main(
+        mocker=mocker, argv_mock=argv_mock, stdin_mock=stdin_mock, method=method, method_return_value=method_return_value,
+        method_kwargs=method_kwargs, module=module
+    )
+
+    read_type: str = 'rb' if is_binary else 'r'
+
+    with open(output_file, read_type) as file:
+        actual_output: t.Union[str, bytes] = file.read()
+
+    assert actual_output == expected_output
+
+
+def test_main_zip_archive(
+    mocker, argv_mock: list, zip_archive_data: tuple, stdin_mock: str, method: str, method_return_value: object, method_kwargs: dict,
+    module, expected_output: t.Union[str, bytes], is_binary: bool = False
+):
+    zip_archive_path, zip_file_name = zip_archive_data
+    argv_mock: list = argv_mock + [f'--output={zip_archive_path}:{zip_file_name}']
+
+    _test_main(
+        mocker=mocker, argv_mock=argv_mock, stdin_mock=stdin_mock, method=method, method_return_value=method_return_value,
+        method_kwargs=method_kwargs, module=module
+    )
+
+    with zf.ZipFile(zip_archive_path, 'r') as zip_file:
+        actual_output: bytes = zip_file.read(zip_file_name)
+
+        if not is_binary:
+            actual_output: str = actual_output.decode()
+
+    assert actual_output == expected_output

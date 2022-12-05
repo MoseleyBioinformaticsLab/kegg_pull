@@ -75,7 +75,7 @@ def main():
         mapping: dict = ltd.gene_to_reaction()
     elif args['<target-database-name>']:
         mapping: dict = ltd.database_link(
-            target_database_name=args['<target-database-name>'], source_database_name=args['source-database-name']
+            target_database_name=args['<target-database-name>'], source_database_name=args['<source-database-name>']
         )
     else:
         entry_ids: list = u.parse_input_sequence(input_source=args['<entry-ids>'])
