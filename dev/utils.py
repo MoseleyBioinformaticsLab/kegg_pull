@@ -1,6 +1,9 @@
 import pytest as pt
 import zipfile as zf
 import typing as t
+import json as j
+import jsonschema as js
+import os
 
 
 def assert_expected_error_message(expected_message: str, error: pt.ExceptionInfo):
@@ -114,3 +117,52 @@ def test_main_zip_archive(
             actual_output: str = actual_output.decode()
 
     assert actual_output == expected_output
+
+
+def test_save_to_json(json_file_path: str, expected_saved_json_object: dict):
+    if '.zip:' in json_file_path:
+        with zf.ZipFile('archive.zip', 'r') as zip_file:
+            json_file_name: str = 'dir/file.json' if 'dir/' in json_file_path else 'file.json'
+            actual_saved_mapping: dict = j.loads(zip_file.read(name=json_file_name))
+    else:
+        with open(json_file_path, 'r') as file:
+            actual_saved_mapping: dict = j.load(file)
+
+    assert actual_saved_mapping == expected_saved_json_object
+
+
+def test_load_from_json(
+    json_file_path: str, saved_object: dict, method: t.Callable, expected_loaded_object: dict, loaded_object_attribute: str = None
+):
+    _write_test_json_object(json_file_path=json_file_path, test_object=saved_object)
+    actual_loaded_object: t.Union[object, dict] = method(file_path=json_file_path)
+
+    if loaded_object_attribute is not None:
+        actual_loaded_object: dict = actual_loaded_object.__getattribute__(loaded_object_attribute)
+
+    assert actual_loaded_object == expected_loaded_object
+
+
+def _write_test_json_object(json_file_path: str, test_object: t.Union[list, dict, int, float, str]) -> None:
+    if '.zip:' in json_file_path:
+        with zf.ZipFile('archive.zip', 'w') as zip_file:
+            json_file_name: str = 'dir/file.json' if 'dir/' in json_file_path else 'file.json'
+            zip_file.writestr(json_file_name, j.dumps(test_object, indent=2))
+    else:
+        if json_file_path.startswith('dir'):
+            directory, _ = os.path.split(json_file_path)
+            os.makedirs(directory)
+
+        with open(json_file_path, 'w') as file:
+            file.write(j.dumps(test_object, indent=2))
+
+
+def test_invalid_load_from_json(
+    json_file_path: str, invalid_json_object: dict, method: t.Callable, expected_error_message: str, caplog
+):
+    _write_test_json_object(json_file_path=json_file_path, test_object=invalid_json_object)
+
+    with pt.raises(js.exceptions.ValidationError):
+        method(file_path=json_file_path)
+
+    assert_error(message=expected_error_message, caplog=caplog)

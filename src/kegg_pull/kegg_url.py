@@ -100,6 +100,7 @@ class AbstractKEGGurl(abc.ABC):
 
     @property
     def url(self) -> str:
+        # TODO remove this property and make _url public (remove underscore). Possibly document url with Attributes section in class docstring (not __init__)
         """The constructed and validated KEGG URL."""
         return self._url
 

@@ -43,6 +43,7 @@ test_main_data = [
         {'database_name': 'pathway', 'keywords': ['k1', 'k2']}, 'k1\nk2'
     )
 ]
+# noinspection DuplicatedCode
 @pt.mark.parametrize('args,method,kwargs,stdin_mock', test_main_data)
 def test_main_print(mocker, args: list, method: str, kwargs: dict, stdin_mock: str):
     u.test_main_print(

@@ -5,6 +5,10 @@ This package has the following modules:
 
 ``entry_ids``
 
+``link_to_dict``
+
+``pathway_organizer``
+
 ``rest``
 
 ``kegg_url``
