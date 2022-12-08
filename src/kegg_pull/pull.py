@@ -99,6 +99,7 @@ class SinglePull:
                 os.makedirs(output)
 
         self._kegg_rest = kegg_rest if kegg_rest is not None else r.KEGGrest()
+        # TODO make entry_field protected. Instead of setting it in AbstractMultiplePull, set it in the single_pull call to pull. Have it only passed into the pull method instead of here.
         self.entry_field = entry_field
         self._multiprocess_lock = mp.Lock() if multiprocess_lock_save else None
 
@@ -299,6 +300,8 @@ class AbstractMultiplePull(abc.ABC):
 
         self._unsuccessful_threshold = unsuccessful_threshold
 
+    # TODO instead of checking if entry_field is '', simply pass it in as is since it will necessarily overwrite the previous _entry_field member in the SinglePull
+    # TODO likely will need to have a global entry_field parameter for MultiProcessMultiplePull similar to the global single_pull
     def pull(
         self, entry_ids: list, entry_field: t.Optional[str] = '', force_single_entry: t.Optional[bool] = None
     ) -> PullResult:

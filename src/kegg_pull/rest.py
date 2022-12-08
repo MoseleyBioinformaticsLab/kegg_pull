@@ -30,11 +30,14 @@ class KEGGresponse:
         :param binary_body: The binary version of the response body.
         :raises ValueError: Raised if the status is SUCCESS but a response body is not provided.
         """
+        self.instance_variable = ''
         if status == KEGGresponse.Status.SUCCESS and (
             text_body is None or binary_body is None or text_body == '' or binary_body == b''
         ):
             raise ValueError('A KEGG response cannot be marked as successful if its response body is empty')
 
+        # Todo remove the properties and the underscores from the data members.
+        # TODO Add a variables section to the class description
         self._status = status
         self._kegg_url = kegg_url
         self._text_body = text_body

@@ -1,9 +1,6 @@
 import pytest as pt
 import typing as t
-import json as j
 import jsonschema as js
-import zipfile as zf
-import os
 
 import kegg_pull.link_to_dict as ltd
 import kegg_pull.kegg_url as ku
@@ -238,50 +235,16 @@ def test_to_json_string():
     assert actual_json_string == expected_json_string
 
 
-@pt.fixture(name='file_path', params=['mapping.json', 'archive.zip:mapping.json'])
-def get_file_path(request):
-    file_path: str = request.param
-
-    yield file_path
-
-    if '.zip:' in file_path:
-        os.remove('archive.zip')
-    else:
-        os.remove('mapping.json')
+def test_save_to_json(json_file_path: str):
+    ltd.save_to_json(mapping={'k1': {'v1'}, 'k2': {'v3', 'v2'}}, file_path=json_file_path)
+    u.test_save_to_json(json_file_path=json_file_path, expected_saved_json_object={'k1': ['v1'], 'k2': ['v2', 'v3']})
 
 
-def test_save_to_json(file_path: str):
-    mapping = {'k1': {'v1'}, 'k2': {'v3', 'v2'}}
-    ltd.save_to_json(mapping=mapping, file_path=file_path)
-
-    if '.zip:' in file_path:
-        with zf.ZipFile('archive.zip', 'r') as zip_file:
-            actual_saved_mapping: dict = j.loads(zip_file.read(name='mapping.json'))
-    else:
-        with open(file_path, 'r') as file:
-            actual_saved_mapping: dict = j.load(file)
-
-    expected_saved_mapping = {'k1': ['v1'], 'k2': ['v2', 'v3']}
-
-    assert actual_saved_mapping == expected_saved_mapping
-
-
-def test_load_from_json(file_path: str):
-    saved_mapping = {'k1': ['v1'], 'k2': ['v2', 'v3']}
-    _write_test_json_object(file_path=file_path, test_object=saved_mapping)
-    actual_loaded_mapping: dict = ltd.load_from_json(file_path=file_path)
-    expected_loaded_mapping = {'k1': {'v1'}, 'k2': {'v3', 'v2'}}
-
-    assert actual_loaded_mapping == expected_loaded_mapping
-
-
-def _write_test_json_object(file_path: str, test_object: t.Union[list, dict, int, float, str]) -> None:
-    if '.zip:' in file_path:
-        with zf.ZipFile('archive.zip', 'w') as zip_file:
-            zip_file.writestr('mapping.json', j.dumps(test_object, indent=2))
-    else:
-        with open(file_path, 'w') as file:
-            file.write(j.dumps(test_object, indent=2))
+def test_load_from_json(json_file_path: str):
+    u.test_load_from_json(
+        json_file_path=json_file_path, saved_object={'k1': ['v1'], 'k2': ['v2', 'v3']}, method=ltd.load_from_json,
+        expected_loaded_object={'k1': {'v1'}, 'k2': {'v3', 'v2'}}
+    )
 
 
 test_invalid_save_to_json_data = [{}, {'a': [1]}, {'a': [1.2]}, {'a': [[], []]}, {'a': {}}, {'a': []}, {'': ['b']}]
@@ -309,10 +272,8 @@ test_invalid_load_from_json_data.extend(
 
 
 @pt.mark.parametrize('invalid_json_object', test_invalid_load_from_json_data)
-def test_invalid_load_from_json(caplog, file_path: str, invalid_json_object: t.Union[list, dict, int, float, str]):
-    _write_test_json_object(file_path=file_path, test_object=invalid_json_object)
-
-    with pt.raises(js.exceptions.ValidationError):
-        ltd.load_from_json(file_path=file_path)
-
-    u.assert_error(message=expected_error_message, caplog=caplog)
+def test_invalid_load_from_json(caplog, json_file_path: str, invalid_json_object: t.Union[list, dict, int, float, str]):
+    u.test_invalid_load_from_json(
+        json_file_path=json_file_path, invalid_json_object=invalid_json_object, method=ltd.load_from_json,
+        expected_error_message=expected_error_message, caplog=caplog
+    )

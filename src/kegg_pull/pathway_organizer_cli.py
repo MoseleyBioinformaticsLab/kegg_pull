@@ -36,7 +36,6 @@ def main():
         if filter_nodes:
             filter_nodes: list = u.parse_input_sequence(input_source=filter_nodes)
 
-    pathway_organizer = po.PathwayOrganizer()
-    pathway_organizer.load_from_kegg(top_level_nodes=top_level_nodes, filter_nodes=filter_nodes)
+    pathway_organizer = po.PathwayOrganizer.load_from_kegg(top_level_nodes=top_level_nodes, filter_nodes=filter_nodes)
     hierarchy_nodes_json_string = str(pathway_organizer)
     u.print_or_save(output_location=args['--output'], output_content=hierarchy_nodes_json_string)
