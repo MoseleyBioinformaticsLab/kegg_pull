@@ -69,7 +69,7 @@ def test_main_entry_ids(mocker, args: list, expected_output: str, print_output: 
     _test_output(mocker=mocker, args=args, expected_output=expected_output, print_output=print_output)
 
 
-def _test_output(mocker, args: list, expected_output: str, print_output: bool):
+def _test_output(mocker, args: list, expected_output: str, print_output: bool, json_output: bool = False):
     print_mock = None
 
     if print_output:
@@ -84,12 +84,25 @@ def _test_output(mocker, args: list, expected_output: str, print_output: bool):
         expected_output: str = file.read()
 
     if print_output:
-         print_mock.assert_called_once_with(expected_output)
+        if json_output:
+            expected_json: dict = j.loads(expected_output)
+            [[actual_json], _] = print_mock.call_args
+            actual_json: dict = j.loads(actual_json)
+
+            assert actual_json == expected_json
+        else:
+            print_mock.assert_called_once_with(expected_output)
     else:
         with open('output.txt', 'r') as file:
-            actual_entry_ids: str = file.read()
+            actual_output: str = file.read()
 
-        assert expected_output == actual_entry_ids
+        if json_output:
+            actual_json: dict = j.loads(actual_output)
+            expected_json: dict = j.loads(expected_output)
+
+            assert actual_json == expected_json
+        else:
+            assert actual_output == expected_output
 
 
 test_main_rest_data = [
@@ -183,38 +196,28 @@ def test_main_pull(mocker, args: list, output: str):
     assert actual_pull_results == expected_pull_results
 
 
-# TODO Uncomment
-#
-# def remove_mapping_file(name='mapping_path'):
-#     mapping_path = 'mapping.zip'
-#
-#     yield mapping_path
-#
-#     os.remove(mapping_path)
-#
-#
-# def test_main_link_to_dict(mocker, mapping_path):
-#     args: list = ['kegg_pull', 'link-to-dict', '--link-target=module', '-', '--output=mapping.zip:subdir/mapping.json']
-#     mocker.patch('sys.argv', args)
-#
-#     stdin_mock = """
-#         K12696
-#         K22365
-#         K22435
-#     """
-#
-#     stdin_mock: mocker.MagicMock = mocker.patch('kegg_pull._utils.sys.stdin.read', return_value=stdin_mock)
-#     m.main()
-#     stdin_mock.assert_called_once_with()
-#
-#     with open('dev/test_data/link-to-dict.json', 'r') as f:
-#         expected_mapping: dict = j.load(f)
-#
-#     with zf.ZipFile(mapping_path, 'r') as zip_file:
-#         actual_mapping: bytes = zip_file.read('subdir/mapping.json')
-#         actual_mapping: dict = j.loads(s=actual_mapping)
-#
-#     assert actual_mapping == expected_mapping
+def test_main_link_to_dict(mocker, print_output):
+    args: list = ['kegg_pull', 'link-to-dict', '--link-target=module', '-']
+
+    stdin_mock = """
+        K12696
+        K22365
+        K22435
+    """
+
+    stdin_mock: mocker.MagicMock = mocker.patch('kegg_pull._utils.sys.stdin.read', return_value=stdin_mock)
+
+    _test_output(
+        mocker=mocker, args=args, expected_output='dev/test_data/link-to-dict.json', print_output=print_output, json_output=True
+    )
+
+    stdin_mock.assert_called_once_with()
 
 
-# TODO test pathway organizer with metabolism nodes and filtering the overview node (same as for machine learning project)
+def test_main_pathway_organizer(mocker, print_output: bool):
+    args = ['kegg_pull', 'pathway-organizer', '--tln=Metabolism', '--fn=Global and overview maps']
+
+    _test_output(
+        mocker=mocker, args=args, expected_output='dev/test_data/pathway-organizer/metabolic-pathways.json',
+        print_output=print_output, json_output=True
+    )

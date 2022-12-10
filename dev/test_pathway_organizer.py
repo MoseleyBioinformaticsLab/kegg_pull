@@ -6,13 +6,24 @@ import kegg_pull.pathway_organizer as po
 import dev.utils as u
 
 
-test_load_from_kegg_data = [
-    (None, None, 'all-nodes.json'),
-    ({'Metabolism', 'Genetic Information Processing'}, None, 'top-level-nodes.json'),
-    (None, {'Genetic Information Processing', 'Global and overview maps', '00010  Glycolysis / Gluconeogenesis'}, 'filter-nodes.json')
-]
-@pt.mark.parametrize('top_level_nodes,filter_nodes,hierarchy_nodes_file', test_load_from_kegg_data)
-def test_load_from_kegg(mocker, top_level_nodes: set, filter_nodes: set, hierarchy_nodes_file: str):
+def test_load_from_kegg_warning(mocker, caplog):
+    get_mock: mocker.MagicMock = _get_get_mock(mocker=mocker)
+    parse_hierarchy_spy: mocker.MagicMock = mocker.spy(po.PathwayOrganizer, '_parse_hierarchy')
+    pathway_org: po.PathwayOrganizer = po.PathwayOrganizer.load_from_kegg(top_level_nodes={'invalid-top-level-node'})
+    get_mock.assert_called_once_with(entry_ids=['br:br08901'], entry_field='json')
+
+    u.assert_warning(
+        message='Top level node name "invalid-top-level-node" is not recognized and will be ignored. Valid values are: "Cellular '
+                'Processes, Drug Development, Environmental Information Processing, Genetic Information Processing, '
+                'Human Diseases, Metabolism, Organismal Systems"', caplog=caplog
+    )
+
+    parse_hierarchy_spy.assert_called_once_with(pathway_org, level=1, hierarchy_nodes=[], parent_name=None)
+
+    assert pathway_org.hierarchy_nodes == {}
+
+
+def _get_get_mock(mocker):
     def get_mock(**_) -> mocker.MagicMock:
         with open('dev/test_data/pathway-organizer/pathway-hierarchy.json', 'r') as file_:
             text_body_mock: str = file_.read()
@@ -21,7 +32,17 @@ def test_load_from_kegg(mocker, top_level_nodes: set, filter_nodes: set, hierarc
 
         return kegg_response_mock
 
-    get_mock: mocker.MagicMock = mocker.patch('kegg_pull.pathway_organizer.r.KEGGrest.get', wraps=get_mock)
+    return mocker.patch('kegg_pull.pathway_organizer.r.KEGGrest.get', wraps=get_mock)
+
+
+test_load_from_kegg_data = [
+    (None, None, 'all-nodes.json'),
+    ({'Metabolism', 'Genetic Information Processing'}, None, 'top-level-nodes.json'),
+    (None, {'Genetic Information Processing', 'Global and overview maps', '00010  Glycolysis / Gluconeogenesis'}, 'filter-nodes.json')
+]
+@pt.mark.parametrize('top_level_nodes,filter_nodes,hierarchy_nodes_file', test_load_from_kegg_data)
+def test_load_from_kegg(mocker, top_level_nodes: set, filter_nodes: set, hierarchy_nodes_file: str):
+    get_mock: mocker.MagicMock = _get_get_mock(mocker=mocker)
     pathway_organizer = po.PathwayOrganizer.load_from_kegg(top_level_nodes=top_level_nodes, filter_nodes=filter_nodes)
     get_mock.assert_called_once_with(entry_ids=['br:br08901'], entry_field='json')
 
