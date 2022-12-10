@@ -43,7 +43,7 @@ class PathwayOrganizer:
         pathway_org.hierarchy_nodes = {}
         pathway_org._filter_nodes = filter_nodes
         hierarchy: list = PathwayOrganizer._get_hierarchy(kegg_rest=kegg_rest)
-        valid_top_level_nodes: set = {top_level_node['name'] for top_level_node in hierarchy}
+        valid_top_level_nodes: list = sorted(top_level_node['name'] for top_level_node in hierarchy)
 
         if top_level_nodes is not None:
             for top_level_node in list(top_level_nodes):
