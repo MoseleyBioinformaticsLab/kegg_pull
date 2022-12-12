@@ -20,49 +20,50 @@ def teardown():
 test_main_data = [
     (
         ['entry-ids', '-'], {'n_tries': None, 'time_out': None, 'sleep_time': None},
-        {'output': '.', 'entry_field': None, 'multiprocess_lock_save': False}, 'u.parse_input_sequence', {'input_source': '-'},
-        'SingleProcessMultiplePull', {'force_single_entry': False, 'unsuccessful_threshold': None}
+        {'output': '.', 'multiprocess_lock_save': False}, 'u.parse_input_sequence', {'input_source': '-'},
+        'SingleProcessMultiplePull', {'unsuccessful_threshold': None}, {'force_single_entry': False, 'entry_field': None}
     ),
     (
         ['entry-ids', '1,2', '--output=out-dir/', '--sleep-time=10.1'], {'n_tries': None, 'time_out': None, 'sleep_time': 10.1},
-        {'output': 'out-dir/', 'entry_field': None, 'multiprocess_lock_save': False}, 'u.parse_input_sequence', {'input_source': '1,2'},
-        'SingleProcessMultiplePull', {'force_single_entry': False, 'unsuccessful_threshold': None}
+        {'output': 'out-dir/', 'multiprocess_lock_save': False}, 'u.parse_input_sequence', {'input_source': '1,2'},
+        'SingleProcessMultiplePull', {'unsuccessful_threshold': None}, {'force_single_entry': False, 'entry_field': None}
     ),
     (
         ['entry-ids', '1,2', '--n-tries=4', '--time-out=50', '--entry-field=mol'], {'n_tries': 4, 'time_out': 50, 'sleep_time': None},
-        {'output': '.', 'entry_field': 'mol', 'multiprocess_lock_save': False}, 'u.parse_input_sequence', {'input_source': '1,2'},
-        'SingleProcessMultiplePull', {'force_single_entry': False, 'unsuccessful_threshold': None}
+        {'output': '.', 'multiprocess_lock_save': False}, 'u.parse_input_sequence', {'input_source': '1,2'},
+        'SingleProcessMultiplePull', {'unsuccessful_threshold': None}, {'force_single_entry': False, 'entry_field': 'mol'}
     ),
     (
         ['entry-ids', '-', '--entry-field=mol'], {'n_tries': None, 'time_out': None, 'sleep_time': None},
-        {'output': '.', 'entry_field': 'mol', 'multiprocess_lock_save': False}, 'u.parse_input_sequence', {'input_source': '-'},
-        'SingleProcessMultiplePull', {'force_single_entry': False, 'unsuccessful_threshold': None}
+        {'output': '.', 'multiprocess_lock_save': False}, 'u.parse_input_sequence', {'input_source': '-'},
+        'SingleProcessMultiplePull', {'unsuccessful_threshold': None}, {'force_single_entry': False, 'entry_field': 'mol'}
     ),
     (
         ['database', 'pathway', '--output=out-dir', '--multi-process', '--sleep-time=20', '--force-single-entry'],
         {'n_tries': None, 'time_out': None, 'sleep_time': 20},
-        {'output': 'out-dir', 'entry_field': None, 'multiprocess_lock_save': False}, 'ei.from_database', {'database_name': 'pathway'},
-        'MultiProcessMultiplePull', {'force_single_entry': True, 'n_workers': None, 'unsuccessful_threshold': None}
+        {'output': 'out-dir', 'multiprocess_lock_save': False}, 'ei.from_database',
+        {'database_name': 'pathway'}, 'MultiProcessMultiplePull', {'n_workers': None, 'unsuccessful_threshold': None},
+        {'force_single_entry': True, 'entry_field': None}
     ),
     (
         ['database', 'brite', '--multi-process', '--n-tries=5', '--time-out=35', '--n-workers=6'],
-        {'n_tries': 5, 'time_out': 35, 'sleep_time': None}, {'output': '.', 'entry_field': None, 'multiprocess_lock_save': False},
+        {'n_tries': 5, 'time_out': 35, 'sleep_time': None}, {'output': '.', 'multiprocess_lock_save': False},
         'ei.from_database', {'database_name': 'brite'}, 'MultiProcessMultiplePull',
-        {'force_single_entry': True, 'n_workers': 6, 'unsuccessful_threshold': None}
+        {'n_workers': 6, 'unsuccessful_threshold': None}, {'force_single_entry': True, 'entry_field': None}
     ),
     (
         ['entry-ids', '-', '--ut=0.4'], {'n_tries': None, 'time_out': None, 'sleep_time': None},
-        {'output': '.', 'entry_field': None, 'multiprocess_lock_save': False}, 'u.parse_input_sequence', {'input_source': '-'},
-        'SingleProcessMultiplePull', {'force_single_entry': False, 'unsuccessful_threshold': 0.4}
+        {'output': '.', 'multiprocess_lock_save': False}, 'u.parse_input_sequence', {'input_source': '-'},
+        'SingleProcessMultiplePull', {'unsuccessful_threshold': 0.4}, {'force_single_entry': False, 'entry_field': None}
     )
 ]
 @pt.mark.parametrize(
     'args,kegg_rest_kwargs,single_pull_kwargs,entry_ids_method,entry_ids_kwargs,multiple_pull_class,'
-    'multiple_pull_kwargs', test_main_data
+    'multiple_pull_kwargs,pull_kwargs', test_main_data
 )
 def test_main(
     mocker, _, args: list, kegg_rest_kwargs: dict, single_pull_kwargs: dict, entry_ids_method: str,
-    entry_ids_kwargs: dict, multiple_pull_class: str, multiple_pull_kwargs: dict
+    entry_ids_kwargs: dict, multiple_pull_class: str, multiple_pull_kwargs: dict, pull_kwargs: dict
 ):
     args = ['kegg_pull', 'pull'] + args
     mocker.patch('sys.argv', args)
@@ -95,7 +96,7 @@ def test_main(
     assert time_mock.call_count == 2
 
     MultiplePullMock.assert_called_once_with(single_pull=single_pull_mock, **multiple_pull_kwargs)
-    multiple_pull_mock.pull.assert_called_once_with(entry_ids=entry_ids_mock)
+    multiple_pull_mock.pull.assert_called_once_with(entry_ids=entry_ids_mock, **pull_kwargs)
     entry_ids_method_mock.assert_called_with(**entry_ids_kwargs)
 
     expected_pull_results = {

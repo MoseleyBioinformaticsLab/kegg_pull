@@ -133,8 +133,7 @@ def pull_output(request):
 
 
 test_main_pull_data = [
-    ['--force-single-entry', '--multi-process', '--n-workers=2'],
-    ['--force-single-entry']
+    ['--multi-process', '--n-workers=2'], ['--force-single-entry', '--multi-process', '--n-workers=2'], ['--force-single-entry']
 ]
 @pt.mark.parametrize('args', test_main_pull_data)
 def test_main_pull(mocker, args: list, output: str):
