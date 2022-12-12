@@ -14,7 +14,11 @@ BASE_URL: str = 'https://rest.kegg.jp'
 
 
 class AbstractKEGGurl(abc.ABC):
-    """Abstract class which validates and constructs URLs for accessing the KEGG REST API and contains the base data and functionality for all KEGG URL classes."""
+    """
+    Abstract class which validates and constructs URLs for accessing the KEGG REST API and contains the base data and functionality for all KEGG URL classes.
+
+    :ivar str url: The constructed and validated KEGG URL.
+    """
     _URL_LENGTH_LIMIT = 4000
 
     _valid_kegg_databases = {
@@ -37,11 +41,11 @@ class AbstractKEGGurl(abc.ABC):
         """
         self._validate(**kwargs)
         url_options: str = self._create_rest_options(**kwargs)
-        self._url = f'{base_url}/{rest_operation}/{url_options}'
+        self.url = f'{base_url}/{rest_operation}/{url_options}'
 
-        if len(self._url) > AbstractKEGGurl._URL_LENGTH_LIMIT:
+        if len(self.url) > AbstractKEGGurl._URL_LENGTH_LIMIT:
            AbstractKEGGurl._raise_error(
-               reason=f'The KEGG URL length of {len(self._url)} exceeds the limit of {AbstractKEGGurl._URL_LENGTH_LIMIT}'
+               reason=f'The KEGG URL length of {len(self.url)} exceeds the limit of {AbstractKEGGurl._URL_LENGTH_LIMIT}'
            )
 
     # noinspection PyMethodParameters
@@ -97,12 +101,6 @@ class AbstractKEGGurl(abc.ABC):
         :return: The REST API options.
         """
         pass  # pragma: no cover
-
-    @property
-    def url(self) -> str:
-        # TODO remove this property and make _url public (remove underscore). Possibly document url with Attributes section in class docstring (not __init__)
-        """The constructed and validated KEGG URL."""
-        return self._url
 
     def __repr__(self) -> str:
         return self.url
@@ -221,20 +219,19 @@ class InfoKEGGurl(AbstractKEGGurl):
 
 
 class GetKEGGurl(AbstractKEGGurl):
-    """Contains URL construction and validation functionality for the KEGG API get operation."""
+    """
+    Contains URL construction and validation functionality for the KEGG API get operation.
+
+    :cvar str MAX_ENTRY_IDS_PER_URL: The maximum number of entry IDs allowed in a single get KEGG URL.
+    :ivar list entry_ids: The entry IDs of the get KEGG URL.
+    """
 
     _entry_fields = {
         'aaseq': True, 'ntseq': True, 'mol': True, 'kcf': True, 'image': False, 'conf': False, 'kgml': False,
         'json': False
     }
 
-    _MAX_ENTRY_IDS_PER_URL = 10
-
-    # noinspection PyMethodParameters
-    @u.staticproperty
-    def MAX_ENTRY_IDS_PER_URL() -> int:
-        """ The maximum number of entry IDs allowed in a single get KEGG URL."""
-        return GetKEGGurl._MAX_ENTRY_IDS_PER_URL
+    MAX_ENTRY_IDS_PER_URL = 10
 
     def __init__(self, entry_ids: list, entry_field: str = None) -> None:
         """
@@ -243,13 +240,8 @@ class GetKEGGurl(AbstractKEGGurl):
         :raises ValueError: Raised if the entry IDs or entry field is not valid.
         """
         super().__init__(rest_operation='get', entry_ids=entry_ids, entry_field=entry_field)
-        self._entry_ids = entry_ids
+        self.entry_ids = entry_ids
         self._entry_field = entry_field
-
-    @property
-    def entry_ids(self) -> list:
-        """The entry IDs of the get KEGG URL."""
-        return self._entry_ids
 
     @property
     def multiple_entry_ids(self) -> bool:
@@ -268,7 +260,7 @@ class GetKEGGurl(AbstractKEGGurl):
         if n_entry_ids == 0:
             self._raise_error(reason='Entry IDs must be specified for the KEGG get operation')
 
-        max_entry_ids: int = GetKEGGurl._MAX_ENTRY_IDS_PER_URL
+        max_entry_ids: int = GetKEGGurl.MAX_ENTRY_IDS_PER_URL
 
         if n_entry_ids > max_entry_ids:
             self._raise_error(

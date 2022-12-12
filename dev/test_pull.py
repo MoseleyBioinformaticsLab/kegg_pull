@@ -84,9 +84,9 @@ def test_separate_entries(mocker, output_mock: str, entry_field: str, separator:
 
     kegg_rest_mock = mocker.MagicMock(get=mocker.MagicMock(return_value=response_mock))
     KEGGrestMock = mocker.patch('kegg_pull.pull.r.KEGGrest', return_value=kegg_rest_mock)
-    single_pull = p.SinglePull(output=output_mock, entry_field=entry_field)
+    single_pull = p.SinglePull(output=output_mock)
     KEGGrestMock.assert_called_once_with()
-    pull_result: p.PullResult = single_pull.pull(entry_ids=entry_ids_mock)
+    pull_result: p.PullResult = single_pull.pull(entry_ids=entry_ids_mock, entry_field=entry_field)
     kegg_rest_mock.get.assert_called_once_with(entry_ids=entry_ids_mock, entry_field=entry_field)
 
     assert pull_result.successful_entry_ids == tuple(entry_ids_mock)
@@ -186,8 +186,8 @@ def test_single_entry(mocker, file_name: str, status: r.KEGGresponse.Status):
     )
 
     mocker.patch('kegg_pull.rest.KEGGrest.get', return_value=kegg_response_mock)
-    single_pull = p.SinglePull(output='.', entry_field='image')
-    pull_result: p.PullResult = single_pull.pull(entry_ids=[single_entry_id])
+    single_pull = p.SinglePull(output='.')
+    pull_result: p.PullResult = single_pull.pull(entry_ids=[single_entry_id], entry_field='image')
 
     assert pull_result.timed_out_entry_ids == ()
 
@@ -240,7 +240,8 @@ def test_not_all_requested_entries(mocker, entry_field: str):
     )
 
     pull_result = p.PullResult()
-    single_pull = p.SinglePull(output='.', entry_field=entry_field)
+    single_pull = p.SinglePull(output='.')
+    single_pull._entry_field = entry_field
     single_pull._save_multi_entry_response(kegg_response=initial_kegg_response_mock, pull_result=pull_result)
 
     assert pull_result.successful_entry_ids == (entry_id1, entry_id2)
@@ -335,7 +336,10 @@ def test_multiple_pull(mocker, MultiplePull: type, kwargs: dict, caplog, _):
         assert multiple_pull_result.timed_out_entry_ids == expected_timed_out_entry_ids
 
         if MultiplePull is p.SingleProcessMultiplePull:
-            expected_call_args_list = [{'entry_ids': expected_pull_call} for expected_pull_call in expected_pull_calls]
+            expected_call_args_list = [
+                {'entry_ids': expected_pull_call, 'entry_field': None} for expected_pull_call in expected_pull_calls
+            ]
+
             u.assert_call_args(function_mock=single_pull_mock.pull, expected_call_args_list=expected_call_args_list, do_kwargs=True)
 
 
@@ -347,8 +351,8 @@ def test_get_n_entries_per_url(mocker, MultiplePull: type, kwargs: dict):
     get_n_entries_per_url_spy: mocker.MagicMock = mocker.spy(p.AbstractMultiplePull, '_get_n_entries_per_url')
     pull_mock: mocker.MagicMock = mocker.patch(f'kegg_pull.pull.{MultiplePull.__name__}._pull')
     multiple_pull.pull(entry_ids=entry_ids_mock, force_single_entry=True, entry_field='compound')
-    group_entry_ids_spy.assert_called_once_with(entry_ids_to_group=entry_ids_mock, force_single_entry=True)
-    get_n_entries_per_url_spy.assert_called_once_with(force_single_entry=True, entry_field='compound')
+    group_entry_ids_spy.assert_called_once_with(entry_ids_to_group=entry_ids_mock)
+    get_n_entries_per_url_spy.assert_called_once_with(multiple_pull)
     expected_grouped_entry_ids = [[entry_id] for entry_id in entry_ids_mock]
     pull_mock.assert_called_once()
 
@@ -360,8 +364,8 @@ def test_get_n_entries_per_url(mocker, MultiplePull: type, kwargs: dict):
     pull_mock.reset_mock()
     multiple_pull.pull(entry_ids=entry_ids_mock, entry_field='json')
 
-    group_entry_ids_spy.assert_called_once_with(entry_ids_to_group=entry_ids_mock, force_single_entry=False)
-    get_n_entries_per_url_spy.assert_called_once_with(force_single_entry=False, entry_field='json')
+    group_entry_ids_spy.assert_called_once_with(entry_ids_to_group=entry_ids_mock)
+    get_n_entries_per_url_spy.assert_called_once_with(multiple_pull)
     pull_mock.assert_called_once()
 
     assert group_entry_ids_spy.spy_return == expected_grouped_entry_ids
@@ -370,10 +374,10 @@ def test_get_n_entries_per_url(mocker, MultiplePull: type, kwargs: dict):
 
 class PickleableSinglePullMock:
     def __init__(self):
-        self.entry_field = None
+        self._entry_field = None
 
     @staticmethod
-    def pull(entry_ids: list):
+    def pull(entry_ids: list, **_):
         successful_entry_ids: list = tuple(entry_ids[:-1])
         failed_entry_ids: list = tuple(entry_ids[-1:])
         single_pull_result = p.PullResult()
@@ -387,9 +391,9 @@ class PickleableSinglePullMock:
 def test_get_single_pull_result(mocker):
     pull_result = p.PullResult()
     single_pull_mock = mocker.MagicMock(pull=mocker.MagicMock(return_value=pull_result))
-    mocker.patch('kegg_pull.pull.global_single_pull', single_pull_mock)
+    mocker.patch('kegg_pull.pull._global_single_pull', single_pull_mock)
     actual_result: bytes = p._get_single_pull_result(entry_ids=testing_entry_ids)
-    single_pull_mock.pull.assert_called_once_with(entry_ids=testing_entry_ids)
+    single_pull_mock.pull.assert_called_once_with(entry_ids=testing_entry_ids, entry_field=None)
 
     assert actual_result == p.p.dumps(pull_result)
 

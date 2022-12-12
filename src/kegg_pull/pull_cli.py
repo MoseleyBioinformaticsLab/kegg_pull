@@ -39,7 +39,7 @@ def main():
     output: str = args['--output'] if args['--output'] is not None else '.'
     entry_field: str = args['--entry-field']
     multiprocess_lock_save: bool = args['--multi-process'] and output.endswith('.zip')
-    single_pull = p.SinglePull(output=output, kegg_rest=kegg_rest, entry_field=entry_field, multiprocess_lock_save=multiprocess_lock_save)
+    single_pull = p.SinglePull(output=output, kegg_rest=kegg_rest, multiprocess_lock_save=multiprocess_lock_save)
     force_single_entry: bool = args['--force-single-entry']
 
     if args['database']:
@@ -58,16 +58,17 @@ def main():
         n_workers = int(args['--n-workers']) if args['--n-workers'] is not None else None
 
         multiple_pull = p.MultiProcessMultiplePull(
-            single_pull=single_pull, force_single_entry=force_single_entry, n_workers=n_workers,
-            unsuccessful_threshold=unsuccessful_threshold
+            single_pull=single_pull, unsuccessful_threshold=unsuccessful_threshold, n_workers=n_workers
         )
     else:
-        multiple_pull = p.SingleProcessMultiplePull(
-            single_pull=single_pull, force_single_entry=force_single_entry, unsuccessful_threshold=unsuccessful_threshold
-        )
+        multiple_pull = p.SingleProcessMultiplePull(single_pull=single_pull, unsuccessful_threshold=unsuccessful_threshold)
 
     time1: float = _testable_time()
-    pull_result: p.PullResult = multiple_pull.pull(entry_ids=entry_ids)
+
+    pull_result: p.PullResult = multiple_pull.pull(
+        entry_ids=entry_ids, entry_field=entry_field, force_single_entry=force_single_entry
+    )
+
     time2: float = _testable_time()
 
     n_total_entry_ids: int = len(pull_result.successful_entry_ids) + len(pull_result.failed_entry_ids)

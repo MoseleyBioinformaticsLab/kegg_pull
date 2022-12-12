@@ -14,7 +14,14 @@ from . import kegg_url as ku
 
 
 class KEGGresponse:
-    """Class containing details of a response from the KEGG REST API."""
+    """
+    Class containing details of a response from the KEGG REST API.
+
+    :ivar Status status: The status of the KEGG response.
+    :ivar AbstractKEGGurl kegg_url: The URL used in the request to the KEGG REST API that resulted in the KEGG response.
+    :ivar str text_body: The text version of the response body.
+    :ivar bytes binary_body: The binary version of the response body.
+    """
 
     class Status(e.Enum):
         """The status of a KEGG response."""
@@ -30,34 +37,15 @@ class KEGGresponse:
         :param binary_body: The binary version of the response body.
         :raises ValueError: Raised if the status is SUCCESS but a response body is not provided.
         """
-        self.instance_variable = ''
         if status == KEGGresponse.Status.SUCCESS and (
             text_body is None or binary_body is None or text_body == '' or binary_body == b''
         ):
             raise ValueError('A KEGG response cannot be marked as successful if its response body is empty')
 
-        # Todo remove the properties and the underscores from the data members.
-        # TODO Add a variables section to the class description
-        self._status = status
-        self._kegg_url = kegg_url
-        self._text_body = text_body
-        self._binary_body = binary_body
-
-    @property
-    def status(self) -> Status:
-        return self._status
-
-    @property
-    def kegg_url(self) -> ku.AbstractKEGGurl:
-        return self._kegg_url
-
-    @property
-    def text_body(self) -> str:
-        return self._text_body
-
-    @property
-    def binary_body(self) -> bytes:
-        return self._binary_body
+        self.status = status
+        self.kegg_url = kegg_url
+        self.text_body = text_body
+        self.binary_body = binary_body
 
 
 class KEGGrest:

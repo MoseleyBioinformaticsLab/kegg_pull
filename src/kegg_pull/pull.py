@@ -85,31 +85,31 @@ class PullResult:
 class SinglePull:
     """Class capable of performing a single request to the KEGG REST API for pulling up to a maximum number of entries."""
     def __init__(
-        self, output: str, kegg_rest: r.KEGGrest = None, entry_field: str = None, multiprocess_lock_save: bool = False
+        self, output: str, kegg_rest: r.KEGGrest = None, multiprocess_lock_save: bool = False
     ) -> None:
         """
         :param output: Path to the location where entries are saved (treated like a ZIP file if ends in ".zip", else a directory).
         :param kegg_rest: Optional KEGGrest object used to make the requests to the KEGG REST API (a KEGGrest object with the default settings is created if one is not provided).
-        :param entry_field: Optional KEGG entry field to pull.
         :param multiprocess_lock_save: Whether to block the code that saves KEGG entries in order to be multiprocess safe. Should not be needed unless saving entries to a ZIP archive across multiple processes.
         """
         self._output = output
 
         if not output.endswith('.zip') and not os.path.isdir(output):
-                os.makedirs(output)
+            os.makedirs(output)
 
         self._kegg_rest = kegg_rest if kegg_rest is not None else r.KEGGrest()
-        # TODO make entry_field protected. Instead of setting it in AbstractMultiplePull, set it in the single_pull call to pull. Have it only passed into the pull method instead of here.
-        self.entry_field = entry_field
+        self._entry_field = None
         self._multiprocess_lock = mp.Lock() if multiprocess_lock_save else None
 
-    def pull(self, entry_ids: list) -> PullResult:
+    def pull(self, entry_ids: list, entry_field: str = None) -> PullResult:
         """ Makes a single request to the KEGG REST API to pull one or more entries and save them as files.
 
         :param entry_ids: The IDs of the entries to pull and save.
+        :param entry_field: Optional KEGG entry field to pull.
         :return: The pull result.
         """
-        kegg_response: r.KEGGresponse = self._kegg_rest.get(entry_ids=entry_ids, entry_field=self.entry_field)
+        self._entry_field = entry_field
+        kegg_response: r.KEGGresponse = self._kegg_rest.get(entry_ids=entry_ids, entry_field=self._entry_field)
         get_url: ku.GetKEGGurl = kegg_response.kegg_url
         pull_result = PullResult()
 
@@ -139,7 +139,7 @@ class SinglePull:
             pull_result.add_entry_ids(*get_url.entry_ids, status=r.KEGGresponse.Status.SUCCESS)
 
             for entry_id, entry in zip(get_url.entry_ids, entries):
-                self._save(entry_id=entry_id, entry=entry, entry_field=self.entry_field)
+                self._save(entry_id=entry_id, entry=entry, entry_field=self._entry_field)
 
     def _separate_entries(self, concatenated_entries: str) -> list:
         """ Separates the entries in a multi-entry response from KEGG.
@@ -152,10 +152,10 @@ class SinglePull:
             'mol': SinglePull._mol_separator, 'ntseq': SinglePull._gene_separator
         }
 
-        if self.entry_field is None:
+        if self._entry_field is None:
             separator = SinglePull._standard_separator
         else:
-            separator = field_to_separator[self.entry_field]
+            separator = field_to_separator[self._entry_field]
 
         entries: list = separator(concatenated_entries=concatenated_entries)
         entries = [entry.strip() for entry in entries]
@@ -215,7 +215,7 @@ class SinglePull:
         :param pull_result: The pull result to update based on the success of the pulling.
         """
         for entry_id in get_url.entry_ids:
-            kegg_response: r.KEGGresponse = self._kegg_rest.get(entry_ids=[entry_id], entry_field=self.entry_field)
+            kegg_response: r.KEGGresponse = self._kegg_rest.get(entry_ids=[entry_id], entry_field=self._entry_field)
 
             if kegg_response.status == r.KEGGresponse.Status.SUCCESS:
                 self._save_single_entry_response(kegg_response=kegg_response, pull_result=pull_result)
@@ -253,12 +253,12 @@ class SinglePull:
         [entry_id] = get_url.entry_ids
         pull_result.add_entry_ids(entry_id, status=r.KEGGresponse.Status.SUCCESS)
 
-        if ku.GetKEGGurl.is_binary(entry_field=self.entry_field):
+        if ku.GetKEGGurl.is_binary(entry_field=self._entry_field):
             entry: bytes = kegg_response.binary_body
         else:
             entry: str = kegg_response.text_body
 
-        self._save(entry_id=entry_id, entry=entry, entry_field=self.entry_field)
+        self._save(entry_id=entry_id, entry=entry, entry_field=self._entry_field)
 
 
     def _handle_unsuccessful_url(self, kegg_response: r.KEGGresponse, pull_result: PullResult) -> None:
@@ -282,16 +282,12 @@ class AbstractMultiplePull(abc.ABC):
 
     ABORTED_PULL_RESULTS_PATH = 'aborted-pull-results.json'
 
-    def __init__(
-        self, single_pull: SinglePull, force_single_entry: bool = False, unsuccessful_threshold: float = None
-    ) -> None:
+    def __init__(self, single_pull: SinglePull, unsuccessful_threshold: float = None) -> None:
         """
         :param single_pull: The SinglePull object used for each pull.
-        :param force_single_entry: Whether to pull only one entry at a time regardless of the entry field specified in the SinglePull argument.
         :param unsuccessful_threshold: If set, the ratio of unsuccessful entry IDs to total entry IDs at which execution stops. Details of the aborted process are logged.
         """
         self._single_pull = single_pull
-        self._force_single_entry = force_single_entry
 
         if unsuccessful_threshold is not None and (unsuccessful_threshold <= 0.0 or unsuccessful_threshold >= 1.0):
             raise ValueError(
@@ -299,22 +295,22 @@ class AbstractMultiplePull(abc.ABC):
             )
 
         self._unsuccessful_threshold = unsuccessful_threshold
+        self._entry_field = None
+        self._force_single_entry = None
 
     # TODO instead of checking if entry_field is '', simply pass it in as is since it will necessarily overwrite the previous _entry_field member in the SinglePull
     # TODO likely will need to have a global entry_field parameter for MultiProcessMultiplePull similar to the global single_pull
-    def pull(
-        self, entry_ids: list, entry_field: t.Optional[str] = '', force_single_entry: t.Optional[bool] = None
-    ) -> PullResult:
+    def pull(self, entry_ids: list, entry_field: str = None, force_single_entry: bool = False) -> PullResult:
         """ Makes multiple requests to the KEGG REST API for an arbitrary amount of entry IDs.
 
         :param entry_ids: The IDs of the entries that are split into multiple pulls.
-        :param entry_field: An optional field of the entries to pull. If specified, updates the underlying SinglePull class's entry_field member.
-        :param force_single_entry: If provided, updates the force_single_single_entry value of this AbstractMultiplePull object just for this call of pull.
+        :param entry_field: An optional field of the entries to pull.
+        :param force_single_entry: Whether to pull only one entry at a time regardless of the entry field specified. Recommended if there are Brite entry IDs.
         :return: The pull result.
         """
-        force_single_entry = force_single_entry if force_single_entry is not None else self._force_single_entry
+        self._entry_field = entry_field
+        self._force_single_entry = force_single_entry
         n_entry_ids: int = len(entry_ids)
-        unsuccessful_threshold: float = self._unsuccessful_threshold
         progress_bar = tqdm.tqdm(total=n_entry_ids)
 
         def check_progress(single_pull_result: PullResult, multiple_pull_result: PullResult, grouped_entry_ids: list):
@@ -324,7 +320,7 @@ class AbstractMultiplePull(abc.ABC):
                 multiple_pull_result.timed_out_entry_ids
             )
 
-            if unsuccessful_threshold is not None and n_unsuccessful / n_entry_ids >= unsuccessful_threshold:
+            if self._unsuccessful_threshold is not None and n_unsuccessful / n_entry_ids >= self._unsuccessful_threshold:
                 total_processed_entry_ids: set = set(multiple_pull_result.successful_entry_ids)
                 total_processed_entry_ids: set = total_processed_entry_ids.union(set(multiple_pull_result.failed_entry_ids))
                 total_processed_entry_ids: set = total_processed_entry_ids.union(set(multiple_pull_result.timed_out_entry_ids))
@@ -336,7 +332,7 @@ class AbstractMultiplePull(abc.ABC):
                             remaining_entry_ids.add(entry_id)
 
                 l.error(
-                    f'Unsuccessful threshold of {unsuccessful_threshold} met. Aborting. Details saved at '
+                    f'Unsuccessful threshold of {self._unsuccessful_threshold} met. Aborting. Details saved at '
                     f'{AbstractMultiplePull.ABORTED_PULL_RESULTS_PATH}'
                 )
 
@@ -358,21 +354,17 @@ class AbstractMultiplePull(abc.ABC):
             else:
                 progress_bar.update(n=n_entry_ids_processed)
 
-        # If a new entry field is provided, update it
-        if entry_field != '':
-            self._single_pull.entry_field = entry_field
-
-        entry_ids: list = self._group_entry_ids(
-            entry_ids_to_group=entry_ids, force_single_entry=force_single_entry
-        )
+        entry_ids: list = self._group_entry_ids(entry_ids_to_group=entry_ids)
 
         return self._pull(grouped_entry_ids=entry_ids, check_progress=check_progress)
 
-    def _group_entry_ids(self, entry_ids_to_group: list, force_single_entry: bool) -> list:
-        group_size: int = AbstractMultiplePull._get_n_entries_per_url(
-            force_single_entry=force_single_entry, entry_field=self._single_pull.entry_field
-        )
+    def _group_entry_ids(self, entry_ids_to_group: list) -> list:
+        """ Splits up a list of entry IDs into a list of lists.
 
+        :param entry_ids_to_group: The entry IDs to divide into groups.
+        :return: The list of lists.
+        """
+        group_size: int = self._get_n_entries_per_url()
         grouped_entry_ids = []
 
         for i in range(0, len(entry_ids_to_group), group_size):
@@ -381,17 +373,14 @@ class AbstractMultiplePull(abc.ABC):
 
         return grouped_entry_ids
 
-    @staticmethod
-    def _get_n_entries_per_url(force_single_entry: bool, entry_field: str) -> int:
+    def _get_n_entries_per_url(self) -> int:
         """ Gets the number of entries for each Get KEGG URL used to make the pulls.
 
-        :param force_single_entry: If true, returns 1.
-        :param entry_field: If the entry field can only be pulled 1 at a time, return 1.
-        :return: 1 if the above specifications are true, else the maximum number of entries per Get URL.
+        :return: 1 if certain specifications are met, else the maximum number of entries per Get URL.
         """
-        if force_single_entry:
+        if self._force_single_entry:
             return 1
-        elif ku.GetKEGGurl.only_one_entry(entry_field=entry_field):
+        elif ku.GetKEGGurl.only_one_entry(entry_field=self._entry_field):
             return 1
         else:
             return ku.GetKEGGurl.MAX_ENTRY_IDS_PER_URL
@@ -420,7 +409,7 @@ class SingleProcessMultiplePull(AbstractMultiplePull):
         multiple_pull_result = PullResult()
 
         for entry_id_group in grouped_entry_ids:
-            single_pull_result: PullResult = self._single_pull.pull(entry_ids=entry_id_group)
+            single_pull_result: PullResult = self._single_pull.pull(entry_ids=entry_id_group, entry_field=self._entry_field)
 
             check_progress(
                 single_pull_result=single_pull_result, multiple_pull_result=multiple_pull_result,
@@ -433,20 +422,13 @@ class SingleProcessMultiplePull(AbstractMultiplePull):
 class MultiProcessMultiplePull(AbstractMultiplePull):
     """Class that makes multiple requests to the KEGG REST API to pull entries within multiple processes."""
 
-    def __init__(
-        self, single_pull: SinglePull, n_workers: int = None, force_single_entry: bool = False,
-        unsuccessful_threshold: float = None
-    ):
+    def __init__(self, single_pull: SinglePull, unsuccessful_threshold: float = None, n_workers: int = None):
         """
         :param single_pull: The SinglePull object used for each pull. If saving to a ZIP archive, must be instantiated with multiprocess_lock_save set to True.
-        :param force_single_entry: Whether to pull only one entry at a time despite the entry field specified in the SinglePull argument.
-        :param n_workers: The number of processes to use. If None, defaults to the number of cores available.
         :param unsuccessful_threshold: If set, the ratio of unsuccessful entry IDs to total entry IDs at which execution stops. Details of the aborted process are logged.
+        :param n_workers: The number of processes to use. If None, defaults to the number of cores available.
         """
-        super(MultiProcessMultiplePull, self).__init__(
-            single_pull=single_pull, force_single_entry=force_single_entry, unsuccessful_threshold=unsuccessful_threshold
-        )
-
+        super(MultiProcessMultiplePull, self).__init__(single_pull=single_pull, unsuccessful_threshold=unsuccessful_threshold)
         self._n_workers = n_workers if n_workers is not None else os.cpu_count()
 
     def _pull(self, grouped_entry_ids: list, check_progress: t.Callable) -> PullResult:
@@ -454,14 +436,14 @@ class MultiProcessMultiplePull(AbstractMultiplePull):
 
         :param grouped_entry_ids: List of lists of entry IDs, with each list being below or equal to the number allowed per Get KEGG URL.
         :param check_progress: Function that updates the progress bar and pull result if the unsuccessful threshold either isn't set or hasn't been reached. Else aborts.
-        :return: The pull result
+        :return: The pull result.
         """
         multiple_pull_result = PullResult()
 
         # Passing in _set_single_pull as the "initializer" allows setting the SinglePull object as a global variable.
         # We need to set it as a global since pickling its Lock member is not allowed.
         # Also, this makes it available to each process without pickling it every time it's passed to a worker.
-        with mp.Pool(self._n_workers, initializer=_set_single_pull, initargs=(self._single_pull,)) as pool:
+        with mp.Pool(self._n_workers, initializer=_set_single_pull, initargs=(self._single_pull, self._entry_field)) as pool:
             async_results = [
                 pool.apply_async(_get_single_pull_result, (entry_ids,)) for entry_ids in grouped_entry_ids
             ]
@@ -478,17 +460,20 @@ class MultiProcessMultiplePull(AbstractMultiplePull):
         return multiple_pull_result
 
 
-global_single_pull: SinglePull = None
+_global_single_pull: SinglePull = None
+_global_entry_field: t.Union[str, None] = None
 
 
-def _set_single_pull(single_pull: SinglePull) -> None:
+def _set_single_pull(single_pull: SinglePull, entry_field: t.Union[str, None]) -> None:
     """ Sets a global SinglePull variable to be used in each process within a multiprocessing pool.
 
     :param single_pull: The SinglePull object to set such that it's accessible to each process.
     """
-    global global_single_pull
+    global _global_single_pull
+    global _global_entry_field
 
-    global_single_pull = single_pull  # pragma: no cover
+    _global_single_pull = single_pull  # pragma: no cover
+    _global_entry_field = entry_field  # pragma: no cover
 
 
 def _get_single_pull_result(entry_ids: list) -> bytes:
@@ -497,6 +482,6 @@ def _get_single_pull_result(entry_ids: list) -> bytes:
     :param entry_ids: The IDs of the entries to pull.
     :return: The pull result.
     """
-    single_pull_result: PullResult = global_single_pull.pull(entry_ids=entry_ids)
+    single_pull_result: PullResult = _global_single_pull.pull(entry_ids=entry_ids, entry_field=_global_entry_field)
 
     return p.dumps(single_pull_result)
