@@ -5,6 +5,7 @@ import os
 import sys
 import json as j
 import jsonschema as js
+import inspect as ins
 
 
 def get_molecular_attribute_args(args: dict) -> tuple:
@@ -121,6 +122,19 @@ def save_file(file_location: str, file_content: t.Union[str, bytes], file_name: 
 
             with open(file_path, save_type) as file:
                 file.write(file_content)
+
+
+class NonInstantiable:
+    """Base classes of this class are only instantiable in the same module that they are defined in."""
+    @classmethod
+    def __init__(cls):
+        caller_module_path: str = ins.stack()[2].filename
+        class_module_path: str = ins.getfile(cls)
+
+        # Ensure the python module of the caller matches that of the class
+        # This ensures the class is only instantiated in the same module that it's defined in
+        if caller_module_path != class_module_path:
+            raise RuntimeError(f'The class "{cls.__name__}" cannot be instantiated outside of its module.')
 
 
 class staticproperty(staticmethod):

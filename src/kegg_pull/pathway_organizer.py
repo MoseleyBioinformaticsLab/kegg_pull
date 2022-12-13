@@ -11,7 +11,7 @@ from . import rest as r
 from . import _utils as u
 
 
-class PathwayOrganizer:
+class PathwayOrganizer(u.NonInstantiable):
     """
     Contains methods for managing a mapping of node keys to node information, these nodes coming from a pathways Brite hierarchy.
     An instantiated ``PathwayOrganizer`` object must be returned from either ``PathwayOrganizer.load_from_kegg`` or
@@ -27,6 +27,7 @@ class PathwayOrganizer:
                 - **entry_id**: The entry ID of the node (None if the node does not correspond to a KEGG entry).
     """
     def __init__(self) -> None:
+        super(PathwayOrganizer, self).__init__()
         self.hierarchy_nodes: dict = None
         self._filter_nodes: set = None
 

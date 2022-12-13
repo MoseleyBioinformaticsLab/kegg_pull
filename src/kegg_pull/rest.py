@@ -11,9 +11,10 @@ import inspect as ins
 import logging as l
 
 from . import kegg_url as ku
+from . import _utils as u
 
 
-class KEGGresponse:
+class KEGGresponse(u.NonInstantiable):
     """
     Class containing details of a response from the KEGG REST API.
 
@@ -22,7 +23,6 @@ class KEGGresponse:
     :ivar str text_body: The text version of the response body.
     :ivar bytes binary_body: The binary version of the response body.
     """
-
     class Status(e.Enum):
         """The status of a KEGG response."""
         SUCCESS = 1
@@ -37,6 +37,8 @@ class KEGGresponse:
         :param binary_body: The binary version of the response body.
         :raises ValueError: Raised if the status is SUCCESS but a response body is not provided.
         """
+        super(KEGGresponse, self).__init__()
+
         if status == KEGGresponse.Status.SUCCESS and (
             text_body is None or binary_body is None or text_body == '' or binary_body == b''
         ):

@@ -167,3 +167,7 @@ def test_invalid_load_from_json(
         method(file_path=json_file_path)
 
     assert_error(message=expected_error_message, caplog=caplog)
+
+
+def mock_non_instantiable(mocker):
+    mocker.patch('kegg_pull._utils.NonInstantiable.__init__')

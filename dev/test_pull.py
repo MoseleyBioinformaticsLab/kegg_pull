@@ -239,7 +239,7 @@ def test_not_all_requested_entries(mocker, entry_field: str):
         'kegg_pull.pull.r.KEGGrest.get', side_effect=[separate_response_mock1, separate_response_mock2]
     )
 
-    pull_result = p.PullResult()
+    pull_result: p.PullResult = _get_pull_result_mock(mocker=mocker)
     single_pull = p.SinglePull(output='.')
     single_pull._entry_field = entry_field
     single_pull._save_multi_entry_response(kegg_response=initial_kegg_response_mock, pull_result=pull_result)
@@ -263,6 +263,12 @@ def test_not_all_requested_entries(mocker, entry_field: str):
         assert actual_file_content == expected_file_content
 
 
+def _get_pull_result_mock(mocker) -> p.PullResult:
+    u.mock_non_instantiable(mocker=mocker)
+
+    return p.PullResult()
+
+
 @pt.fixture(name='_')
 def remove_aborted_pull_results():
     yield
@@ -276,6 +282,8 @@ test_multiple_pull_data = [
 ]
 @pt.mark.parametrize('MultiplePull,kwargs', test_multiple_pull_data)
 def test_multiple_pull(mocker, MultiplePull: type, kwargs: dict, caplog, _):
+    u.mock_non_instantiable(mocker=mocker)
+
     expected_pull_calls = [
         ['A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9'],
         ['B0', 'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9'],
@@ -284,7 +292,7 @@ def test_multiple_pull(mocker, MultiplePull: type, kwargs: dict, caplog, _):
     ]
 
     entry_ids_mock = list(i.chain.from_iterable(expected_pull_calls))
-    single_pull_mock = PickleableSinglePullMock()
+    single_pull_mock = _get_single_pull_mock(mocker=mocker)
 
     if MultiplePull is p.SingleProcessMultiplePull:
         single_pull_mock.pull = mocker.spy(single_pull_mock, 'pull')
@@ -343,10 +351,24 @@ def test_multiple_pull(mocker, MultiplePull: type, kwargs: dict, caplog, _):
             u.assert_call_args(function_mock=single_pull_mock.pull, expected_call_args_list=expected_call_args_list, do_kwargs=True)
 
 
+def _get_single_pull_mock(mocker):
+    def pull(entry_ids: list, **_):
+        successful_entry_ids: list = tuple(entry_ids[:-1])
+        failed_entry_ids: list = tuple(entry_ids[-1:])
+        single_pull_result = _get_pull_result_mock(mocker=mocker)
+        setattr(single_pull_result, '_successful_entry_ids', successful_entry_ids)
+        setattr(single_pull_result, '_failed_entry_ids', failed_entry_ids)
+        setattr(single_pull_result, '_timed_out_entry_ids', ())
+
+        return single_pull_result
+
+    return mocker.MagicMock(pull=mocker.MagicMock(wraps=pull))
+
+
 @pt.mark.parametrize('MultiplePull,kwargs', test_multiple_pull_data)
 def test_get_n_entries_per_url(mocker, MultiplePull: type, kwargs: dict):
     entry_ids_mock = ['eid1', 'eid2', 'eid3', 'eid4']
-    multiple_pull = MultiplePull(single_pull=PickleableSinglePullMock(), **kwargs)
+    multiple_pull = MultiplePull(single_pull=_get_single_pull_mock(mocker=mocker), **kwargs)
     group_entry_ids_spy: mocker.MagicMock = mocker.spy(multiple_pull, '_group_entry_ids')
     get_n_entries_per_url_spy: mocker.MagicMock = mocker.spy(p.AbstractMultiplePull, '_get_n_entries_per_url')
     pull_mock: mocker.MagicMock = mocker.patch(f'kegg_pull.pull.{MultiplePull.__name__}._pull')
@@ -372,24 +394,8 @@ def test_get_n_entries_per_url(mocker, MultiplePull: type, kwargs: dict):
     assert get_n_entries_per_url_spy.spy_return == 1
 
 
-class PickleableSinglePullMock:
-    def __init__(self):
-        self._entry_field = None
-
-    @staticmethod
-    def pull(entry_ids: list, **_):
-        successful_entry_ids: list = tuple(entry_ids[:-1])
-        failed_entry_ids: list = tuple(entry_ids[-1:])
-        single_pull_result = p.PullResult()
-        setattr(single_pull_result, '_successful_entry_ids', successful_entry_ids)
-        setattr(single_pull_result, '_failed_entry_ids', failed_entry_ids)
-        setattr(single_pull_result, '_timed_out_entry_ids', ())
-
-        return single_pull_result
-
-
 def test_get_single_pull_result(mocker):
-    pull_result = p.PullResult()
+    pull_result = _get_pull_result_mock(mocker=mocker)
     single_pull_mock = mocker.MagicMock(pull=mocker.MagicMock(return_value=pull_result))
     mocker.patch('kegg_pull.pull._global_single_pull', single_pull_mock)
     actual_result: bytes = p._get_single_pull_result(entry_ids=testing_entry_ids)
