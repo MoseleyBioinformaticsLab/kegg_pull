@@ -17,10 +17,11 @@ from . import rest as r
 from . import _utils as u
 
 
-class PullResult:
+class PullResult(u.NonInstantiable):
     """The collections of entry IDs, each of which resulted in a particular KEGG Response status after a pull."""
 
     def __init__(self) -> None:
+        super(PullResult, self).__init__()
         self._successful_entry_ids = []
         self._failed_entry_ids = []
         self._timed_out_entry_ids = []
@@ -52,7 +53,7 @@ class PullResult:
         """The IDs of entries that timed out before being pulled."""
         return tuple(self._timed_out_entry_ids)
 
-    def add_entry_ids(self, *entry_ids, status: r.KEGGresponse.Status) -> None:
+    def _add_entry_ids(self, *entry_ids, status: r.KEGGresponse.Status) -> None:
         """ Adds entry IDs of a given status to the pull result.
 
         :param entry_ids: The entry IDs to add.
@@ -65,7 +66,7 @@ class PullResult:
         else:
             self._timed_out_entry_ids.extend(entry_ids)
 
-    def merge_pull_results(self, other) -> int:
+    def _merge_pull_results(self, other) -> int:
         """ Combines two pull results into one.
 
         :param other: The pull result to combine into this one.
@@ -136,7 +137,8 @@ class SinglePull:
             # If we did not get all the entries requested, process each entry one at a time
             self._pull_separate_entries(get_url=get_url, pull_result=pull_result)
         else:
-            pull_result.add_entry_ids(*get_url.entry_ids, status=r.KEGGresponse.Status.SUCCESS)
+            # noinspection PyProtectedMember
+            pull_result._add_entry_ids(*get_url.entry_ids, status=r.KEGGresponse.Status.SUCCESS)
 
             for entry_id, entry in zip(get_url.entry_ids, entries):
                 self._save(entry_id=entry_id, entry=entry, entry_field=self._entry_field)
@@ -220,7 +222,8 @@ class SinglePull:
             if kegg_response.status == r.KEGGresponse.Status.SUCCESS:
                 self._save_single_entry_response(kegg_response=kegg_response, pull_result=pull_result)
             else:
-                pull_result.add_entry_ids(entry_id, status=kegg_response.status)
+                # noinspection PyProtectedMember
+                pull_result._add_entry_ids(entry_id, status=kegg_response.status)
 
     def _save(self, entry_id: str, entry: t.Union[str, bytes], entry_field: str) -> None:
         """ Saves a KEGG entry as a file.
@@ -251,7 +254,8 @@ class SinglePull:
         """
         get_url: ku.GetKEGGurl = kegg_response.kegg_url
         [entry_id] = get_url.entry_ids
-        pull_result.add_entry_ids(entry_id, status=r.KEGGresponse.Status.SUCCESS)
+        # noinspection PyProtectedMember
+        pull_result._add_entry_ids(entry_id, status=r.KEGGresponse.Status.SUCCESS)
 
         if ku.GetKEGGurl.is_binary(entry_field=self._entry_field):
             entry: bytes = kegg_response.binary_body
@@ -274,7 +278,8 @@ class SinglePull:
             self._pull_separate_entries(get_url=get_url, pull_result=pull_result)
         else:
             [entry_id] = get_url.entry_ids
-            pull_result.add_entry_ids(entry_id, status=status)
+            # noinspection PyProtectedMember
+            pull_result._add_entry_ids(entry_id, status=status)
 
 
 class AbstractMultiplePull(abc.ABC):
@@ -314,7 +319,8 @@ class AbstractMultiplePull(abc.ABC):
         progress_bar = tqdm.tqdm(total=n_entry_ids)
 
         def check_progress(single_pull_result: PullResult, multiple_pull_result: PullResult, grouped_entry_ids: list):
-            n_entry_ids_processed: int = multiple_pull_result.merge_pull_results(other=single_pull_result)
+            # noinspection PyProtectedMember
+            n_entry_ids_processed: int = multiple_pull_result._merge_pull_results(other=single_pull_result)
 
             n_unsuccessful: int = len(multiple_pull_result.failed_entry_ids) + len(
                 multiple_pull_result.timed_out_entry_ids

@@ -13,7 +13,9 @@ test_kegg_response_exception_data = [
     )
 ]
 @pt.mark.parametrize('kwargs,expected_message', test_kegg_response_exception_data)
-def test_kegg_response_exception(kwargs: dict, expected_message: str):
+def test_kegg_response_exception(mocker, kwargs: dict, expected_message: str):
+    u.mock_non_instantiable(mocker=mocker)
+
     with pt.raises(ValueError) as error:
         r.KEGGresponse(**kwargs)
 

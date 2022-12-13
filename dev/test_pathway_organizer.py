@@ -67,7 +67,8 @@ def _get_expected_hierarchy_nodes(hierarchy_nodes_file: str) -> dict:
     return expected_hierarchy_nodes
 
 
-def test_save_to_json(json_file_path: str):
+def test_save_to_json(mocker, json_file_path: str):
+    u.mock_non_instantiable(mocker=mocker)
     pathway_organizer = po.PathwayOrganizer()
     pathway_organizer.hierarchy_nodes = _get_expected_hierarchy_nodes(hierarchy_nodes_file='top-level-nodes.json')
     pathway_organizer.save_to_json(file_path=json_file_path)

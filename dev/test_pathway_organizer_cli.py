@@ -46,7 +46,7 @@ test_main_data = [
 ]
 @pt.mark.parametrize('args,kwargs,stdin_mock', test_main_data)
 def test_main_print(mocker, args: list, kwargs: dict, stdin_mock: str):
-    pathway_org_mock, expected_output = _get_mock_pathway_org_and_expected_output()
+    pathway_org_mock, expected_output = _get_mock_pathway_org_and_expected_output(mocker=mocker)
 
     u.test_main_print(
         mocker=mocker, argv_mock=args, stdin_mock=stdin_mock, method=method, method_return_value=pathway_org_mock,
@@ -54,7 +54,8 @@ def test_main_print(mocker, args: list, kwargs: dict, stdin_mock: str):
     )
 
 
-def _get_mock_pathway_org_and_expected_output():
+def _get_mock_pathway_org_and_expected_output(mocker):
+    u.mock_non_instantiable(mocker=mocker)
     hierarchy_nodes_mock = {'a': {'name': 'b', 'level': 1, 'parent': 'c', 'children': ['a'], 'entry-id': 'd'}}
     pathway_org_mock = po.PathwayOrganizer()
     pathway_org_mock.hierarchy_nodes = hierarchy_nodes_mock
@@ -65,7 +66,7 @@ def _get_mock_pathway_org_and_expected_output():
 
 @pt.mark.parametrize('args,kwargs,stdin_mock', test_main_data)
 def test_main_file(mocker, args: list, kwargs: dict, stdin_mock: str, output_file: str):
-    pathway_org_mock, expected_output = _get_mock_pathway_org_and_expected_output()
+    pathway_org_mock, expected_output = _get_mock_pathway_org_and_expected_output(mocker=mocker)
 
     u.test_main_file(
         mocker=mocker, argv_mock=args, output_file=output_file, stdin_mock=stdin_mock, method=method,
@@ -75,7 +76,7 @@ def test_main_file(mocker, args: list, kwargs: dict, stdin_mock: str, output_fil
 
 @pt.mark.parametrize('args,kwargs,stdin_mock', test_main_data)
 def test_main_zip_archive(mocker, args: list, kwargs: dict, stdin_mock: str, zip_archive_data: tuple):
-    pathway_org_mock, expected_output = _get_mock_pathway_org_and_expected_output()
+    pathway_org_mock, expected_output = _get_mock_pathway_org_and_expected_output(mocker=mocker)
 
     u.test_main_zip_archive(
         mocker=mocker, argv_mock=args, zip_archive_data=zip_archive_data, stdin_mock=stdin_mock, method=method,
