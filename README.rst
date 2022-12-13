@@ -38,6 +38,7 @@ Note, the ``pip`` command will install dependencies automatically.
    docopt
    requests
    tqdm
+   jsonschema
 
 Get the source code
 -------------------

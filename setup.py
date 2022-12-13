@@ -5,7 +5,8 @@ import re
 requirements = [
     'docopt',
     'requests',
-    'tqdm'
+    'tqdm',
+    'jsonschema'
 ]
 
 
