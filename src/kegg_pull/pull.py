@@ -160,7 +160,7 @@ class SinglePull:
             separator = field_to_separator[self._entry_field]
 
         entries: list = separator(concatenated_entries=concatenated_entries)
-        entries = [entry.strip() for entry in entries]
+        entries = [entry for entry in entries]
 
         return entries
 
