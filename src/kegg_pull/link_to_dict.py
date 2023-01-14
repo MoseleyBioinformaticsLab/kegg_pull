@@ -5,6 +5,7 @@ Functionality for converting the output from the KEGG "link" REST operation into
 """
 import typing as t
 import json as j
+import copy as cp
 
 from . import rest as r
 from . import kegg_url as ku
@@ -102,7 +103,7 @@ def _add_to_dict(dictionary: dict, key: str, values: set) -> None:
     if key in dictionary.keys():
         dictionary[key].update(values)
     else:
-        dictionary[key] = values
+        dictionary[key] = cp.deepcopy(values)  # In case the values are referenced elsewhere, we don't want to update a shallow copy
 
 
 def pathway_to_compound(add_glycans: bool, add_drugs: bool, kegg_rest: r.KEGGrest = None) -> dict:
@@ -189,6 +190,7 @@ def reaction_to_compound(add_glycans: bool, add_drugs: bool, kegg_rest: r.KEGGre
     """
     return _database_to_compound(database='reaction', add_glycans=add_glycans, add_drugs=add_drugs, kegg_rest=kegg_rest)
 
+
 def compound_to_gene(add_glycans: bool, add_drugs: bool, kegg_rest: r.KEGGrest = None) -> dict:
     """ Creates a dictionary that maps compound entry IDs to related gene IDs (from the KEGG ko database).
 
@@ -199,6 +201,7 @@ def compound_to_gene(add_glycans: bool, add_drugs: bool, kegg_rest: r.KEGGrest =
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
     return reverse_mapping(mapping=gene_to_compound(add_glycans=add_glycans, add_drugs=add_drugs, kegg_rest=kegg_rest))
+
 
 def gene_to_compound(add_glycans: bool, add_drugs: bool, kegg_rest: r.KEGGrest = None) -> dict:
     """ Creates a dictionary that maps gene entry IDs (from the KEGG ko database) to related compound IDs.
