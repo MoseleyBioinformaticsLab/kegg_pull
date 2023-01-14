@@ -87,6 +87,7 @@ def _test_output(mocker, args: list, expected_output: str, print_output: bool, j
         if json_output:
             expected_json: dict = j.loads(expected_output)
             [[actual_json], _] = print_mock.call_args
+            actual_json: str = actual_json
             actual_json: dict = j.loads(actual_json)
 
             assert actual_json == expected_json
@@ -195,22 +196,24 @@ def test_main_pull(mocker, args: list, output: str):
     assert actual_pull_results == expected_pull_results
 
 
-def test_main_link_to_dict(mocker, print_output):
-    args: list = ['kegg_pull', 'link-to-dict', '--link-target=module', '-']
+test_main_link_to_dict_data = [
+    (['compound-to-reaction', '--add-glycans'], None, 'compound-to-reaction'),
+    (['--link-target=module', '-'], '\nK12696\nK22365\nK22435\t', 'module')
+]
+@pt.mark.parametrize('args,stdin_mock_str,expected_output', test_main_link_to_dict_data)
+def test_main_link_to_dict(mocker, print_output: bool, args: list, stdin_mock_str: str, expected_output: str):
+    args: list = ['kegg_pull', 'link-to-dict'] + args
+    stdin_mock = None
 
-    stdin_mock = """
-        K12696
-        K22365
-        K22435
-    """
-
-    stdin_mock: mocker.MagicMock = mocker.patch('kegg_pull._utils.sys.stdin.read', return_value=stdin_mock)
+    if stdin_mock_str:
+        stdin_mock: mocker.MagicMock = mocker.patch('kegg_pull._utils.sys.stdin.read', return_value=stdin_mock_str)
 
     _test_output(
-        mocker=mocker, args=args, expected_output='dev/test_data/link-to-dict.json', print_output=print_output, json_output=True
+        mocker=mocker, args=args, expected_output=f'dev/test_data/link-to-dict-{expected_output}.json', print_output=print_output, json_output=True
     )
 
-    stdin_mock.assert_called_once_with()
+    if stdin_mock:
+        stdin_mock.assert_called_once_with()
 
 
 def test_main_pathway_organizer(mocker, print_output: bool):
