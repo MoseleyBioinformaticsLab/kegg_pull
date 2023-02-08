@@ -90,8 +90,9 @@ def save_file(file_location: str, file_content: t.Union[str, bytes], file_name: 
 
         file_path: str = os.path.join(file_location, file_name)
         save_type: str = 'wb' if type(file_content) is bytes else 'w'
+        encoding: t.Union[str, None] = None if type(file_content) is bytes else 'utf-8'
 
-        with open(file_path, save_type) as file:
+        with open(file_path, save_type, encoding=encoding) as file:
             file.write(file_content)
 
 
