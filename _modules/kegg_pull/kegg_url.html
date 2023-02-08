@@ -3,17 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kegg_pull.kegg_url &mdash; kegg_pull 2.0.0 documentation</title>
+  <title>kegg_pull.kegg_url &mdash; kegg_pull 2.0.1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -26,14 +24,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> kegg_pull
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            kegg_pull
           </a>
               <div class="version">
-                2.0.0
+                2.0.1
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -61,7 +63,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
       <li class="breadcrumb-item active">kegg_pull.kegg_url</li>
       <li class="wy-breadcrumbs-aside">
@@ -89,7 +91,7 @@
 
 
 <div class="viewcode-block" id="AbstractKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.AbstractKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">AbstractKEGGurl</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Abstract class which validates and constructs URLs for accessing the KEGG REST API and contains the base data and functionality for all KEGG URL classes.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract class which validates and constructs URLs for accessing the KEGG REST API and contains the base data and functionality for all KEGG URL classes.&quot;&quot;&quot;</span>
     <span class="n">_URL_LENGTH_LIMIT</span> <span class="o">=</span> <span class="mi">4000</span>
 
     <span class="n">_valid_kegg_databases</span> <span class="o">=</span> <span class="p">{</span>
@@ -104,7 +106,7 @@
     <span class="n">_organism_set</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rest_operation</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">base_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">BASE_URL</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param rest_operation: The KEGG REST API operation in the URL.</span>
 <span class="sd">        :param base_url: The base URL for accessing the KEGG web API.</span>
 <span class="sd">        :param kwargs: The arguments used to construct the REST options after they are validated.</span>
@@ -122,7 +124,7 @@
     <span class="c1"># noinspection PyMethodParameters</span>
     <span class="nd">@u</span><span class="o">.</span><span class="n">staticproperty</span>
     <span class="k">def</span> <span class="nf">organism_set</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Obtains the set of valid KEGG organism database names by requesting from the KEGG REST API (caches this result so the request only needs to be done once).</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Obtains the set of valid KEGG organism database names by requesting from the KEGG REST API (caches this result so the request only needs to be done once).</span>
 
 <span class="sd">        :return: The set of organism database names.</span>
 <span class="sd">        :raises RuntimeError: Raised in the unlikely case that the request fails.</span>
@@ -157,7 +159,7 @@
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Ensures the arguments passed into the constructor result in a valid KEGG URL.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Ensures the arguments passed into the constructor result in a valid KEGG URL.</span>
 
 <span class="sd">        :param kwargs: The arguments to validate.</span>
 <span class="sd">        :raises ValueError: Raised if the given arguments cannot construct a valid KEGG URL.</span>
@@ -166,7 +168,7 @@
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_create_rest_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Creates the string at the end part of a KEGG URL to specify the options for a REST API request.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Creates the string at the end part of a KEGG URL to specify the options for a REST API request.</span>
 
 <span class="sd">        :param kwargs: The arguments used to create the options.</span>
 <span class="sd">        :return: The REST API options.</span>
@@ -175,7 +177,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The constructed and validated KEGG URL.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The constructed and validated KEGG URL.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_url</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -183,7 +185,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_raise_error</span><span class="p">(</span><span class="n">reason</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Raises an exception for when a URL is not valid.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Raises an exception for when a URL is not valid.</span>
 
 <span class="sd">        :param reason: The reason why the URL was not valid.</span>
 <span class="sd">        :raises ValueError: The error that is raised.</span>
@@ -194,7 +196,7 @@
     <span class="k">def</span> <span class="nf">_validate_rest_option</span><span class="p">(</span>
         <span class="n">option_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">option_value</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">valid_rest_options</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Iterable</span><span class="p">,</span> <span class="n">add_org</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Raises an exception if a provided REST API option is not valid.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Raises an exception if a provided REST API option is not valid.</span>
 
 <span class="sd">        :param option_name: The name of the type of option to check.</span>
 <span class="sd">        :param option_value: The value of the REST API option provided.</span>
@@ -217,7 +219,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_validate_database_name</span><span class="p">(</span><span class="n">database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">extra_databases</span><span class="p">:</span> <span class="nb">set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(),</span> <span class="n">excluded_databases</span><span class="p">:</span> <span class="nb">set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()):</span>
-        <span class="sd">&quot;&quot;&quot; Ensures the database provided is a valid KEGG database.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Ensures the database provided is a valid KEGG database.</span>
 
 <span class="sd">        :param database_name: The name of the database to validate.</span>
 <span class="sd">        :param extra_databases: Additional optional database names to add to the core KEGG databases for the validation.</span>
@@ -237,17 +239,17 @@
 
 
 <div class="viewcode-block" id="ListKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.ListKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">ListKEGGurl</span><span class="p">(</span><span class="n">AbstractKEGGurl</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Contains URL construction and validation functionality of the KEGG API list operation.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Contains URL construction and validation functionality of the KEGG API list operation.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param database_name: The database option for the KEGG list URL.</span>
 <span class="sd">        :raises ValueError: Raised if the provided database is not valid.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">rest_operation</span><span class="o">=</span><span class="s1">&#39;list&#39;</span><span class="p">,</span> <span class="n">database_name</span><span class="o">=</span><span class="n">database_name</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Ensures the database option is a KEGG database supported by the list operation.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Ensures the database option is a KEGG database supported by the list operation.</span>
 
 <span class="sd">        :param database_name: The name of the database to check.</span>
 <span class="sd">        :raises ValueError: Raised if the provided database is not valid.</span>
@@ -257,7 +259,7 @@
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_create_rest_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Implements the KEGG REST API options creation by returning the provided database name (the only option).</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Implements the KEGG REST API options creation by returning the provided database name (the only option).</span>
 
 <span class="sd">        :param database_name: The database option to return.</span>
 <span class="sd">        :return: The database option.</span>
@@ -266,17 +268,17 @@
 
 
 <div class="viewcode-block" id="InfoKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.InfoKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">InfoKEGGurl</span><span class="p">(</span><span class="n">AbstractKEGGurl</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Contains URL construction and validation functionality of the KEGG API info operation.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Contains URL construction and validation functionality of the KEGG API info operation.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param database_name: The database option for the KEGG info URL.</span>
 <span class="sd">        :raises ValueError: Raised if the provided database is not valid.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">InfoKEGGurl</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">rest_operation</span><span class="o">=</span><span class="s1">&#39;info&#39;</span><span class="p">,</span> <span class="n">database_name</span><span class="o">=</span><span class="n">database_name</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Ensures the database option is a KEGG database supported by the info operation.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Ensures the database option is a KEGG database supported by the info operation.</span>
 
 <span class="sd">        :param database_name: The name of the database to check.</span>
 <span class="sd">        :raises ValueError: Raised if the provided database is not valid.</span>
@@ -286,7 +288,7 @@
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_create_rest_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Implements the KEGG REST API options creation by returning the provided database name (the only option).</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Implements the KEGG REST API options creation by returning the provided database name (the only option).</span>
 
 <span class="sd">        :param database_name: The database option to return.</span>
 <span class="sd">        :return: The database option.</span>
@@ -295,7 +297,7 @@
 
 
 <div class="viewcode-block" id="GetKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.GetKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">GetKEGGurl</span><span class="p">(</span><span class="n">AbstractKEGGurl</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Contains URL construction and validation functionality for the KEGG API get operation.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Contains URL construction and validation functionality for the KEGG API get operation.&quot;&quot;&quot;</span>
 
     <span class="n">_entry_fields</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;aaseq&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;ntseq&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;mol&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;kcf&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;image&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;conf&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;kgml&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
@@ -307,11 +309,11 @@
     <span class="c1"># noinspection PyMethodParameters</span>
     <span class="nd">@u</span><span class="o">.</span><span class="n">staticproperty</span>
     <span class="k">def</span> <span class="nf">MAX_ENTRY_IDS_PER_URL</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; The maximum number of entry IDs allowed in a single get KEGG URL.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; The maximum number of entry IDs allowed in a single get KEGG URL.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">GetKEGGurl</span><span class="o">.</span><span class="n">_MAX_ENTRY_IDS_PER_URL</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">entry_field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param entry_ids: Specifies which entry IDs go in the first option of the URL.</span>
 <span class="sd">        :param entry_field: Specifies which entry field goes in the second option.</span>
 <span class="sd">        :raises ValueError: Raised if the entry IDs or entry field is not valid.</span>
@@ -322,16 +324,16 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">entry_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;The entry IDs of the get KEGG URL.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The entry IDs of the get KEGG URL.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_entry_ids</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">multiple_entry_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Determines whether the get KEGG URL has more than one entry ID.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Determines whether the get KEGG URL has more than one entry ID.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">entry_ids</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
 
     <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">entry_field</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Ensures valid Entry IDs and a valid entry field are provided.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Ensures valid Entry IDs and a valid entry field are provided.</span>
 
 <span class="sd">        :param entry_ids: The entry IDs to validate.</span>
 <span class="sd">        :param entry_field: The entry field to validate.</span>
@@ -362,7 +364,7 @@
 
 <div class="viewcode-block" id="GetKEGGurl.only_one_entry"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.GetKEGGurl.only_one_entry">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">only_one_entry</span><span class="p">(</span><span class="n">entry_field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Determines whether a KEGG entry field can only be pulled in one entry at a time for the KEGG get API</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Determines whether a KEGG entry field can only be pulled in one entry at a time for the KEGG get API</span>
 <span class="sd">        operation.</span>
 
 <span class="sd">        :param entry_field: The KEGG entry field to check.</span>
@@ -371,14 +373,14 @@
 
 <div class="viewcode-block" id="GetKEGGurl.is_binary"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.GetKEGGurl.is_binary">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_binary</span><span class="p">(</span><span class="n">entry_field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Determines if the entry field is a binary response or not.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Determines if the entry field is a binary response or not.</span>
 
 <span class="sd">        :param entry_field: The KEGG entry field to check.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">entry_field</span> <span class="o">==</span> <span class="s1">&#39;image&#39;</span></div>
 
     <span class="k">def</span> <span class="nf">_create_rest_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">entry_field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Constructs the REST options for the KEGG API get operation.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Constructs the REST options for the KEGG API get operation.</span>
 
 <span class="sd">        :param entry_ids: The entry IDs for the first REST option.</span>
 <span class="sd">        :param entry_field: The entry field for the second REST option.</span>
@@ -393,10 +395,10 @@
 
 
 <div class="viewcode-block" id="KeywordsFindKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.KeywordsFindKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">KeywordsFindKEGGurl</span><span class="p">(</span><span class="n">AbstractKEGGurl</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Contains the URL construction and validation functionality for the KEGG API find operation based on the URL form that searches entries by keywords.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Contains the URL construction and validation functionality for the KEGG API find operation based on the URL form that searches entries by keywords.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">keywords</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param database_name: The database name option for the first part of the URL.</span>
 <span class="sd">        :param keywords: The keyword options for the second part of the URL.</span>
 <span class="sd">        :raises ValueError: Raised if the database name is invalid or keywords are not provided.</span>
@@ -404,7 +406,7 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">KeywordsFindKEGGurl</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">rest_operation</span><span class="o">=</span><span class="s1">&#39;find&#39;</span><span class="p">,</span> <span class="n">database_name</span><span class="o">=</span><span class="n">database_name</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">keywords</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Ensures keywords are provided and the database name is valid.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Ensures keywords are provided and the database name is valid.</span>
 
 <span class="sd">        :param database_name: The database name to check.</span>
 <span class="sd">        :param keywords: The keywords to check.</span>
@@ -416,7 +418,7 @@
         <span class="n">AbstractKEGGurl</span><span class="o">.</span><span class="n">_validate_database_name</span><span class="p">(</span><span class="n">database_name</span><span class="o">=</span><span class="n">database_name</span><span class="p">,</span> <span class="n">excluded_databases</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;brite&#39;</span><span class="p">,</span> <span class="s1">&#39;kegg&#39;</span><span class="p">})</span>
 
     <span class="k">def</span> <span class="nf">_create_rest_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keywords</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Constructs the options for the URL using the database name followed by the keywords.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Constructs the options for the URL using the database name followed by the keywords.</span>
 
 <span class="sd">        :param keywords: The keywords to go in the options.</span>
 <span class="sd">        :param database_name: The database name to go in the options.</span>
@@ -428,14 +430,14 @@
 
 
 <div class="viewcode-block" id="MolecularFindKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.MolecularFindKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">MolecularFindKEGGurl</span><span class="p">(</span><span class="n">AbstractKEGGurl</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Contains the URL construction and validation functionality for the KEGG API find operation based on the URL form that uses chemical / molecular attributes of compounds.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Contains the URL construction and validation functionality for the KEGG API find operation based on the URL form that uses chemical / molecular attributes of compounds.&quot;&quot;&quot;</span>
 
     <span class="n">_valid_molecular_databases</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;compound&#39;</span><span class="p">,</span> <span class="s1">&#39;drug&#39;</span><span class="p">}</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">formula</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">exact_mass</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">molecular_weight</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param database_name: The database name option for the first part of the URL.</span>
 <span class="sd">        :param formula: The chemical formula option that can go in the second part of the URL.</span>
 <span class="sd">        :param exact_mass: The exact molecule mass option that can go in the second part of the URL.</span>
@@ -451,7 +453,7 @@
         <span class="bp">self</span><span class="p">,</span> <span class="n">database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">formula</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">exact_mass</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">molecular_weight</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Ensures a valid database name and molecular attributes are provided.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Ensures a valid database name and molecular attributes are provided.</span>
 
 <span class="sd">        :param database_name: The database name to check.</span>
 <span class="sd">        :param formula: The chemical formula attribute to check.</span>
@@ -482,7 +484,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_validate_range</span><span class="p">(</span><span class="n">range_values</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">,</span> <span class="n">range_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Ensures a given range is valid.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Ensures a given range is valid.</span>
 
 <span class="sd">        :param range_values: The two end points of the range (start and end).</span>
 <span class="sd">        :param range_name: The name of the range for the resulting error message in case of an invalid range.</span>
@@ -508,7 +510,7 @@
     <span class="k">def</span> <span class="nf">_create_rest_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">formula</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">exact_mass</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">molecular_weight</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Constructs the options for the URL using the database name followed by a molecular attribute.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Constructs the options for the URL using the database name followed by a molecular attribute.</span>
 
 <span class="sd">        :param database_name: The database name option in the first part of the URL.</span>
 <span class="sd">        :param formula: The chemical formula option that can go in the second part of the URL.</span>
@@ -527,7 +529,7 @@
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_get_range_options</span><span class="p">(</span><span class="n">option_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">option_value</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Constructs options for the URL that are either a single number or a range (start and end separated by a</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Constructs options for the URL that are either a single number or a range (start and end separated by a</span>
 <span class="sd">        dash).</span>
 
 <span class="sd">        :param option_name: The name of the option to go in the third part of the URL.</span>
@@ -545,7 +547,7 @@
 
 
 <div class="viewcode-block" id="AbstractConvKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.AbstractConvKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">AbstractConvKEGGurl</span><span class="p">(</span><span class="n">AbstractKEGGurl</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Abstract class containing data shared by the KEGG URL classes that validate and construct URLs for the conv KEGG</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract class containing data shared by the KEGG URL classes that validate and construct URLs for the conv KEGG</span>
 <span class="sd">    REST API operation.&quot;&quot;&quot;</span>
 
     <span class="n">_valid_outside_gene_databases</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ncbi-geneid&#39;</span><span class="p">,</span> <span class="s1">&#39;ncbi-proteinid&#39;</span><span class="p">,</span> <span class="s1">&#39;uniprot&#39;</span><span class="p">}</span>
@@ -553,7 +555,7 @@
     <span class="n">_valid_outside_molecule_databases</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;pubchem&#39;</span><span class="p">,</span> <span class="s1">&#39;chebi&#39;</span><span class="p">}</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param kwargs: Arguments for the URL validation and construction.</span>
 <span class="sd">        :raises ValueError: Raised if the provided arguments cannot construct a valid conv KEGG URL.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -561,7 +563,7 @@
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Validates options for a conv KEGG URL.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Validates options for a conv KEGG URL.</span>
 
 <span class="sd">        :param kwargs: The options to validate.</span>
 <span class="sd">        :raises ValueError: Raised if the provided arguments cannot construct a valid conv KEGG URL.</span>
@@ -570,7 +572,7 @@
 
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span> <span class="nf">_create_rest_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Constructs the options in a conv KEGG URL.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Constructs the options in a conv KEGG URL.</span>
 
 <span class="sd">        :param kwargs: The arguments to create the options.</span>
 <span class="sd">        :return: The constructed options.</span>
@@ -579,10 +581,10 @@
 
 
 <div class="viewcode-block" id="DatabaseConvKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.DatabaseConvKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">DatabaseConvKEGGurl</span><span class="p">(</span><span class="n">AbstractConvKEGGurl</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Contains the URL construction and validation functionality of the KEGG API conv operation based on the URL form that uses a KEGG database and an outside database.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Contains the URL construction and validation functionality of the KEGG API conv operation based on the URL form that uses a KEGG database and an outside database.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kegg_database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">outside_database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param kegg_database_name: The name of the KEGG database.</span>
 <span class="sd">        :param outside_database_name: The name of the outside database.</span>
 <span class="sd">        :raises ValueError: Raised if the database names are not valid or are not of the same type.</span>
@@ -592,7 +594,7 @@
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kegg_database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">outside_database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Ensures that the database names are valid and that they&#39;re both the same type</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Ensures that the database names are valid and that they&#39;re both the same type</span>
 
 <span class="sd">        :param kegg_database_name: The name of the KEGG database to check.</span>
 <span class="sd">        :param outside_database_name: The name of the outside database to check.</span>
@@ -632,7 +634,7 @@
             <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_create_rest_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kegg_database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">outside_database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Constructs the REST options by appending the outside database name to the kegg database name</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Constructs the REST options by appending the outside database name to the kegg database name</span>
 
 <span class="sd">        :param kegg_database_name: The KEGG database option.</span>
 <span class="sd">        :param outside_database_name: The outside database option</span>
@@ -642,10 +644,10 @@
 
 
 <div class="viewcode-block" id="EntriesConvKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.EntriesConvKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">EntriesConvKEGGurl</span><span class="p">(</span><span class="n">AbstractConvKEGGurl</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Contains the URL construction and validation functionality for the KEGG API conv operation based on the URL form that uses a target database and entry IDs.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Contains the URL construction and validation functionality for the KEGG API conv operation based on the URL form that uses a target database and entry IDs.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param target_database_name: The target database option.</span>
 <span class="sd">        :param entry_ids: The entry IDs options.</span>
 <span class="sd">        :raises ValueError: Raised if the target database is invalid or entry IDs are not provided.</span>
@@ -653,7 +655,7 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">EntriesConvKEGGurl</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">target_database_name</span><span class="o">=</span><span class="n">target_database_name</span><span class="p">,</span> <span class="n">entry_ids</span><span class="o">=</span><span class="n">entry_ids</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Ensures the target database is valid and that the entry IDs are provided.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Ensures the target database is valid and that the entry IDs are provided.</span>
 
 <span class="sd">        :param target_database_name: The name of the target database to check.</span>
 <span class="sd">        :param entry_ids: The entry IDs to check.</span>
@@ -674,7 +676,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_raise_error</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="s1">&#39;Entry IDs must be specified for this KEGG &quot;conv&quot; operation&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_create_rest_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Constructs the REST options by appending the entry IDs (separated by &#39;+&#39;) to the target database name.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Constructs the REST options by appending the entry IDs (separated by &#39;+&#39;) to the target database name.</span>
 
 <span class="sd">        :param target_database_name: The name of the target database in the first part of the URL.</span>
 <span class="sd">        :param entry_ids: The entry IDs in the second part of the URL.</span>
@@ -684,12 +686,12 @@
 
 
 <div class="viewcode-block" id="AbstractLinkKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.AbstractLinkKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">AbstractLinkKEGGurl</span><span class="p">(</span><span class="n">AbstractKEGGurl</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Abstract class containing the shared data for the link KEGG URLs.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract class containing the shared data for the link KEGG URLs.&quot;&quot;&quot;</span>
 
     <span class="n">_extra_database_names</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;atc&#39;</span><span class="p">,</span> <span class="s1">&#39;jtc&#39;</span><span class="p">,</span> <span class="s1">&#39;ndc&#39;</span><span class="p">,</span> <span class="s1">&#39;yj&#39;</span><span class="p">,</span> <span class="s1">&#39;pubmed&#39;</span><span class="p">}</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param kwargs: The arguments to validate and construct the URL.</span>
 <span class="sd">        :raises ValueError: Raised if the provided arguments are invalid.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -705,10 +707,10 @@
 
 
 <div class="viewcode-block" id="DatabaseLinkKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.DatabaseLinkKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">DatabaseLinkKEGGurl</span><span class="p">(</span><span class="n">AbstractLinkKEGGurl</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Contains the URL construction and validation functionality for the link KEGG REST API operation of the form that uses a target database and a source database.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Contains the URL construction and validation functionality for the link KEGG REST API operation of the form that uses a target database and a source database.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">source_database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param target_database_name: The name of the target database option.</span>
 <span class="sd">        :param source_database_name: The name of the source database option.</span>
 <span class="sd">        :raises ValueError: Raised if the databases are invalid.</span>
@@ -718,7 +720,7 @@
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">source_database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Ensures the provided databases are valid</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Ensures the provided databases are valid</span>
 
 <span class="sd">        :param target_database_name: The name of the target database to check.</span>
 <span class="sd">        :param source_database_name: The name of the source database to check.</span>
@@ -737,7 +739,7 @@
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_create_rest_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">source_database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Constructs the options by appending the target database name to the source database name</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Constructs the options by appending the target database name to the source database name</span>
 <span class="sd">        :param target_database_name: The target database name for the first option.</span>
 <span class="sd">        :param source_database_name: The source database name for the second option.</span>
 <span class="sd">        :return: The constructed options.</span>
@@ -746,10 +748,10 @@
 
 
 <div class="viewcode-block" id="EntriesLinkKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.EntriesLinkKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">EntriesLinkKEGGurl</span><span class="p">(</span><span class="n">AbstractLinkKEGGurl</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Contains the URL construction and validation functionality for the link KEGG REST API operation of the form that uses a target database and entry IDs.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Contains the URL construction and validation functionality for the link KEGG REST API operation of the form that uses a target database and entry IDs.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param target_database_name: The name of the target database option.</span>
 <span class="sd">        :param entry_ids: The entry IDs options.</span>
 <span class="sd">        :raises ValueError: Raised if the target database is invalid or entry IDs are not provided.</span>
@@ -757,7 +759,7 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">EntriesLinkKEGGurl</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">target_database_name</span><span class="o">=</span><span class="n">target_database_name</span><span class="p">,</span> <span class="n">entry_ids</span><span class="o">=</span><span class="n">entry_ids</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Ensures the target database name is valid and that the entry IDs are provided.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Ensures the target database name is valid and that the entry IDs are provided.</span>
 
 <span class="sd">        :param target_database_name: The name of the target database to check.</span>
 <span class="sd">        :param entry_ids: The entry IDs to check.</span>
@@ -774,7 +776,7 @@
             <span class="n">AbstractKEGGurl</span><span class="o">.</span><span class="n">_raise_error</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="s1">&#39;At least one entry ID must be specified to perform the link operation&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_create_rest_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_database_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Constructs the options by appending the entry IDs (separated by &#39;+&#39;) to the target database name.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructs the options by appending the entry IDs (separated by &#39;+&#39;) to the target database name.</span>
 
 <span class="sd">        :param target_database_name: The name of the target database for the first options.</span>
 <span class="sd">        :param entry_ids: The entry IDs as the last options.</span>
@@ -784,17 +786,17 @@
 
 
 <div class="viewcode-block" id="DdiKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.DdiKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">DdiKEGGurl</span><span class="p">(</span><span class="n">AbstractKEGGurl</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Contains the URL construction and validation functionality for the ddi KEGG REST operation.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Contains the URL construction and validation functionality for the ddi KEGG REST operation.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">drug_entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param drug_entry_ids: The entry IDs for a drug database.</span>
 <span class="sd">        :raises ValueError: Raised if the drug entry IDs are not provided.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">DdiKEGGurl</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">rest_operation</span><span class="o">=</span><span class="s1">&#39;ddi&#39;</span><span class="p">,</span> <span class="n">drug_entry_ids</span><span class="o">=</span><span class="n">drug_entry_ids</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">drug_entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Ensures the drug entry IDs are provided.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Ensures the drug entry IDs are provided.</span>
 
 <span class="sd">        :param drug_entry_ids: The drug entry IDs to check.</span>
 <span class="sd">        :raises ValueError: Raised if the drug entry IDs are not provided.</span>
@@ -803,7 +805,7 @@
             <span class="n">AbstractKEGGurl</span><span class="o">.</span><span class="n">_raise_error</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="s1">&#39;At least one drug entry ID must be specified for the DDI operation&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_create_rest_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">drug_entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Constructs the options by separating the drug entry IDs by &#39;+&#39;.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Constructs the options by separating the drug entry IDs by &#39;+&#39;.</span>
 
 <span class="sd">        :param drug_entry_ids: The drug entry ID options.</span>
 <span class="sd">        :return: The constructed options.</span>
