@@ -121,7 +121,8 @@ def test_main_pull(mocker, args: list, output: str):
     stdin_mock = """
         br:br08005
         br:br08902
-        
+        br:br08431
+
         br:br03220
         br:br03222
     """
@@ -130,18 +131,22 @@ def test_main_pull(mocker, args: list, output: str):
 
     successful_entry_ids = [
         'br:br08005',
-        'br:br08902'
+        'br:br08902',
+        'br:br08431'
     ]
+
+    # The expected output file names have underscores instead of colons in case testing on Windows.
+    expected_output_files: list = [entry_id.replace(':', '_') for entry_id in successful_entry_ids]
 
     expected_pull_results = {
         'successful-entry-ids': successful_entry_ids,
         'failed-entry-ids': ['br:br03220', 'br:br03222'],
         'timed-out-entry-ids': [],
-        'num-successful': 2,
+        'num-successful': 3,
         'num-failed': 2,
         'num-timed-out': 0,
-        'num-total': 4,
-        'percent-success': 50.0,
+        'num-total': 5,
+        'percent-success': 60.0,
         'pull-minutes': 1.0
     }
 
@@ -153,22 +158,23 @@ def test_main_pull(mocker, args: list, output: str):
 
     assert time_mock.call_count == 2
 
-    if output.endswith('.zip'):
-        with zf.ZipFile(output, 'r') as actual_zip:
-            with zf.ZipFile(f'dev/test_data/{output}', 'r') as expected_zip:
-                for successful_entry_id in successful_entry_ids:
-                    actual_entry: str = actual_zip.read(successful_entry_id + '.txt').decode()
-                    expected_entry: str = expected_zip.read(successful_entry_id + '.txt').decode()
+    # If running on Windows, change the actual files names to have underscores instead of colons.
+    if os.name == 'nt':  # pragma: no cover
+        expected_output_files: list = expected_output_files[:-1]  # The last brite gives different output on Windows
+        successful_entry_ids: list = expected_output_files  # pragma: no cover
 
-                    assert actual_entry == expected_entry
-    else:
-        for successful_entry_id in successful_entry_ids:
+    for successful_entry_id, expected_output_file in zip(successful_entry_ids, expected_output_files):
+        if output.endswith('.zip'):
+            with zf.ZipFile(output, 'r') as actual_zip:
+                actual_entry: str = actual_zip.read(successful_entry_id + '.txt').decode()
+        else:
             with open(f'{output}/{successful_entry_id}.txt') as actual_file:
-                with open(f'dev/test_data/{output}/{successful_entry_id}.txt') as expected_file:
-                    actual_entry: str = actual_file.read()
-                    expected_entry: str = expected_file.read()
+                actual_entry: str = actual_file.read()
 
-            assert actual_entry == expected_entry
+        with open(f'dev/test_data/brite-entries/{expected_output_file}.txt') as expected_file:
+            expected_entry: str = expected_file.read()
+
+        assert actual_entry == expected_entry
 
     with open('pull-results.json', 'r') as file:
         actual_pull_results: dict = j.load(file)

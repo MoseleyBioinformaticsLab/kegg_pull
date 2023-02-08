@@ -77,18 +77,23 @@ def handle_cli_output(output_target: str, output_content: t.Union[str, bytes]) -
 
 
 def save_file(file_location: str, file_content: t.Union[str, bytes], file_name: str) -> None:
-        if file_location.endswith('.zip'):
-            with zf.ZipFile(file_location, 'a') as zip_file:
-                zip_file.writestr(file_name, file_content)
-        else:
-            if not os.path.isdir(file_location):
-                os.makedirs(file_location)
+    if os.name == 'nt':  # pragma: no cover
+        # If the OS is Windows, replace colons with underscores (Windows does not support colons in file names).
+        file_name: str = file_name.replace(':', '_')  # pragma: no cover
 
-            file_path: str = os.path.join(file_location, file_name)
-            save_type: str = 'wb' if type(file_content) is bytes else 'w'
+    if file_location.endswith('.zip'):
+        with zf.ZipFile(file_location, 'a') as zip_file:
+            zip_file.writestr(file_name, file_content)
+    else:
+        if not os.path.isdir(file_location):
+            os.makedirs(file_location)
 
-            with open(file_path, save_type) as file:
-                file.write(file_content)
+        file_path: str = os.path.join(file_location, file_name)
+        save_type: str = 'wb' if type(file_content) is bytes else 'w'
+        encoding: t.Union[str, None] = None if type(file_content) is bytes else 'utf-8'
+
+        with open(file_path, save_type, encoding=encoding) as file:
+            file.write(file_content)
 
 
 class staticproperty(staticmethod):
