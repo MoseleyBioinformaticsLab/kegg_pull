@@ -53,11 +53,16 @@
 <li class="toctree-l3"><a class="reference internal" href="#installation">Installation</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#install-on-linux-mac-os-x">Install on Linux, Mac OS X</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#install-on-windows">Install on Windows</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pypi">PyPi</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#questions-feature-requests-and-bug-reports">Questions, Feature Requests, and Bug Reports</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dependencies">Dependencies</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#get-the-source-code">Get the source code</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-the-source-code">Get the source code</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#linux-mac-os-x">Linux, Mac OS X</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#windows">Windows</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -118,6 +123,12 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">py</span> <span class="o">-</span><span class="mi">3</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">kegg</span><span class="o">-</span><span class="n">pull</span>
 </pre></div>
 </div>
+<p><strong>Note:</strong> If <code class="docutils literal notranslate"><span class="pre">py</span></code> is not installed on Windows (e.g. Python was installed via the Windows store rather than from the official Python website), the installation command is the same as Linux and Mac OS X.</p>
+<p><strong>Note:</strong> If the <code class="docutils literal notranslate"><span class="pre">kegg_pull</span></code> console script is not found on Windows, the CLI can be used via <code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">-m</span> <span class="pre">kegg_pull</span></code> or <code class="docutils literal notranslate"><span class="pre">py</span> <span class="pre">-3</span> <span class="pre">-m</span> <span class="pre">kegg_pull</span></code> or <code class="docutils literal notranslate"><span class="pre">path\to\console\script\kegg_pull.exe</span></code>. Alternatively, the directory where the console script is located can be added to the Path environment variable. For example, the console script may be installed at:</p>
+<pre class="literal-block">c:\users\&lt;username&gt;\appdata\local\programs\python\python310\Scripts\</pre>
+</section>
+<section id="pypi">
+<h4>PyPi<a class="headerlink" href="#pypi" title="Permalink to this heading"></a></h4>
 <p>See our PyPi page <a class="reference external" href="https://pypi.org/project/kegg-pull/">here</a>.</p>
 </section>
 </section>
@@ -142,9 +153,18 @@
 </pre></div>
 </div>
 <p>Once you have a copy of the source, you can embed it in your own Python package, or install it into your system site-packages easily:</p>
+<section id="linux-mac-os-x">
+<h4>Linux, Mac OS X<a class="headerlink" href="#linux-mac-os-x" title="Permalink to this heading"></a></h4>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
 </pre></div>
 </div>
+</section>
+<section id="windows">
+<h4>Windows<a class="headerlink" href="#windows" title="Permalink to this heading"></a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">py</span> <span class="o">-</span><span class="mi">3</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span>
+</pre></div>
+</div>
+</section>
 </section>
 </section>
 </section>
