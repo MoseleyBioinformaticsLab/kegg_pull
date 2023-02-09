@@ -23,6 +23,8 @@ Install on Windows
 .. parsed-literal::
    py -3 -m pip install kegg-pull
 
+**Note:** Many KEGG entry IDs contain colons and ``kegg_pull`` saves KEGG entry files with their ID in the file name. When running on Windows, all file names with colons will have their colons replaced with underscores.
+
 **Note:** If ``py`` is not installed on Windows (e.g. Python was installed via the Windows store rather than from the official Python website), the installation command is the same as Linux and Mac OS X.
 
 **Note:** If the ``kegg_pull`` console script is not found on Windows, the CLI can be used via ``python3 -m kegg_pull`` or ``py -3 -m kegg_pull`` or ``path\to\console\script\kegg_pull.exe``. Alternatively, the directory where the console script is located can be added to the Path environment variable. For example, the console script may be installed at:
