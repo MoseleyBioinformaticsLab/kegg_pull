@@ -16,7 +16,6 @@ Requires python 3.8 and above.
 Install on Linux, Mac OS X
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. parsed-literal::
-
    python3 -m pip install kegg-pull
 
 Install on Windows
@@ -24,6 +23,15 @@ Install on Windows
 .. parsed-literal::
    py -3 -m pip install kegg-pull
 
+**Note:** If ``py`` is not installed on Windows (e.g. Python was installed via the Windows store rather than from the official Python website), the installation command is the same as Linux and Mac OS X.
+
+**Note:** If the ``kegg_pull`` console script is not found on Windows, the CLI can be used via ``python3 -m kegg_pull`` or ``py -3 -m kegg_pull`` or ``path\to\console\script\kegg_pull.exe``. Alternatively, the directory where the console script is located can be added to the Path environment variable. For example, the console script may be installed at:
+
+.. parsed-literal::
+   c:\\users\\<username>\\appdata\\local\\programs\\python\\python310\\Scripts\\
+
+PyPi
+~~~~
 See our PyPi page `here <https://pypi.org/project/kegg-pull/>`__.
 
 Questions, Feature Requests, and Bug Reports
@@ -50,5 +58,12 @@ You can clone the repository via:
 
 Once you have a copy of the source, you can embed it in your own Python package, or install it into your system site-packages easily:
 
+Linux, Mac OS X
+~~~~~~~~~~~~~~~
 .. parsed-literal::
    python3 setup.py install
+
+Windows
+~~~~~~~
+.. parsed-literal::
+   py -3 setup.py install
