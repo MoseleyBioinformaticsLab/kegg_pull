@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KEGG DISEASE: Carbohydrates in viral infections</title>
+<link rel="stylesheet" href="/css/kegg20.css">
+<script src="/kegg/js/colorid.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+</head>
+
+<body onload="colorid();">
+
+<h3 class="txt5"><a href="/kegg/disease/"><img src="/Fig/bget/kegg5.gif" style="vertical-align:middle;" alt="KEGG image"></a>&nbsp; Carbohydrates in viral infections</h3>
+
+[ <a href="/brite/br08904+br08431">Brite table menu</a> ]
+
+<hr class="frame5">
+
+<br>
+<div class="frame0">
+  <table>
+    <tr>
+      <td colspan="3">Virus</td>
+      <td colspan="2">Viral attachment protein</td>
+      <td>Potensial glycan receptor</td>
+      <td>Disease</td>
+      <td>Reference</td>
+    </tr>
+    <tr>
+      <td>Orthohepadnavirus</td>
+      <td colspan="2">HBV [<a href="/entry/gn:T40004">gn:T40004</a>]</td>
+      <td></td>
+      <td></td>
+      <td>Heparan sulfate</td>
+      <td>Hepatitis B (<a href="/entry/H00412">H00412</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/23161433">23161433</a></td>
+    </tr>
+    <tr>
+      <td>Deltaretrovirus</td>
+      <td colspan="2">HTLV-1 [<a href="/entry/gn:T40003">gn:T40003</a>]</td>
+      <td>gp46 [<a href="/entry/vg:1491939">vg:1491939</a>]</td>
+      <td><a href="/entry/K19259">K19259</a></td>
+      <td>Heparan sulfate</td>
+      <td>Adult T-cell leukemia （<a href="/entry/H00009">H00009</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/12941902">12941902</a></td>
+    </tr>
+    <tr>
+      <td rowspan="2">Lentivirus</td>
+      <td rowspan="2" colspan="2">HIV-1 [<a href="/entry/gn:T40001">gn:T40001</a>]</td>
+      <td>gp120 V3 loop [<a href="/entry/vg:155971">vg:155971</a>]</td>
+      <td><a href="/entry/K19287">K19287</a></td>
+      <td rowspan="2">Heparan sulfate</td>
+      <td rowspan="2">Acquired immunodeficiency syndrome (<a href="/entry/H00406">H00406</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/9557643">9557643</a></td>
+    </tr>
+    <tr>
+      <td>Tat [<a href="/entry/vg:155871">vg:155871</a>]</td>
+      <td><a href="/entry/K19258">K19258</a></td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/19661268">19661268</a></td>
+    </tr>
+    <tr>
+      <td rowspan="7">Rotavirus</td>
+      <td rowspan="6">Rotavirus A [<a href="/entry/gn:T40092">gn:T40092</a>]</td>
+      <td>DS-1 (P[4])</td>
+      <td>VP4 [GenBank: <a href="/entry/AJ54022">AJ54022</a>7]</td>
+      <td></td>
+      <td>A-type, H-type I HBGAs <br> Leb (<a href="/entry/G00263">G00263</a>)</td>
+      <td rowspan="7">Rotaviral enteritis (<a href="/entry/H00975">H00975</a>) <br> Viral gastroenteritis (<a href="/entry/H01430">H01430</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/28090561">28090561</a></td>
+    </tr>
+    <tr>
+      <td> RV3 P[6]</td>
+      <td>VP4 [GenBank: A<a href="/entry/LD49094">LD49094</a>]</td>
+      <td></td>
+      <td><a href="/entry/G00110">G00110</a> (GM1) <br> A-type HBGAs <br> Lex <br> <a href="/entry/G00395">G00395</a> (type I teterasaccharide, LNT)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/26274396">26274396</a> <a href="https://www.ncbi.nlm.nih.gov/pubmed/28090561">28090561</a> <a href="https://www.ncbi.nlm.nih.gov/pubmed/24501414">24501414</a></td>
+    </tr>
+    <tr>
+      <td>Wa (P[8])</td>
+      <td>VP4 [<a href="/entry/vg:7011406">vg:7011406</a>]</td>
+      <td><a href="/entry/K19249">K19249</a></td>
+      <td><a href="/entry/G00110">G00110</a> (GM1) <br> Leb (<a href="/entry/G00263">G00263</a>) <br> H type I HBGAs</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/22345472">22345472</a></td>
+    </tr>
+    <tr>
+      <td>K8 (P[9])</td>
+      <td>VP4 [Uni<a href="/entry/prot:Q01641">prot:Q01641</a>]</td>
+      <td></td>
+      <td>A-type HBGAs</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/25556995">25556995</a> <a href="https://www.ncbi.nlm.nih.gov/pubmed/28090561">28090561</a></td>
+    </tr>
+    <tr>
+      <td>HAL1166 (P[14])</td>
+      <td>VP4 [GenBank: A<a href="/entry/AA21092">AA21092</a>]</td>
+      <td></td>
+      <td>A-type HBGAs</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/22504179">22504179</a></td>
+    </tr>
+    <tr>
+      <td>N155 (P[11])</td>
+      <td>VP4 [GenB<a href="/entry/ank:ABY64684">ank:ABY64684</a>]</td>
+      <td></td>
+      <td><a href="/entry/G00536">G00536</a> (type II tetrasaccharide, LNnT) <br> <a href="/entry/G00395">G00395</a> (type I teterasaccharide, LNT)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/28090561">28090561</a></td>
+    </tr>
+    <tr>
+      <td colspan="2">Rotavirus C [<a href="/entry/gn:T40094">gn:T40094</a>]</td>
+      <td>VP4 [<a href="/entry/vg:3773132">vg:3773132</a>]</td>
+      <td></td>
+      <td>A-type HBGAs</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/29593033">29593033</a></td>
+    </tr>
+    <tr>
+      <td>Alphavirus</td>
+      <td colspan="2">Sindbis virus</td>
+      <td>E2 [<a href="/entry/vg:1502155">vg:1502155</a>] [<a href="/entry/vg:13165406">vg:13165406</a>]</td>
+      <td><a href="/entry/K19288">K19288</a></td>
+      <td>Heparan sulfate</td>
+      <td>Sindbis fever</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/20300181">20300181</a></td>
+    </tr>
+    <tr>
+      <td>Orthoreovirus</td>
+      <td colspan="2">MRV-3</td>
+      <td>Sigma 1 [<a href="/entry/vg:8437025">vg:8437025</a>]</td>
+      <td><a href="/entry/K19250">K19250</a></td>
+      <td>α-2,3-, α-2,6- and α-2,8-linked sialylated oligosaccharides</td>
+      <td></td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/25263223">25263223</a></td>
+    </tr>
+    <tr>
+      <td>Orthohepevirus</td>
+      <td colspan="2">HEV [<a href="/entry/gn:T40067">gn:T40067</a>]</td>
+      <td>Capsid protein [<a href="/entry/vg:1494410">vg:1494410</a>]</td>
+      <td></td>
+      <td>Heparan sulfate (6-O sulfation of syndecans)</td>
+      <td>Hepatitis E</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/19812150">19812150</a></td>
+    </tr>
+    <tr>
+      <td rowspan="7">Flavivirus</td>
+      <td rowspan="2">DENV [<a href="/entry/gn:T40048">gn:T40048</a>]</td>
+      <td>DENV-1</td>
+      <td>E [<a href="/entry/vg:5075725">vg:5075725</a>]</td>
+      <td></td>
+      <td rowspan="7">Heparan sulfate</td>
+      <td rowspan="2">Dengue (<a href="/entry/H00381">H00381</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/11050058">11050058</a></td>
+    </tr>
+    <tr>
+      <td>DENV-2</td>
+      <td>E [<a href="/entry/vg:1494449">vg:1494449</a>]</td>
+      <td></td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/11878919">11878919</a>  <a href="https://www.ncbi.nlm.nih.gov/pubmed/22170634">22170634</a></td>
+    </tr>
+    <tr>
+      <td colspan="2">JEV [<a href="/entry/gn:T40052">gn:T40052</a>]</td>
+      <td>E [<a href="/entry/vg:1489713">vg:1489713</a>]</td>
+      <td></td>
+      <td>Mosquito-borne viral encephalitis (<a href="/entry/H00379">H00379</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/14981764">14981764</a></td>
+    </tr>
+    <tr>
+      <td colspan="2">TBEV [<a href="/entry/gn:T40061">gn:T40061</a>]</td>
+      <td>E [<a href="/entry/vg:1489719">vg:1489719</a>]</td>
+      <td></td>
+      <td>Tick-borne viral encephalitis (<a href="/entry/H00380">H00380</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/28471403">28471403</a></td>
+    </tr>
+    <tr>
+      <td colspan="2">WNV [<a href="/entry/gn:T40029">gn:T40029</a>]</td>
+      <td>E [<a href="/entry/vg:912267">vg:912267</a>]</td>
+      <td></td>
+      <td>West Nile fever (<a href="/entry/H01548">H01548</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/28471403">28471403</a></td>
+    </tr>
+    <tr>
+      <td colspan="2">YFV [<a href="/entry/gn:T40057">gn:T40057</a>]</td>
+      <td>E [<a href="/entry/vg:1502173">vg:1502173</a>]</td>
+      <td></td>
+      <td>Yellow fever (<a href="/entry/H00384">H00384</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/11878919">11878919</a></td>
+    </tr>
+    <tr>
+      <td colspan="2">ZIKV [<a href="/entry/gn:T40049">gn:T40049</a>]</td>
+      <td>E [<a href="/entry/vg:34443389">vg:34443389</a>]</td>
+      <td></td>
+      <td>Zika fever (<a href="/entry/H01553">H01553</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/28151637">28151637</a></td>
+    </tr>
+    <tr>
+      <td>Hepacivirus</td>
+      <td colspan="2">HCV [<a href="/entry/gn:T40066">gn:T40066</a>]</td>
+      <td>E2 [<a href="/entry/ag:NP_751921">ag:NP_751921</a>]</td>
+      <td><a href="/entry/K22272">K22272</a></td>
+      <td>Heparan sulfate</td>
+      <td>Hepatitis C virus infection (<a href="/entry/H00413">H00413</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/12867431">12867431</a> <a href="https://www.ncbi.nlm.nih.gov/pubmed/22660965">22660965</a></td>
+    </tr>
+    <tr>
+      <td>Alphacoronavirus</td>
+      <td colspan="2">HCoV-NL63 [<a href="/entry/gn:T40365">gn:T40365</a>]</td>
+      <td></td>
+      <td></td>
+      <td>Heparan sulfate</td>
+      <td>Common cold (<a href="/entry/H02442">H02442</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/25187545">25187545</a></td>
+    </tr>
+    <tr>
+      <td rowspan="3">Betacoronavirus</td>
+      <td colspan="2">HCoV-OC43 [<a href="/entry/gn:T40362">gn:T40362</a>]</td>
+      <td>S [<a href="/entry/vg:39105218">vg:39105218</a>]</td>
+      <td rowspan="2"><a href="/entry/K24325">K24325</a></td>
+      <td rowspan="2">9-O-acetylated sialic acid</td>
+      <td rowspan="2">Common cold (<a href="/entry/H02442">H02442</a>)</td>
+      <td rowspan="2"><a href="https://www.ncbi.nlm.nih.gov/pubmed/30679277">30679277</a></td>
+    </tr>
+    <tr>
+      <td colspan="2">HCoV-HKU1 [<a href="/entry/gn:T40363">gn:T40363</a>]</td>
+      <td>S [<a href="/entry/vg:3200426">vg:3200426</a>]</td>
+    </tr>
+    <tr>
+      <td colspan="2">MERS-CoV [<a href="/entry/gn:T40090">gn:T40090</a>]</td>
+      <td>S [<a href="/entry/vg:14254594">vg:14254594</a>]</td>
+      <td><a href="/entry/K24324">K24324</a></td>
+      <td>Neu5,9Ac2 (α2,3Gal linkage)</td>
+      <td>Middle East respiratory syndrome (<a href="/entry/H01419">H01419</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/28923942">28923942</a></td>
+    </tr>
+    <tr>
+      <td rowspan="4">Norovirus</td>
+      <td rowspan="4">NV [<a href="/entry/gn:T40107">gn:T40107</a>]</td>
+      <td>Norovirus GI</td>
+      <td>VP1 [<a href="/entry/vg:1491972">vg:1491972</a>]</td>
+      <td></td>
+      <td>A-, H-type HBGAs <br> Leb, Ley antigens</td>
+      <td rowspan="4">Enteritis due to Norovirus (<a href="/entry/H01323">H01323</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/18599458">18599458</a></td>
+    </tr>
+    <tr>
+      <td>Norovirus GII.4</td>
+      <td>VP1 [<a href="/entry/vg:39105315">vg:39105315</a>]</td>
+      <td></td>
+      <td>A-, B-, H-type HBGAs <br> Le-b antigens</td>
+      <td rowspan="3"><a href="https://www.ncbi.nlm.nih.gov/pubmed/12825167">12825167</a></td>
+    </tr>
+    <tr>
+      <td>Norovirus GII.5</td>
+      <td>VP1 [Gen<a href="/entry/bank:AAK84404">bank:AAK84404</a>]</td>
+      <td></td>
+      <td>A-type 1, B-type 1 <br> ALeb, BLeb antigens</td>
+    </tr>
+    <tr>
+      <td>Norovirus GII.9</td>
+      <td>VP1 [Gen<a href="/entry/bank:AAK84676">bank:AAK84676</a>]</td>
+      <td></td>
+      <td>H, Le-a, Le-x and Le-y antigens</td>
+    </tr>
+    <tr>
+      <td rowspan="5">Enterovirus</td>
+      <td rowspan="2">Enterovirus A [<a href="/entry/gn:T40103">gn:T40103</a>]</td>
+      <td>Coxsackievirus A16 [<a href="/entry/gn:T40331">gn:T40331</a>]</td>
+      <td>VP1 [<a href="/entry/vg:1461111">vg:1461111</a>]</td>
+      <td></td>
+      <td rowspan="2">Heparan sulfate</td>
+      <td rowspan="2">Enterovirus infection (<a href="/entry/H01326">H01326</a>) <br>Hand, foot and mouth disease (<a href="/entry/H01326">H01326</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/28745308">28745308</a></td>
+    </tr>
+    <tr>
+      <td>Enterovirus A71 [<a href="/entry/gn:T40343">gn:T40343</a>]</td>
+      <td></td>
+      <td></td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/27875780">27875780</a> <a href="https://www.ncbi.nlm.nih.gov/pubmed/23097443">23097443</a></td>
+    </tr>
+    <tr>
+      <td>Enterovirus C [<a href="/entry/gn:T40105">gn:T40105</a>]</td>
+      <td>Coxsackievirus A24 variant</td>
+      <td>VP1</td>
+      <td></td>
+      <td>Sialylated O-linked glycans  (Neu5Acα2,3Gal and Neu5Acα2,6Gal)</td>
+      <td>Acute hemorrhagic conjunctivitis (<a href="/entry/H01421">H01421</a>)Respiratory diseases</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/25329320">25329320</a> <a href="https://www.ncbi.nlm.nih.gov/pubmed/21880775">21880775</a></td>
+    </tr>
+    <tr>
+      <td rowspan="2">Enterovirus D [<a href="/entry/gn:T40106">gn:T40106</a>]</td>
+      <td>Enterovirus D68</td>
+      <td>VP1 [<a href="/entry/vg:37616478">vg:37616478</a>]</td>
+      <td></td>
+      <td>α-2-6-linked sialic acids</td>
+      <td>Respiratory diseases</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/24371050">24371050</a></td>
+    </tr>
+    <tr>
+      <td>Enterovirus 70 [<a href="/entry/gn:T40334">gn:T40334</a>]</td>
+      <td>VP1 [<a href="/entry/vg:1461118">vg:1461118</a>]</td>
+      <td></td>
+      <td>α-2-3-linked sialic acids</td>
+      <td>Acute hemorrhagic conjunctivitis (<a href="/entry/H01421">H01421</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/15890948">15890948</a></td>
+    </tr>
+    <tr>
+      <td>Morbillivirus</td>
+      <td colspan="2">MeV [<a href="/entry/gn:T40033">gn:T40033</a>]</td>
+      <td>HE  [<a href="/entry/vg:1489801">vg:1489801</a>]</td>
+      <td><a href="/entry/K19378">K19378</a></td>
+      <td>N-linked oligosaccharide in SCR2 of CD46</td>
+      <td>Measles (<a href="/entry/H00394">H00394</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/8764003">8764003</a></td>
+    </tr>
+    <tr>
+      <td>Rubulavirus</td>
+      <td colspan="2">Mumps rubulavirus [<a href="/entry/gn:T40034">gn:T40034</a>]</td>
+      <td>HN  [<a href="/entry/vg:1489765">vg:1489765</a>]</td>
+      <td><a href="/entry/K19247">K19247</a></td>
+      <td>α-2,3-linked sialoglycans</td>
+      <td>Mumps (<a href="/entry/H00396">H00396</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/31118251">31118251</a></td>
+    </tr>
+    <tr>
+      <td rowspan="3">Respirovirus</td>
+      <td colspan="2">HPIV1 [<a href="/entry/gn:T40043">gn:T40043</a>]</td>
+      <td>HN  [<a href="/entry/vg:935266">vg:935266</a>]</td>
+      <td><a href="/entry/K19247">K19247</a></td>
+      <td>neolacto-series gangliosides containing a terminal NeuAcα2-3Galβ1-4GlcNAc</td>
+      <td rowspan="3">Parainfluenza infection (<a href="/entry/H00400">H00400</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/11312330">11312330</a></td>
+    </tr>
+    <tr>
+      <td rowspan="2" colspan="2">HPIV3 [<a href="/entry/gn:T40044">gn:T40044</a>]</td>
+      <td>HN [<a href="/entry/vg:911961">vg:911961</a>]</td>
+      <td><a href="/entry/K19247">K19247</a></td>
+      <td>gangliosides with a terminal NeuAcα2-3Gal-, NeuAcα2-6Gal- or NeuGcα2-3Galβ1-4GlcNAc</td>
+      <td rowspan="2"><a href="https://www.ncbi.nlm.nih.gov/pubmed/11312330">11312330</a></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td>Heparan sulfate</td>
+    </tr>
+    <tr>
+      <td>Metapneumovirus</td>
+      <td colspan="2">HMPV [<a href="/entry/gn:T40095">gn:T40095</a>]</td>
+      <td>F [<a href="/entry/vg:37626966">vg:37626966</a>]</td>
+      <td><a href="/entry/K19261">K19261</a></td>
+      <td>Heparan sulfate</td>
+      <td>Human metapneumovirus infection (<a href="/entry/H01063">H01063</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/22238303">22238303</a></td>
+    </tr>
+    <tr>
+      <td>Orthopneumovirus</td>
+      <td colspan="2">RSV [<a href="/entry/gn:T40045">gn:T40045</a>]</td>
+      <td></td>
+      <td></td>
+      <td>Iduronic acid-containing glycosaminoglycans</td>
+      <td>Respiratory syncytial virus infection (<a href="/entry/H00401">H00401</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/10860881">10860881</a></td>
+    </tr>
+    <tr>
+      <td rowspan="3">Alphainfluenzavirus</td>
+      <td rowspan="3">IAV (human)</td>
+      <td>H1N1</td>
+      <td>H1 [<a href="/entry/vg:23308115">vg:23308115</a>]</td>
+      <td rowspan="3"><a href="/entry/K19251">K19251</a></td>
+      <td rowspan="3">α2,6-linked sialylated glycans</td>
+      <td rowspan="3">Influenza (<a href="/entry/H00398">H00398</a>)</td>
+      <td rowspan="3"><a href="https://www.ncbi.nlm.nih.gov/pubmed/25263223">25263223</a></td>
+    </tr>
+    <tr>
+      <td>H2N2</td>
+      <td>H2 [<a href="/entry/vg:3655103">vg:3655103</a>]</td>
+    </tr>
+    <tr>
+      <td>H3N2</td>
+      <td>H3 [<a href="/entry/vg:3655151">vg:3655151</a>]</td>
+    </tr>
+    <tr>
+      <td>Gammainfluenzavirus</td>
+      <td colspan="2">ICV</td>
+      <td>HEF [<a href="/entry/vg:3077359">vg:3077359</a>]</td>
+      <td><a href="/entry/K19253">K19253</a></td>
+      <td>9-O-Ac-NeuAc</td>
+      <td>Influenza (<a href="/entry/H00398">H00398</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/9817207">9817207</a> <a href="https://www.ncbi.nlm.nih.gov/pubmed/3700379">3700379</a></td>
+    </tr>
+    <tr>
+      <td>Deltavirus</td>
+      <td colspan="2">HDV [<a href="/entry/gn:T40085">gn:T40085</a>]</td>
+      <td></td>
+      <td></td>
+      <td>hepatocyte-associated heparan sulfate proteoglycans</td>
+      <td>Hepatitis D (<a href="/entry/H00414">H00414</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/23505490">23505490</a></td>
+    </tr>
+    <tr>
+      <td rowspan="5">Simplexvirus</td>
+      <td rowspan="3" colspan="2">HSV-1 [<a href="/entry/gn:T40073">gn:T40073</a>]</td>
+      <td>gB [<a href="/entry/vg:24271469">vg:24271469</a>]</td>
+      <td><a href="/entry/K19255">K19255</a></td>
+      <td rowspan="2">Heparan sulfate</td>
+      <td rowspan="3">Herpes simplex virus infection (<a href="/entry/H00365">H00365</a>)</td>
+      <td rowspan="2"><a href="https://www.ncbi.nlm.nih.gov/pubmed/15056211">15056211</a></td>
+    </tr>
+    <tr>
+      <td>gC [<a href="/entry/vg:2703410">vg:2703410</a>]</td>
+      <td><a href="/entry/K19256">K19256</a></td>
+    </tr>
+    <tr>
+      <td>gD [<a href="/entry/vg:2703406">vg:2703406</a>]</td>
+      <td><a href="/entry/K19264">K19264</a></td>
+      <td>3-O-sulfated Heparan sulfate</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/20004926">20004926</a></td>
+    </tr>
+    <tr>
+      <td rowspan="2" colspan="2">HSV-2 [<a href="/entry/gn:T40074">gn:T40074</a>]</td>
+      <td>gB [<a href="/entry/vg:1487312">vg:1487312</a>]</td>
+      <td><a href="/entry/K19255">K19255</a></td>
+      <td rowspan="2">Heparan sulfate</td>
+      <td rowspan="2">Herpes simplex virus infection (<a href="/entry/H00365">H00365</a>)</td>
+      <td rowspan="2"><a href="https://www.ncbi.nlm.nih.gov/pubmed/15056211">15056211</a></td>
+    </tr>
+    <tr>
+      <td>gC [<a href="/entry/vg:1487331">vg:1487331</a>]</td>
+      <td><a href="/entry/K19256">K19256</a></td>
+    </tr>
+    <tr>
+      <td>Varicellovirus</td>
+      <td colspan="2">VZV [<a href="/entry/gn:T40078">gn:T40078</a>]</td>
+      <td>gB [<a href="/entry/vg:1487662">vg:1487662</a>]</td>
+      <td><a href="/entry/K19255">K19255</a></td>
+      <td>Heparan sulfate</td>
+      <td>Varicella (<a href="/entry/H00366">H00366</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/7724595">7724595</a> <a href="https://www.ncbi.nlm.nih.gov/pubmed/9620211">9620211</a></td>
+    </tr>
+    <tr>
+      <td rowspan="2">Cytomegalovirus</td>
+      <td rowspan="2" colspan="2">HCMV [<a href="/entry/gn:T40080">gn:T40080</a>]</td>
+      <td>gB [<a href="/entry/vg:3077424">vg:3077424</a>]</td>
+      <td><a href="/entry/K22773">K22773</a></td>
+      <td rowspan="2">Heparin</td>
+      <td rowspan="2">Cytomegalovirus infection (<a href="/entry/H00368">H00368</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/22440964">22440964</a> <a href="https://www.ncbi.nlm.nih.gov/pubmed/9426459">9426459</a></td>
+    </tr>
+    <tr>
+      <td>gC-II</td>
+      <td><a href="/entry/K19263">K19263</a></td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/8381465">8381465</a> <a href="https://www.ncbi.nlm.nih.gov/pubmed/8384757">8384757</a> <a href="https://www.ncbi.nlm.nih.gov/pubmed/1310777">1310777</a></td>
+    </tr>
+    <tr>
+      <td rowspan="2">Orthopoxvirus</td>
+      <td rowspan="2" colspan="2">Vaccinia virus [<a href="/entry/gn:T40360">gn:T40360</a>]</td>
+      <td>A27L [<a href="/entry/vg:3707680">vg:3707680</a>]</td>
+      <td><a href="/entry/K19263">K19263</a></td>
+      <td>Heparan sulfate</td>
+      <td rowspan="2">Vaccinia (<a href="/entry/H02352">H02352</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/9445060">9445060</a></td>
+    </tr>
+    <tr>
+      <td>D8L [<a href="/entry/vg:3707569">vg:3707569</a>]</td>
+      <td></td>
+      <td>Chondroitin sulfate</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/10482629">10482629</a></td>
+    </tr>
+    <tr>
+      <td>Mastadenovirus</td>
+      <td>Human mastadenovirus D [<a href="/entry/gn:T40102">gn:T40102</a>]</td>
+      <td>Ad37</td>
+      <td>Fiber Knob [uni<a href="/entry/prot:Q64823">prot:Q64823</a>]</td>
+      <td></td>
+      <td>GD1a (<a href="/entry/G00111">G00111</a>)</td>
+      <td>Acute hemorrhagic conjunctivitis (<a href="/entry/H01421">H01421</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/21151139">21151139</a></td>
+    </tr>
+    <tr>
+      <td>Alphapolyomavirus</td>
+      <td colspan="2">MCPyV [<a href="/entry/gn:T40051">gn:T40051</a>]</td>
+      <td>VP1 [<a href="/entry/vg:10987416">vg:10987416</a>]</td>
+      <td><a href="/entry/K19248">K19248</a></td>
+      <td>Oligosaccharide containing a linear Neu5Acα2,3Gal</td>
+      <td>Merkel cell carcinoma (<a href="/entry/H01555">H01555</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/22910713">22910713</a> <a href="https://www.ncbi.nlm.nih.gov/pubmed/19605473">19605473</a></td>
+    </tr>
+    <tr>
+      <td rowspan="4">Betapolyomavirus</td>
+      <td colspan="2">SV40 [<a href="/entry/gn:T40086">gn:T40086</a>]</td>
+      <td>VP1 [<a href="/entry/vg:29031018">vg:29031018</a>]</td>
+      <td rowspan="2"><a href="/entry/K19248">K19248</a></td>
+      <td><a href="/entry/G00110">G00110</a> (GM1)</td>
+      <td>Malignant pleural mesothelioma (<a href="/entry/H00015">H00015</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/18353982">18353982</a></td>
+    </tr>
+    <tr>
+      <td colspan="2">JCPyV [<a href="/entry/gn:T40072">gn:T40072</a>]</td>
+      <td>VP1 [<a href="/entry/vg:1489518">vg:1489518</a>]</td>
+      <td><a href="/entry/G11147">G11147</a> (LSTc)</td>
+      <td>Progressive multifocal leukoencephalopathy (<a href="/entry/H00370">H00370</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/20951965">20951965</a></td>
+    </tr>
+    <tr>
+      <td colspan="2">BKPyV</td>
+      <td>VP1 [<a href="/entry/vg:29031008">vg:29031008</a>]</td>
+      <td></td>
+      <td><a href="/entry/G00114">G00114</a> (GD2) <br> <a href="/entry/G00116">G00116</a> (GT1b) <br> <a href="/entry/G00115">G00115</a> (GD1b) <br> <a href="/entry/G00113">G00113</a> (GD3)</td>
+      <td>Hemorrhagic cystitis <br> Polyomavirus nephropathy</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/24130487">24130487</a></td>
+    </tr>
+    <tr>
+      <td colspan="2">LPyV</td>
+      <td>VP1 [<a href="/entry/vg:1494437">vg:1494437</a>]</td>
+      <td><a href="/entry/K19248">K19248</a></td>
+      <td>Linear trisaccharides terminating Neu5Acα2,3Galβ1,4Glc(NAc)</td>
+      <td></td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/24204265">24204265</a></td>
+    </tr>
+    <tr>
+      <td>Erythroparvovirus</td>
+      <td colspan="2">B19V [<a href="/entry/gn:T40084">gn:T40084</a>]</td>
+      <td>VLP</td>
+      <td></td>
+      <td><a href="/entry/G00094">G00094</a> (Gb4Cer)</td>
+      <td>Erythema infectiosum (<a href="/entry/H00404">H00404</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/24889255">24889255</a></td>
+    </tr>
+    <tr>
+      <td rowspan="2">Alphapapillomavirus</td>
+      <td colspan="2">HPV 11</td>
+      <td>L1</td>
+      <td></td>
+      <td rowspan="2">Heparan sulfate</td>
+      <td>Condyloma acuminatum (<a href="/entry/H01418">H01418</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/10026203">10026203</a></td>
+    </tr>
+    <tr>
+      <td colspan="2">HPV 16 [<a href="/entry/gn:T40087">gn:T40087</a>]</td>
+      <td>L1 [<a href="/entry/vg:1489082">vg:1489082</a>]</td>
+      <td><a href="/entry/K19260">K19260</a></td>
+      <td>Vulvar cancer (<a href="/entry/H00029">H00029</a>) <br> Cervical cancer (<a href="/entry/H00030">H00030</a>)</td>
+      <td><a href="https://www.ncbi.nlm.nih.gov/pubmed/17640876">17640876</a> <a href="https://www.ncbi.nlm.nih.gov/pubmed/21115492">21115492</a></td>
+    </tr>
+  </table>
+</div>
+
+<br>
+<hr class="frame5">
+
+[ <a href="/kegg/disease/">DISEASE</a> |
+<a href="/kegg/brite.html">BRITE</a> |
+<a href="/kegg/kegg2.html">KEGG2</a> |
+<a href="/kegg/">KEGG</a> ]
+<br>Last updated: November 9, 2020
+
+</body>
+
+</html>
