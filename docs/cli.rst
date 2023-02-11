@@ -1,5 +1,6 @@
 CLI
 ===
+**Note:** Many KEGG entry IDs contain colons and ``kegg_pull`` saves KEGG entry files with their ID in the file name. When running on Windows, all file names with colons will have their colons replaced with underscores.
 
 kegg_pull Commandline Interface
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
