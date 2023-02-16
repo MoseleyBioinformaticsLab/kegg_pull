@@ -7,3 +7,4 @@ contents: str = contents.replace('! ', '% ')
 
 with open('tutorial.rst', 'w') as file:
     file.write(contents)
+
