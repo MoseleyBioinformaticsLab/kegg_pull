@@ -466,7 +466,7 @@ class MultiProcessMultiplePull(AbstractMultiplePull):
         return multiple_pull_result
 
 
-_global_single_pull: SinglePull = None
+_global_single_pull: t.Union[SinglePull, None] = None
 _global_entry_field: t.Union[str, None] = None
 
 
