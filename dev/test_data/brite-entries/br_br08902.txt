@@ -6,6 +6,7 @@ C    br08901  KEGG pathway maps
 B  Brite files
 C    br08902  BRITE hierarchy files
 C    br08904  BRITE table files
+C    br08906  BRITE binary relation files
 AGenes and Proteins
 B  Orthologs, modules and networks
 C    ko00001  KEGG Orthology (KO)
@@ -131,5 +132,5 @@ B  Organism information
 C    br08605  Plant pathogens
 !
 #
-#Last updated: July 15, 2022
+#Last updated: February 24, 2023
 #&raquo; Japanese version
