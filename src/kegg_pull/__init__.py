@@ -5,7 +5,7 @@ This package has the following modules:
 
 ``entry_ids``
 
-``link_to_dict``
+``map``
 
 ``pathway_organizer``
 

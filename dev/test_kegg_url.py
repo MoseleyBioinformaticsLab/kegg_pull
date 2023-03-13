@@ -141,7 +141,7 @@ def test_validate_exception(KEGGurl: type, kwargs: dict, expected_message: str):
         KEGGurl(**kwargs)
 
     expected_message = f'Cannot create URL - {expected_message}'
-    u.assert_expected_error_message(expected_message=expected_message, error=error)
+    u.assert_exception(expected_message=expected_message, exception=error)
 
 
 test_validate_warning_data = [
@@ -269,4 +269,4 @@ def test_organism_set_unsuccessful(mocker, timeout: bool, _):
         ku.AbstractKEGGurl.organism_set()
 
     get_mock.assert_called_once_with(url=url, timeout=60)
-    u.assert_expected_error_message(expected_message=error_message, error=error)
+    u.assert_exception(expected_message=error_message, exception=error)

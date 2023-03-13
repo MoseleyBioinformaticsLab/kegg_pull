@@ -423,4 +423,4 @@ def test_multiple_pull_exception(mocker, unsuccessful_threshold):
     with pt.raises(ValueError) as error:
         p.SingleProcessMultiplePull(single_pull=single_pull_mock, unsuccessful_threshold=unsuccessful_threshold)
 
-    u.assert_expected_error_message(expected_message=expected_message, error=error)
+    u.assert_exception(expected_message=expected_message, exception=error)

@@ -888,18 +888,18 @@
     "entry-id": "path:map00908"
   },
   "path:map00903": {
-    "name": "00903  Limonene and pinene degradation",
+    "name": "00903  Limonene degradation",
     "level": 3,
     "parent": "Metabolism of terpenoids and polyketides",
     "children": null,
     "entry-id": "path:map00903"
   },
-  "path:map00281": {
-    "name": "00281  Geraniol degradation",
+  "path:map00907": {
+    "name": "00907  Pinene, camphor and geraniol degradation",
     "level": 3,
     "parent": "Metabolism of terpenoids and polyketides",
     "children": null,
-    "entry-id": "path:map00281"
+    "entry-id": "path:map00907"
   },
   "path:map01052": {
     "name": "01052  Type I polyketide structures",
@@ -984,7 +984,6 @@
     "parent": "Metabolism",
     "children": [
       "path:map00253",
-      "path:map00281",
       "path:map00522",
       "path:map00523",
       "path:map00900",
@@ -993,6 +992,7 @@
       "path:map00904",
       "path:map00905",
       "path:map00906",
+      "path:map00907",
       "path:map00908",
       "path:map00909",
       "path:map00981",

@@ -4,7 +4,7 @@ Flattening A Pathways Brite Hierarchy
 Functionality for flattening a pathways Brite hierarchy (ID: 'br:br08901') into a collection of its nodes, mapping a node ID to information about it, enabling combinations with other KEGG data.
 """
 import json as j
-import logging as l
+import logging as log
 import typing as t
 
 from . import rest as r
@@ -49,7 +49,7 @@ class PathwayOrganizer(u.NonInstantiable):
         if top_level_nodes is not None:
             for top_level_node in list(top_level_nodes):
                 if top_level_node not in valid_top_level_nodes:
-                    l.warning(
+                    log.warning(
                         f'Top level node name "{top_level_node}" is not recognized and will be ignored. Valid values are: '
                         f'"{", ".join(valid_top_level_nodes)}"'
                     )

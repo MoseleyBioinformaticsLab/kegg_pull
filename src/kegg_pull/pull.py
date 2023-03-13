@@ -8,7 +8,7 @@ import os
 import abc
 import typing as t
 import pickle as p
-import logging as l
+import logging as log
 import json as j
 import tqdm
 
@@ -337,7 +337,7 @@ class AbstractMultiplePull(abc.ABC):
                         if entry_id not in total_processed_entry_ids:
                             remaining_entry_ids.add(entry_id)
 
-                l.error(
+                log.error(
                     f'Unsuccessful threshold of {self._unsuccessful_threshold} met. Aborting. Details saved at '
                     f'{AbstractMultiplePull.ABORTED_PULL_RESULTS_PATH}'
                 )

@@ -27,7 +27,7 @@ def test_main_exception(mocker, expected_message: str, status):
     with pt.raises(RuntimeError) as error:
         r_cli.main()
 
-    u.assert_expected_error_message(expected_message=expected_message, error=error)
+    u.assert_exception(expected_message=expected_message, exception=error)
 
 
 test_main_args = [

@@ -93,10 +93,7 @@ def test_from_file(file_info: str):
         with pt.raises(ValueError) as error:
             ei.from_file(file_path=file_name)
 
-        u.assert_expected_error_message(
-            expected_message=f'Attempted to load entry IDs from {file_name}. But the file is empty',
-            error=error
-        )
+        u.assert_exception(expected_message=f'Attempted to load entry IDs from {file_name}. But the file is empty', exception=error)
     else:
         actual_entry_ids: list = ei.from_file(file_path=file_name)
 
