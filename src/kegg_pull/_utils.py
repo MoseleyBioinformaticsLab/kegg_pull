@@ -1,4 +1,4 @@
-import logging as l
+import logging as log
 import typing as t
 import zipfile as zf
 import os
@@ -64,7 +64,7 @@ def validate_json_object(json_object: dict, json_schema: dict, validation_error_
     try:
         js.validate(json_object, json_schema)
     except js.exceptions.ValidationError as e:
-        l.error(validation_error_message)
+        log.error(validation_error_message)
 
         raise e
 
@@ -91,7 +91,7 @@ def parse_input_sequence(input_source: str) -> list:
 def print_or_save(output_target: str, output_content: t.Union[str, bytes]) -> None:
     if output_target is None:
         if type(output_content) is bytes:
-            l.warning('Printing binary output...')
+            log.warning('Printing binary output...')
 
         print(output_content)
     else:

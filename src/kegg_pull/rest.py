@@ -8,7 +8,7 @@ import requests as rq
 import time
 import typing as t
 import inspect as ins
-import logging as l
+import logging as log
 
 from . import kegg_url as ku
 from . import _utils as u
@@ -115,7 +115,7 @@ class KEGGrest:
             )
 
         if kegg_url is not None and KEGGurl is not None:
-            l.warning(
+            log.warning(
                 'Both an instantiated kegg_url object and KEGGurl class are provided. Using the instantiated object...'
             )
 

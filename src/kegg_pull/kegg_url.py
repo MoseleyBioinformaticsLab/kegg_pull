@@ -4,7 +4,7 @@ Constructing URLs for the KEGG REST API
 Classes for creating and validating KEGG REST API URLs.
 """
 import requests as rq
-import logging as l
+import logging as log
 import abc
 import typing as t
 
@@ -388,12 +388,12 @@ class MolecularFindKEGGurl(AbstractKEGGurl):
             )
 
         if formula is not None and (exact_mass is not None or molecular_weight is not None):
-            l.warning(
+            log.warning(
                 'Only a chemical formula, exact mass, or molecular weight is used to construct the URL. Using formula'
                 '...'
             )
         elif formula is None and exact_mass is not None and molecular_weight is not None:
-            l.warning('Both an exact mass and molecular weight are provided. Using exact mass...')
+            log.warning('Both an exact mass and molecular weight are provided. Using exact mass...')
 
         MolecularFindKEGGurl._validate_range(range_values=exact_mass, range_name='Exact mass')
         MolecularFindKEGGurl._validate_range(range_values=molecular_weight, range_name='Molecular weight')

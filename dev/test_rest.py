@@ -19,7 +19,7 @@ def test_kegg_response_exception(mocker, kwargs: dict, expected_message: str):
     with pt.raises(ValueError) as error:
         r.KEGGresponse(**kwargs)
 
-    u.assert_expected_error_message(expected_message=expected_message, error=error)
+    u.assert_exception(expected_message=expected_message, exception=error)
 
 
 def test_kegg_rest_exception():
@@ -27,7 +27,7 @@ def test_kegg_rest_exception():
         r.KEGGrest(n_tries=0)
 
     expected_message = '0 is not a valid number of tries to make a KEGG request.'
-    u.assert_expected_error_message(expected_message=expected_message, error=error)
+    u.assert_exception(expected_message=expected_message, exception=error)
 
 
 def test_kegg_rest():
@@ -172,7 +172,7 @@ def test_get_kegg_url_exception(kwargs: dict, expected_message: str):
     with pt.raises(ValueError) as error:
         r.KEGGrest._get_kegg_url(**kwargs)
 
-    u.assert_expected_error_message(expected_message=expected_message, error=error)
+    u.assert_exception(expected_message=expected_message, exception=error)
 
 
 def test_get_kegg_url_warning(mocker, caplog):
@@ -201,4 +201,4 @@ def test_request_and_check_error(mocker, expected_message: str, status: r.KEGGre
         r.request_and_check_error(kegg_url=kegg_url_mock, kwarg1='val1', kwarg2='val2')
 
     request_mock.assert_called_once_with(KEGGurl=None, kegg_url=kegg_url_mock, kwarg1='val1', kwarg2='val2')
-    u.assert_expected_error_message(expected_message=expected_message, error=error)
+    u.assert_exception(expected_message=expected_message, exception=error)

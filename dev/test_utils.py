@@ -12,7 +12,7 @@ def test_parse_input_sequence_comma_exception(comma_separated_list: str):
         utils.parse_input_sequence(input_source=comma_separated_list)
 
     expected_message = f'Empty list provided from comma separated list: "{comma_separated_list}"'
-    u.assert_expected_error_message(expected_message=expected_message, error=error)
+    u.assert_exception(expected_message=expected_message, exception=error)
 
 
 @pt.mark.parametrize('stdin_input', ['', '\n', '\t\t', '\n\n', '\t \n \t', ' \n \n\t\t \t\n'])
@@ -24,7 +24,7 @@ def test_parse_input_sequence_stdin_exception(mocker, stdin_input: str):
 
     stdin_mock.assert_called_once_with()
     expected_message = 'Empty list provided from standard input'
-    u.assert_expected_error_message(expected_message=expected_message, error=error)
+    u.assert_exception(expected_message=expected_message, exception=error)
 
 
 def test_get_range_values_exception():
@@ -32,7 +32,7 @@ def test_get_range_values_exception():
         utils._get_range_values(range_values=(1,2,3), value_type=int)
 
     expected_message = f'Range can only be specified by two values but 3 values were provided: 1, 2, 3'
-    u.assert_expected_error_message(expected_message=expected_message, error=error)
+    u.assert_exception(expected_message=expected_message, exception=error)
 
 
 @pt.mark.parametrize(
@@ -46,4 +46,4 @@ def test_non_instantiable(NonInstantiable: type, kwargs: dict):
     with pt.raises(RuntimeError) as error:
         NonInstantiable(**kwargs)
 
-    u.assert_expected_error_message(expected_message=expected_error_message, error=error)
+    u.assert_exception(expected_message=expected_error_message, exception=error)
