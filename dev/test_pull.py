@@ -1,9 +1,10 @@
+# noinspection PyPackageRequirements
 import pytest as pt
 import shutil as sh
 import os
 import zipfile as zf
 import itertools as i
-import json as j
+import json
 
 import kegg_pull.rest as r
 import kegg_pull.pull as p
@@ -318,7 +319,7 @@ def test_multiple_pull(mocker, MultiplePull: type, kwargs: dict, caplog, _):
         }
 
         with open(p.AbstractMultiplePull.ABORTED_PULL_RESULTS_PATH, 'r') as file:
-            actual_abort_results: dict = j.load(file)
+            actual_abort_results: dict = json.load(file)
 
         assert expected_abort_results == actual_abort_results
     else:

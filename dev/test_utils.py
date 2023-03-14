@@ -1,3 +1,4 @@
+# noinspection PyPackageRequirements
 import pytest as pt
 # noinspection PyProtectedMember
 import kegg_pull._utils as utils

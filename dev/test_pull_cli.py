@@ -1,13 +1,14 @@
+# noinspection PyPackageRequirements
 import pytest as pt
 import os
-import json as j
+import json
 
 import kegg_pull.pull_cli as p_cli
 import dev.utils as u
 
 
-def test_main_help(mocker):
-    u.assert_main_help(mocker=mocker, module=p_cli, subcommand='pull')
+def test_help(mocker):
+    u.assert_help(mocker=mocker, module=p_cli, subcommand='pull')
 
 
 @pt.fixture(name='_')
@@ -17,7 +18,7 @@ def teardown():
     os.remove('pull-results.json')
 
 
-test_main_data = [
+test_data = [
     (
         ['entry-ids', '-'], {'n_tries': None, 'time_out': None, 'sleep_time': None},
         {'output': '.', 'multiprocess_lock_save': False}, 'u.parse_input_sequence', {'input_source': '-'},
@@ -42,13 +43,13 @@ test_main_data = [
         ['database', 'pathway', '--output=out-dir', '--multi-process', '--sleep-time=20', '--force-single-entry'],
         {'n_tries': None, 'time_out': None, 'sleep_time': 20},
         {'output': 'out-dir', 'multiprocess_lock_save': False}, 'ei.from_database',
-        {'database_name': 'pathway'}, 'MultiProcessMultiplePull', {'n_workers': None, 'unsuccessful_threshold': None},
+        {'database': 'pathway'}, 'MultiProcessMultiplePull', {'n_workers': None, 'unsuccessful_threshold': None},
         {'force_single_entry': True, 'entry_field': None}
     ),
     (
         ['database', 'brite', '--multi-process', '--n-tries=5', '--time-out=35', '--n-workers=6'],
         {'n_tries': 5, 'time_out': 35, 'sleep_time': None}, {'output': '.', 'multiprocess_lock_save': False},
-        'ei.from_database', {'database_name': 'brite'}, 'MultiProcessMultiplePull',
+        'ei.from_database', {'database': 'brite'}, 'MultiProcessMultiplePull',
         {'n_workers': 6, 'unsuccessful_threshold': None}, {'force_single_entry': True, 'entry_field': None}
     ),
     (
@@ -59,7 +60,7 @@ test_main_data = [
 ]
 @pt.mark.parametrize(
     'args,kegg_rest_kwargs,single_pull_kwargs,entry_ids_method,entry_ids_kwargs,multiple_pull_class,'
-    'multiple_pull_kwargs,pull_kwargs', test_main_data
+    'multiple_pull_kwargs,pull_kwargs', test_data
 )
 def test_main(
     mocker, _, args: list, kegg_rest_kwargs: dict, single_pull_kwargs: dict, entry_ids_method: str,
@@ -112,7 +113,7 @@ def test_main(
     }
 
     with open('pull-results.json', 'r') as file:
-        actual_pull_results: dict = j.load(file)
+        actual_pull_results: dict = json.load(file)
 
     assert actual_pull_results == expected_pull_results
 

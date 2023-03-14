@@ -153,13 +153,13 @@ class KEGGrest:
 
         return False
 
-    def list(self, database_name: str) -> KEGGresponse:
+    def list(self, database: str) -> KEGGresponse:
         """ Executes the "list" KEGG API operation, pulling the entry IDs of the provided database.
 
-        :param database_name: The database from which to pull entry IDs.
+        :param database: The database from which to pull entry IDs.
         :return: The KEGG response.
         """
-        return self.request(KEGGurl=ku.ListKEGGurl, database_name=database_name)
+        return self.request(KEGGurl=ku.ListKEGGurl, database=database)
 
     def get(self, entry_ids: list, entry_field: str = None) -> KEGGresponse:
         """ Executes the "get" KEGG API operation, pulling the entries of the provided entry IDs.
@@ -170,84 +170,84 @@ class KEGGrest:
         """
         return self.request(KEGGurl=ku.GetKEGGurl, entry_ids=entry_ids, entry_field=entry_field)
 
-    def info(self, database_name: str) -> KEGGresponse:
+    def info(self, database: str) -> KEGGresponse:
         """ Executes the "info" KEGG API operation, pulling information about a KEGG database.
 
-        :param database_name: The database to pull information about.
+        :param database: The database to pull information about.
         :return: The KEGG response
         """
-        return self.request(KEGGurl=ku.InfoKEGGurl, database_name=database_name)
+        return self.request(KEGGurl=ku.InfoKEGGurl, database=database)
 
-    def keywords_find(self, database_name: str, keywords: list) -> KEGGresponse:
+    def keywords_find(self, database: str, keywords: list) -> KEGGresponse:
         """ Executes the "find" KEGG API operation, finding entry IDs based on keywords to search in entries.
 
-        :param database_name: The name of the database containing entries to search for.
+        :param database: The name of the database containing entries to search for.
         :param keywords: The keywords to search in entries.
         :return: The KEGG response
         """
-        return self.request(KEGGurl=ku.KeywordsFindKEGGurl, database_name=database_name, keywords=keywords)
+        return self.request(KEGGurl=ku.KeywordsFindKEGGurl, database=database, keywords=keywords)
 
     def molecular_find(
-        self, database_name: str, formula: str = None, exact_mass: t.Union[float, tuple] = None,
+        self, database: str, formula: str = None, exact_mass: t.Union[float, tuple] = None,
         molecular_weight: t.Union[int, tuple] = None
     ) -> KEGGresponse:
         """ Executes the "find" KEGG API operation, finding entry IDs in chemical databases based on one (and only one) choice of three molecular attributes of the entries.
 
-        :param database_name: The name of the chemical database to search for entries in.
+        :param database: The name of the chemical database to search for entries in.
         :param formula: The chemical formula (one of three choices) of chemical entries to search for.
         :param exact_mass: The exact mass (one of three choices) of chemical entries to search for (single value or range).
         :param molecular_weight: The molecular weight (one of three choices) of chemical entries to search for (single value or range).
         :return: The KEGG response
         """
         return self.request(
-            KEGGurl=ku.MolecularFindKEGGurl, database_name=database_name, formula=formula, exact_mass=exact_mass,
+            KEGGurl=ku.MolecularFindKEGGurl, database=database, formula=formula, exact_mass=exact_mass,
             molecular_weight=molecular_weight
         )
 
-    def database_conv(self, kegg_database_name: str, outside_database_name: str) -> KEGGresponse:
+    def database_conv(self, kegg_database: str, outside_database: str) -> KEGGresponse:
         """ Executes the "conv" KEGG API operation, converting the entry IDs of a KEGG database to those of an outside database.
 
-        :param kegg_database_name: The name of the KEGG database to pull converted entry IDs from.
-        :param outside_database_name: The name of the outside database to pull converted entry IDs from.
+        :param kegg_database: The name of the KEGG database to pull converted entry IDs from.
+        :param outside_database: The name of the outside database to pull converted entry IDs from.
         :return: The KEGG response.
         """
         return self.request(
-            KEGGurl=ku.DatabaseConvKEGGurl, kegg_database_name=kegg_database_name,
-            outside_database_name=outside_database_name
+            KEGGurl=ku.DatabaseConvKEGGurl, kegg_database=kegg_database,
+            outside_database=outside_database
         )
 
-    def entries_conv(self, target_database_name: str, entry_ids: list) -> KEGGresponse:
+    def entries_conv(self, target_database: str, entry_ids: list) -> KEGGresponse:
         """ Executes the "conv" KEGG API operation, converting provided entry IDs from one database to the form of a target database.
 
-        :param target_database_name: The name of the database to get converted entry IDs from.
+        :param target_database: The name of the database to get converted entry IDs from.
         :param entry_ids: The entry IDs to convert to the form of the target database.
         :return: The KEGG response.
         """
         return self.request(
-            KEGGurl=ku.EntriesConvKEGGurl, target_database_name=target_database_name, entry_ids=entry_ids
+            KEGGurl=ku.EntriesConvKEGGurl, target_database=target_database, entry_ids=entry_ids
         )
 
-    def database_link(self, target_database_name: str, source_database_name: str) -> KEGGresponse:
+    def database_link(self, target_database: str, source_database: str) -> KEGGresponse:
         """ Executes the "link" KEGG API operation, showing the IDs of entries in one KEGG database that are connected/related to entries of another KEGG database.
 
-        :param target_database_name: One of the two KEGG databases to pull linked entries from.
-        :param source_database_name: The other KEGG database to link entries from the target database.
+        :param target_database: One of the two KEGG databases to pull linked entries from.
+        :param source_database: The other KEGG database to link entries from the target database.
         :return: The KEGG response
         """
         return self.request(
-            KEGGurl=ku.DatabaseLinkKEGGurl, target_database_name=target_database_name,
-            source_database_name=source_database_name
+            KEGGurl=ku.DatabaseLinkKEGGurl, target_database=target_database,
+            source_database=source_database
         )
 
-    def entries_link(self, target_database_name: str, entry_ids: list) -> KEGGresponse:
+    def entries_link(self, target_database: str, entry_ids: list) -> KEGGresponse:
         """ Executes the "link" KEGG API operation, showing the IDs of entries that are connected/related to entries of a provided databases.
 
-        :param target_database_name: The KEGG database to find links to the provided entries.
+        :param target_database: The KEGG database to find links to the provided entries.
         :param entry_ids: The IDs of the entries to link to entries in the target database.
         :return: The KEGG response
         """
         return self.request(
-            KEGGurl=ku.EntriesLinkKEGGurl, target_database_name=target_database_name, entry_ids=entry_ids
+            KEGGurl=ku.EntriesLinkKEGGurl, target_database=target_database, entry_ids=entry_ids
         )
 
     def ddi(self, drug_entry_ids: list) -> KEGGresponse:

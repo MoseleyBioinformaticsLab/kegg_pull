@@ -3,7 +3,7 @@ import pytest as pt
 import zipfile as zf
 import os
 import shutil as sh
-import json as j
+import json
 
 import kegg_pull.__main__ as m
 import kegg_pull.entry_ids_cli as ei_cli
@@ -14,7 +14,7 @@ import kegg_pull.pathway_organizer_cli as po_cli
 import dev.utils as u
 
 
-def test_main_help(mocker):
+def test_help(mocker):
     mocker.patch('sys.argv', ['kegg_pull', '--full-help'])
     print_mock: mocker.MagicMock = mocker.patch('builtins.print')
     m.main()
@@ -32,7 +32,7 @@ def test_main_help(mocker):
         print_mock.assert_called_once_with(m.__doc__)
 
 
-def test_main_version(mocker):
+def test_version(mocker):
     mocker.patch('sys.argv', ['kegg_pull', '--version'])
     version_mock = 'version mock'
     mocker.patch('kegg_pull.__main__.__version__', version_mock)
@@ -53,14 +53,14 @@ def print_output_fixture(request):
         os.remove('output.txt')
 
 
-test_main_entry_ids_data = [
+test_entry_ids_data = [
     (['database', 'brite'], 'dev/test_data/all-brite-entry-ids.txt'),
     (['keywords', 'module', 'Guanine,ribonucleotide'], 'dev/test_data/module-entry-ids.txt'),
-    (['molecular-attribute', 'drug', '--em=420', '--em=440'], 'dev/test_data/drug-entry-ids.txt')]
+    (['molec-attr', 'drug', '--em=420', '--em=440'], 'dev/test_data/drug-entry-ids.txt')]
 
 
-@pt.mark.parametrize('args,expected_output', test_main_entry_ids_data)
-def test_main_entry_ids(mocker, args: list, expected_output: str, print_output: bool):
+@pt.mark.parametrize('args,expected_output', test_entry_ids_data)
+def test_entry_ids(mocker, args: list, expected_output: str, print_output: bool):
     args: list = ['kegg_pull', 'entry-ids'] + args
     _test_output(mocker=mocker, args=args, expected_output=expected_output, print_output=print_output)
 
@@ -77,10 +77,10 @@ def _test_output(mocker, args: list, expected_output: str, print_output: bool, j
         expected_output: str = file.read()
     if print_output:
         if json_output:
-            expected_json: dict = j.loads(expected_output)
+            expected_json: dict = json.loads(expected_output)
             [[actual_json], _] = print_mock.call_args
             actual_json: str = actual_json
-            actual_json: dict = j.loads(actual_json)
+            actual_json: dict = json.loads(actual_json)
             assert actual_json == expected_json
         else:
             print_mock.assert_called_once_with(expected_output)
@@ -88,14 +88,14 @@ def _test_output(mocker, args: list, expected_output: str, print_output: bool, j
         with open('output.txt', 'r') as file:
             actual_output: str = file.read()
         if json_output:
-            actual_json: dict = j.loads(actual_output)
-            expected_json: dict = j.loads(expected_output)
+            actual_json: dict = json.loads(actual_output)
+            expected_json: dict = json.loads(expected_output)
             assert actual_json == expected_json
         else:
             assert actual_output == expected_output
 
 
-test_main_rest_data = [
+test_rest_data = [
     (['conv', 'glycan', 'pubchem'], 'dev/test_data/glycan-pubchem-conv.txt'),
     (['conv', '--conv-target=pubchem', 'gl:G13143,gl:G13141,gl:G13139'], 'dev/test_data/glycan-pubchem-entry-ids.txt'),
     (['link', 'module', 'pathway'], 'dev/test_data/module-pathway-link.txt'),
@@ -103,8 +103,8 @@ test_main_rest_data = [
     (['ddi', 'D00564,D00100,D00109'], 'dev/test_data/ddi-output.txt')]
 
 
-@pt.mark.parametrize('args,expected_output', test_main_rest_data)
-def test_main_rest(mocker, args: list, expected_output: str, print_output: bool):
+@pt.mark.parametrize('args,expected_output', test_rest_data)
+def test_rest(mocker, args: list, expected_output: str, print_output: bool):
     args = ['kegg_pull', 'rest'] + args
     _test_output(mocker=mocker, args=args, expected_output=expected_output, print_output=print_output)
 
@@ -120,12 +120,12 @@ def pull_output(request):
     os.remove('pull-results.json')
 
 
-test_main_pull_data = [
+test_pull_data = [
     ['--multi-process', '--n-workers=2'], ['--force-single-entry', '--multi-process', '--n-workers=2'], ['--force-single-entry']]
 
 
-@pt.mark.parametrize('args', test_main_pull_data)
-def test_main_pull(mocker, args: list, output: str):
+@pt.mark.parametrize('args', test_pull_data)
+def test_pull(mocker, args: list, output: str):
     stdin_mock = """
         br:br08005
         br:br08902
@@ -169,18 +169,18 @@ def test_main_pull(mocker, args: list, output: str):
             expected_entry: str = expected_file.read()
         assert actual_entry == expected_entry
     with open('pull-results.json', 'r') as file:
-        actual_pull_results: dict = j.load(file)
+        actual_pull_results: dict = json.load(file)
     assert actual_pull_results == expected_pull_results
 
 
-test_main_map_data = [
+test_map_data = [
     (['entry-ids', '-', 'module', '--reverse'], '\nK12696\nK22365\nK22435\t', 'module'),
     (['pathway', 'ko'], None, 'pathway-gene'),
     (['compound', 'reaction', 'pathway', '--add-glycans', '--add-drugs', '--deduplicate'], None, 'compound-reaction-pathway')]
 
 
-@pt.mark.parametrize('args,stdin_mock_str,expected_output', test_main_map_data)
-def test_main_map(mocker, print_output: bool, args: list, stdin_mock_str: str, expected_output: str):
+@pt.mark.parametrize('args,stdin_mock_str,expected_output', test_map_data)
+def test_map(mocker, print_output: bool, args: list, stdin_mock_str: str, expected_output: str):
     args: list = ['kegg_pull', 'map'] + args
     stdin_mock = None
     if stdin_mock_str:
@@ -192,7 +192,7 @@ def test_main_map(mocker, print_output: bool, args: list, stdin_mock_str: str, e
         stdin_mock.assert_called_once_with()
 
 
-def test_main_pathway_organizer(mocker, print_output: bool):
+def test_pathway_organizer(mocker, print_output: bool):
     args = ['kegg_pull', 'pathway-organizer', '--tln=Metabolism', '--fn=Global and overview maps']
     _test_output(
         mocker=mocker, args=args, expected_output='dev/test_data/pathway-organizer/metabolic-pathways.json',
