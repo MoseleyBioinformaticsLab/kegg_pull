@@ -1,5 +1,6 @@
+# noinspection PyPackageRequirements
 import pytest as pt
-import json as j
+import json
 import typing as t
 
 import kegg_pull.pathway_organizer as po
@@ -62,7 +63,7 @@ def test_load_from_kegg(mocker, top_level_nodes: set, filter_nodes: set, hierarc
 
 def _get_expected_hierarchy_nodes(hierarchy_nodes_file: str) -> dict:
     with open(f'dev/test_data/pathway-organizer/{hierarchy_nodes_file}') as file:
-        expected_hierarchy_nodes: dict = j.load(file)
+        expected_hierarchy_nodes: dict = json.load(file)
 
     return expected_hierarchy_nodes
 

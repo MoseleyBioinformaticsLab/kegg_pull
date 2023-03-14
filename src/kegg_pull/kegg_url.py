@@ -140,22 +140,22 @@ class AbstractKEGGurl(abc.ABC):
             AbstractKEGGurl._raise_error(reason=error_reason)
 
     @staticmethod
-    def _validate_database_name(database_name: str, extra_databases: set = set(), excluded_databases: set = set()):
+    def _validate_database(database: str, extra_databases: set = set(), excluded_databases: set = set()):
         """ Ensures the database provided is a valid KEGG database.
 
-        :param database_name: The name of the database to validate.
+        :param database: The name of the database to validate.
         :param extra_databases: Additional optional database names to add to the core KEGG databases for the validation.
         :param excluded_databases: Optional database names to exclude from the validation. If extra_databases overlaps
         excluded_databases, extra_databases has priority.
         :raises ValueError: Raised when the provided database is not valid.
         """
-        if database_name not in AbstractKEGGurl.organism_set:
+        if database not in AbstractKEGGurl.organism_set:
             valid_databases = AbstractKEGGurl._valid_kegg_databases.union(AbstractKEGGurl._valid_medicus_databases)
             valid_databases: set = valid_databases - excluded_databases
             valid_databases: set = valid_databases.union(extra_databases)
 
             AbstractKEGGurl._validate_rest_option(
-                option_name='database name', option_value=database_name, valid_rest_options=valid_databases,
+                option_name='database name', option_value=database, valid_rest_options=valid_databases,
                 add_org=True
             )
 
@@ -163,59 +163,59 @@ class AbstractKEGGurl(abc.ABC):
 class ListKEGGurl(AbstractKEGGurl):
     """Contains URL construction and validation functionality of the KEGG API list operation."""
 
-    def __init__(self, database_name: str):
+    def __init__(self, database: str):
         """
-        :param database_name: The database option for the KEGG list URL.
+        :param database: The database option for the KEGG list URL.
         :raises ValueError: Raised if the provided database is not valid.
         """
-        super().__init__(rest_operation='list', database_name=database_name)
+        super().__init__(rest_operation='list', database=database)
 
-    def _validate(self, database_name: str):
+    def _validate(self, database: str):
         """ Ensures the database option is a KEGG database supported by the list operation.
 
-        :param database_name: The name of the database to check.
+        :param database: The name of the database to check.
         :raises ValueError: Raised if the provided database is not valid.
         """
-        AbstractKEGGurl._validate_database_name(
-            database_name=database_name, extra_databases={'organism'}, excluded_databases={'genes', 'ligand', 'kegg'}
+        AbstractKEGGurl._validate_database(
+            database=database, extra_databases={'organism'}, excluded_databases={'genes', 'ligand', 'kegg'}
         )
 
-    def _create_rest_options(self, database_name: str) -> str:
+    def _create_rest_options(self, database: str) -> str:
         """ Implements the KEGG REST API options creation by returning the provided database name (the only option).
 
-        :param database_name: The database option to return.
+        :param database: The database option to return.
         :return: The database option.
         """
-        return database_name
+        return database
 
 
 class InfoKEGGurl(AbstractKEGGurl):
     """Contains URL construction and validation functionality of the KEGG API info operation."""
 
-    def __init__(self, database_name: str) -> None:
+    def __init__(self, database: str) -> None:
         """
-        :param database_name: The database option for the KEGG info URL.
+        :param database: The database option for the KEGG info URL.
         :raises ValueError: Raised if the provided database is not valid.
         """
-        super(InfoKEGGurl, self).__init__(rest_operation='info', database_name=database_name)
+        super(InfoKEGGurl, self).__init__(rest_operation='info', database=database)
 
-    def _validate(self, database_name: str):
+    def _validate(self, database: str):
         """ Ensures the database option is a KEGG database supported by the info operation.
 
-        :param database_name: The name of the database to check.
+        :param database: The name of the database to check.
         :raises ValueError: Raised if the provided database is not valid.
         """
-        AbstractKEGGurl._validate_database_name(
-            database_name=database_name, excluded_databases=AbstractKEGGurl._valid_medicus_databases
+        AbstractKEGGurl._validate_database(
+            database=database, excluded_databases=AbstractKEGGurl._valid_medicus_databases
         )
 
-    def _create_rest_options(self, database_name: str) -> str:
+    def _create_rest_options(self, database: str) -> str:
         """ Implements the KEGG REST API options creation by returning the provided database name (the only option).
 
-        :param database_name: The database option to return.
+        :param database: The database option to return.
         :return: The database option.
         """
-        return database_name
+        return database
 
 
 class GetKEGGurl(AbstractKEGGurl):
@@ -313,36 +313,36 @@ class GetKEGGurl(AbstractKEGGurl):
 class KeywordsFindKEGGurl(AbstractKEGGurl):
     """Contains the URL construction and validation functionality for the KEGG API find operation based on the URL form that searches entries by keywords."""
 
-    def __init__(self, database_name: str, keywords: list):
+    def __init__(self, database: str, keywords: list):
         """
-        :param database_name: The database name option for the first part of the URL.
+        :param database: The database name option for the first part of the URL.
         :param keywords: The keyword options for the second part of the URL.
         :raises ValueError: Raised if the database name is invalid or keywords are not provided.
         """
-        super(KeywordsFindKEGGurl, self).__init__(rest_operation='find', database_name=database_name, keywords=keywords)
+        super(KeywordsFindKEGGurl, self).__init__(rest_operation='find', database=database, keywords=keywords)
 
-    def _validate(self, database_name: str, keywords: list):
+    def _validate(self, database: str, keywords: list):
         """ Ensures keywords are provided and the database name is valid.
 
-        :param database_name: The database name to check.
+        :param database: The database name to check.
         :param keywords: The keywords to check.
         :raises ValueError: Raised if the database name is invalid or keywords are not provided.
         """
         if len(keywords) == 0:
             self._raise_error(reason='No search keywords specified')
 
-        AbstractKEGGurl._validate_database_name(database_name=database_name, excluded_databases={'brite', 'kegg'})
+        AbstractKEGGurl._validate_database(database=database, excluded_databases={'brite', 'kegg'})
 
-    def _create_rest_options(self, keywords: list, database_name: str) -> str:
+    def _create_rest_options(self, keywords: list, database: str) -> str:
         """ Constructs the options for the URL using the database name followed by the keywords.
 
         :param keywords: The keywords to go in the options.
-        :param database_name: The database name to go in the options.
+        :param database: The database name to go in the options.
         :return: The constructed options.
         """
         keywords_string = '+'.join(keywords)
 
-        return f'{database_name}/{keywords_string}'
+        return f'{database}/{keywords_string}'
 
 
 class MolecularFindKEGGurl(AbstractKEGGurl):
@@ -350,35 +350,35 @@ class MolecularFindKEGGurl(AbstractKEGGurl):
 
     _valid_molecular_databases = {'compound', 'drug'}
 
-    def __init__(self, database_name: str, formula: str = None, exact_mass: t.Union[float, tuple] = None,
+    def __init__(self, database: str, formula: str = None, exact_mass: t.Union[float, tuple] = None,
         molecular_weight: t.Union[int, tuple] = None
     ):
         """
-        :param database_name: The database name option for the first part of the URL.
+        :param database: The database name option for the first part of the URL.
         :param formula: The chemical formula option that can go in the second part of the URL.
         :param exact_mass: The exact molecule mass option that can go in the second part of the URL.
         :param molecular_weight: The molecular weight option that can go in the second part of the URL.
         :raises ValueError: Raised if the provided database name or molecular attribute is invalid.
         """
         super(MolecularFindKEGGurl, self).__init__(
-            rest_operation='find', database_name=database_name, formula=formula, exact_mass=exact_mass,
+            rest_operation='find', database=database, formula=formula, exact_mass=exact_mass,
             molecular_weight=molecular_weight
         )
 
     def _validate(
-        self, database_name: str, formula: str = None, exact_mass: t.Union[float, tuple] = None,
+        self, database: str, formula: str = None, exact_mass: t.Union[float, tuple] = None,
         molecular_weight: t.Union[int, tuple] = None
     ):
         """ Ensures a valid database name and molecular attributes are provided.
 
-        :param database_name: The database name to check.
+        :param database: The database name to check.
         :param formula: The chemical formula attribute to check.
         :param exact_mass: The exact mass attribute to check.
         :param molecular_weight: The molecular weight attribute to check.
         :raises ValueError: Raised if the provided database name or molecular attribute is invalid.
         """
         AbstractKEGGurl._validate_rest_option(
-            option_name='molecular database name', option_value=database_name,
+            option_name='molecular database name', option_value=database,
             valid_rest_options=MolecularFindKEGGurl._valid_molecular_databases
         )
 
@@ -423,12 +423,12 @@ class MolecularFindKEGGurl(AbstractKEGGurl):
                            f' {min_val}-{max_val}'
                 )
 
-    def _create_rest_options(self, database_name: str, formula: str = None, exact_mass: t.Union[float, tuple] = None,
+    def _create_rest_options(self, database: str, formula: str = None, exact_mass: t.Union[float, tuple] = None,
         molecular_weight: t.Union[int, tuple] = None
     ) -> str:
         """ Constructs the options for the URL using the database name followed by a molecular attribute.
 
-        :param database_name: The database name option in the first part of the URL.
+        :param database: The database name option in the first part of the URL.
         :param formula: The chemical formula option that can go in the second part of the URL.
         :param exact_mass: The exact mass attribute that can go in the second part of the URL.
         :param molecular_weight: The molecular weight attribute that can go in the second part of the URL.
@@ -441,7 +441,7 @@ class MolecularFindKEGGurl(AbstractKEGGurl):
         else:
             options = MolecularFindKEGGurl._get_range_options(option_name='mol_weight', option_value=molecular_weight)
 
-        return f'{database_name}/{options}'
+        return f'{database}/{options}'
 
     @staticmethod
     def _get_range_options(option_name: str, option_value: t.Union[float, int, tuple]) -> str:
@@ -499,30 +499,30 @@ class AbstractConvKEGGurl(AbstractKEGGurl):
 class DatabaseConvKEGGurl(AbstractConvKEGGurl):
     """Contains the URL construction and validation functionality of the KEGG API conv operation based on the URL form that uses a KEGG database and an outside database."""
 
-    def __init__(self, kegg_database_name: str, outside_database_name: str):
+    def __init__(self, kegg_database: str, outside_database: str):
         """
-        :param kegg_database_name: The name of the KEGG database.
-        :param outside_database_name: The name of the outside database.
+        :param kegg_database: The name of the KEGG database.
+        :param outside_database: The name of the outside database.
         :raises ValueError: Raised if the database names are not valid or are not of the same type.
         """
         super(DatabaseConvKEGGurl, self).__init__(
-            kegg_database_name=kegg_database_name, outside_database_name=outside_database_name
+            kegg_database=kegg_database, outside_database=outside_database
         )
 
-    def _validate(self, kegg_database_name: str, outside_database_name: str):
+    def _validate(self, kegg_database: str, outside_database: str):
         """ Ensures that the database names are valid and that they're both the same type
 
-        :param kegg_database_name: The name of the KEGG database to check.
-        :param outside_database_name: The name of the outside database to check.
+        :param kegg_database: The name of the KEGG database to check.
+        :param outside_database: The name of the outside database to check.
         :raises ValueError: Raised if the database names are not valid or are not of the same type.
         """
         valid_kegg_gene_databases: set = AbstractKEGGurl.organism_set
         valid_kegg_molecule_databases: set = AbstractConvKEGGurl._valid_kegg_molecule_databases
         valid_kegg_databases: set = valid_kegg_molecule_databases.union(valid_kegg_gene_databases)
 
-        if kegg_database_name not in valid_kegg_databases:
+        if kegg_database not in valid_kegg_databases:
             AbstractKEGGurl._validate_rest_option(
-                option_name='KEGG database', option_value=kegg_database_name,
+                option_name='KEGG database', option_value=kegg_database,
                 valid_rest_options=valid_kegg_molecule_databases, add_org=True
             )
 
@@ -531,49 +531,49 @@ class DatabaseConvKEGGurl(AbstractConvKEGGurl):
         valid_outside_databases: set = valid_outside_molecule_databases.union(valid_outside_gene_databases)
 
         AbstractKEGGurl._validate_rest_option(
-            option_name='outside database', option_value=outside_database_name,
+            option_name='outside database', option_value=outside_database,
             valid_rest_options=valid_outside_databases
         )
 
-        if kegg_database_name in valid_kegg_gene_databases and \
-                outside_database_name not in valid_outside_gene_databases:
+        if kegg_database in valid_kegg_gene_databases and \
+                outside_database not in valid_outside_gene_databases:
             AbstractKEGGurl._raise_error(
-                reason=f'KEGG database "{kegg_database_name}" is a gene database but outside database '
-                       f'"{outside_database_name}" is not.'
+                reason=f'KEGG database "{kegg_database}" is a gene database but outside database '
+                       f'"{outside_database}" is not.'
             )
 
-        if kegg_database_name in valid_kegg_molecule_databases and \
-                outside_database_name not in valid_outside_molecule_databases:
+        if kegg_database in valid_kegg_molecule_databases and \
+                outside_database not in valid_outside_molecule_databases:
             AbstractKEGGurl._raise_error(
-                reason=f'KEGG database "{kegg_database_name}" is a molecule database but outside database '
-                       f'"{outside_database_name}" is not.'
+                reason=f'KEGG database "{kegg_database}" is a molecule database but outside database '
+                       f'"{outside_database}" is not.'
             )
 
-    def _create_rest_options(self, kegg_database_name: str, outside_database_name: str) -> str:
+    def _create_rest_options(self, kegg_database: str, outside_database: str) -> str:
         """ Constructs the REST options by appending the outside database name to the kegg database name
 
-        :param kegg_database_name: The KEGG database option.
-        :param outside_database_name: The outside database option
+        :param kegg_database: The KEGG database option.
+        :param outside_database: The outside database option
         :return: The constructed options.
         """
-        return f'{kegg_database_name}/{outside_database_name}'
+        return f'{kegg_database}/{outside_database}'
 
 
 class EntriesConvKEGGurl(AbstractConvKEGGurl):
     """Contains the URL construction and validation functionality for the KEGG API conv operation based on the URL form that uses a target database and entry IDs."""
 
-    def __init__(self, target_database_name: str, entry_ids: list):
+    def __init__(self, target_database: str, entry_ids: list):
         """
-        :param target_database_name: The target database option.
+        :param target_database: The target database option.
         :param entry_ids: The entry IDs options.
         :raises ValueError: Raised if the target database is invalid or entry IDs are not provided.
         """
-        super(EntriesConvKEGGurl, self).__init__(target_database_name=target_database_name, entry_ids=entry_ids)
+        super(EntriesConvKEGGurl, self).__init__(target_database=target_database, entry_ids=entry_ids)
 
-    def _validate(self, target_database_name: str, entry_ids: list):
+    def _validate(self, target_database: str, entry_ids: list):
         """ Ensures the target database is valid and that the entry IDs are provided.
 
-        :param target_database_name: The name of the target database to check.
+        :param target_database: The name of the target database to check.
         :param entry_ids: The entry IDs to check.
         :raises ValueError: Raised if the target database is invalid or entry IDs are not provided.
         """
@@ -582,29 +582,29 @@ class EntriesConvKEGGurl(AbstractConvKEGGurl):
         valid_databases: set = valid_databases.union(AbstractConvKEGGurl._valid_outside_molecule_databases)
         valid_databases.add('genes')
 
-        if target_database_name not in valid_databases.union(AbstractKEGGurl.organism_set):
+        if target_database not in valid_databases.union(AbstractKEGGurl.organism_set):
             AbstractKEGGurl._validate_rest_option(
-                option_name='target database', option_value=target_database_name, valid_rest_options=valid_databases,
+                option_name='target database', option_value=target_database, valid_rest_options=valid_databases,
                 add_org=True
             )
 
         if len(entry_ids) == 0:
             self._raise_error(reason='Entry IDs must be specified for this KEGG "conv" operation')
 
-    def _create_rest_options(self, target_database_name: str, entry_ids: list) -> str:
+    def _create_rest_options(self, target_database: str, entry_ids: list) -> str:
         """ Constructs the REST options by appending the entry IDs (separated by '+') to the target database name.
 
-        :param target_database_name: The name of the target database in the first part of the URL.
+        :param target_database: The name of the target database in the first part of the URL.
         :param entry_ids: The entry IDs in the second part of the URL.
         :return: The constructed options.
         """
-        return f'{target_database_name}/{"+".join(entry_ids)}'
+        return f'{target_database}/{"+".join(entry_ids)}'
 
 
 class AbstractLinkKEGGurl(AbstractKEGGurl):
     """Abstract class containing the shared data for the link KEGG URLs."""
 
-    _extra_database_names = {'atc', 'jtc', 'ndc', 'yj', 'pubmed'}
+    _extra_databases = {'atc', 'jtc', 'ndc', 'yj', 'pubmed'}
 
     def __init__(self, **kwargs):
         """
@@ -625,80 +625,80 @@ class AbstractLinkKEGGurl(AbstractKEGGurl):
 class DatabaseLinkKEGGurl(AbstractLinkKEGGurl):
     """Contains the URL construction and validation functionality for the link KEGG REST API operation of the form that uses a target database and a source database."""
 
-    def __init__(self, target_database_name: str, source_database_name: str):
+    def __init__(self, target_database: str, source_database: str):
         """
-        :param target_database_name: The name of the target database option.
-        :param source_database_name: The name of the source database option.
+        :param target_database: The name of the target database option.
+        :param source_database: The name of the source database option.
         :raises ValueError: Raised if the databases are invalid.
         """
         super(DatabaseLinkKEGGurl, self).__init__(
-            target_database_name=target_database_name, source_database_name=source_database_name
+            target_database=target_database, source_database=source_database
         )
 
-    def _validate(self, target_database_name: str, source_database_name: str):
+    def _validate(self, target_database: str, source_database: str):
         """ Ensures the provided databases are valid
 
-        :param target_database_name: The name of the target database to check.
-        :param source_database_name: The name of the source database to check.
+        :param target_database: The name of the target database to check.
+        :param source_database: The name of the source database to check.
         :raises ValueError: Raised if the databases are invalid.
         """
         excluded_databases: set = AbstractKEGGurl._valid_medicus_databases.union({'kegg', 'genes', 'ligand'})
 
-        AbstractKEGGurl._validate_database_name(
-            database_name=target_database_name, extra_databases=AbstractLinkKEGGurl._extra_database_names,
+        AbstractKEGGurl._validate_database(
+            database=target_database, extra_databases=AbstractLinkKEGGurl._extra_databases,
             excluded_databases=excluded_databases
         )
 
-        AbstractKEGGurl._validate_database_name(
-            database_name=source_database_name, extra_databases=AbstractLinkKEGGurl._extra_database_names,
+        AbstractKEGGurl._validate_database(
+            database=source_database, extra_databases=AbstractLinkKEGGurl._extra_databases,
             excluded_databases=excluded_databases
         )
 
-    def _create_rest_options(self, target_database_name: str, source_database_name: str) -> str:
+    def _create_rest_options(self, target_database: str, source_database: str) -> str:
         """ Constructs the options by appending the target database name to the source database name
-        :param target_database_name: The target database name for the first option.
-        :param source_database_name: The source database name for the second option.
+        :param target_database: The target database name for the first option.
+        :param source_database: The source database name for the second option.
         :return: The constructed options.
         """
-        return f'{target_database_name}/{source_database_name}'
+        return f'{target_database}/{source_database}'
 
 
 class EntriesLinkKEGGurl(AbstractLinkKEGGurl):
     """Contains the URL construction and validation functionality for the link KEGG REST API operation of the form that uses a target database and entry IDs."""
 
-    def __init__(self, target_database_name: str, entry_ids: list):
+    def __init__(self, target_database: str, entry_ids: list):
         """
-        :param target_database_name: The name of the target database option.
+        :param target_database: The name of the target database option.
         :param entry_ids: The entry IDs options.
         :raises ValueError: Raised if the target database is invalid or entry IDs are not provided.
         """
-        super(EntriesLinkKEGGurl, self).__init__(target_database_name=target_database_name, entry_ids=entry_ids)
+        super(EntriesLinkKEGGurl, self).__init__(target_database=target_database, entry_ids=entry_ids)
 
-    def _validate(self, target_database_name: str, entry_ids: list):
+    def _validate(self, target_database: str, entry_ids: list):
         """ Ensures the target database name is valid and that the entry IDs are provided.
 
-        :param target_database_name: The name of the target database to check.
+        :param target_database: The name of the target database to check.
         :param entry_ids: The entry IDs to check.
         :raises ValueError: Raised if the target database is invalid or entry IDs are not provided.
         """
         excluded_databases: set = AbstractKEGGurl._valid_medicus_databases.union({'kegg', 'ligand'})
 
-        AbstractKEGGurl._validate_database_name(
-            database_name=target_database_name, extra_databases=AbstractLinkKEGGurl._extra_database_names,
+        AbstractKEGGurl._validate_database(
+            database=target_database, extra_databases=AbstractLinkKEGGurl._extra_databases,
             excluded_databases=excluded_databases
         )
 
         if len(entry_ids) == 0:
             AbstractKEGGurl._raise_error(reason='At least one entry ID must be specified to perform the link operation')
 
-    def _create_rest_options(self, target_database_name: str, entry_ids: list) -> str:
+    def _create_rest_options(self, target_database: str, entry_ids: list) -> str:
         """Constructs the options by appending the entry IDs (separated by '+') to the target database name.
 
-        :param target_database_name: The name of the target database for the first options.
+        :param target_database: The name of the target database for the first options.
         :param entry_ids: The entry IDs as the last options.
         :return: The constructed options.
         """
-        return f'{target_database_name}/{"+".join(entry_ids)}'
+        return f'{target_database}/{"+".join(entry_ids)}'
 
 
 class DdiKEGGurl(AbstractKEGGurl):

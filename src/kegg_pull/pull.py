@@ -9,7 +9,7 @@ import abc
 import typing as t
 import pickle as p
 import logging as log
-import json as j
+import json
 import tqdm
 
 from . import kegg_url as ku
@@ -354,7 +354,7 @@ class AbstractMultiplePull(abc.ABC):
                 }
 
                 with open(AbstractMultiplePull.ABORTED_PULL_RESULTS_PATH, 'w') as file:
-                    j.dump(aborted_pull_results, file, indent=0)
+                    json.dump(aborted_pull_results, file, indent=0)
 
                 exit(1)
             else:

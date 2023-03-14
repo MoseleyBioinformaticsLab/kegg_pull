@@ -47,7 +47,7 @@ test_entries_map_data = [True, False]
 def test_entries_map(mocker, reverse: bool, kegg_rest):
     expected_mapping = {'k': {'v1', 'v2'}}
     to_dict_mock = mocker.patch('kegg_pull.map._to_dict', return_value=expected_mapping)
-    shared_kwargs = {'entry_ids': ['e1', 'e2'], 'target_database_name': 'x', 'kegg_rest': kegg_rest}
+    shared_kwargs = {'entry_ids': ['e1', 'e2'], 'target_database': 'x', 'kegg_rest': kegg_rest}
     actual_mapping = kmap.entries_map(reverse=reverse, **shared_kwargs)
     to_dict_mock.assert_called_once_with(KEGGurl=ku.EntriesLinkKEGGurl, **shared_kwargs)
     if reverse:
@@ -56,8 +56,8 @@ def test_entries_map(mocker, reverse: bool, kegg_rest):
 
 
 test_deduplicate_pathway_ids_data = [
-    {'source_database_name': 'pathway', 'target_database_name': 'x'},
-    {'source_database_name': 'x', 'target_database_name': 'pathway'}]
+    {'source_database': 'pathway', 'target_database': 'x'},
+    {'source_database': 'x', 'target_database': 'pathway'}]
 
 
 @pt.mark.parametrize('kwargs', test_deduplicate_pathway_ids_data)
@@ -66,7 +66,7 @@ def test_deduplicate_pathway_ids(mocker, kwargs: dict, kegg_rest):
     to_dict_return = {
         'path:map1': {'x1'}, f'path:ko1': {'x1'}, 'path:map2': {'x2', 'x3'},
         'path:ko2': {'x2', 'x3'}}
-    pathway_is_target = kwargs['target_database_name'] == 'pathway'
+    pathway_is_target = kwargs['target_database'] == 'pathway'
     to_dict_return = kmap.reverse(mapping=to_dict_return) if pathway_is_target else to_dict_return
     to_dict_mock = mocker.patch('kegg_pull.map._to_dict', return_value=to_dict_return)
     actual_mapping = kmap.database_map(deduplicate=True, **kwargs)
@@ -81,7 +81,7 @@ def test_deduplicate_pathway_ids_exception(mocker):
               f' Databases specified: module, ko.'
     mocker.patch('kegg_pull.map._to_dict')
     with pt.raises(ValueError) as error:
-        kmap.database_map(source_database_name='module', target_database_name='ko', deduplicate=True)
+        kmap.database_map(source_database='module', target_database='ko', deduplicate=True)
     u.assert_exception(expected_message=message, exception=error)
 
 
@@ -90,26 +90,26 @@ def get_mapping_data(request, mocker):
     add_glycans, add_drugs = request.param
 
     def mapping_data(kegg_rest: t.Union[mocker.MagicMock, None], kwargs: dict) -> tuple:
-        compound_is_target = kwargs['target_database_name'] == 'compound'
+        compound_is_target = kwargs['target_database'] == 'compound'
         expected_call_args_list = [kwargs]
         compound_to_x = {'cpd1': {'x1', 'x2'}, 'cpd2': {'x1'}, 'cpd3': {'x2'}, 'cpd4': {'x3'}, 'cpd5': {'x2'}, 'cpd6': {'x4'}}
         to_dict_side_effect = [kmap.reverse(mapping=compound_to_x) if compound_is_target else compound_to_x]
         if add_glycans:
             expected_call_args_list.extend([
-                {'source_database_name': 'compound', 'target_database_name': 'glycan'},
-                {'source_database_name': 'glycan', 'target_database_name': 'x'}])
+                {'source_database': 'compound', 'target_database': 'glycan'},
+                {'source_database': 'glycan', 'target_database': 'x'}])
             to_dict_side_effect.extend([
                 {'cpd1': {'gl1'}, 'cpd7': {'gl1', 'gl3'}, 'cpd8': {'gl2'}, 'cpd9': {'gl2'}, 'cpd10': {'gl3'}, 'cpd11': {'gl4'}},
                 {'gl1': {'x1', 'x5'}, 'gl2': {'x2', 'x5'}, 'gl4': {'x3'}, 'gl3': {'x3'}, 'gl5': {'x6'}}])
         if add_drugs:
             expected_call_args_list.extend([
-                {'source_database_name': 'compound', 'target_database_name': 'drug'},
-                {'source_database_name': 'drug', 'target_database_name': 'x'}])
+                {'source_database': 'compound', 'target_database': 'drug'},
+                {'source_database': 'drug', 'target_database': 'x'}])
             to_dict_side_effect.extend([
                 {'cpd4': {'d1'}, 'cpd3': {'d1'}, 'cpd6': {'d2'}, 'cpd5': {'d2'}, 'cpd12': {'d4'}, 'cpd13': {'d4'}, 'cpd14': {'d5'}},
                 {'d1': {'x1', 'x5'}, 'd2': {'x2', 'x5'}, 'd3': {'x3'}, 'd4': {'x3'}, 'd5': {'x6'}, 'd6': {'x6'}}])
         expected_call_args_list = [{
-            'source_database_name': d['source_database_name'], 'target_database_name': d['target_database_name'],
+            'source_database': d['source_database'], 'target_database': d['target_database'],
             'kegg_rest': kegg_rest, 'KEGGurl': ku.DatabaseLinkKEGGurl} for d in expected_call_args_list]
         if add_glycans and add_drugs:
             expected_mapping = {
@@ -132,8 +132,8 @@ def get_mapping_data(request, mocker):
 
 
 test_add_glycans_or_drugs_data = [
-    {'source_database_name': 'compound', 'target_database_name': 'x'},
-    {'source_database_name': 'x', 'target_database_name': 'compound'}]
+    {'source_database': 'compound', 'target_database': 'x'},
+    {'source_database': 'x', 'target_database': 'compound'}]
 
 
 @pt.mark.parametrize('kwargs', test_add_glycans_or_drugs_data)
@@ -151,7 +151,7 @@ def test_add_glycans_or_drugs_warning(mocker, caplog):
     mocker.patch('kegg_pull.map._to_dict')
     expected_message = f'Adding compound IDs (corresponding to equivalent glycan and/or drug entries) to a mapping where ' \
                        f'neither the source database nor the target database are "compound". Databases specified: reaction, ko.'
-    kmap.database_map(source_database_name='reaction', target_database_name='ko', add_glycans=True)
+    kmap.database_map(source_database='reaction', target_database='ko', add_glycans=True)
     u.assert_warning(message=expected_message, caplog=caplog)
 
 
@@ -169,31 +169,31 @@ def test_indirect(mocker, kegg_rest, test_case: str):
     compound_to_glycan = {'cpd1': {'gl1'}}
     compound_to_drug = {'cpd3': {'d1'}}
     compound_to_gene_expected_call_args_list = [
-        {'source_database_name': 'compound', 'target_database_name': 'reaction'},
-        {'source_database_name': 'reaction', 'target_database_name': 'ko'}]
+        {'source_database': 'compound', 'target_database': 'reaction'},
+        {'source_database': 'reaction', 'target_database': 'ko'}]
     if test_case == 'drugs_and_glycans':
         glycan_to_gene = {'gl1': {'ko1', 'ko4'}, 'gl2': {'ko5'}}
         drug_to_gene = {'d1': {'ko3', 'ko6'}, 'd2': {'ko7'}}
         expected_call_args_list = compound_to_gene_expected_call_args_list
         expected_call_args_list.extend([
-            {'source_database_name': 'compound', 'target_database_name': 'glycan'},
-            {'source_database_name': 'glycan', 'target_database_name': 'ko'},
-            {'source_database_name': 'compound', 'target_database_name': 'drug'},
-            {'source_database_name': 'drug', 'target_database_name': 'ko'}])
+            {'source_database': 'compound', 'target_database': 'glycan'},
+            {'source_database': 'glycan', 'target_database': 'ko'},
+            {'source_database': 'compound', 'target_database': 'drug'},
+            {'source_database': 'drug', 'target_database': 'ko'}])
         side_effect = [
             compound_to_reaction, reaction_to_gene, compound_to_glycan, glycan_to_gene, compound_to_drug, drug_to_gene]
         to_dict_mock = mocker.patch('kegg_pull.map._to_dict', side_effect=side_effect)
         actual_mapping = kmap.indirect(
-            source_database_name='compound', intermediate_database_name='reaction', target_database_name='ko',
+            source_database='compound', intermediate_database='reaction', target_database='ko',
             add_glycans=True, add_drugs=True, kegg_rest=kegg_rest)
         expected_mapping = {'cpd1': {'ko3', 'ko1', 'ko2', 'ko4'}, 'cpd3': {'ko3', 'ko6'}}
     elif test_case == 'deduplicate':
         expected_call_args_list = [
-            {'source_database_name': 'pathway', 'target_database_name': 'reaction'},
-            {'source_database_name': 'reaction', 'target_database_name': 'ko'}]
+            {'source_database': 'pathway', 'target_database': 'reaction'},
+            {'source_database': 'reaction', 'target_database': 'ko'}]
         to_dict_mock = mocker.patch('kegg_pull.map._to_dict', side_effect=[pathway_to_reaction, reaction_to_gene])
         actual_mapping = kmap.indirect(
-            source_database_name='pathway', intermediate_database_name='reaction', target_database_name='ko',
+            source_database='pathway', intermediate_database='reaction', target_database='ko',
             deduplicate=True, kegg_rest=kegg_rest)
         expected_mapping = {'path:map1': {'ko3', 'ko1', 'ko2'}, 'path:map3': {'ko3'}}
     elif test_case == 'drugs_and_glycans_and_deduplicate':
@@ -201,18 +201,18 @@ def test_indirect(mocker, kegg_rest, test_case: str):
         glycan_to_pathway = {'gl1': {'path:map1', 'path:map4'}, 'gl2': {'path:map5'}}
         drug_to_pathway = {'d1': {'path:map3', 'path:map6'}, 'd2': {'path:map7'}}
         expected_call_args_list = [
-            {'source_database_name': 'compound', 'target_database_name': 'reaction'},
-            {'source_database_name': 'reaction', 'target_database_name': 'pathway'},
-            {'source_database_name': 'compound', 'target_database_name': 'glycan'},
-            {'source_database_name': 'glycan', 'target_database_name': 'pathway'},
-            {'source_database_name': 'compound', 'target_database_name': 'drug'},
-            {'source_database_name': 'drug', 'target_database_name': 'pathway'}]
+            {'source_database': 'compound', 'target_database': 'reaction'},
+            {'source_database': 'reaction', 'target_database': 'pathway'},
+            {'source_database': 'compound', 'target_database': 'glycan'},
+            {'source_database': 'glycan', 'target_database': 'pathway'},
+            {'source_database': 'compound', 'target_database': 'drug'},
+            {'source_database': 'drug', 'target_database': 'pathway'}]
         side_effect = [
             compound_to_reaction, reaction_to_pathway, compound_to_glycan, glycan_to_pathway, compound_to_drug, drug_to_pathway
         ]
         to_dict_mock = mocker.patch('kegg_pull.map._to_dict', side_effect=side_effect)
         actual_mapping = kmap.indirect(
-            source_database_name='compound', intermediate_database_name='reaction', target_database_name='pathway',
+            source_database='compound', intermediate_database='reaction', target_database='pathway',
             deduplicate=True, add_glycans=True, add_drugs=True, kegg_rest=kegg_rest)
         expected_mapping = {
             'cpd1': {'path:map1', 'path:map3', 'path:map4'}, 'cpd2': {'path:map2'},
@@ -221,20 +221,20 @@ def test_indirect(mocker, kegg_rest, test_case: str):
         expected_call_args_list = compound_to_gene_expected_call_args_list
         to_dict_mock = mocker.patch('kegg_pull.map._to_dict', side_effect=[compound_to_reaction, reaction_to_gene])
         actual_mapping = kmap.indirect(
-            source_database_name='compound', intermediate_database_name='reaction', target_database_name='ko',
+            source_database='compound', intermediate_database='reaction', target_database='ko',
             kegg_rest=kegg_rest)
         expected_mapping = {'cpd1': {'ko3', 'ko1', 'ko2'}, 'cpd3': {'ko3'}}
     expected_call_args_list = [{
-        'source_database_name': d['source_database_name'], 'target_database_name': d['target_database_name'],
+        'source_database': d['source_database'], 'target_database': d['target_database'],
         'kegg_rest': kegg_rest, 'KEGGurl': ku.DatabaseLinkKEGGurl} for d in expected_call_args_list]
     u.assert_call_args(function_mock=to_dict_mock, expected_call_args_list=expected_call_args_list, do_kwargs=True)
     assert actual_mapping == expected_mapping
 
 
 test_indirect_exception_data = [
-    ({'source_database_name': 'pathway', 'intermediate_database_name': 'reaction', 'target_database_name': 'reaction'},
+    ({'source_database': 'pathway', 'intermediate_database': 'reaction', 'target_database': 'reaction'},
      'The source, intermediate, and target database must all be unique. Databases specified: pathway, reaction, reaction.'),
-    ({'source_database_name': 'reaction', 'intermediate_database_name': 'reaction', 'target_database_name': 'reaction'},
+    ({'source_database': 'reaction', 'intermediate_database': 'reaction', 'target_database': 'reaction'},
      'The source, intermediate, and target database must all be unique. Databases specified: reaction, reaction, reaction.')
 ]
 

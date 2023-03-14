@@ -1,3 +1,4 @@
+# noinspection PyPackageRequirements
 import pytest as pt
 import requests as rq
 
@@ -122,18 +123,18 @@ def test_request_and_test_timeout(mocker):
 
 
 test_rest_method_data = [
-    (ku.ListKEGGurl, r.KEGGrest.list, {'database_name': 'module'}),
+    (ku.ListKEGGurl, r.KEGGrest.list, {'database': 'module'}),
     (ku.GetKEGGurl, r.KEGGrest.get, {'entry_ids': ['xyz'], 'entry_field': None}),
-    (ku.InfoKEGGurl, r.KEGGrest.info, {'database_name': 'pathway'}),
-    (ku.KeywordsFindKEGGurl, r.KEGGrest.keywords_find, {'database_name': '', 'keywords': ['a', 'b']}),
+    (ku.InfoKEGGurl, r.KEGGrest.info, {'database': 'pathway'}),
+    (ku.KeywordsFindKEGGurl, r.KEGGrest.keywords_find, {'database': '', 'keywords': ['a', 'b']}),
     (
         ku.MolecularFindKEGGurl, r.KEGGrest.molecular_find,
-        {'database_name': '', 'formula': 'abc', 'exact_mass': None, 'molecular_weight': None}
+        {'database': '', 'formula': 'abc', 'exact_mass': None, 'molecular_weight': None}
     ),
-    (ku.DatabaseConvKEGGurl, r.KEGGrest.database_conv, {'kegg_database_name': 'a', 'outside_database_name': 'b'}),
-    (ku.EntriesConvKEGGurl, r.KEGGrest.entries_conv, {'target_database_name': 'module', 'entry_ids': ['123', 'abc']}),
-    (ku.DatabaseLinkKEGGurl, r.KEGGrest.database_link, {'target_database_name': 'x', 'source_database_name': 'y'}),
-    (ku.EntriesLinkKEGGurl, r.KEGGrest.entries_link, {'target_database_name': '123', 'entry_ids': ['x', 'y']}),
+    (ku.DatabaseConvKEGGurl, r.KEGGrest.database_conv, {'kegg_database': 'a', 'outside_database': 'b'}),
+    (ku.EntriesConvKEGGurl, r.KEGGrest.entries_conv, {'target_database': 'module', 'entry_ids': ['123', 'abc']}),
+    (ku.DatabaseLinkKEGGurl, r.KEGGrest.database_link, {'target_database': 'x', 'source_database': 'y'}),
+    (ku.EntriesLinkKEGGurl, r.KEGGrest.entries_link, {'target_database': '123', 'entry_ids': ['x', 'y']}),
     (ku.DdiKEGGurl, r.KEGGrest.ddi, {'drug_entry_ids': ['1', '2']})
 ]
 @pt.mark.parametrize('KEGGurl,method,kwargs', test_rest_method_data)
@@ -177,7 +178,7 @@ def test_get_kegg_url_exception(kwargs: dict, expected_message: str):
 
 def test_get_kegg_url_warning(mocker, caplog):
     kegg_url_mock = mocker.MagicMock()
-    kegg_url = r.KEGGrest._get_kegg_url(KEGGurl=ku.InfoKEGGurl, kegg_url=kegg_url_mock, database_name='database mock')
+    kegg_url = r.KEGGrest._get_kegg_url(KEGGurl=ku.InfoKEGGurl, kegg_url=kegg_url_mock, database='database mock')
 
     u.assert_warning(
         message='Both an instantiated kegg_url object and KEGGurl class are provided. Using the instantiated object...',

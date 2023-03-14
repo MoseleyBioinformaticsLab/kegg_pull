@@ -3,7 +3,7 @@ Flattening A Pathways Brite Hierarchy
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Functionality for flattening a pathways Brite hierarchy (ID: 'br:br08901') into a collection of its nodes, mapping a node ID to information about it, enabling combinations with other KEGG data.
 """
-import json as j
+import json
 import logging as log
 import typing as t
 
@@ -74,7 +74,7 @@ class PathwayOrganizer(u.NonInstantiable):
         kegg_rest = kegg_rest if kegg_rest is not None else r.KEGGrest()
         kegg_response: r.KEGGresponse = kegg_rest.get(entry_ids=['br:br08901'], entry_field='json')
         text_body: str = kegg_response.text_body.strip()
-        brite_hierarchy: dict = j.loads(s=text_body)
+        brite_hierarchy: dict = json.loads(s=text_body)
 
         return brite_hierarchy['children']
 
@@ -144,7 +144,7 @@ class PathwayOrganizer(u.NonInstantiable):
 
         :return: The JSON string version of the hierarchy nodes.
         """
-        return j.dumps(self.hierarchy_nodes, indent=2)
+        return json.dumps(self.hierarchy_nodes, indent=2)
 
     _schema = {
         'type': 'object',

@@ -1,3 +1,4 @@
+# noinspection PyPackageRequirements
 import pytest as pt
 import typing as t
 import os
@@ -9,11 +10,11 @@ import dev.utils as u
 
 
 test_from_kegg_rest_data = [
-    (ei.from_database, ku.ListKEGGurl, {'database_name': 'compound'}, 'list/compound'),
-    (ei.from_keywords, ku.KeywordsFindKEGGurl, {'database_name': 'compound', 'keywords': ['kw1', 'kw2']}, 'find/compound/kw1+kw2'),
+    (ei.from_database, ku.ListKEGGurl, {'database': 'compound'}, 'list/compound'),
+    (ei.from_keywords, ku.KeywordsFindKEGGurl, {'database': 'compound', 'keywords': ['kw1', 'kw2']}, 'find/compound/kw1+kw2'),
     (
         ei.from_molecular_attribute, ku.MolecularFindKEGGurl,
-        {'database_name': 'compound', 'formula': 'M4O3C2K1', 'exact_mass': None, 'molecular_weight': None},
+        {'database': 'compound', 'formula': 'M4O3C2K1', 'exact_mass': None, 'molecular_weight': None},
         'find/compound/M4O3C2K1/formula'
     )
 ]

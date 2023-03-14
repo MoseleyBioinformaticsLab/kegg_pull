@@ -1,3 +1,4 @@
+# noinspection PyPackageRequirements
 import pytest as pt
 import os
 import shutil as sh
@@ -7,7 +8,7 @@ import kegg_pull.kegg_url as ku
 
 @pt.fixture(autouse=True)
 def mock_organism_set(mocker, request):
-    if not 'disable_mock_organism_set' in request.keywords:
+    if 'disable_mock_organism_set' not in request.keywords:
         organism_set_mock = {'organism-code', 'organism-T-number'}
 
         mocker.patch.object(

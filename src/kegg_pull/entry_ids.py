@@ -9,15 +9,15 @@ from . import rest as r
 from . import kegg_url as ku
 
 
-def from_database(database_name: str, kegg_rest: r.KEGGrest = None) -> list:
+def from_database(database: str, kegg_rest: r.KEGGrest = None) -> list:
     """ Pulls the KEGG entry IDs of a given database.
 
-    :param database_name: The KEGG database to pull the entry IDs from.
+    :param database: The KEGG database to pull the entry IDs from.
     :param kegg_rest: The KEGGrest object to request the entry IDs. If None, one is created with the default parameters.
     :return: The list of resulting entry IDs.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
-    return _process_response(KEGGurl=ku.ListKEGGurl, kegg_rest=kegg_rest, database_name=database_name)
+    return _process_response(KEGGurl=ku.ListKEGGurl, kegg_rest=kegg_rest, database=database)
 
 
 def _process_response(KEGGurl: type, kegg_rest: t.Union[r.KEGGrest, None], **kwargs) -> list:
@@ -66,25 +66,25 @@ def from_file(file_path: str) -> list:
     return entry_ids
 
 
-def from_keywords(database_name: str, keywords: list, kegg_rest: r.KEGGrest = None) -> list:
+def from_keywords(database: str, keywords: list, kegg_rest: r.KEGGrest = None) -> list:
     """ Pulls entry IDs from a KEGG database based on keywords searched in the entries.
 
-    :param database_name: The name of the database to pull entry IDs from.
+    :param database: The name of the database to pull entry IDs from.
     :param keywords: The keywords to search entries in the database with.
     :param kegg_rest: The KEGGrest object to request the entry IDs. If None, one is created with the default parameters.
     :return: The list of entry IDs.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
-    return _process_response(KEGGurl=ku.KeywordsFindKEGGurl, kegg_rest=kegg_rest, database_name=database_name, keywords=keywords)
+    return _process_response(KEGGurl=ku.KeywordsFindKEGGurl, kegg_rest=kegg_rest, database=database, keywords=keywords)
 
 
 def from_molecular_attribute(
-    database_name: str, formula: str = None, exact_mass: t.Union[float, tuple] = None, molecular_weight: t.Union[int, tuple] = None,
+    database: str, formula: str = None, exact_mass: t.Union[float, tuple] = None, molecular_weight: t.Union[int, tuple] = None,
     kegg_rest: r.KEGGrest = None
 ) -> list:
     """ Pulls entry IDs from a KEGG database containing chemical entries based on one (and only one) of three molecular attributes of the entries.
 
-    :param database_name: The name of the database containing chemical entries.
+    :param database: The name of the database containing chemical entries.
     :param formula: The chemical formula to search for.
     :param exact_mass: The exact mass of the compound to search for (a single value or a range).
     :param molecular_weight: The molecular weight of the compound to search for (a single value or a range).
@@ -93,6 +93,6 @@ def from_molecular_attribute(
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
     return _process_response(
-        KEGGurl=ku.MolecularFindKEGGurl, kegg_rest=kegg_rest, database_name=database_name, formula=formula, exact_mass=exact_mass,
+        KEGGurl=ku.MolecularFindKEGGurl, kegg_rest=kegg_rest, database=database, formula=formula, exact_mass=exact_mass,
         molecular_weight=molecular_weight
     )

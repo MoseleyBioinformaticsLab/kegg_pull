@@ -1,14 +1,14 @@
 """
 Usage:
     kegg_pull pull -h | --help
-    kegg_pull pull database <database-name> [--force-single-entry] [--multi-process] [--n-workers=<n-workers>] [--output=<output>] [--entry-field=<entry-field>] [--n-tries=<n-tries>] [--time-out=<time-out>] [--sleep-time=<sleep-time>] [--ut=<unsuccessful-threshold>]
+    kegg_pull pull database <database> [--force-single-entry] [--multi-process] [--n-workers=<n-workers>] [--output=<output>] [--entry-field=<entry-field>] [--n-tries=<n-tries>] [--time-out=<time-out>] [--sleep-time=<sleep-time>] [--ut=<unsuccessful-threshold>]
     kegg_pull pull entry-ids <entry-ids> [--force-single-entry] [--multi-process] [--n-workers=<n-workers>] [--output=<output>] [--entry-field=<entry-field>] [--n-tries=<n-tries>] [--time-out=<time-out>] [--sleep-time=<sleep-time>] [--ut=<unsuccessful-threshold>]
 
 Options:
     -h --help                       Show this help message.
     database                        Pulls all the entries in a KEGG database.
-    <database-name>                 The KEGG database from which to pull entries.
-    --force-single-entry            Forces pulling only one entry at a time for every request to the KEGG web API. This flag is automatically set if <database-name> is "brite".
+    <database>                      The KEGG database from which to pull entries.
+    --force-single-entry            Forces pulling only one entry at a time for every request to the KEGG web API. This flag is automatically set if <database> is "brite".
     --multi-process                 If set, the entries are pulled across multiple processes to increase speed. Otherwise, the entries are pulled sequentially in a single process.
     --n-workers=<n-workers>         The number of sub-processes to create when pulling. Defaults to the number of cores available. Ignored if --multi-process is not set.
     --output=<output>               The directory where the pulled KEGG entries will be stored. Defaults to the current working directory. If ends in ".zip", entries are saved to a ZIP archive instead of a directory.
@@ -21,8 +21,8 @@ Options:
     <entry-ids>                     Comma separated list of entry IDs to pull (e.g. id1,id2,id3 etc.). Or if equal to "-", entry IDs are read from standard input. Will likely need to set --force-single-entry if any of the entries are from the brite database.
 """
 import docopt as d
-import json as j
-import time as t
+import json
+import time
 
 from . import pull as p
 from . import rest as r
@@ -43,12 +43,12 @@ def main():
     force_single_entry: bool = args['--force-single-entry']
 
     if args['database']:
-        database_name: str = args['<database-name>']
+        database: str = args['<database>']
 
-        if database_name == 'brite':
+        if database == 'brite':
             force_single_entry = True
 
-        entry_ids: list = ei.from_database(database_name=database_name)
+        entry_ids: list = ei.from_database(database=database)
     else:
         entry_ids: list = u.parse_input_sequence(input_source=args['<entry-ids>'])
 
@@ -88,7 +88,7 @@ def main():
     }
 
     with open('pull-results.json', 'w') as file:
-        j.dump(pull_results, file, indent=0)
+        json.dump(pull_results, file, indent=0)
 
 
 def _testable_time() -> float:
@@ -96,4 +96,4 @@ def _testable_time() -> float:
 
     :return: The result of time.time()
     """
-    return t.time()  # pragma: no cover
+    return time.time()  # pragma: no cover

@@ -3,7 +3,7 @@ import typing as t
 import zipfile as zf
 import os
 import sys
-import json as j
+import json
 import jsonschema as js
 import inspect as ins
 
@@ -50,10 +50,10 @@ def load_json_file(file_path: str, json_schema: dict, validation_error_message: 
 
         with zf.ZipFile(file_location, 'r') as zip_file:
             json_object: bytes = zip_file.read(file_name)
-            json_object: dict = j.loads(s=json_object)
+            json_object: dict = json.loads(s=json_object)
     else:
         with open(file_path, 'r') as file:
-            json_object: dict = j.load(file)
+            json_object: dict = json.load(file)
 
     validate_json_object(json_object=json_object, json_schema=json_schema, validation_error_message=validation_error_message)
 

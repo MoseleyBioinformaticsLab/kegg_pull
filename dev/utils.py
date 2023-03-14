@@ -2,7 +2,7 @@
 import pytest as pt
 import zipfile as zf
 import typing as t
-import json as j
+import json
 import jsonschema as js
 import os
 
@@ -24,7 +24,7 @@ def assert_error(message: str, caplog):
     assert record.message == message
 
 
-def assert_main_help(mocker, module, subcommand: str):
+def assert_help(mocker, module, subcommand: str):
     for help_arg in ['-h', '--help']:
         mocker.patch('sys.argv', ['kegg_pull', subcommand, help_arg])
         print_mock: mocker.MagicMock = mocker.patch('builtins.print')
@@ -53,7 +53,7 @@ def _test_main(mocker, argv_mock: list, stdin_mock: str, method: str, method_ret
         stdin_mock.assert_called_once_with()
 
 
-def test_main_print(
+def test_print(
         mocker, argv_mock: list, stdin_mock: str, method: str, method_return_value: object, method_kwargs: dict, module,
         expected_output: t.Union[str, bytes], is_binary: bool = False, caplog=None):
     print_mock: mocker.MagicMock = mocker.patch('builtins.print')
@@ -65,7 +65,7 @@ def test_main_print(
     print_mock.assert_called_once_with(expected_output)
 
 
-def test_main_file(
+def test_file(
         mocker, argv_mock: list, output_file: str, stdin_mock: str, method: str, method_return_value: object, method_kwargs: dict, module,
         expected_output: t.Union[str, bytes], is_binary: bool = False):
     argv_mock: list = argv_mock + [f'--output={output_file}']
@@ -78,7 +78,7 @@ def test_main_file(
     assert actual_output == expected_output
 
 
-def test_main_zip_archive(
+def test_zip_archive(
         mocker, argv_mock: list, zip_archive_data: tuple, stdin_mock: str, method: str, method_return_value: object, method_kwargs: dict,
         module, expected_output: t.Union[str, bytes], is_binary: bool = False):
     zip_archive_path, zip_file_name = zip_archive_data
@@ -97,10 +97,10 @@ def test_save_to_json(json_file_path: str, expected_saved_json_object: dict):
     if '.zip:' in json_file_path:
         with zf.ZipFile('archive.zip', 'r') as zip_file:
             json_file_name: str = 'dir/file.json' if 'dir/' in json_file_path else 'file.json'
-            actual_saved_mapping: dict = j.loads(zip_file.read(name=json_file_name))
+            actual_saved_mapping: dict = json.loads(zip_file.read(name=json_file_name))
     else:
         with open(json_file_path, 'r') as file:
-            actual_saved_mapping: dict = j.load(file)
+            actual_saved_mapping: dict = json.load(file)
     assert actual_saved_mapping == expected_saved_json_object
 
 
@@ -118,13 +118,13 @@ def _write_test_json_object(json_file_path: str, test_object: t.Union[list, dict
     if '.zip:' in json_file_path:
         with zf.ZipFile('archive.zip', 'w') as zip_file:
             json_file_name: str = 'dir/file.json' if 'dir/' in json_file_path else 'file.json'
-            zip_file.writestr(json_file_name, j.dumps(test_object, indent=2))
+            zip_file.writestr(json_file_name, json.dumps(test_object, indent=2))
     else:
         if json_file_path.startswith('dir'):
             directory, _ = os.path.split(json_file_path)
             os.makedirs(directory)
         with open(json_file_path, 'w') as file:
-            file.write(j.dumps(test_object, indent=2))
+            file.write(json.dumps(test_object, indent=2))
 
 
 def test_invalid_load_from_json(
