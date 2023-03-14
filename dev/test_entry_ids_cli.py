@@ -7,43 +7,43 @@ import kegg_pull.entry_ids_cli as ei_cli
 import dev.utils as u
 
 
-def test_main_help(mocker):
-    u.assert_main_help(mocker=mocker, module=ei_cli, subcommand='entry-ids')
+def test_help(mocker):
+    u.assert_cli_help(mocker=mocker, module=ei_cli, subcommand='entry-ids')
 
-test_main_data = [
-    (['database', 'compound'], 'from_database', {'database_name': 'compound'}, None),
-    (['keywords', 'pathway', 'k1,,k2'], 'from_keywords', {'database_name': 'pathway', 'keywords': ['k1', 'k2']}, None),
+test_data = [
+    (['database', 'compound'], 'from_database', {'database': 'compound'}, None),
+    (['keywords', 'pathway', 'k1,,k2'], 'from_keywords', {'database': 'pathway', 'keywords': ['k1', 'k2']}, None),
     (
-        ['molecular-attribute', 'drug', '--formula=CO2'], 'from_molecular_attribute',
-        {'database_name': 'drug', 'formula': 'CO2', 'exact_mass': None, 'molecular_weight': None}, None
+        ['molec-attr', 'drug', '--formula=CO2'], 'from_molecular_attribute',
+        {'database': 'drug', 'formula': 'CO2', 'exact_mass': None, 'molecular_weight': None}, None
     ),
     (
-        ['molecular-attribute', 'drug', '--em=20.2'], 'from_molecular_attribute',
-        {'database_name': 'drug', 'formula': None, 'exact_mass': 20.2, 'molecular_weight': None}, None
+        ['molec-attr', 'drug', '--em=20.2'], 'from_molecular_attribute',
+        {'database': 'drug', 'formula': None, 'exact_mass': 20.2, 'molecular_weight': None}, None
     ),
     (
-        ['molecular-attribute', 'drug', '--mw=202'], 'from_molecular_attribute',
-        {'database_name': 'drug', 'formula': None, 'exact_mass': None, 'molecular_weight': 202}, None
+        ['molec-attr', 'drug', '--mw=202'], 'from_molecular_attribute',
+        {'database': 'drug', 'formula': None, 'exact_mass': None, 'molecular_weight': 202}, None
     ),
     (
-        ['molecular-attribute', 'drug', '--em=20.2', '--em=30.3'], 'from_molecular_attribute',
-        {'database_name': 'drug', 'formula': None, 'exact_mass': (20.2, 30.3), 'molecular_weight': None}, None
+        ['molec-attr', 'drug', '--em=20.2', '--em=30.3'], 'from_molecular_attribute',
+        {'database': 'drug', 'formula': None, 'exact_mass': (20.2, 30.3), 'molecular_weight': None}, None
     ),
     (
-        ['molecular-attribute', 'drug', '--mw=202', '--mw=303'],
+        ['molec-attr', 'drug', '--mw=202', '--mw=303'],
         'from_molecular_attribute',
-        {'database_name': 'drug', 'formula': None, 'exact_mass': None, 'molecular_weight': (202, 303)}, None
+        {'database': 'drug', 'formula': None, 'exact_mass': None, 'molecular_weight': (202, 303)}, None
     ),
-    (['keywords', 'pathway', '-'], 'from_keywords', {'database_name': 'pathway', 'keywords': ['k1', 'k2']}, 'k1\nk2')
+    (['keywords', 'pathway', '-'], 'from_keywords', {'database': 'pathway', 'keywords': ['k1', 'k2']}, 'k1\nk2')
 ]
-@pt.mark.parametrize('args,method,kwargs,stdin_mock', test_main_data)
-def test_main_print(mocker, args: list, method: str, kwargs: dict, stdin_mock: str):
+@pt.mark.parametrize('args,method,kwargs,stdin_mock', test_data)
+def test_print(mocker, args: list, method: str, kwargs: dict, stdin_mock: str):
     print_mock: mocker.MagicMock = mocker.patch('builtins.print')
-    entry_ids_mock: list = _test_main(mocker=mocker, args=args, method=method, kwargs=kwargs, stdin_mock=stdin_mock)
+    entry_ids_mock: list = _test_cli(mocker=mocker, args=args, method=method, kwargs=kwargs, stdin_mock=stdin_mock)
     print_mock.assert_called_once_with('\n'.join(entry_ids_mock))
 
 
-def _test_main(mocker, args: list, method: str, kwargs: dict, stdin_mock: str) -> list:
+def _test_cli(mocker, args: list, method: str, kwargs: dict, stdin_mock: str) -> list:
     argv_mock = ['kegg_pull', 'entry-ids']
     argv_mock.extend(args)
     mocker.patch('sys.argv', argv_mock)
@@ -73,11 +73,11 @@ def output_file_mock(request):
     sh.rmtree('dir', ignore_errors=True)
 
 
-@pt.mark.parametrize('args,method,kwargs,stdin_mock', test_main_data)
-def test_main_file(mocker, args: list, method: str, kwargs: dict, output_file: str, stdin_mock: str):
+@pt.mark.parametrize('args,method,kwargs,stdin_mock', test_data)
+def test_file(mocker, args: list, method: str, kwargs: dict, output_file: str, stdin_mock: str):
     args: list = args.copy()
     args.append(f'--output={output_file}')
-    entry_ids_mock: list = _test_main(mocker=mocker, args=args, method=method, kwargs=kwargs, stdin_mock=stdin_mock)
+    entry_ids_mock: list = _test_cli(mocker=mocker, args=args, method=method, kwargs=kwargs, stdin_mock=stdin_mock)
     expected_output = '\n'.join(entry_ids_mock)
 
     with open(output_file, 'r') as file:
@@ -95,12 +95,12 @@ def remove_zip_archive(request):
 
     os.remove(zip_archive_path)
 
-@pt.mark.parametrize('args,method,kwargs,stdin_mock', test_main_data)
-def test_main_zip_archive(mocker, args: list, method: str, kwargs: dict, zip_archive_data: tuple, stdin_mock: str):
+@pt.mark.parametrize('args,method,kwargs,stdin_mock', test_data)
+def test_zip_archive(mocker, args: list, method: str, kwargs: dict, zip_archive_data: tuple, stdin_mock: str):
     zip_archive_path, zip_file_name = zip_archive_data
     args: list = args.copy()
     args.append(f'--output={zip_archive_path}:{zip_file_name}')
-    entry_ids_mock: list = _test_main(mocker=mocker, args=args, method=method, kwargs=kwargs, stdin_mock=stdin_mock)
+    entry_ids_mock: list = _test_cli(mocker=mocker, args=args, method=method, kwargs=kwargs, stdin_mock=stdin_mock)
     expected_output = '\n'.join(entry_ids_mock)
 
     with zf.ZipFile(zip_archive_path, 'r') as zip_file:

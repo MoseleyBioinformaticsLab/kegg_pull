@@ -1,3 +1,4 @@
+# noinspection PyPackageRequirements
 import pytest as pt
 import typing as t
 import os
@@ -26,11 +27,11 @@ def test_process_response_exception(mocker, expected_message: str, status: r.KEG
 
 
 test_from_kegg_rest_data = [
-    (ei.from_database, 'list', {'database_name': 'compound'}),
-    (ei.from_keywords, 'keywords_find', {'database_name': 'compound', 'keywords': ['kw1', 'kw2']}),
+    (ei.from_database, 'list', {'database': 'compound'}),
+    (ei.from_keywords, 'keywords_find', {'database': 'compound', 'keywords': ['kw1', 'kw2']}),
     (
         ei.from_molecular_attribute, 'molecular_find',
-        {'database_name': 'compound', 'formula': 'M4O3C2K1', 'exact_mass': None, 'molecular_weight': None}
+        {'database': 'compound', 'formula': 'M4O3C2K1', 'exact_mass': None, 'molecular_weight': None}
     )
 ]
 @pt.mark.parametrize('get_entry_ids,rest_method,kwargs', test_from_kegg_rest_data)

@@ -7,17 +7,17 @@ import dev.utils as u
 
 test_validate_exception_data = [
     (
-        ku.KeywordsFindKEGGurl, {'database_name': 'ko', 'keywords': ['keyword'] * 500},
+        ku.KeywordsFindKEGGurl, {'database': 'ko', 'keywords': ['keyword'] * 500},
         'The KEGG URL length of 4028 exceeds the limit of 4000'
     ),
     (
-        ku.ListKEGGurl, {'database_name': 'ligand'},
+        ku.ListKEGGurl, {'database': 'ligand'},
         'Invalid database name: "ligand". Valid values are: <org>, ag, atc, brite, brite_ja, compound, compound_ja, '
         'dgroup, dgroup_ja, disease, disease_ja, drug, drug_ja, enzyme, genome, glycan, jtc, ko, module, ndc, network, '
         'organism, pathway, rclass, reaction, variant, vg, vp, yj. Where <org> is an organism code or T number.'
     ),
     (
-        ku.InfoKEGGurl, {'database_name': 'organism'},
+        ku.InfoKEGGurl, {'database': 'organism'},
         'Invalid database name: "organism". Valid values are: <org>, ag, brite, compound, dgroup, disease, drug, '
         'enzyme, genes, genome, glycan, kegg, ko, ligand, module, network, pathway, rclass, reaction, variant, vg, vp.'
         ' Where <org> is an organism code or T number.'
@@ -38,99 +38,99 @@ test_validate_exception_data = [
         ku.GetKEGGurl, {'entry_ids': ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']},
         f'The maximum number of entry IDs is {ku.GetKEGGurl.MAX_ENTRY_IDS_PER_URL} but 11 were provided'
     ),
-    (ku.KeywordsFindKEGGurl, {'database_name': 'not-brite', 'keywords': []}, 'No search keywords specified'),
+    (ku.KeywordsFindKEGGurl, {'database': 'not-brite', 'keywords': []}, 'No search keywords specified'),
     (
-        ku.KeywordsFindKEGGurl, {'database_name': 'brite', 'keywords': ['x']},
+        ku.KeywordsFindKEGGurl, {'database': 'brite', 'keywords': ['x']},
         'Invalid database name: "brite". Valid values are: <org>, ag, atc, brite_ja, compound, compound_ja, dgroup, '
         'dgroup_ja, disease, disease_ja, drug, drug_ja, enzyme, genes, genome, glycan, jtc, ko, ligand, module, ndc, '
         'network, pathway, rclass, reaction, variant, vg, vp, yj. Where <org> is an organism code or T number.'
     ),
     (
-        ku.MolecularFindKEGGurl, {'database_name': 'glycan'},
+        ku.MolecularFindKEGGurl, {'database': 'glycan'},
         'Invalid molecular database name: "glycan". Valid values are: compound, drug.'
     ),
     (
-        ku.MolecularFindKEGGurl, {'database_name': 'drug'},
+        ku.MolecularFindKEGGurl, {'database': 'drug'},
         'Must provide either a chemical formula, exact mass, or molecular weight option'
     ),
     (
-        ku.MolecularFindKEGGurl, {'database_name': 'compound', 'exact_mass': ()},
+        ku.MolecularFindKEGGurl, {'database': 'compound', 'exact_mass': ()},
         'Exact mass range can only be constructed from 2 values but 0 are provided: '
     ),
     (
-        ku.MolecularFindKEGGurl, {'database_name': 'compound', 'exact_mass': (1.1,2.2,3.3)},
+        ku.MolecularFindKEGGurl, {'database': 'compound', 'exact_mass': (1.1,2.2,3.3)},
         'Exact mass range can only be constructed from 2 values but 3 are provided: 1.1, 2.2, 3.3'
     ),
     (
-        ku.MolecularFindKEGGurl, {'database_name': 'compound', 'molecular_weight': ()},
+        ku.MolecularFindKEGGurl, {'database': 'compound', 'molecular_weight': ()},
         'Molecular weight range can only be constructed from 2 values but 0 are provided: '
     ),
     (
-        ku.MolecularFindKEGGurl, {'database_name': 'compound', 'molecular_weight': (10, 20, 30)},
+        ku.MolecularFindKEGGurl, {'database': 'compound', 'molecular_weight': (10, 20, 30)},
         'Molecular weight range can only be constructed from 2 values but 3 are provided: 10, 20, 30'
     ),
     (
-        ku.MolecularFindKEGGurl, {'database_name': 'drug', 'exact_mass': (30.3, 20.2)},
+        ku.MolecularFindKEGGurl, {'database': 'drug', 'exact_mass': (30.3, 20.2)},
         'The first value in the range must be less than the second. Values provided: 30.3-20.2'
     ),
     (
-        ku.MolecularFindKEGGurl, {'database_name': 'drug', 'exact_mass': (10.1, 10.1)},
+        ku.MolecularFindKEGGurl, {'database': 'drug', 'exact_mass': (10.1, 10.1)},
         'The first value in the range must be less than the second. Values provided: 10.1-10.1'
     ),
     (
-        ku.MolecularFindKEGGurl, {'database_name': 'drug', 'molecular_weight': (303, 202)},
+        ku.MolecularFindKEGGurl, {'database': 'drug', 'molecular_weight': (303, 202)},
         'The first value in the range must be less than the second. Values provided: 303-202'
     ),
     (
-        ku.MolecularFindKEGGurl, {'database_name': 'drug', 'molecular_weight': (101, 101)},
+        ku.MolecularFindKEGGurl, {'database': 'drug', 'molecular_weight': (101, 101)},
         'The first value in the range must be less than the second. Values provided: 101-101'
     ),
     (
-        ku.DatabaseConvKEGGurl, {'kegg_database_name': 'genes', 'outside_database_name': ''},
+        ku.DatabaseConvKEGGurl, {'kegg_database': 'genes', 'outside_database': ''},
         'Invalid KEGG database: "genes". Valid values are: <org>, compound, drug, glycan. Where <org> is an organism '
         'code or T number.'
     ),
     (
-        ku.DatabaseConvKEGGurl, {'kegg_database_name': 'drug', 'outside_database_name': 'glycan'},
+        ku.DatabaseConvKEGGurl, {'kegg_database': 'drug', 'outside_database': 'glycan'},
         'Invalid outside database: "glycan". Valid values are: chebi, ncbi-geneid, ncbi-proteinid, pubchem, uniprot.'
     ),
     (
-        ku.DatabaseConvKEGGurl, {'kegg_database_name': 'organism-T-number', 'outside_database_name': 'pubchem'},
+        ku.DatabaseConvKEGGurl, {'kegg_database': 'organism-T-number', 'outside_database': 'pubchem'},
         'KEGG database "organism-T-number" is a gene database but outside database "pubchem" is not.'
     ),
     (
-        ku.DatabaseConvKEGGurl, {'kegg_database_name': 'compound', 'outside_database_name': 'ncbi-geneid'},
+        ku.DatabaseConvKEGGurl, {'kegg_database': 'compound', 'outside_database': 'ncbi-geneid'},
         'KEGG database "compound" is a molecule database but outside database "ncbi-geneid" is not.'
     ),
     (
-        ku.EntriesConvKEGGurl, {'target_database_name': 'rclass', 'entry_ids': []},
+        ku.EntriesConvKEGGurl, {'target_database': 'rclass', 'entry_ids': []},
         'Invalid target database: "rclass". Valid values are: <org>, chebi, compound, drug, genes, glycan, ncbi-geneid,'
         ' ncbi-proteinid, pubchem, uniprot. Where <org> is an organism code or T number.'
     ),
     (
-        ku.EntriesConvKEGGurl, {'target_database_name': 'chebi', 'entry_ids': []},
+        ku.EntriesConvKEGGurl, {'target_database': 'chebi', 'entry_ids': []},
         'Entry IDs must be specified for this KEGG "conv" operation'
     ),
     (
-        ku.DatabaseLinkKEGGurl, {'target_database_name': 'genes', 'source_database_name': ''},
+        ku.DatabaseLinkKEGGurl, {'target_database': 'genes', 'source_database': ''},
         'Invalid database name: "genes". Valid values are: <org>, ag, atc, brite, compound, dgroup, disease, drug, '
         'enzyme, genome, glycan, jtc, ko, module, ndc, network, pathway, pubmed, rclass, reaction, variant, vg, vp, yj.'
         ' Where <org> is an organism code or T number.'
     ),
     (
-        ku.DatabaseLinkKEGGurl, {'target_database_name': 'ndc', 'source_database_name': 'kegg'},
+        ku.DatabaseLinkKEGGurl, {'target_database': 'ndc', 'source_database': 'kegg'},
         'Invalid database name: "kegg". Valid values are: <org>, ag, atc, brite, compound, dgroup, disease, drug, '
         'enzyme, genome, glycan, jtc, ko, module, ndc, network, pathway, pubmed, rclass, reaction, variant, vg, vp, yj.'
         ' Where <org> is an organism code or T number.'
     ),
     (
-        ku.EntriesLinkKEGGurl, {'target_database_name': 'ligand', 'entry_ids': []},
+        ku.EntriesLinkKEGGurl, {'target_database': 'ligand', 'entry_ids': []},
         'Invalid database name: "ligand". Valid values are: <org>, ag, atc, brite, compound, dgroup, disease, drug, '
         'enzyme, genes, genome, glycan, jtc, ko, module, ndc, network, pathway, pubmed, rclass, reaction, variant, vg, '
         'vp, yj. Where <org> is an organism code or T number.'
     ),
     (
-        ku.EntriesLinkKEGGurl, {'target_database_name': 'yj', 'entry_ids': []},
+        ku.EntriesLinkKEGGurl, {'target_database': 'yj', 'entry_ids': []},
         'At least one entry ID must be specified to perform the link operation'
     ),
     (ku.DdiKEGGurl, {'drug_entry_ids': []}, 'At least one drug entry ID must be specified for the DDI operation')
@@ -146,17 +146,17 @@ def test_validate_exception(KEGGurl: type, kwargs: dict, expected_message: str):
 
 test_validate_warning_data = [
     (
-        ku.MolecularFindKEGGurl, {'database_name': 'compound', 'formula': 'O3', 'exact_mass': 20.2},
+        ku.MolecularFindKEGGurl, {'database': 'compound', 'formula': 'O3', 'exact_mass': 20.2},
         'Only a chemical formula, exact mass, or molecular weight is used to construct the URL. Using formula...',
         'find/compound/O3/formula'
     ),
     (
-        ku.MolecularFindKEGGurl, {'database_name': 'drug', 'formula': 'O3', 'molecular_weight': 200},
+        ku.MolecularFindKEGGurl, {'database': 'drug', 'formula': 'O3', 'molecular_weight': 200},
         'Only a chemical formula, exact mass, or molecular weight is used to construct the URL. Using formula...',
         'find/drug/O3/formula'
     ),
     (
-        ku.MolecularFindKEGGurl, {'database_name': 'compound', 'exact_mass': 20.2, 'molecular_weight': 200},
+        ku.MolecularFindKEGGurl, {'database': 'compound', 'exact_mass': 20.2, 'molecular_weight': 200},
         'Both an exact mass and molecular weight are provided. Using exact mass...',
         'find/compound/20.2/exact_mass'
     )
@@ -171,40 +171,40 @@ def test_validate_warning(KEGGurl: type, kwargs: dict, expected_message: str, ur
 
 
 test_create_rest_options_data = [
-    (ku.ListKEGGurl, {'database_name': 'vg'}, 'list', 'vg'),
-    (ku.ListKEGGurl, {'database_name': 'organism-code'}, 'list', 'organism-code'),
-    (ku.ListKEGGurl, {'database_name': 'organism'}, 'list', 'organism'),
-    (ku.InfoKEGGurl, {'database_name': 'ligand'}, 'info', 'ligand'),
+    (ku.ListKEGGurl, {'database': 'vg'}, 'list', 'vg'),
+    (ku.ListKEGGurl, {'database': 'organism-code'}, 'list', 'organism-code'),
+    (ku.ListKEGGurl, {'database': 'organism'}, 'list', 'organism'),
+    (ku.InfoKEGGurl, {'database': 'ligand'}, 'info', 'ligand'),
     (ku.GetKEGGurl, {'entry_ids': ['x'], 'entry_field': None}, 'get', 'x'),
     (ku.GetKEGGurl, {'entry_ids': ['x'], 'entry_field': 'image'}, 'get', 'x/image'),
     (ku.GetKEGGurl, {'entry_ids': ['x'], 'entry_field': 'aaseq'}, 'get', 'x/aaseq'),
     (ku.GetKEGGurl, {'entry_ids': ['x', 'y'], 'entry_field': None}, 'get', 'x+y'),
     (ku.GetKEGGurl, {'entry_ids': ['x', 'y', 'z'], 'entry_field': 'ntseq'}, 'get', 'x+y+z/ntseq'),
     (
-        ku.KeywordsFindKEGGurl, {'database_name': 'organism-T-number', 'keywords': ['key', 'word']}, 'find',
+        ku.KeywordsFindKEGGurl, {'database': 'organism-T-number', 'keywords': ['key', 'word']}, 'find',
         'organism-T-number/key+word'
     ),
-    (ku.MolecularFindKEGGurl, {'database_name': 'drug', 'formula': 'CH4'}, 'find', 'drug/CH4/formula'),
-    (ku.MolecularFindKEGGurl, {'database_name': 'compound', 'exact_mass': 30.3}, 'find', 'compound/30.3/exact_mass'),
-    (ku.MolecularFindKEGGurl, {'database_name': 'drug', 'molecular_weight': 300}, 'find', 'drug/300/mol_weight'),
+    (ku.MolecularFindKEGGurl, {'database': 'drug', 'formula': 'CH4'}, 'find', 'drug/CH4/formula'),
+    (ku.MolecularFindKEGGurl, {'database': 'compound', 'exact_mass': 30.3}, 'find', 'compound/30.3/exact_mass'),
+    (ku.MolecularFindKEGGurl, {'database': 'drug', 'molecular_weight': 300}, 'find', 'drug/300/mol_weight'),
     (
-        ku.MolecularFindKEGGurl, {'database_name': 'drug', 'exact_mass': (20.2, 30.3)}, 'find',
+        ku.MolecularFindKEGGurl, {'database': 'drug', 'exact_mass': (20.2, 30.3)}, 'find',
         'drug/20.2-30.3/exact_mass'
     ),
     (
-        ku.MolecularFindKEGGurl, {'database_name': 'drug', 'molecular_weight': (200, 300)}, 'find',
+        ku.MolecularFindKEGGurl, {'database': 'drug', 'molecular_weight': (200, 300)}, 'find',
         'drug/200-300/mol_weight'
     ),
     (
-        ku.DatabaseConvKEGGurl, {'kegg_database_name': 'organism-code', 'outside_database_name': 'uniprot'}, 'conv',
+        ku.DatabaseConvKEGGurl, {'kegg_database': 'organism-code', 'outside_database': 'uniprot'}, 'conv',
         'organism-code/uniprot'
     ),
-    (ku.DatabaseConvKEGGurl, {'kegg_database_name': 'glycan', 'outside_database_name': 'chebi'}, 'conv', 'glycan/chebi'),
-    (ku.EntriesConvKEGGurl, {'target_database_name': 'genes', 'entry_ids': ['x', 'y', 'z']}, 'conv', 'genes/x+y+z'),
-    (ku.EntriesConvKEGGurl, {'target_database_name': 'ncbi-proteinid', 'entry_ids': ['a']}, 'conv', 'ncbi-proteinid/a'),
-    (ku.DatabaseLinkKEGGurl, {'target_database_name': 'pubmed', 'source_database_name': 'atc'}, 'link', 'pubmed/atc'),
-    (ku.EntriesLinkKEGGurl, {'target_database_name': 'genes', 'entry_ids': ['a', 'b', 'c']}, 'link', 'genes/a+b+c'),
-    (ku.EntriesLinkKEGGurl, {'target_database_name': 'jtc', 'entry_ids': ['x']}, 'link', 'jtc/x'),
+    (ku.DatabaseConvKEGGurl, {'kegg_database': 'glycan', 'outside_database': 'chebi'}, 'conv', 'glycan/chebi'),
+    (ku.EntriesConvKEGGurl, {'target_database': 'genes', 'entry_ids': ['x', 'y', 'z']}, 'conv', 'genes/x+y+z'),
+    (ku.EntriesConvKEGGurl, {'target_database': 'ncbi-proteinid', 'entry_ids': ['a']}, 'conv', 'ncbi-proteinid/a'),
+    (ku.DatabaseLinkKEGGurl, {'target_database': 'pubmed', 'source_database': 'atc'}, 'link', 'pubmed/atc'),
+    (ku.EntriesLinkKEGGurl, {'target_database': 'genes', 'entry_ids': ['a', 'b', 'c']}, 'link', 'genes/a+b+c'),
+    (ku.EntriesLinkKEGGurl, {'target_database': 'jtc', 'entry_ids': ['x']}, 'link', 'jtc/x'),
     (ku.DdiKEGGurl, {'drug_entry_ids': ['x', 'y']}, 'ddi', 'x+y')
 ]
 @pt.mark.parametrize('KEGGurl,kwargs,rest_operation,rest_options', test_create_rest_options_data)

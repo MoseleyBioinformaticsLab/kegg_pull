@@ -8,7 +8,7 @@ import os
 import abc
 import typing as t
 import pickle as p
-import logging as l
+import logging as log
 import json as j
 import tqdm
 
@@ -259,7 +259,6 @@ class SinglePull:
 
         self._save(entry_id=entry_id, entry=entry, entry_field=self.entry_field)
 
-
     def _handle_unsuccessful_url(self, kegg_response: r.KEGGresponse, pull_result: PullResult) -> None:
         """ Handles an unsuccessful pull (failed or timed out).
 
@@ -332,7 +331,7 @@ class AbstractMultiplePull(abc.ABC):
                         if entry_id not in total_processed_entry_ids:
                             remaining_entry_ids.add(entry_id)
 
-                l.error(
+                log.error(
                     f'Unsuccessful threshold of {unsuccessful_threshold} met. Aborting. Details saved at '
                     f'{AbstractMultiplePull.ABORTED_PULL_RESULTS_PATH}'
                 )

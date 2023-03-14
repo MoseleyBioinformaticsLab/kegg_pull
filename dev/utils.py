@@ -13,7 +13,7 @@ def assert_warning(message: str, caplog):
     assert record.message == message
 
 
-def assert_main_help(mocker, module, subcommand: str):
+def assert_cli_help(mocker, module, subcommand: str):
     mocker.patch('sys.argv', ['kegg_pull', subcommand, '--help'])
     print_mock: mocker.MagicMock = mocker.patch('builtins.print')
 

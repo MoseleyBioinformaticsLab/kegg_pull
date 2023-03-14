@@ -1,3 +1,4 @@
+# noinspection PyPackageRequirements
 import pytest as pt
 import zipfile as zf
 import os
@@ -10,7 +11,7 @@ import kegg_pull.rest_cli as r_cli
 import kegg_pull.pull_cli as p_cli
 
 
-def test_main_help(mocker):
+def test_help(mocker):
     mocker.patch('sys.argv', ['kegg_pull', '--full-help'])
     print_mock: mocker.MagicMock = mocker.patch('builtins.print')
     m.main()
@@ -28,7 +29,7 @@ def test_main_help(mocker):
     print_mock.assert_called_once_with(m.__doc__)
 
 
-def test_main_version(mocker):
+def test_version(mocker):
     mocker.patch('sys.argv', ['kegg_pull', '--version'])
     version_mock = 'version mock'
     mocker.patch('kegg_pull.__main__.__version__', version_mock)
@@ -51,13 +52,13 @@ def print_output_fixture(request):
         os.remove('output.txt')
 
 
-test_main_entry_ids_data = [
+test_entry_ids_data = [
     (['database', 'brite'], 'dev/test_data/all-brite-entry-ids.txt'),
     (['keywords', 'module', 'Guanine,ribonucleotide'], 'dev/test_data/module-entry-ids.txt'),
-    (['molecular-attribute', 'drug', '--em=420', '--em=440'], 'dev/test_data/drug-entry-ids.txt')
+    (['molec-attr', 'drug', '--em=420', '--em=440'], 'dev/test_data/drug-entry-ids.txt')
 ]
-@pt.mark.parametrize('args,expected_output', test_main_entry_ids_data)
-def test_main_entry_ids(mocker, args: list, expected_output: str, print_output: bool):
+@pt.mark.parametrize('args,expected_output', test_entry_ids_data)
+def test_entry_ids(mocker, args: list, expected_output: str, print_output: bool):
     args: list = ['kegg_pull', 'entry-ids'] + args
     _test_output(mocker=mocker, args=args, expected_output=expected_output, print_output=print_output)
 
@@ -77,7 +78,7 @@ def _test_output(mocker, args: list, expected_output: str, print_output: bool):
         expected_output: str = file.read()
 
     if print_output:
-         print_mock.assert_called_once_with(expected_output)
+        print_mock.assert_called_once_with(expected_output)
     else:
         with open('output.txt', 'r') as file:
             actual_entry_ids: str = file.read()
@@ -85,15 +86,15 @@ def _test_output(mocker, args: list, expected_output: str, print_output: bool):
         assert expected_output == actual_entry_ids
 
 
-test_main_rest_data = [
+test_rest_data = [
     (['conv', 'glycan', 'pubchem'], 'dev/test_data/glycan-pubchem-conv.txt'),
     (['conv', '--conv-target=pubchem', 'gl:G13143,gl:G13141,gl:G13139'], 'dev/test_data/glycan-pubchem-entry-ids.txt'),
     (['link', 'module', 'pathway'], 'dev/test_data/module-pathway-link.txt'),
     (['link', '--link-target=pathway', 'md:M00575,md:M00574,md:M00363'], 'dev/test_data/pathway-module-entry-ids.txt'),
     (['ddi', 'D00564,D00100,D00109'], 'dev/test_data/ddi-output.txt')
 ]
-@pt.mark.parametrize('args,expected_output', test_main_rest_data)
-def test_main_rest(mocker, args: list, expected_output: str, print_output: bool):
+@pt.mark.parametrize('args,expected_output', test_rest_data)
+def test_rest(mocker, args: list, expected_output: str, print_output: bool):
     args = ['kegg_pull', 'rest'] + args
     _test_output(mocker=mocker, args=args, expected_output=expected_output, print_output=print_output)
 
@@ -112,12 +113,12 @@ def pull_output(request):
     os.remove('pull-results.json')
 
 
-test_main_pull_data = [
+test_pull_data = [
     ['--force-single-entry', '--multi-process', '--n-workers=2'],
     ['--force-single-entry']
 ]
-@pt.mark.parametrize('args', test_main_pull_data)
-def test_main_pull(mocker, args: list, output: str):
+@pt.mark.parametrize('args', test_pull_data)
+def test_pull(mocker, args: list, output: str):
     stdin_mock = """
         br:br08005
         br:br08902

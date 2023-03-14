@@ -1,3 +1,4 @@
+# noinspection PyPackageRequirements
 import pytest as pt
 import os
 import json as j
@@ -6,8 +7,8 @@ import kegg_pull.pull_cli as p_cli
 import dev.utils as u
 
 
-def test_main_help(mocker):
-    u.assert_main_help(mocker=mocker, module=p_cli, subcommand='pull')
+def test_help(mocker):
+    u.assert_cli_help(mocker=mocker, module=p_cli, subcommand='pull')
 
 
 @pt.fixture(name='_')
@@ -17,7 +18,7 @@ def teardown():
     os.remove('pull-results.json')
 
 
-test_main_data = [
+test_data = [
     (
         ['entry-ids', '-'], {'n_tries': None, 'time_out': None, 'sleep_time': None},
         {'output': '.', 'entry_field': None, 'multiprocess_lock_save': False}, 'u.handle_cli_input', {'input_source': '-'},
@@ -41,13 +42,13 @@ test_main_data = [
     (
         ['database', 'pathway', '--output=out-dir', '--multi-process', '--sleep-time=20', '--force-single-entry'],
         {'n_tries': None, 'time_out': None, 'sleep_time': 20},
-        {'output': 'out-dir', 'entry_field': None, 'multiprocess_lock_save': False}, 'ei.from_database', {'database_name': 'pathway'},
+        {'output': 'out-dir', 'entry_field': None, 'multiprocess_lock_save': False}, 'ei.from_database', {'database': 'pathway'},
         'MultiProcessMultiplePull', {'force_single_entry': True, 'n_workers': None, 'unsuccessful_threshold': None}
     ),
     (
         ['database', 'brite', '--multi-process', '--n-tries=5', '--time-out=35', '--n-workers=6'],
         {'n_tries': 5, 'time_out': 35, 'sleep_time': None}, {'output': '.', 'entry_field': None, 'multiprocess_lock_save': False},
-        'ei.from_database', {'database_name': 'brite'}, 'MultiProcessMultiplePull',
+        'ei.from_database', {'database': 'brite'}, 'MultiProcessMultiplePull',
         {'force_single_entry': True, 'n_workers': 6, 'unsuccessful_threshold': None}
     ),
     (
@@ -58,9 +59,9 @@ test_main_data = [
 ]
 @pt.mark.parametrize(
     'args,kegg_rest_kwargs,single_pull_kwargs,entry_ids_method,entry_ids_kwargs,multiple_pull_class,'
-    'multiple_pull_kwargs', test_main_data
+    'multiple_pull_kwargs', test_data
 )
-def test_main(
+def test_cli(
     mocker, _, args: list, kegg_rest_kwargs: dict, single_pull_kwargs: dict, entry_ids_method: str,
     entry_ids_kwargs: dict, multiple_pull_class: str, multiple_pull_kwargs: dict
 ):
