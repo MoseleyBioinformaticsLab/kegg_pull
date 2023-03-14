@@ -1,7 +1,7 @@
 """
 Creating Dictionaries From KEGG Link Requests
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Functionality for converting the output from the KEGG "link" REST operation into dictionaries mapping the entry IDs from one database to the IDs of related entries.
+Functionality for converting the output from the KEGG "link" or "conv" REST operations into dictionaries mapping the entry IDs from one database to the IDs of related entries.
 """
 import typing as t
 import json
@@ -14,21 +14,21 @@ from . import _utils as u
 KEGGmapping = t.Dict[str, t.Set[str]]
 
 
-def database_map(
+def database_link(
         source_database: str, target_database: str, deduplicate: bool = False, add_glycans: bool = False,
         add_drugs: bool = False, kegg_rest: t.Union[r.KEGGrest, None] = None) -> KEGGmapping:
-    """ Converts the output of the KEGG "link" operation (of the form that maps the entry IDs of one database to the entry IDs of
-    another) into a dictionary along with other helpful optional functionality.
+    """ Converts the output of the KEGG "link" operation (of the form that maps the entry IDs of one database to the entry
+     IDs of another) into a dictionary along with other helpful optional functionality.
 
     :param source_database: The name of the database with entry IDs mapped to the target database.
     :param target_database: The name of the database with entry IDs mapped from the source database.
-    :param deduplicate: Some mappings including pathway entry IDs result in half beginning with the normal "path:map" prefix but the other half with a different prefix. If True, removes the IDs corresponding to identical entries but with a different prefix. Raises an exception if neither the source nor the target database is "pathway".
+    :param deduplicate: Some mappings including pathway entry IDs result in half beginning with the normal "path:map" prefix but the other half with a different prefix. If True, removes the IDs corresponding to identical entries but with a different prefix.
     :param add_glycans: Whether to add the corresponding compound IDs of equivalent glycan entries. Logs a warning if neither the source nor the target database is "compound".
     :param add_drugs: Whether to add the corresponding compound IDs of equivalent drug entries. Logs a warning if neither the source nor the target database is "compound".
     :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default  parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
-    :raises ValueError: Raised if deduplicate is True but source_database is not "pathway".
+    :raises ValueError: Raised if deduplicate is True but neither source_database nor target_database is "pathway".
     """
     mapping = _to_dict(
         kegg_rest=kegg_rest, KEGGurl=ku.DatabaseLinkKEGGurl, target_database=target_database,
@@ -87,6 +87,8 @@ def _deduplicate_pathway_ids(
             raise ValueError(
                 f'Cannot deduplicate path:map entry ids when neither the source database nor the target database is set to '
                 f'"pathway". Databases specified: {source_database}, {target_database}.')
+
+        # noinspection PyShadowingNames
         def deduplicate_pathway_ids(mapping: KEGGmapping, **_) -> KEGGmapping:
             for pathway_id in list(mapping.keys()):
                 if not pathway_id.startswith('path:map'):
@@ -104,11 +106,11 @@ def _process_mapping(
     """ Performs additional processing on a mapping according to a provided function.
 
     :param mapping: The mapping to process.
-    :param func: The funciton that processes the mapping.
+    :param func: The function that processes the mapping.
     :param source_database: The name of the source database of the mapping.
     :param target_database: The name of the target database of the mapping.
     :param relevant_database: The name of the database (expected to be either the source or the target) to which the processing is relevant.
-    :return:
+    :return: The processed mapping.
     """
     double_reverse = target_database == relevant_database
     if double_reverse:
@@ -140,14 +142,16 @@ def _add_glycans_or_drugs(
                 f'Adding compound IDs (corresponding to equivalent glycan and/or drug entries) to a mapping where neither the source'
                 f' database nor the target database are "compound". Databases specified: {source_database}, '
                 f'{target_database}.')
+
+        # noinspection PyShadowingNames
         def add_glycans_or_drugs(mapping: KEGGmapping, target_database: str) -> KEGGmapping:
             if add_glycans:
-                glycan_to_database = indirect(
+                glycan_to_database = indirect_link(
                     source_database='compound', intermediate_database='glycan', target_database=target_database,
                     kegg_rest=kegg_rest)
                 mapping = combine_mappings(mapping1=mapping, mapping2=glycan_to_database)
             if add_drugs:
-                drug_to_database = indirect(
+                drug_to_database = indirect_link(
                     source_database='compound', intermediate_database='drug', target_database=target_database,
                     kegg_rest=kegg_rest)
                 mapping = combine_mappings(mapping1=mapping, mapping2=drug_to_database)
@@ -158,41 +162,87 @@ def _add_glycans_or_drugs(
     return mapping
 
 
-def entries_map(
-        entry_ids: t.List[str], target_database: str, reverse: bool = False,
-        kegg_rest: t.Union[r.KEGGrest, None] = None) -> KEGGmapping:
-    """ Converts the output of the KEGG "link" operation (of the form that maps the entry IDs of a database to specific provided
-    entry IDs) to a dictionary.
+# noinspection PyShadowingNames
+def database_conv(
+        kegg_database: str, outside_database: str, reverse: bool, kegg_rest: t.Union[r.KEGGrest, None] = None) -> KEGGmapping:
+    """ Converts the output of the KEGG "conv" operation (of the form that maps the entry IDs of one database to the entry
+     IDs of another) into a dictionary.
 
-    :param entry_ids: The IDs of the entries to map to entries in the target database.
-    :param target_database: The name of the database with entry IDs mapped to from the provided entry IDs.
+    :param kegg_database: The name of the KEGG database with entry IDs mapped to the outside database.
+    :param outside_database: The name of the outside database with entry IDs mapped from the KEGG database.
     :param reverse: Reverses the mapping with the target becoming the source and the source becoming the target. Equivalent to calling the reverse() function of this module.
-    :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default  parameters.
+    :param kegg_rest: The KEGGrest object to perform the "conv" operation. If None, one is created with the default parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
-    mapping = _to_dict(
-        kegg_rest=kegg_rest, KEGGurl=ku.EntriesLinkKEGGurl, target_database=target_database, entry_ids=entry_ids)
+    return _map_and_reverse(
+        reverse=reverse, kegg_rest=kegg_rest, KEGGurl=ku.DatabaseConvKEGGurl, kegg_database=kegg_database,
+        outside_database=outside_database)
+
+
+# noinspection PyShadowingNames
+def _map_and_reverse(reverse: bool, **kwargs) -> KEGGmapping:
+    """ Helper function for general mapping functionality ("link" or "conv") that creates a mapping with the option to reverse.
+
+    :param reverse: Reverses the mapping with the target becoming the source and the source becoming the target.
+    :param kwargs: The arguments for the _to_dict helper method.
+    :return:
+    """
+    mapping = _to_dict(**kwargs)
     if reverse:
         mapping = _reverse(mapping=mapping)
     return mapping
 
 
-def indirect(
+# noinspection PyShadowingNames
+def entries_link(
+        entry_ids: t.List[str], target_database: str, reverse: bool = False,
+        kegg_rest: t.Union[r.KEGGrest, None] = None) -> KEGGmapping:
+    """ Converts the output of the KEGG "link" operation (of the form that maps specific provided entry IDs to the IDs of a target database) to a dictionary.
+
+    :param entry_ids: The IDs of the entries to map to entries in the target database.
+    :param target_database: The name of the database with entry IDs mapped to from the provided entry IDs.
+    :param reverse: Reverses the mapping with the target becoming the source and the source becoming the target. Equivalent to calling the reverse() function of this module.
+    :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default parameters.
+    :return: The dictionary.
+    :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
+    """
+    return _map_and_reverse(
+        reverse=reverse, kegg_rest=kegg_rest, KEGGurl=ku.EntriesLinkKEGGurl, target_database=target_database, entry_ids=entry_ids)
+
+
+# noinspection PyShadowingNames
+def entries_conv(
+        entry_ids: t.List[str], target_database: str, reverse: bool = False,
+        kegg_rest: t.Union[r.KEGGrest, None] = None) -> KEGGmapping:
+    """ Converts the output of the KEGG "conv" operation (of the form that maps specific provided entry IDs to the IDs of a target database) to a dictionary.
+
+    :param entry_ids: The IDs of the entries to map to entries in the target database.
+    :param target_database: The name of the database with entry IDs mapped to from the provided entry IDs.
+    :param reverse: Reverses the mapping with the target becoming the source and the source becoming the target. Equivalent to calling the reverse() function of this module.
+    :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default parameters.
+    :return: The dictionary.
+    :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
+    """
+    return _map_and_reverse(
+        reverse=reverse, kegg_rest=kegg_rest, KEGGurl=ku.EntriesConvKEGGurl, target_database=target_database, entry_ids=entry_ids)
+
+
+def indirect_link(
         source_database: str, intermediate_database: str, target_database: str, deduplicate: bool = False,
-        add_glycans: bool = False, add_drugs: bool = False, kegg_rest: t.Union[r.KEGGrest, None]  = None) -> KEGGmapping:
-    """ Creates a dictionary that maps the entry IDs of a source database to those of a target database using an intermediate database e.g. ko-to-compound where the intermediate is reaction (connecting cross-references of ko-to-reaction and reaction-to-compound).
+        add_glycans: bool = False, add_drugs: bool = False, kegg_rest: t.Union[r.KEGGrest, None] = None) -> KEGGmapping:
+    """ Creates a dictionary that maps the entry IDs of a source database to those of a target database using an intermediate database ("link" operation) e.g. ko-to-compound where the intermediate is reaction (connecting cross-references of ko-to-reaction and reaction-to-compound).
 
     :param source_database: The name of the database with entry IDs to map to the target database.
     :param intermediate_database: The name of the database with which two mappings are made i.e. source-to-intermediate and intermediate-to-target, both of which are merged to create source-to-target.
     :param target_database: The name of the database with entry IDs to which those of the source database are mapped.
-    :param deduplicate: Some mappings including pathway entry IDs result in half beginning with the normal "path:map" prefix but the other half with a different prefix. If True, removes the IDs corresponding to identical entries but with a different prefix. Raises an exception if neither the source nor the target database is "pathway".
+    :param deduplicate: Some mappings including pathway entry IDs result in half beginning with the normal "path:map" prefix but the other half with a different prefix. If True, removes the IDs corresponding to identical entries but with a different prefix.
     :param add_glycans: Whether to add the corresponding compound IDs of equivalent glycan entries. Logs a warning if neither the source nor the target database are "compound".
     :param add_drugs: Whether to add the corresponding compound IDs of equivalent drug entries. Logs a warning if neither the source nor the target database are "compound".
     :param kegg_rest: The KEGGrest object to perform the "link" operations. If None, one is created with the default parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
-    :raises ValueError: Raised if deduplicate is True but source_database is not "pathway".
+    :raises ValueError: Raised if deduplicate is True but neither source_database nor target_database is "pathway".
     """
     if len({source_database, intermediate_database, target_database}) < 3:
         raise ValueError(
@@ -235,7 +285,7 @@ def combine_mappings(mapping1: KEGGmapping, mapping2: KEGGmapping) -> KEGGmappin
 
 
 def reverse(mapping: KEGGmapping) -> KEGGmapping:
-    """ Reverses the dictionary mapping entry IDs of one database to IDs of related entries, turning keys into values and values into keys. Using this method is equivalent to specifying the "reverse" parameter in "database_map" and "entries_map".
+    """ Reverses the dictionary mapping entry IDs of one database to IDs of related entries, turning keys into values and values into keys.
 
     :param mapping: The dictionary, of entry IDs (strings) to sets of entry IDs, to reverse.
     :return: The reversed mapping.
@@ -273,7 +323,7 @@ def to_json_string(mapping: KEGGmapping) -> str:
     :return: The JSON string.
     :raises ValidationError: Raised if the mapping does not follow the correct JSON schema. Should follow the correct schema if the dictionary was created with this map module.
     """
-    mapping_to_convert: KEGGmapping = dict()
+    mapping_to_convert = dict()
     for entry_id, entry_ids in mapping.items():
         mapping_to_convert[entry_id] = sorted(entry_ids)
     u.validate_json_object(

@@ -36,9 +36,9 @@ test_args = [
     ['rest', 'find', 'pathway', 'a,b,c,,,'], ['rest', 'find', 'drug', '--formula=CO2'], ['rest', 'find', 'drug', '--em=20.2'],
     ['rest', 'find', 'drug', '--mw=202'], ['rest', 'find', 'drug', '--em=20.2', '--em=30.3'],
     ['rest', 'find', 'drug', '--mw=202', '--mw=303'], ['rest', 'conv', 'kegg-db', 'out-db'],
-    ['rest', 'conv', '--conv-target=genes', 'eid1,eid2'], ['rest', 'link', 'target-db', 'source-db'],
-    ['rest', 'link', '--link-target=target-db', ',x,,,y'], ['rest', 'ddi', 'de1,de2,de3'], ['rest', 'get', '-'],
-    ['rest', 'find', 'pathway', '-'], ['rest', 'conv', '--conv-target=genes', '-'], ['rest', 'link', '--link-target=target-db', '-'],
+    ['rest', 'conv', 'entry-ids', 'eid1,eid2', 'genes'], ['rest', 'link', 'target-db', 'source-db'],
+    ['rest', 'link', 'entry-ids', ',x,,,y', 'target-db'], ['rest', 'ddi', 'de1,de2,de3'], ['rest', 'get', '-'],
+    ['rest', 'find', 'pathway', '-'], ['rest', 'conv', 'entry-ids', '-', 'genes'], ['rest', 'link', 'entry-ids', '-', 'target-db'],
     ['rest', 'ddi', '-']
 ]
 

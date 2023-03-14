@@ -16,6 +16,11 @@ def get_kegg_rest(request, mocker):
         yield None
 
 
+@pt.fixture(name='reverse', params=[True, False])
+def get_reverse(request):
+    yield request.param
+
+
 def test_to_dict(mocker, kegg_rest):
     kegg_rest = kegg_rest
     text_body_mock = """
@@ -40,16 +45,20 @@ def test_to_dict(mocker, kegg_rest):
     assert actual_mapping == expected_mapping
 
 
-test_entries_map_data = [True, False]
+test_map_and_reverse_data = [
+    ('database_conv', ku.DatabaseConvKEGGurl, {'kegg_database': 'kegg-db', 'outside_database': 'outside-db'}),
+    ('entries_conv', ku.EntriesConvKEGGurl, {'entry_ids': ['e1', 'e2'], 'target_database': 'x'}),
+    ('entries_link', ku.EntriesLinkKEGGurl, {'entry_ids': ['e1', 'e2'], 'target_database': 'x'})]
 
 
-@pt.mark.parametrize('reverse', test_entries_map_data)
-def test_entries_map(mocker, reverse: bool, kegg_rest):
+@pt.mark.parametrize('method,KEGGurl,kwargs', test_map_and_reverse_data)
+def test_map_and_reverse(mocker, method: str, KEGGurl: type, kwargs: dict, reverse: bool, kegg_rest):
     expected_mapping = {'k': {'v1', 'v2'}}
     to_dict_mock = mocker.patch('kegg_pull.map._to_dict', return_value=expected_mapping)
-    shared_kwargs = {'entry_ids': ['e1', 'e2'], 'target_database': 'x', 'kegg_rest': kegg_rest}
-    actual_mapping = kmap.entries_map(reverse=reverse, **shared_kwargs)
-    to_dict_mock.assert_called_once_with(KEGGurl=ku.EntriesLinkKEGGurl, **shared_kwargs)
+    # noinspection PyUnresolvedReferences
+    method: t.Callable = kmap.__getattribute__(method)
+    actual_mapping: kmap.KEGGmapping = method(reverse=reverse, kegg_rest=kegg_rest, **kwargs)
+    to_dict_mock.assert_called_once_with(KEGGurl=KEGGurl, kegg_rest=kegg_rest, **kwargs)
     if reverse:
         expected_mapping = kmap.reverse(mapping=expected_mapping)
     assert actual_mapping == expected_mapping
@@ -69,7 +78,7 @@ def test_deduplicate_pathway_ids(mocker, kwargs: dict, kegg_rest):
     pathway_is_target = kwargs['target_database'] == 'pathway'
     to_dict_return = kmap.reverse(mapping=to_dict_return) if pathway_is_target else to_dict_return
     to_dict_mock = mocker.patch('kegg_pull.map._to_dict', return_value=to_dict_return)
-    actual_mapping = kmap.database_map(deduplicate=True, **kwargs)
+    actual_mapping = kmap.database_link(deduplicate=True, **kwargs)
     to_dict_mock.assert_called_once_with(KEGGurl=ku.DatabaseLinkKEGGurl, **kwargs)
     expected_mapping = {'path:map1': {'x1'}, 'path:map2': {'x2', 'x3'}}
     expected_mapping = kmap.reverse(mapping=expected_mapping) if pathway_is_target else expected_mapping
@@ -81,7 +90,7 @@ def test_deduplicate_pathway_ids_exception(mocker):
               f' Databases specified: module, ko.'
     mocker.patch('kegg_pull.map._to_dict')
     with pt.raises(ValueError) as error:
-        kmap.database_map(source_database='module', target_database='ko', deduplicate=True)
+        kmap.database_link(source_database='module', target_database='ko', deduplicate=True)
     u.assert_exception(expected_message=message, exception=error)
 
 
@@ -142,7 +151,7 @@ def test_add_glycans_or_drugs(mocker, kegg_rest, mapping_data: t.Callable, kwarg
         kegg_rest=kegg_rest, kwargs=kwargs)
     to_dict_mock: mocker.MagicMock = mocker.patch('kegg_pull.map._to_dict', side_effect=to_dict_side_effect)
     # noinspection PyUnresolvedReferences
-    actual_mapping: kmap.KEGGmapping = kmap.database_map(add_drugs=add_drugs, add_glycans=add_glycans, kegg_rest=kegg_rest, **kwargs)
+    actual_mapping: kmap.KEGGmapping = kmap.database_link(add_drugs=add_drugs, add_glycans=add_glycans, kegg_rest=kegg_rest, **kwargs)
     u.assert_call_args(function_mock=to_dict_mock, expected_call_args_list=expected_call_args_list, do_kwargs=True)
     assert actual_mapping == expected_mapping
 
@@ -151,15 +160,15 @@ def test_add_glycans_or_drugs_warning(mocker, caplog):
     mocker.patch('kegg_pull.map._to_dict')
     expected_message = f'Adding compound IDs (corresponding to equivalent glycan and/or drug entries) to a mapping where ' \
                        f'neither the source database nor the target database are "compound". Databases specified: reaction, ko.'
-    kmap.database_map(source_database='reaction', target_database='ko', add_glycans=True)
+    kmap.database_link(source_database='reaction', target_database='ko', add_glycans=True)
     u.assert_warning(message=expected_message, caplog=caplog)
 
 
-test_indirect_data = ['drugs_and_glycans', 'deduplicate', 'drugs_and_glycans_and_deduplicate', '']
+test_indirect_link_data = ['drugs_and_glycans', 'deduplicate', 'drugs_and_glycans_and_deduplicate', '']
 
 
-@pt.mark.parametrize('test_case', test_indirect_data)
-def test_indirect(mocker, kegg_rest, test_case: str):
+@pt.mark.parametrize('test_case', test_indirect_link_data)
+def test_indirect_link(mocker, kegg_rest, test_case: str):
     kegg_rest = kegg_rest
     compound_to_reaction = {'cpd1': {'rn1', 'rn3'}, 'cpd2': {'rn2'}, 'cpd3': {'rn3'}}
     pathway_to_reaction = {
@@ -183,18 +192,18 @@ def test_indirect(mocker, kegg_rest, test_case: str):
         side_effect = [
             compound_to_reaction, reaction_to_gene, compound_to_glycan, glycan_to_gene, compound_to_drug, drug_to_gene]
         to_dict_mock = mocker.patch('kegg_pull.map._to_dict', side_effect=side_effect)
-        actual_mapping = kmap.indirect(
-            source_database='compound', intermediate_database='reaction', target_database='ko',
-            add_glycans=True, add_drugs=True, kegg_rest=kegg_rest)
+        actual_mapping = kmap.indirect_link(
+            source_database='compound', intermediate_database='reaction', target_database='ko', add_glycans=True, add_drugs=True,
+            kegg_rest=kegg_rest)
         expected_mapping = {'cpd1': {'ko3', 'ko1', 'ko2', 'ko4'}, 'cpd3': {'ko3', 'ko6'}}
     elif test_case == 'deduplicate':
         expected_call_args_list = [
             {'source_database': 'pathway', 'target_database': 'reaction'},
             {'source_database': 'reaction', 'target_database': 'ko'}]
         to_dict_mock = mocker.patch('kegg_pull.map._to_dict', side_effect=[pathway_to_reaction, reaction_to_gene])
-        actual_mapping = kmap.indirect(
-            source_database='pathway', intermediate_database='reaction', target_database='ko',
-            deduplicate=True, kegg_rest=kegg_rest)
+        actual_mapping = kmap.indirect_link(
+            source_database='pathway', intermediate_database='reaction', target_database='ko', deduplicate=True,
+            kegg_rest=kegg_rest)
         expected_mapping = {'path:map1': {'ko3', 'ko1', 'ko2'}, 'path:map3': {'ko3'}}
     elif test_case == 'drugs_and_glycans_and_deduplicate':
         reaction_to_pathway = kmap.reverse(mapping=pathway_to_reaction)
@@ -211,7 +220,7 @@ def test_indirect(mocker, kegg_rest, test_case: str):
             compound_to_reaction, reaction_to_pathway, compound_to_glycan, glycan_to_pathway, compound_to_drug, drug_to_pathway
         ]
         to_dict_mock = mocker.patch('kegg_pull.map._to_dict', side_effect=side_effect)
-        actual_mapping = kmap.indirect(
+        actual_mapping = kmap.indirect_link(
             source_database='compound', intermediate_database='reaction', target_database='pathway',
             deduplicate=True, add_glycans=True, add_drugs=True, kegg_rest=kegg_rest)
         expected_mapping = {
@@ -220,7 +229,7 @@ def test_indirect(mocker, kegg_rest, test_case: str):
     else:
         expected_call_args_list = compound_to_gene_expected_call_args_list
         to_dict_mock = mocker.patch('kegg_pull.map._to_dict', side_effect=[compound_to_reaction, reaction_to_gene])
-        actual_mapping = kmap.indirect(
+        actual_mapping = kmap.indirect_link(
             source_database='compound', intermediate_database='reaction', target_database='ko',
             kegg_rest=kegg_rest)
         expected_mapping = {'cpd1': {'ko3', 'ko1', 'ko2'}, 'cpd3': {'ko3'}}
@@ -231,7 +240,7 @@ def test_indirect(mocker, kegg_rest, test_case: str):
     assert actual_mapping == expected_mapping
 
 
-test_indirect_exception_data = [
+test_indirect_link_exception_data = [
     ({'source_database': 'pathway', 'intermediate_database': 'reaction', 'target_database': 'reaction'},
      'The source, intermediate, and target database must all be unique. Databases specified: pathway, reaction, reaction.'),
     ({'source_database': 'reaction', 'intermediate_database': 'reaction', 'target_database': 'reaction'},
@@ -239,10 +248,10 @@ test_indirect_exception_data = [
 ]
 
 
-@pt.mark.parametrize('kwargs,error_message', test_indirect_exception_data)
-def test_indirect_exception(kwargs: dict, error_message: str):
+@pt.mark.parametrize('kwargs,error_message', test_indirect_link_exception_data)
+def test_indirect_link_exception(kwargs: dict, error_message: str):
     with pt.raises(ValueError) as error:
-        kmap.indirect(**kwargs)
+        kmap.indirect_link(**kwargs)
     u.assert_exception(expected_message=error_message, exception=error)
 
 
