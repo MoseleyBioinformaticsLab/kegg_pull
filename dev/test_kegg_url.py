@@ -125,6 +125,10 @@ test_validate_exception_data = [
         ' Where <org> is an organism code or T number.'
     ),
     (
+        ku.DatabaseLinkKEGGurl, {'target_database': 'drug', 'source_database': 'drug'},
+        'The source and target database cannot be identical. Database selected: drug.'
+    ),
+    (
         ku.EntriesLinkKEGGurl, {'target_database': 'ligand', 'entry_ids': []},
         'Invalid database name: "ligand". Valid values are: <org>, ag, atc, brite, compound, dgroup, disease, drug, '
         'enzyme, genes, genome, glycan, jtc, ko, module, ndc, network, pathway, pubmed, rclass, reaction, variant, vg, '
