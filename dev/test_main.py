@@ -97,9 +97,9 @@ def _test_output(mocker, args: list, expected_output: str, print_output: bool, j
 
 test_rest_data = [
     (['conv', 'glycan', 'pubchem'], 'dev/test_data/glycan-pubchem-conv.txt'),
-    (['conv', '--conv-target=pubchem', 'gl:G13143,gl:G13141,gl:G13139'], 'dev/test_data/glycan-pubchem-entry-ids.txt'),
+    (['conv', 'entry-ids', 'gl:G13143,gl:G13141,gl:G13139', 'pubchem'], 'dev/test_data/glycan-pubchem-entry-ids.txt'),
     (['link', 'module', 'pathway'], 'dev/test_data/module-pathway-link.txt'),
-    (['link', '--link-target=pathway', 'md:M00575,md:M00574,md:M00363'], 'dev/test_data/pathway-module-entry-ids.txt'),
+    (['link', 'entry-ids', 'md:M00575,md:M00574,md:M00363', 'pathway'], 'dev/test_data/pathway-module-entry-ids.txt'),
     (['ddi', 'D00564,D00100,D00109'], 'dev/test_data/ddi-output.txt')]
 
 
@@ -174,12 +174,15 @@ def test_pull(mocker, args: list, output: str):
 
 
 test_map_data = [
-    (['entry-ids', '-', 'module', '--reverse'], '\nK12696\nK22365\nK22435\t', 'module'),
-    (['pathway', 'ko'], None, 'pathway-gene'),
-    (['compound', 'reaction', 'pathway', '--add-glycans', '--add-drugs', '--deduplicate'], None, 'compound-reaction-pathway')]
+    (['conv', 'mmu', 'ncbi-geneid', '--reverse'], None, 'mmu-ncbi'),
+    (['conv', 'entry-ids', 'cpd:C00001,cpd:C00002', 'pubchem'], None, 'pubchem'),
+    (['link', 'entry-ids', '-', 'module', '--reverse'], '\nK12696\nK22365\nK22435\t', 'module'),
+    (['link', 'pathway', 'ko'], None, 'pathway-gene'),
+    (['link', 'compound', 'reaction', 'pathway', '--add-glycans', '--add-drugs', '--deduplicate'], None, 'compound-reaction-pathway')]
 
 
 @pt.mark.parametrize('args,stdin_mock_str,expected_output', test_map_data)
+@pt.mark.disable_mock_organism_set
 def test_map(mocker, print_output: bool, args: list, stdin_mock_str: str, expected_output: str):
     args: list = ['kegg_pull', 'map'] + args
     stdin_mock = None
