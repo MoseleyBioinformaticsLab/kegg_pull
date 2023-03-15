@@ -642,6 +642,10 @@ class DatabaseLinkKEGGurl(AbstractLinkKEGGurl):
         :param source_database: The name of the source database to check.
         :raises ValueError: Raised if the databases are invalid.
         """
+        if target_database == source_database:
+            AbstractKEGGurl._raise_error(
+                reason=f'The source and target database cannot be identical. Database selected: {source_database}.')
+
         excluded_databases: set = AbstractKEGGurl._valid_medicus_databases.union({'kegg', 'genes', 'ligand'})
 
         AbstractKEGGurl._validate_database(
