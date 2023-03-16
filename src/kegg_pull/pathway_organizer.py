@@ -6,7 +6,6 @@ Functionality for flattening a pathways Brite hierarchy (ID: 'br:br08901') into 
 import json
 import logging as log
 import typing as t
-
 from . import rest as r
 from . import _utils as u
 
@@ -45,24 +44,17 @@ class PathwayOrganizer(u.NonInstantiable):
         pathway_org._filter_nodes = filter_nodes
         hierarchy: list = PathwayOrganizer._get_hierarchy(kegg_rest=kegg_rest)
         valid_top_level_nodes: list = sorted(top_level_node['name'] for top_level_node in hierarchy)
-
         if top_level_nodes is not None:
             for top_level_node in list(top_level_nodes):
                 if top_level_node not in valid_top_level_nodes:
                     log.warning(
                         f'Top level node name "{top_level_node}" is not recognized and will be ignored. Valid values are: '
-                        f'"{", ".join(valid_top_level_nodes)}"'
-                    )
-
+                        f'"{", ".join(valid_top_level_nodes)}"')
                     top_level_nodes.remove(top_level_node)
-
             hierarchy: list = [top_level_node for top_level_node in hierarchy if top_level_node['name'] in top_level_nodes]
-
         pathway_org._parse_hierarchy(level=1, hierarchy_nodes=hierarchy, parent_name=None)
-
         for node_key, node in pathway_org.hierarchy_nodes.items():
             node['children'] = sorted(node['children']) if node['children'] is not None else None
-
         return pathway_org
 
     @staticmethod
@@ -75,7 +67,6 @@ class PathwayOrganizer(u.NonInstantiable):
         kegg_response: r.KEGGresponse = kegg_rest.get(entry_ids=['br:br08901'], entry_field='json')
         text_body: str = kegg_response.text_body.strip()
         brite_hierarchy: dict = json.loads(s=text_body)
-
         return brite_hierarchy['children']
 
     def _parse_hierarchy(self, level: int, hierarchy_nodes: list, parent_name: str) -> set:
@@ -87,38 +78,26 @@ class PathwayOrganizer(u.NonInstantiable):
         :return: The keys of the nodes added to the hierarchy_nodes property representing the children of the parent node.
         """
         nodes_added = set()
-
         for hierarchy_node in hierarchy_nodes:
             node_name: str = hierarchy_node['name']
-
             if self._filter_nodes is None or node_name not in self._filter_nodes:
                 if 'children' in hierarchy_node.keys():
                     node_children: set = self._parse_hierarchy(
-                        level=level+1, hierarchy_nodes=hierarchy_node['children'], parent_name=node_name
-                    )
-
+                        level=level+1, hierarchy_nodes=hierarchy_node['children'], parent_name=node_name)
                     if self._filter_nodes is not None:
                         expected_n_children_added: int = len(
-                            [child for child in hierarchy_node['children'] if child['name'] not in self._filter_nodes]
-                        )
+                            [child for child in hierarchy_node['children'] if child['name'] not in self._filter_nodes])
                     else:
                         expected_n_children_added: int = len(hierarchy_node['children'])
-
                     assert len(node_children) == expected_n_children_added, f'Not all children added for node: {node_name}'
-
                     node_key: str = self._add_hierarchy_node(
-                        name=node_name, level=level, parent=parent_name, children=node_children, entry_id=None
-                    )
+                        name=node_name, level=level, parent=parent_name, children=node_children, entry_id=None)
                 else:
                     entry_id: str = node_name.split(' ')[0]
                     entry_id = f'path:map{entry_id}'
-
                     node_key: str = self._add_hierarchy_node(
-                        name=node_name, level=level, parent=parent_name, children=None, entry_id=entry_id
-                    )
-
+                        name=node_name, level=level, parent=parent_name, children=None, entry_id=entry_id)
                 nodes_added.add(node_key)
-
         return nodes_added
 
     def _add_hierarchy_node(self, name: str, level: int, parent: str, children: set, entry_id: str) -> str:
@@ -132,11 +111,8 @@ class PathwayOrganizer(u.NonInstantiable):
         :return: The key chosen for the node, equal to its entry ID if not None, else the name of the Node.
         """
         key: str = entry_id if entry_id is not None else name
-
         assert key not in self.hierarchy_nodes.keys(), f'Duplicate brite hierarchy node name {key}'
-
         self.hierarchy_nodes[key] = {'name': name, 'level': level, 'parent': parent, 'children': children, 'entry-id': entry_id}
-
         return key
 
     def __str__(self) -> str:
@@ -194,15 +170,11 @@ class PathwayOrganizer(u.NonInstantiable):
         :raises ValidationError: Raised if the JSON file does not follow the correct JSON schema. Should follow the correct schema if hierarchy_nodes was cached using load_from_kegg followed by save_to_json.
         """
         pathway_org = PathwayOrganizer()
-
         hierarchy_nodes: dict = u.load_json_file(
             file_path=file_path, json_schema=PathwayOrganizer._schema,
             validation_error_message=f'Failed to load the hierarchy nodes. The pathway organizer JSON file at {file_path} is '
-                                     f'corrupted and will need to be re-created.'
-        )
-
+                                     f'corrupted and will need to be re-created.')
         pathway_org.hierarchy_nodes = hierarchy_nodes
-
         return pathway_org
 
     def save_to_json(self, file_path: str) -> None:

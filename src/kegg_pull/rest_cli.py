@@ -38,7 +38,6 @@ Options:
     <drug-entry-ids>            Comma separated list of drug entry IDs from the following databases: drug, ndc, or yj (e.g. id1,id2,id3 etc.). Or if equal to "-", entry IDs are read from standard input, one entry ID per line; Press CTRL+D to finalize input or pipe (e.g. cat file.txt | kegg_pull rest ddi - ...).
 """
 import docopt as d
-
 from . import kegg_url as ku
 from . import rest as r
 from . import _utils as u
@@ -54,7 +53,6 @@ def main():
     test_result: bool = None
     kegg_response: r.KEGGresponse = None
     kegg_rest = r.KEGGrest()
-
     if args['info']:
         if test:
             test_result: bool = kegg_rest.test(KEGGurl=ku.InfoKEGGurl, database=database)
@@ -68,106 +66,75 @@ def main():
     elif args['get']:
         entry_ids: list = u.parse_input_sequence(input_source=entry_ids)
         entry_field: str = args['--entry-field']
-
         if test:
             test_result: bool = kegg_rest.test(KEGGurl=ku.GetKEGGurl, entry_ids=entry_ids, entry_field=entry_field)
         else:
             if ku.GetKEGGurl.is_binary(entry_field=entry_field):
                 is_binary = True
-
             kegg_response: r.KEGGresponse = kegg_rest.get(entry_ids=entry_ids, entry_field=entry_field)
     elif args['find']:
         if args['<keywords>']:
             keywords: list = u.parse_input_sequence(input_source=args['<keywords>'])
-
             if test:
-                test_result: bool = kegg_rest.test(
-                    KEGGurl=ku.KeywordsFindKEGGurl, database=database, keywords=keywords
-                )
+                test_result: bool = kegg_rest.test(KEGGurl=ku.KeywordsFindKEGGurl, database=database, keywords=keywords)
             else:
                 kegg_response: r.KEGGresponse = kegg_rest.keywords_find(database=database, keywords=keywords)
         else:
             formula, exact_mass, molecular_weight = u.get_molecular_attribute_args(args=args)
-
             if test:
                 test_result: bool = kegg_rest.test(
                     KEGGurl=ku.MolecularFindKEGGurl, database=database, formula=formula,
-                    exact_mass=exact_mass, molecular_weight=molecular_weight
-                )
+                    exact_mass=exact_mass, molecular_weight=molecular_weight)
             else:
                 kegg_response: r.KEGGresponse = kegg_rest.molecular_find(
-                    database=database, formula=formula, exact_mass=exact_mass, molecular_weight=molecular_weight
-                )
+                    database=database, formula=formula, exact_mass=exact_mass, molecular_weight=molecular_weight)
     elif args['conv']:
         if args['entry-ids']:
             entry_ids: list = u.parse_input_sequence(input_source=entry_ids)
-
             if test:
                 test_result: bool = kegg_rest.test(KEGGurl=ku.EntriesConvKEGGurl, target_database=target_database, entry_ids=entry_ids)
             else:
-                kegg_response: r.KEGGresponse = kegg_rest.entries_conv(
-                    target_database=target_database, entry_ids=entry_ids
-                )
+                kegg_response: r.KEGGresponse = kegg_rest.entries_conv(target_database=target_database, entry_ids=entry_ids)
         else:
             kegg_database = args['<kegg-database>']
             outside_database = args['<outside-database>']
-
             if test:
                 test_result: bool = kegg_rest.test(
-                    KEGGurl=ku.DatabaseConvKEGGurl, kegg_database=kegg_database,
-                    outside_database=outside_database
-                )
+                    KEGGurl=ku.DatabaseConvKEGGurl, kegg_database=kegg_database, outside_database=outside_database)
             else:
-                kegg_response: r.KEGGresponse = kegg_rest.database_conv(
-                    kegg_database=kegg_database, outside_database=outside_database
-                )
+                kegg_response: r.KEGGresponse = kegg_rest.database_conv(kegg_database=kegg_database, outside_database=outside_database)
     elif args['link']:
         if args['entry-ids']:
             entry_ids: list = u.parse_input_sequence(input_source=entry_ids)
-
             if test:
-                test_result: bool = kegg_rest.test(
-                    KEGGurl=ku.EntriesLinkKEGGurl, target_database=target_database, entry_ids=entry_ids
-                )
+                test_result: bool = kegg_rest.test(KEGGurl=ku.EntriesLinkKEGGurl, target_database=target_database, entry_ids=entry_ids)
             else:
-                kegg_response: r.KEGGresponse = kegg_rest.entries_link(
-                    target_database=target_database, entry_ids=entry_ids
-                )
+                kegg_response: r.KEGGresponse = kegg_rest.entries_link(target_database=target_database, entry_ids=entry_ids)
         else:
             source_database: str = args['<source-database>']
-
             if test:
                 test_result: bool = kegg_rest.test(
-                    KEGGurl=ku.DatabaseLinkKEGGurl, target_database=target_database,
-                    source_database=source_database
-                )
+                    KEGGurl=ku.DatabaseLinkKEGGurl, target_database=target_database, source_database=source_database)
             else:
                 kegg_response: r.KEGGresponse = kegg_rest.database_link(
-                    target_database=target_database, source_database=source_database
-                )
+                    target_database=target_database, source_database=source_database)
     else:
         drug_entry_ids: list = u.parse_input_sequence(input_source=args['<drug-entry-ids>'])
-
         if test:
             test_result: bool = kegg_rest.test(KEGGurl=ku.DdiKEGGurl, drug_entry_ids=drug_entry_ids)
         else:
             kegg_response: r.KEGGresponse = kegg_rest.ddi(drug_entry_ids=drug_entry_ids)
-
     if test:
         print(test_result)
     else:
         if kegg_response.status == r.KEGGresponse.Status.FAILED:
             raise RuntimeError(
-                f'The request to the KEGG web API failed with the following URL: {kegg_response.kegg_url.url}'
-            )
+                f'The request to the KEGG web API failed with the following URL: {kegg_response.kegg_url.url}')
         elif kegg_response.status == r.KEGGresponse.Status.TIMEOUT:
             raise RuntimeError(
-                f'The request to the KEGG web API timed out with the following URL: {kegg_response.kegg_url.url}'
-            )
-
+                f'The request to the KEGG web API timed out with the following URL: {kegg_response.kegg_url.url}')
         if is_binary:
             response_body: bytes = kegg_response.binary_body
         else:
             response_body: str = kegg_response.text_body
-
         u.print_or_save(output_target=args['--output'], output_content=response_body)

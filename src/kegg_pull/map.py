@@ -72,8 +72,7 @@ def _add_to_dict(dictionary: KEGGmapping, key: str, values: t.Set[str]):
         dictionary[key] = cp.deepcopy(values)  # In case "values" is referenced elsewhere, we don't want to update a shallow copy
 
 
-def _deduplicate_pathway_ids(
-        mapping: KEGGmapping, deduplicate: bool, source_database: str, target_database: str) -> KEGGmapping:
+def _deduplicate_pathway_ids(mapping: KEGGmapping, deduplicate: bool, source_database: str, target_database: str) -> KEGGmapping:
     """ If requested, removes entry IDs corresponding to duplicate pathway map entries (different ID, same entry).
 
     :param mapping: The mapping to deduplicate.
@@ -101,8 +100,7 @@ def _deduplicate_pathway_ids(
 
 
 def _process_mapping(
-        mapping: KEGGmapping, func: t.Callable, source_database: str, target_database: str,
-        relevant_database: str) -> KEGGmapping:
+        mapping: KEGGmapping, func: t.Callable, source_database: str, target_database: str, relevant_database: str) -> KEGGmapping:
     """ Performs additional processing on a mapping according to a provided function.
 
     :param mapping: The mapping to process.
@@ -213,8 +211,7 @@ def entries_link(
 
 # noinspection PyShadowingNames
 def entries_conv(
-        entry_ids: t.List[str], target_database: str, reverse: bool = False,
-        kegg_rest: t.Union[r.KEGGrest, None] = None) -> KEGGmapping:
+        entry_ids: t.List[str], target_database: str, reverse: bool = False, kegg_rest: t.Union[r.KEGGrest, None] = None) -> KEGGmapping:
     """ Converts the output of the KEGG "conv" operation (of the form that maps specific provided entry IDs to the IDs of a target database) to a dictionary.
 
     :param entry_ids: The IDs of the entries to map to entries in the target database.

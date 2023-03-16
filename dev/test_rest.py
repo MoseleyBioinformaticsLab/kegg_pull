@@ -1,45 +1,38 @@
 # noinspection PyPackageRequirements
 import pytest as pt
+import typing as t
 import requests as rq
-
 import kegg_pull.rest as r
 import kegg_pull.kegg_url as ku
 import dev.utils as u
 
 
 test_kegg_response_exception_data = [
-    (
-        {'status': r.KEGGresponse.Status.SUCCESS, 'kegg_url': None},
-        'A KEGG response cannot be marked as successful if its response body is empty'
-    )
-]
+    ({'status': r.KEGGresponse.Status.SUCCESS, 'kegg_url': None},
+     'A KEGG response cannot be marked as successful if its response body is empty')]
+
+
 @pt.mark.parametrize('kwargs,expected_message', test_kegg_response_exception_data)
 def test_kegg_response_exception(mocker, kwargs: dict, expected_message: str):
     u.mock_non_instantiable(mocker=mocker)
-
     with pt.raises(ValueError) as error:
         r.KEGGresponse(**kwargs)
-
     u.assert_exception(expected_message=expected_message, exception=error)
 
 
 def test_kegg_rest_exception():
     with pt.raises(ValueError) as error:
         r.KEGGrest(n_tries=0)
-
     expected_message = '0 is not a valid number of tries to make a KEGG request.'
     u.assert_exception(expected_message=expected_message, exception=error)
 
 
 def test_kegg_rest():
     kegg_rest = r.KEGGrest(n_tries=2, time_out=30, sleep_time=0.5)
-
     assert kegg_rest._n_tries == 2
     assert kegg_rest._time_out == 30
     assert kegg_rest._sleep_time == 0.5
-
     kegg_rest = r.KEGGrest(n_tries=None, time_out=None, sleep_time=None)
-
     assert kegg_rest._n_tries == 3
     assert kegg_rest._time_out == 60
     assert kegg_rest._sleep_time == 5.0
@@ -57,16 +50,13 @@ def test_request_and_test_success(mocker):
     kegg_response: r.KEGGresponse = kegg_rest.request(kegg_url=kegg_url_mock)
     create_url_spy.assert_called_once_with(KEGGurl=None, kegg_url=kegg_url_mock)
     get_mock.assert_called_once_with(url=url_mock, timeout=60)
-
     assert kegg_response.status == r.KEGGresponse.Status.SUCCESS
     assert kegg_response.text_body == text_mock
     assert kegg_response.binary_body == content_mock
     assert kegg_response.kegg_url == kegg_url_mock
-
     head_mock: mocker.MagicMock = mocker.patch('kegg_pull.rest.rq.head', return_value=response_mock)
     success: bool = kegg_rest.test(kegg_url=kegg_url_mock)
     head_mock.assert_called_once_with(url=url_mock, timeout=60)
-
     assert success == True
 
 
@@ -82,17 +72,14 @@ def test_request_and_test_failed(mocker):
     kegg_response: r.KEGGresponse = kegg_rest.request(kegg_url=kegg_url_mock)
     get_mock.assert_has_calls(mocker.call(url=url_mock, timeout=60) for _ in range(n_tries))
     sleep_mock.assert_has_calls(mocker.call(5.0) for _ in range(n_tries))
-
     assert kegg_response.status == r.KEGGresponse.Status.FAILED
     assert kegg_response.kegg_url == kegg_url_mock
     assert kegg_response.text_body is None
     assert kegg_response.binary_body is None
-
     head_mock: mocker.MagicMock = mocker.patch('kegg_pull.rest.rq.head', return_value=response_mock)
     success: bool = kegg_rest.test(kegg_url=kegg_url_mock)
     head_mock.assert_has_calls(mocker.call(url=url_mock, timeout=60) for _ in range(n_tries))
-
-    assert success == False
+    assert not success
 
 
 def test_request_and_test_timeout(mocker):
@@ -107,19 +94,16 @@ def test_request_and_test_timeout(mocker):
     kegg_response: r.KEGGresponse = kegg_rest.request(kegg_url=kegg_url_mock)
     get_mock.assert_has_calls(mocker.call(url=url_mock, timeout=time_out) for _ in range(n_tries))
     sleep_mock.assert_has_calls(mocker.call(sleep_time) for _ in range(n_tries))
-
     assert kegg_response.status == r.KEGGresponse.Status.TIMEOUT
     assert kegg_response.kegg_url == kegg_url_mock
     assert kegg_response.text_body is None
     assert kegg_response.binary_body is None
-
     sleep_mock.reset_mock()
     head_mock: mocker.MagicMock = mocker.patch('kegg_pull.rest.rq.head', side_effect=rq.exceptions.Timeout())
     success: bool = kegg_rest.test(kegg_url=kegg_url_mock)
     head_mock.assert_has_calls(mocker.call(url=url_mock, timeout=time_out) for _ in range(n_tries))
     sleep_mock.assert_has_calls(mocker.call(sleep_time) for _ in range(n_tries))
-
-    assert success == False
+    assert not success
 
 
 test_rest_method_data = [
@@ -127,18 +111,16 @@ test_rest_method_data = [
     (ku.GetKEGGurl, r.KEGGrest.get, {'entry_ids': ['xyz'], 'entry_field': None}),
     (ku.InfoKEGGurl, r.KEGGrest.info, {'database': 'pathway'}),
     (ku.KeywordsFindKEGGurl, r.KEGGrest.keywords_find, {'database': '', 'keywords': ['a', 'b']}),
-    (
-        ku.MolecularFindKEGGurl, r.KEGGrest.molecular_find,
-        {'database': '', 'formula': 'abc', 'exact_mass': None, 'molecular_weight': None}
-    ),
+    (ku.MolecularFindKEGGurl, r.KEGGrest.molecular_find,{'database': '', 'formula': 'abc', 'exact_mass': None, 'molecular_weight': None}),
     (ku.DatabaseConvKEGGurl, r.KEGGrest.database_conv, {'kegg_database': 'a', 'outside_database': 'b'}),
     (ku.EntriesConvKEGGurl, r.KEGGrest.entries_conv, {'target_database': 'module', 'entry_ids': ['123', 'abc']}),
     (ku.DatabaseLinkKEGGurl, r.KEGGrest.database_link, {'target_database': 'x', 'source_database': 'y'}),
     (ku.EntriesLinkKEGGurl, r.KEGGrest.entries_link, {'target_database': '123', 'entry_ids': ['x', 'y']}),
-    (ku.DdiKEGGurl, r.KEGGrest.ddi, {'drug_entry_ids': ['1', '2']})
-]
+    (ku.DdiKEGGurl, r.KEGGrest.ddi, {'drug_entry_ids': ['1', '2']})]
+
+
 @pt.mark.parametrize('KEGGurl,method,kwargs', test_rest_method_data)
-def test_rest_method(mocker, KEGGurl, method, kwargs):
+def test_rest_method(mocker, KEGGurl: type, method: t.Callable, kwargs: dict):
     kegg_rest = r.KEGGrest()
     request_spy = mocker.spy(kegg_rest, 'request')
     create_url_spy = mocker.spy(r.KEGGrest, '_get_kegg_url')
@@ -151,55 +133,45 @@ def test_rest_method(mocker, KEGGurl, method, kwargs):
     create_url_spy.assert_called_once_with(KEGGurl=KEGGurlMock, kegg_url=None, **kwargs)
     KEGGurlMock.assert_called_once_with(**kwargs)
     getmro_mock.assert_called_once_with(KEGGurlMock)
-
     assert create_url_spy.spy_return == kegg_url_mock
     assert request_spy.spy_return == kegg_response
     assert kegg_response.kegg_url == kegg_url_mock
 
 
 test_get_kegg_url_exception_data = [
-    (
-        {'KEGGurl': None, 'kegg_url': None},
-        'Either an instantiated kegg_url object must be provided or an extended class of AbstractKEGGurl along with the'
-        ' corresponding kwargs for its constructor.'
-    ),
-    (
-        {'KEGGurl': r.KEGGrest, 'kegg_url': None},
-        'The value for KEGGurl must be an inherited class of AbstractKEGGurl. The class "KEGGrest" is not.'
-    )
-]
+    ({'KEGGurl': None, 'kegg_url': None},
+     'Either an instantiated kegg_url object must be provided or an extended class of AbstractKEGGurl along with the'
+     ' corresponding kwargs for its constructor.'),
+    ({'KEGGurl': r.KEGGrest, 'kegg_url': None},
+     'The value for KEGGurl must be an inherited class of AbstractKEGGurl. The class "KEGGrest" is not.')]
+
+
 @pt.mark.parametrize('kwargs,expected_message', test_get_kegg_url_exception_data)
 def test_get_kegg_url_exception(kwargs: dict, expected_message: str):
     with pt.raises(ValueError) as error:
         r.KEGGrest._get_kegg_url(**kwargs)
-
     u.assert_exception(expected_message=expected_message, exception=error)
 
 
 def test_get_kegg_url_warning(mocker, caplog):
     kegg_url_mock = mocker.MagicMock()
     kegg_url = r.KEGGrest._get_kegg_url(KEGGurl=ku.InfoKEGGurl, kegg_url=kegg_url_mock, database='database mock')
-
     u.assert_warning(
-        message='Both an instantiated kegg_url object and KEGGurl class are provided. Using the instantiated object...',
-        caplog=caplog
-    )
-
+        message='Both an instantiated kegg_url object and KEGGurl class are provided. Using the instantiated object...', caplog=caplog)
     assert kegg_url == kegg_url_mock
 
 
 test_request_and_check_error_data = [
     ('The KEGG request failed with the following URL: url/mock', r.KEGGresponse.Status.FAILED),
-    ('The KEGG request timed out with the following URL: url/mock', r.KEGGresponse.Status.TIMEOUT)
-]
+    ('The KEGG request timed out with the following URL: url/mock', r.KEGGresponse.Status.TIMEOUT)]
+
+
 @pt.mark.parametrize('expected_message,status', test_request_and_check_error_data)
 def test_request_and_check_error(mocker, expected_message: str, status: r.KEGGresponse.Status):
     kegg_url_mock = mocker.MagicMock(url='url/mock')
     kegg_response_mock = mocker.MagicMock(kegg_url=kegg_url_mock, status=status)
     request_mock: mocker.MagicMock = mocker.patch('kegg_pull.rest.KEGGrest.request', return_value=kegg_response_mock)
-
     with pt.raises(RuntimeError) as error:
         r.request_and_check_error(kegg_url=kegg_url_mock, kwarg1='val1', kwarg2='val2')
-
     request_mock.assert_called_once_with(KEGGurl=None, kegg_url=kegg_url_mock, kwarg1='val1', kwarg2='val2')
     u.assert_exception(expected_message=expected_message, exception=error)

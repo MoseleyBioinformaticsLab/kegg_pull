@@ -24,7 +24,6 @@ Options:
     <intermediate-database> The name of an intermediate KEGG database with which to find cross-references to cross-references e.g. "kegg_pull map ko reaction compound" creates a mapping from ko-to-compound via ko-to-reaction cross-references connected to reaction-to-compound cross-references.
 """
 import docopt as doc
-
 from . import map as kmap
 from . import _utils as u
 

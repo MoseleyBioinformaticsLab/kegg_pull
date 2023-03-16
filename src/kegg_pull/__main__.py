@@ -10,7 +10,6 @@ Usage:
     kegg_pull rest ...              Executes one of the KEGG REST API operations.
 """
 import sys
-
 from . import __version__
 from . import pull_cli as p_cli
 from . import entry_ids_cli as ei_cli

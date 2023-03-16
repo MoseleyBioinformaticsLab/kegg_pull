@@ -9,7 +9,6 @@ import time
 import typing as t
 import inspect as ins
 import logging as log
-
 from . import kegg_url as ku
 from . import _utils as u
 
@@ -38,12 +37,8 @@ class KEGGresponse(u.NonInstantiable):
         :raises ValueError: Raised if the status is SUCCESS but a response body is not provided.
         """
         super(KEGGresponse, self).__init__()
-
-        if status == KEGGresponse.Status.SUCCESS and (
-            text_body is None or binary_body is None or text_body == '' or binary_body == b''
-        ):
+        if status == KEGGresponse.Status.SUCCESS and (text_body is None or binary_body is None or text_body == '' or binary_body == b''):
             raise ValueError('A KEGG response cannot be marked as successful if its response body is empty')
-
         self.status = status
         self.kegg_url = kegg_url
         self.text_body = text_body
@@ -52,7 +47,7 @@ class KEGGresponse(u.NonInstantiable):
 
 class KEGGrest:
     """Class containing methods for making requests to the KEGG REST API, including all the KEGG REST API operations."""
-    def __init__(self, n_tries: int = 3, time_out: int = 60, sleep_time: float = 5.0):
+    def __init__(self, n_tries: t.Union[int, None] = 3, time_out: t.Union[int, None] = 60, sleep_time: t.Union[float, None] = 5.0):
         """
         :param n_tries: The number of times to try to make a request (can succeed the first time, or any of n_tries, or none of the tries).
         :param time_out: The number of seconds to wait for a request until marking it as timed out.
@@ -61,7 +56,6 @@ class KEGGrest:
         self._n_tries = n_tries if n_tries is not None else 3
         self._time_out = time_out if time_out is not None else 60
         self._sleep_time = sleep_time if sleep_time is not None else 5.0
-
         if self._n_tries < 1:
             raise ValueError(f'{self._n_tries} is not a valid number of tries to make a KEGG request.')
 
@@ -75,19 +69,14 @@ class KEGGrest:
         """
         kegg_url: ku.AbstractKEGGurl = KEGGrest._get_kegg_url(KEGGurl=KEGGurl, kegg_url=kegg_url, **kwargs)
         status = None
-
         for _ in range(self._n_tries):
             try:
                 response: rq.Response = rq.get(url=kegg_url.url, timeout=self._time_out)
-
                 if response.status_code == 200:
                     return KEGGresponse(
-                        status=KEGGresponse.Status.SUCCESS, kegg_url=kegg_url, text_body=response.text,
-                        binary_body=response.content
-                    )
+                        status=KEGGresponse.Status.SUCCESS, kegg_url=kegg_url, text_body=response.text, binary_body=response.content)
                 else:
                     status = KEGGresponse.Status.FAILED
-
                 if response.status_code == 403:
                     # 403 forbidden. KEGG may have blocked the request due to too many requests in too little time.
                     # In case blacklisting, sleep to allow time for KEGG to unblock further requests.
@@ -95,7 +84,6 @@ class KEGGrest:
             except rq.exceptions.Timeout:
                 status = KEGGresponse.Status.TIMEOUT
                 time.sleep(self._sleep_time)
-
         return KEGGresponse(status=status, kegg_url=kegg_url)
 
     @staticmethod
@@ -111,25 +99,17 @@ class KEGGrest:
         if KEGGurl is None and kegg_url is None:
             raise ValueError(
                 f'Either an instantiated kegg_url object must be provided or an extended class of '
-                f'{ku.AbstractKEGGurl.__name__} along with the corresponding kwargs for its constructor.'
-            )
-
+                f'{ku.AbstractKEGGurl.__name__} along with the corresponding kwargs for its constructor.')
         if kegg_url is not None and KEGGurl is not None:
             log.warning(
-                'Both an instantiated kegg_url object and KEGGurl class are provided. Using the instantiated object...'
-            )
-
+                'Both an instantiated kegg_url object and KEGGurl class are provided. Using the instantiated object...')
         if kegg_url is not None:
             return kegg_url
-
         if ku.AbstractKEGGurl not in ins.getmro(KEGGurl):
             raise ValueError(
                 f'The value for KEGGurl must be an inherited class of {ku.AbstractKEGGurl.__name__}. '
-                f'The class "{KEGGurl.__name__}" is not.'
-            )
-
+                f'The class "{KEGGurl.__name__}" is not.')
         kegg_url: ku.AbstractKEGGurl = KEGGurl(**kwargs)
-
         return kegg_url
 
     def test(self, KEGGurl: type = None, kegg_url: ku.AbstractKEGGurl = None, **kwargs) -> bool:
@@ -141,16 +121,13 @@ class KEGGrest:
         :return: True if the URL would succeed, false if it would fail or time out.
         """
         kegg_url: ku.AbstractKEGGurl = KEGGrest._get_kegg_url(KEGGurl=KEGGurl, kegg_url=kegg_url, **kwargs)
-
         for _ in range(self._n_tries):
             try:
                 response: rq.Response = rq.head(url=kegg_url.url, timeout=self._time_out)
-
                 if response.status_code == 200:
                     return True
             except rq.exceptions.Timeout:
                 time.sleep(self._sleep_time)
-
         return False
 
     def list(self, database: str) -> KEGGresponse:
@@ -188,9 +165,8 @@ class KEGGrest:
         return self.request(KEGGurl=ku.KeywordsFindKEGGurl, database=database, keywords=keywords)
 
     def molecular_find(
-        self, database: str, formula: str = None, exact_mass: t.Union[float, tuple] = None,
-        molecular_weight: t.Union[int, tuple] = None
-    ) -> KEGGresponse:
+            self, database: str, formula: str = None, exact_mass: t.Union[float, tuple] = None,
+            molecular_weight: t.Union[int, tuple] = None) -> KEGGresponse:
         """ Executes the "find" KEGG API operation, finding entry IDs in chemical databases based on one (and only one) choice of three molecular attributes of the entries.
 
         :param database: The name of the chemical database to search for entries in.
@@ -200,9 +176,7 @@ class KEGGrest:
         :return: The KEGG response
         """
         return self.request(
-            KEGGurl=ku.MolecularFindKEGGurl, database=database, formula=formula, exact_mass=exact_mass,
-            molecular_weight=molecular_weight
-        )
+            KEGGurl=ku.MolecularFindKEGGurl, database=database, formula=formula, exact_mass=exact_mass, molecular_weight=molecular_weight)
 
     def database_conv(self, kegg_database: str, outside_database: str) -> KEGGresponse:
         """ Executes the "conv" KEGG API operation, converting the entry IDs of a KEGG database to those of an outside database.
@@ -211,10 +185,7 @@ class KEGGrest:
         :param outside_database: The name of the outside database to pull converted entry IDs from.
         :return: The KEGG response.
         """
-        return self.request(
-            KEGGurl=ku.DatabaseConvKEGGurl, kegg_database=kegg_database,
-            outside_database=outside_database
-        )
+        return self.request(KEGGurl=ku.DatabaseConvKEGGurl, kegg_database=kegg_database, outside_database=outside_database)
 
     def entries_conv(self, target_database: str, entry_ids: list) -> KEGGresponse:
         """ Executes the "conv" KEGG API operation, converting provided entry IDs from one database to the form of a target database.
@@ -223,9 +194,7 @@ class KEGGrest:
         :param entry_ids: The entry IDs to convert to the form of the target database.
         :return: The KEGG response.
         """
-        return self.request(
-            KEGGurl=ku.EntriesConvKEGGurl, target_database=target_database, entry_ids=entry_ids
-        )
+        return self.request(KEGGurl=ku.EntriesConvKEGGurl, target_database=target_database, entry_ids=entry_ids)
 
     def database_link(self, target_database: str, source_database: str) -> KEGGresponse:
         """ Executes the "link" KEGG API operation, showing the IDs of entries in one KEGG database that are connected/related to entries of another KEGG database.
@@ -234,10 +203,7 @@ class KEGGrest:
         :param source_database: The other KEGG database to link entries from the target database.
         :return: The KEGG response
         """
-        return self.request(
-            KEGGurl=ku.DatabaseLinkKEGGurl, target_database=target_database,
-            source_database=source_database
-        )
+        return self.request(KEGGurl=ku.DatabaseLinkKEGGurl, target_database=target_database, source_database=source_database)
 
     def entries_link(self, target_database: str, entry_ids: list) -> KEGGresponse:
         """ Executes the "link" KEGG API operation, showing the IDs of entries that are connected/related to entries of a provided databases.
@@ -246,9 +212,7 @@ class KEGGrest:
         :param entry_ids: The IDs of the entries to link to entries in the target database.
         :return: The KEGG response
         """
-        return self.request(
-            KEGGurl=ku.EntriesLinkKEGGurl, target_database=target_database, entry_ids=entry_ids
-        )
+        return self.request(KEGGurl=ku.EntriesLinkKEGGurl, target_database=target_database, entry_ids=entry_ids)
 
     def ddi(self, drug_entry_ids: list) -> KEGGresponse:
         """ Executes the "ddi" KEGG API operation, searching for drug to drug interactions. Providing one entry ID reports all known interactions, while providing multiple checks if any drug pair in a given set of drugs is CI or P. If providing multiple, all entries must belong to the same database.
@@ -272,10 +236,8 @@ def request_and_check_error(kegg_rest: KEGGrest = None, KEGGurl: type = None, ke
     """
     kegg_rest = kegg_rest if kegg_rest is not None else KEGGrest()
     kegg_response: KEGGresponse = kegg_rest.request(KEGGurl=KEGGurl, kegg_url=kegg_url, **kwargs)
-
     if kegg_response.status == KEGGresponse.Status.FAILED:
         raise RuntimeError(f'The KEGG request failed with the following URL: {kegg_response.kegg_url.url}')
     elif kegg_response.status == KEGGresponse.Status.TIMEOUT:
         raise RuntimeError(f'The KEGG request timed out with the following URL: {kegg_response.kegg_url.url}')
-
     return kegg_response

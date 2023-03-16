@@ -10,14 +10,12 @@ Options:
 """
 import docopt as d
 import sys
-
 from . import pathway_organizer as po
 from . import _utils as u
 
 
 def main():
     args: dict = d.docopt(__doc__)
-
     if args['--tln'] == '-' and args['--fn'] == '-':
         # If both the top level nodes and filter nodes are coming from standard input, convert them to comma separated lists
         inputs: str = sys.stdin.read()
@@ -29,13 +27,10 @@ def main():
     else:
         top_level_nodes: str = args['--tln']
         filter_nodes: str = args['--fn']
-
         if top_level_nodes:
             top_level_nodes: set = set(u.parse_input_sequence(input_source=top_level_nodes))
-
         if filter_nodes:
             filter_nodes: set = set(u.parse_input_sequence(input_source=filter_nodes))
-
     pathway_organizer = po.PathwayOrganizer.load_from_kegg(top_level_nodes=top_level_nodes, filter_nodes=filter_nodes)
     hierarchy_nodes_json_string = str(pathway_organizer)
     u.print_or_save(output_target=args['--output'], output_content=hierarchy_nodes_json_string)

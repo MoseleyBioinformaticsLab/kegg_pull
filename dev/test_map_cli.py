@@ -12,34 +12,30 @@ def test_help(mocker):
 
 
 test_data = [
-    (['conv', 'compound', 'chebi'], 'database_conv', {'kegg_database': 'compound', 'outside_database': 'chebi', 'reverse': False},
+    (['conv', 'compound', 'chebi'], 'database_conv', {'kegg_database': 'compound', 'outside_database': 'chebi', 'reverse': False}, None),
+    (['conv', 'entry-ids', '-', 'pubchem'], 'entries_conv', {'entry_ids': ['e1', 'e2'], 'target_database': 'pubchem', 'reverse': False},
+     'e1\ne2'),
+    (['conv', 'entry-ids', 'e1', 'chebi', '--reverse'], 'entries_conv', {'entry_ids': ['e1'], 'target_database': 'chebi', 'reverse': True},
      None),
-    (['conv', 'entry-ids', '-', 'pubchem'], 'entries_conv',
-     {'entry_ids': ['e1', 'e2'], 'target_database': 'pubchem', 'reverse': False}, 'e1\ne2'),
-    (['conv', 'entry-ids', 'e1', 'chebi', '--reverse'], 'entries_conv',
-     {'entry_ids': ['e1'], 'target_database': 'chebi', 'reverse': True}, None),
     (['link', 'enzyme', 'compound'], 'database_link',
-     {'source_database': 'enzyme', 'target_database': 'compound', 'deduplicate': False, 'add_glycans': False,
-      'add_drugs': False}, None),
+     {'source_database': 'enzyme', 'target_database': 'compound', 'deduplicate': False, 'add_glycans': False, 'add_drugs': False}, None),
     (['link', 'compound', 'reaction', '--add-glycans', '--add-drugs'], 'database_link',
-     {'source_database': 'compound', 'target_database': 'reaction', 'deduplicate': False, 'add_glycans': True,
-      'add_drugs': True}, None),
+     {'source_database': 'compound', 'target_database': 'reaction', 'deduplicate': False, 'add_glycans': True, 'add_drugs': True}, None),
     (['link', 'pathway', 'reaction', '--deduplicate'], 'database_link',
-     {'source_database': 'pathway', 'target_database': 'reaction', 'deduplicate': True, 'add_glycans': False,
-      'add_drugs': False}, None),
+     {'source_database': 'pathway', 'target_database': 'reaction', 'deduplicate': True, 'add_glycans': False, 'add_drugs': False}, None),
     (['link', 'entry-ids', 'e1,e2,e3', 'glycan'], 'entries_link',
      {'entry_ids': ['e1', 'e2', 'e3'], 'target_database': 'glycan', 'reverse': False}, None),
     (['link', 'entry-ids', '-', 'ko', '--reverse'], 'entries_link',
      {'entry_ids': ['e1', 'e2', 'e3'], 'target_database': 'ko', 'reverse': True}, ' e1\ne2\t\ne3\n\n'),
     (['link', 'ko', 'reaction', 'compound'], 'indirect_link',
-     {'source_database': 'ko', 'intermediate_database': 'reaction', 'target_database': 'compound',
-      'deduplicate': False, 'add_glycans': False, 'add_drugs': False}, None),
+     {'source_database': 'ko', 'intermediate_database': 'reaction', 'target_database': 'compound', 'deduplicate': False,
+      'add_glycans': False, 'add_drugs': False}, None),
     (['link', 'pathway', 'reaction', 'ko', '--deduplicate'], 'indirect_link',
-     {'source_database': 'pathway', 'intermediate_database': 'reaction', 'target_database': 'ko',
-      'deduplicate': True, 'add_glycans': False, 'add_drugs': False}, None),
+     {'source_database': 'pathway', 'intermediate_database': 'reaction', 'target_database': 'ko', 'deduplicate': True,
+      'add_glycans': False, 'add_drugs': False}, None),
     (['link', 'compound', 'reaction', 'ko', '--add-glycans', '--add-drugs'], 'indirect_link',
-     {'source_database': 'compound', 'intermediate_database': 'reaction', 'target_database': 'ko',
-      'deduplicate': False, 'add_glycans': True, 'add_drugs': True}, None)]
+     {'source_database': 'compound', 'intermediate_database': 'reaction', 'target_database': 'ko', 'deduplicate': False,
+      'add_glycans': True, 'add_drugs': True}, None)]
 
 
 def _prepare_input(args: list, method: str) -> t.Tuple[list, str, str]:
