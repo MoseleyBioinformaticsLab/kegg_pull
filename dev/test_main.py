@@ -4,7 +4,6 @@ import zipfile as zf
 import os
 import shutil as sh
 import json
-
 import kegg_pull.__main__ as m
 import kegg_pull.entry_ids_cli as ei_cli
 import kegg_pull.rest_cli as r_cli
@@ -135,7 +134,7 @@ def test_pull(mocker, args: list, output: str):
         br:br03222
     """
     stdin_mock: mocker.MagicMock = mocker.patch('kegg_pull._utils.sys.stdin.read', return_value=stdin_mock)
-    successful_entry_ids = ['br:br08005', 'br:br08902','br:br08431']
+    successful_entry_ids = ['br:br08005', 'br:br08902', 'br:br08431']
     # The expected output file names have underscores instead of colons in case testing on Windows.
     expected_output_files: list = [entry_id.replace(':', '_') for entry_id in successful_entry_ids]
     expected_pull_results = {

@@ -4,7 +4,6 @@ Pulling Lists of KEGG Entry IDs
 Functionality for pulling lists of KEGG entry IDs from the KEGG REST API.
 """
 import typing as t
-
 from . import rest as r
 from . import kegg_url as ku
 
@@ -32,7 +31,6 @@ def _process_response(KEGGurl: type, kegg_rest: t.Union[r.KEGGrest, None], **kwa
     """
     kegg_response: r.KEGGresponse = r.request_and_check_error(kegg_rest=kegg_rest, KEGGurl=KEGGurl, **kwargs)
     entry_ids: list = _parse_entry_ids_string(entry_ids_string=kegg_response.text_body)
-
     return entry_ids
 
 
@@ -44,7 +42,6 @@ def _parse_entry_ids_string(entry_ids_string: str) -> list:
     """
     entry_ids: list = entry_ids_string.strip().split('\n')
     entry_ids = [entry_id.split('\t')[0].strip() for entry_id in entry_ids if entry_id.strip() != '']
-
     return entry_ids
 
 
@@ -57,12 +54,9 @@ def from_file(file_path: str) -> list:
     """
     with open(file_path, 'r') as file:
         entry_ids: str = file.read()
-
         if entry_ids == '':
             raise ValueError(f'Attempted to load entry IDs from {file_path}. But the file is empty')
-
         entry_ids: list = _parse_entry_ids_string(entry_ids_string=entry_ids)
-
     return entry_ids
 
 
@@ -79,9 +73,8 @@ def from_keywords(database: str, keywords: list, kegg_rest: r.KEGGrest = None) -
 
 
 def from_molecular_attribute(
-    database: str, formula: str = None, exact_mass: t.Union[float, tuple] = None, molecular_weight: t.Union[int, tuple] = None,
-    kegg_rest: r.KEGGrest = None
-) -> list:
+        database: str, formula: str = None, exact_mass: t.Union[float, tuple] = None, molecular_weight: t.Union[int, tuple] = None,
+        kegg_rest: r.KEGGrest = None) -> list:
     """ Pulls entry IDs from a KEGG database containing chemical entries based on one (and only one) of three molecular attributes of the entries.
 
     :param database: The name of the database containing chemical entries.
@@ -94,5 +87,4 @@ def from_molecular_attribute(
     """
     return _process_response(
         KEGGurl=ku.MolecularFindKEGGurl, kegg_rest=kegg_rest, database=database, formula=formula, exact_mass=exact_mass,
-        molecular_weight=molecular_weight
-    )
+        molecular_weight=molecular_weight)

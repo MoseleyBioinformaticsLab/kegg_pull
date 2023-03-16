@@ -23,7 +23,6 @@ Options:
 import docopt as d
 import json
 import time
-
 from . import pull as p
 from . import rest as r
 from . import entry_ids as ei
@@ -41,40 +40,27 @@ def main():
     multiprocess_lock_save: bool = args['--multi-process'] and output.endswith('.zip')
     single_pull = p.SinglePull(output=output, kegg_rest=kegg_rest, multiprocess_lock_save=multiprocess_lock_save)
     force_single_entry: bool = args['--force-single-entry']
-
     if args['database']:
         database: str = args['<database>']
-
         if database == 'brite':
             force_single_entry = True
-
         entry_ids: list = ei.from_database(database=database)
     else:
         entry_ids: list = u.parse_input_sequence(input_source=args['<entry-ids>'])
-
     unsuccessful_threshold: float = float(args['--ut']) if args['--ut'] is not None else None
-
     if args['--multi-process']:
         n_workers = int(args['--n-workers']) if args['--n-workers'] is not None else None
-
         multiple_pull = p.MultiProcessMultiplePull(
-            single_pull=single_pull, unsuccessful_threshold=unsuccessful_threshold, n_workers=n_workers
-        )
+            single_pull=single_pull, unsuccessful_threshold=unsuccessful_threshold, n_workers=n_workers)
     else:
         multiple_pull = p.SingleProcessMultiplePull(single_pull=single_pull, unsuccessful_threshold=unsuccessful_threshold)
-
     time1: float = _testable_time()
-
     pull_result: p.PullResult = multiple_pull.pull(
-        entry_ids=entry_ids, entry_field=entry_field, force_single_entry=force_single_entry
-    )
-
+        entry_ids=entry_ids, entry_field=entry_field, force_single_entry=force_single_entry)
     time2: float = _testable_time()
-
     n_total_entry_ids: int = len(pull_result.successful_entry_ids) + len(pull_result.failed_entry_ids)
     n_total_entry_ids += len(pull_result.timed_out_entry_ids)
     percent_success: float = len(pull_result.successful_entry_ids) / n_total_entry_ids * 100
-
     pull_results = {
         'percent-success': float(f'{percent_success:.2f}'),
         'pull-minutes': float(f'{(time2 - time1) / 60:.2f}'),
@@ -84,9 +70,7 @@ def main():
         'num-total': n_total_entry_ids,
         'successful-entry-ids': pull_result.successful_entry_ids,
         'failed-entry-ids': pull_result.failed_entry_ids,
-        'timed-out-entry-ids': pull_result.timed_out_entry_ids
-    }
-
+        'timed-out-entry-ids': pull_result.timed_out_entry_ids}
     with open('pull-results.json', 'w') as file:
         json.dump(pull_results, file, indent=0)
 

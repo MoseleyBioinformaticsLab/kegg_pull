@@ -18,7 +18,6 @@ Options:
     --mw=<molecular-weight> Same as "--em=<exact-mass>" but searches based on the molecular weight.
 """
 import docopt as d
-
 from . import entry_ids as ei
 from . import _utils as u
 
@@ -26,7 +25,6 @@ from . import _utils as u
 def main():
     args: dict = d.docopt(__doc__)
     database: str = args['<database>']
-
     if args['database']:
         entry_ids: list = ei.from_database(database=database)
     elif args['keywords']:
@@ -34,10 +32,7 @@ def main():
         entry_ids: list = ei.from_keywords(database=database, keywords=keywords)
     else:
         formula, exact_mass, molecular_weight = u.get_molecular_attribute_args(args=args)
-
         entry_ids: list = ei.from_molecular_attribute(
-            database=database, formula=formula, exact_mass=exact_mass, molecular_weight=molecular_weight
-        )
-
+            database=database, formula=formula, exact_mass=exact_mass, molecular_weight=molecular_weight)
     entry_ids: str = '\n'.join(entry_ids)
     u.print_or_save(output_target=args['--output'], output_content=entry_ids)
