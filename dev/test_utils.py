@@ -28,7 +28,7 @@ def test_parse_input_sequence_stdin_exception(mocker, stdin_input: str):
 
 def test_get_range_values_exception():
     with pt.raises(ValueError) as error:
-        utils._get_range_values(range_values=[1, 2, 3], value_type=int)
+        utils._get_range_values(range_values=['1', '2', '3'], value_type=int)
     expected_message = f'Range can only be specified by two values but 3 values were provided: 1, 2, 3'
     u.assert_exception(expected_message=expected_message, exception=error)
 

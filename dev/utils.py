@@ -55,7 +55,7 @@ def _test_main(mocker, argv_mock: list, stdin_mock: str, method: str, method_ret
 
 def test_print(
         mocker, argv_mock: list, stdin_mock: str, method: str, method_return_value: object, method_kwargs: dict, module,
-        expected_output: t.Union[str, bytes], is_binary: bool = False, caplog=None):
+        expected_output: str | bytes, is_binary: bool = False, caplog=None):
     print_mock: mocker.MagicMock = mocker.patch('builtins.print')
     _test_main(
         mocker=mocker, argv_mock=argv_mock, stdin_mock=stdin_mock, method=method, method_return_value=method_return_value,
@@ -67,20 +67,20 @@ def test_print(
 
 def test_file(
         mocker, argv_mock: list, output_file: str, stdin_mock: str, method: str, method_return_value: object, method_kwargs: dict, module,
-        expected_output: t.Union[str, bytes], is_binary: bool = False):
+        expected_output: str | bytes, is_binary: bool = False):
     argv_mock: list = argv_mock + [f'--output={output_file}']
     _test_main(
         mocker=mocker, argv_mock=argv_mock, stdin_mock=stdin_mock, method=method, method_return_value=method_return_value,
         method_kwargs=method_kwargs, module=module)
     read_type: str = 'rb' if is_binary else 'r'
     with open(output_file, read_type) as file:
-        actual_output: t.Union[str, bytes] = file.read()
+        actual_output: str | bytes = file.read()
     assert actual_output == expected_output
 
 
 def test_zip_archive(
         mocker, argv_mock: list, zip_archive_data: tuple, stdin_mock: str, method: str, method_return_value: object, method_kwargs: dict,
-        module, expected_output: t.Union[str, bytes], is_binary: bool = False):
+        module, expected_output: str | bytes, is_binary: bool = False):
     zip_archive_path, zip_file_name = zip_archive_data
     argv_mock: list = argv_mock + [f'--output={zip_archive_path}:{zip_file_name}']
     _test_main(
@@ -105,16 +105,15 @@ def test_save_to_json(json_file_path: str, expected_saved_json_object: dict):
 
 
 def test_load_from_json(
-        json_file_path: str, saved_object: dict, method: t.Callable, expected_loaded_object: dict,
-        loaded_object_attribute: str = None):
+        json_file_path: str, saved_object: dict, method: t.Callable, expected_loaded_object: dict, loaded_object_attribute: str = None):
     _write_test_json_object(json_file_path=json_file_path, test_object=saved_object)
-    actual_loaded_object: t.Union[object, dict] = method(file_path=json_file_path)
+    actual_loaded_object = method(file_path=json_file_path)
     if loaded_object_attribute is not None:
         actual_loaded_object: dict = actual_loaded_object.__getattribute__(loaded_object_attribute)
     assert actual_loaded_object == expected_loaded_object
 
 
-def _write_test_json_object(json_file_path: str, test_object: t.Union[list, dict, int, float, str]) -> None:
+def _write_test_json_object(json_file_path: str, test_object: list | dict | int | float | str) -> None:
     if '.zip:' in json_file_path:
         with zf.ZipFile('archive.zip', 'w') as zip_file:
             json_file_name: str = 'dir/file.json' if 'dir/' in json_file_path else 'file.json'

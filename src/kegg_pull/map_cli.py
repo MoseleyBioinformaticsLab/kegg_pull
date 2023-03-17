@@ -28,8 +28,8 @@ from . import map as kmap
 from . import _utils as u
 
 
-def main():
-    args: dict = doc.docopt(__doc__)
+def main() -> None:
+    args = doc.docopt(__doc__)
     source_database: str = args['<source-database>']
     intermediate_database: str = args['<intermediate-database>']
     target_database: str = args['<target-database>']
@@ -53,8 +53,8 @@ def main():
             source_database=source_database, target_database=target_database, deduplicate=deduplicate,
             add_glycans=add_glycans, add_drugs=add_drugs)
     else:
-        kegg_database = args['<kegg-database>']
-        outside_database = args['<outside-database>']
+        kegg_database: str = args['<kegg-database>']
+        outside_database: str = args['<outside-database>']
         mapping = kmap.database_conv(kegg_database=kegg_database, outside_database=outside_database, reverse=reverse)
-    mapping: str = kmap.to_json_string(mapping=mapping)
-    u.print_or_save(output_target=args['--output'], output_content=mapping)
+    mapping_str: str = kmap.to_json_string(mapping=mapping)
+    u.print_or_save(output_target=args['--output'], output_content=mapping_str)

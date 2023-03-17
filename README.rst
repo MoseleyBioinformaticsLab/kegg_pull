@@ -11,7 +11,7 @@ The complete documentation for our API and CLI including tutorials can be found 
 
 Installation
 ------------
-Requires python 3.8 and above.
+Requires python 3.10 and above.
 
 Install on Linux, Mac OS X
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

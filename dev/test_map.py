@@ -95,7 +95,7 @@ def test_deduplicate_pathway_ids_exception(mocker):
 def get_mapping_data(request, mocker):
     add_glycans, add_drugs = request.param
 
-    def mapping_data(kegg_rest: t.Union[mocker.MagicMock, None], kwargs: dict) -> tuple:
+    def mapping_data(kegg_rest: mocker.MagicMock | None, kwargs: dict) -> tuple:
         compound_is_target = kwargs['target_database'] == 'compound'
         expected_call_args_list = [kwargs]
         compound_to_x = {'cpd1': {'x1', 'x2'}, 'cpd2': {'x1'}, 'cpd3': {'x2'}, 'cpd4': {'x3'}, 'cpd5': {'x2'}, 'cpd6': {'x4'}}
@@ -293,7 +293,7 @@ test_invalid_load_from_json_data.extend([
 
 
 @pt.mark.parametrize('invalid_json_object', test_invalid_load_from_json_data)
-def test_invalid_load_from_json(caplog, json_file_path: str, invalid_json_object: t.Union[list, dict, int, float, str]):
+def test_invalid_load_from_json(caplog, json_file_path: str, invalid_json_object: list | dict | int | float | str):
     u.test_invalid_load_from_json(
         json_file_path=json_file_path, invalid_json_object=invalid_json_object, method=kmap.load_from_json,
         expected_error_message=expected_error_message, caplog=caplog)

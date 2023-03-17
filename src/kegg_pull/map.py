@@ -11,12 +11,12 @@ from . import rest as r
 from . import kegg_url as ku
 from . import _utils as u
 
-KEGGmapping = t.Dict[str, t.Set[str]]
+KEGGmapping = dict[str, set[str]]
 
 
 def database_link(
         source_database: str, target_database: str, deduplicate: bool = False, add_glycans: bool = False,
-        add_drugs: bool = False, kegg_rest: t.Union[r.KEGGrest, None] = None) -> KEGGmapping:
+        add_drugs: bool = False, kegg_rest: r.KEGGrest | None = None) -> KEGGmapping:
     """ Converts the output of the KEGG "link" operation (of the form that maps the entry IDs of one database to the entry
      IDs of another) into a dictionary along with other helpful optional functionality.
 
@@ -42,7 +42,7 @@ def database_link(
     return mapping
 
 
-def _to_dict(kegg_rest: t.Union[r.KEGGrest, None], KEGGurl: type, **kwargs) -> KEGGmapping:
+def _to_dict(kegg_rest: r.KEGGrest | None, KEGGurl: type[ku.AbstractKEGGurl], **kwargs) -> KEGGmapping:
     """ Converts output from the KEGG "link" operation into a dictionary.
 
     :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default parameters.
@@ -51,7 +51,7 @@ def _to_dict(kegg_rest: t.Union[r.KEGGrest, None], KEGGurl: type, **kwargs) -> K
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
-    kegg_response: r.KEGGresponse = r.request_and_check_error(kegg_rest=kegg_rest, KEGGurl=KEGGurl, **kwargs)
+    kegg_response = r.request_and_check_error(kegg_rest=kegg_rest, KEGGurl=KEGGurl, **kwargs)
     mapped_ids = dict()
     for one_to_one in kegg_response.text_body.strip().split('\n'):
         [map_from_id, map_to_id] = one_to_one.strip().split('\t')
@@ -59,7 +59,7 @@ def _to_dict(kegg_rest: t.Union[r.KEGGrest, None], KEGGurl: type, **kwargs) -> K
     return mapped_ids
 
 
-def _add_to_dict(dictionary: KEGGmapping, key: str, values: t.Set[str]):
+def _add_to_dict(dictionary: KEGGmapping, key: str, values: set[str]) -> None:
     """ Adds a set of values to a set mapped from a given key in a dictionary.
 
     :param dictionary: The dictionary mapping to sets, one of which the values will be added to.
@@ -100,7 +100,7 @@ def _deduplicate_pathway_ids(mapping: KEGGmapping, deduplicate: bool, source_dat
 
 
 def _process_mapping(
-        mapping: KEGGmapping, func: t.Callable, source_database: str, target_database: str, relevant_database: str) -> KEGGmapping:
+        mapping: KEGGmapping, func: t.Callable[..., KEGGmapping], source_database: str, target_database: str, relevant_database: str) -> KEGGmapping:
     """ Performs additional processing on a mapping according to a provided function.
 
     :param mapping: The mapping to process.
@@ -122,7 +122,7 @@ def _process_mapping(
 
 def _add_glycans_or_drugs(
         mapping: KEGGmapping, source_database: str, target_database: str, add_glycans: bool, add_drugs: bool,
-        kegg_rest: t.Union[r.KEGGrest, None] = None) -> KEGGmapping:
+        kegg_rest: r.KEGGrest | None = None) -> KEGGmapping:
     """ If requested, adds the corresponding compound IDs of equivalent glycan and/or drug entries to a mapping (assuming mapping from "compound" to some target database).
 
     :param mapping: The mapping to add the IDs of compound-equivalents which cross-reference the target database.
@@ -162,7 +162,7 @@ def _add_glycans_or_drugs(
 
 # noinspection PyShadowingNames
 def database_conv(
-        kegg_database: str, outside_database: str, reverse: bool, kegg_rest: t.Union[r.KEGGrest, None] = None) -> KEGGmapping:
+        kegg_database: str, outside_database: str, reverse: bool, kegg_rest: r.KEGGrest | None = None) -> KEGGmapping:
     """ Converts the output of the KEGG "conv" operation (of the form that maps the entry IDs of one database to the entry
      IDs of another) into a dictionary.
 
@@ -194,8 +194,8 @@ def _map_and_reverse(reverse: bool, **kwargs) -> KEGGmapping:
 
 # noinspection PyShadowingNames
 def entries_link(
-        entry_ids: t.List[str], target_database: str, reverse: bool = False,
-        kegg_rest: t.Union[r.KEGGrest, None] = None) -> KEGGmapping:
+        entry_ids: list[str], target_database: str, reverse: bool = False,
+        kegg_rest: r.KEGGrest | None = None) -> KEGGmapping:
     """ Converts the output of the KEGG "link" operation (of the form that maps specific provided entry IDs to the IDs of a target database) to a dictionary.
 
     :param entry_ids: The IDs of the entries to map to entries in the target database.
@@ -211,7 +211,7 @@ def entries_link(
 
 # noinspection PyShadowingNames
 def entries_conv(
-        entry_ids: t.List[str], target_database: str, reverse: bool = False, kegg_rest: t.Union[r.KEGGrest, None] = None) -> KEGGmapping:
+        entry_ids: list[str], target_database: str, reverse: bool = False, kegg_rest: r.KEGGrest | None = None) -> KEGGmapping:
     """ Converts the output of the KEGG "conv" operation (of the form that maps specific provided entry IDs to the IDs of a target database) to a dictionary.
 
     :param entry_ids: The IDs of the entries to map to entries in the target database.
@@ -227,7 +227,7 @@ def entries_conv(
 
 def indirect_link(
         source_database: str, intermediate_database: str, target_database: str, deduplicate: bool = False,
-        add_glycans: bool = False, add_drugs: bool = False, kegg_rest: t.Union[r.KEGGrest, None] = None) -> KEGGmapping:
+        add_glycans: bool = False, add_drugs: bool = False, kegg_rest: r.KEGGrest | None = None) -> KEGGmapping:
     """ Creates a dictionary that maps the entry IDs of a source database to those of a target database using an intermediate database ("link" operation) e.g. ko-to-compound where the intermediate is reaction (connecting cross-references of ko-to-reaction and reaction-to-compound).
 
     :param source_database: The name of the database with entry IDs to map to the target database.
@@ -336,8 +336,8 @@ def save_to_json(mapping: KEGGmapping, file_path: str) -> None:
     :param file_path: The path to the JSON file. If in a ZIP archive, the file path must be in the following format: /path/to/zip-archive.zip:/path/to/file (e.g. ./archive.zip:mapping.json).
     :raises ValidationError: Raised if the mapping does not follow the correct JSON schema. Should follow the correct schema if the dictionary was created with this map module.
     """
-    mapping: str = to_json_string(mapping=mapping)
-    u.save_output(output_target=file_path, output_content=mapping)
+    mapping_str: str = to_json_string(mapping=mapping)
+    u.save_output(output_target=file_path, output_content=mapping_str)
 
 
 def load_from_json(file_path: str) -> KEGGmapping:

@@ -238,7 +238,7 @@ def test_multiple_pull(mocker, MultiplePull: type, kwargs: dict, caplog, _):
             actual_abort_results: dict = json.load(file)
         assert expected_abort_results == actual_abort_results
     else:
-        multiple_pull_result: p.PullResult = multiple_pull.pull(entry_ids=entry_ids_mock)
+        multiple_pull_result = multiple_pull.pull(entry_ids=entry_ids_mock)
         expected_successful_entry_ids = (
             'A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'B0', 'B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8',
             'C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'D0')
@@ -262,7 +262,7 @@ class PickleableSinglePullMock:
     """
     class PickleablePullResultMock:
         """
-        A regular PullResult object will raise an exception if instantiated outside of the pull module and we cannot take advantage of
+        A regular PullResult object will raise an exception if instantiated outside the pull module, and we cannot take advantage of
         the "mock_non_instantiable" function in dev/utils.py since Windows cannot handle that either.
         """
         def __init__(self, successful_entry_ids: tuple, failed_entry_ids: tuple):

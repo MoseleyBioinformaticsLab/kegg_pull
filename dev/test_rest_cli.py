@@ -41,8 +41,8 @@ test_kwargs = [
     {'database': 'drug', 'formula': 'CO2', 'exact_mass': None, 'molecular_weight': None},
     {'database': 'drug', 'formula': None, 'exact_mass': 20.2, 'molecular_weight': None},
     {'database': 'drug', 'formula': None, 'exact_mass': None, 'molecular_weight': 202},
-    {'database': 'drug', 'formula': None, 'exact_mass': (20.2,30.3), 'molecular_weight': None},
-    {'database': 'drug', 'formula': None, 'exact_mass': None, 'molecular_weight': (202,303)},
+    {'database': 'drug', 'formula': None, 'exact_mass': (20.2, 30.3), 'molecular_weight': None},
+    {'database': 'drug', 'formula': None, 'exact_mass': None, 'molecular_weight': (202, 303)},
     {'kegg_database': 'kegg-db', 'outside_database': 'out-db'},
     {'target_database': 'genes', 'entry_ids': ['eid1', 'eid2']},
     {'target_database': 'target-db', 'source_database': 'source-db'},
@@ -121,7 +121,7 @@ test_test_data = [
 
 
 @pt.mark.parametrize('KEGGurl,args,kwargs', test_test_data)
-def test_test(mocker, KEGGurl: t.Type, args: list, kwargs: dict, test_result: bool):
+def test_test(mocker, KEGGurl: type[ku.AbstractKEGGurl], args: list, kwargs: dict, test_result: bool):
     test_mock: mocker.MagicMock = mocker.patch('kegg_pull.rest_cli.r.KEGGrest.test', return_value=test_result)
     argv_mock: list = ['kegg_pull'] + args + ['--test']
     mocker.patch('sys.argv', argv_mock)

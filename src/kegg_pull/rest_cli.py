@@ -44,86 +44,86 @@ from . import _utils as u
 
 
 def main():
-    args: dict = d.docopt(__doc__)
+    args = d.docopt(__doc__)
     database: str = args['<database>']
-    entry_ids: str = args['<entry-ids>']
+    entry_ids: str | list[str] = args['<entry-ids>']
     target_database: str = args['<target-database>']
     test: bool = args['--test']
     is_binary = False
-    test_result: bool = None
-    kegg_response: r.KEGGresponse = None
+    test_result: bool | None = None
+    kegg_response: r.KEGGresponse | None = None
     kegg_rest = r.KEGGrest()
     if args['info']:
         if test:
-            test_result: bool = kegg_rest.test(KEGGurl=ku.InfoKEGGurl, database=database)
+            test_result = kegg_rest.test(KEGGurl=ku.InfoKEGGurl, database=database)
         else:
-            kegg_response: r.KEGGresponse = kegg_rest.info(database=database)
+            kegg_response = kegg_rest.info(database=database)
     elif args['list']:
         if test:
-            test_result: bool = kegg_rest.test(KEGGurl=ku.ListKEGGurl, database=database)
+            test_result = kegg_rest.test(KEGGurl=ku.ListKEGGurl, database=database)
         else:
-            kegg_response: r.KEGGresponse = kegg_rest.list(database=database)
+            kegg_response = kegg_rest.list(database=database)
     elif args['get']:
-        entry_ids: list = u.parse_input_sequence(input_source=entry_ids)
+        entry_ids = u.parse_input_sequence(input_source=entry_ids)
         entry_field: str = args['--entry-field']
         if test:
-            test_result: bool = kegg_rest.test(KEGGurl=ku.GetKEGGurl, entry_ids=entry_ids, entry_field=entry_field)
+            test_result = kegg_rest.test(KEGGurl=ku.GetKEGGurl, entry_ids=entry_ids, entry_field=entry_field)
         else:
             if ku.GetKEGGurl.is_binary(entry_field=entry_field):
                 is_binary = True
-            kegg_response: r.KEGGresponse = kegg_rest.get(entry_ids=entry_ids, entry_field=entry_field)
+            kegg_response = kegg_rest.get(entry_ids=entry_ids, entry_field=entry_field)
     elif args['find']:
         if args['<keywords>']:
-            keywords: list = u.parse_input_sequence(input_source=args['<keywords>'])
+            keywords = u.parse_input_sequence(input_source=args['<keywords>'])
             if test:
-                test_result: bool = kegg_rest.test(KEGGurl=ku.KeywordsFindKEGGurl, database=database, keywords=keywords)
+                test_result = kegg_rest.test(KEGGurl=ku.KeywordsFindKEGGurl, database=database, keywords=keywords)
             else:
-                kegg_response: r.KEGGresponse = kegg_rest.keywords_find(database=database, keywords=keywords)
+                kegg_response = kegg_rest.keywords_find(database=database, keywords=keywords)
         else:
             formula, exact_mass, molecular_weight = u.get_molecular_attribute_args(args=args)
             if test:
-                test_result: bool = kegg_rest.test(
+                test_result = kegg_rest.test(
                     KEGGurl=ku.MolecularFindKEGGurl, database=database, formula=formula,
                     exact_mass=exact_mass, molecular_weight=molecular_weight)
             else:
-                kegg_response: r.KEGGresponse = kegg_rest.molecular_find(
+                kegg_response = kegg_rest.molecular_find(
                     database=database, formula=formula, exact_mass=exact_mass, molecular_weight=molecular_weight)
     elif args['conv']:
         if args['entry-ids']:
-            entry_ids: list = u.parse_input_sequence(input_source=entry_ids)
+            entry_ids = u.parse_input_sequence(input_source=entry_ids)
             if test:
-                test_result: bool = kegg_rest.test(KEGGurl=ku.EntriesConvKEGGurl, target_database=target_database, entry_ids=entry_ids)
+                test_result = kegg_rest.test(KEGGurl=ku.EntriesConvKEGGurl, target_database=target_database, entry_ids=entry_ids)
             else:
-                kegg_response: r.KEGGresponse = kegg_rest.entries_conv(target_database=target_database, entry_ids=entry_ids)
+                kegg_response = kegg_rest.entries_conv(target_database=target_database, entry_ids=entry_ids)
         else:
             kegg_database = args['<kegg-database>']
             outside_database = args['<outside-database>']
             if test:
-                test_result: bool = kegg_rest.test(
+                test_result = kegg_rest.test(
                     KEGGurl=ku.DatabaseConvKEGGurl, kegg_database=kegg_database, outside_database=outside_database)
             else:
-                kegg_response: r.KEGGresponse = kegg_rest.database_conv(kegg_database=kegg_database, outside_database=outside_database)
+                kegg_response = kegg_rest.database_conv(kegg_database=kegg_database, outside_database=outside_database)
     elif args['link']:
         if args['entry-ids']:
-            entry_ids: list = u.parse_input_sequence(input_source=entry_ids)
+            entry_ids = u.parse_input_sequence(input_source=entry_ids)
             if test:
-                test_result: bool = kegg_rest.test(KEGGurl=ku.EntriesLinkKEGGurl, target_database=target_database, entry_ids=entry_ids)
+                test_result = kegg_rest.test(KEGGurl=ku.EntriesLinkKEGGurl, target_database=target_database, entry_ids=entry_ids)
             else:
-                kegg_response: r.KEGGresponse = kegg_rest.entries_link(target_database=target_database, entry_ids=entry_ids)
+                kegg_response = kegg_rest.entries_link(target_database=target_database, entry_ids=entry_ids)
         else:
             source_database: str = args['<source-database>']
             if test:
-                test_result: bool = kegg_rest.test(
+                test_result = kegg_rest.test(
                     KEGGurl=ku.DatabaseLinkKEGGurl, target_database=target_database, source_database=source_database)
             else:
-                kegg_response: r.KEGGresponse = kegg_rest.database_link(
+                kegg_response = kegg_rest.database_link(
                     target_database=target_database, source_database=source_database)
     else:
-        drug_entry_ids: list = u.parse_input_sequence(input_source=args['<drug-entry-ids>'])
+        drug_entry_ids = u.parse_input_sequence(input_source=args['<drug-entry-ids>'])
         if test:
-            test_result: bool = kegg_rest.test(KEGGurl=ku.DdiKEGGurl, drug_entry_ids=drug_entry_ids)
+            test_result = kegg_rest.test(KEGGurl=ku.DdiKEGGurl, drug_entry_ids=drug_entry_ids)
         else:
-            kegg_response: r.KEGGresponse = kegg_rest.ddi(drug_entry_ids=drug_entry_ids)
+            kegg_response = kegg_rest.ddi(drug_entry_ids=drug_entry_ids)
     if test:
         print(test_result)
     else:

@@ -3,10 +3,10 @@ KEGG REST API Operations
 ~~~~~~~~~~~~~~~~~~~~~~~~
 Interface for the KEGG REST API including all its operations.
 """
+import typing as t
 import enum as e
 import requests as rq
 import time
-import typing as t
 import inspect as ins
 import logging as log
 from . import kegg_url as ku
@@ -47,7 +47,7 @@ class KEGGresponse(u.NonInstantiable):
 
 class KEGGrest:
     """Class containing methods for making requests to the KEGG REST API, including all the KEGG REST API operations."""
-    def __init__(self, n_tries: t.Union[int, None] = 3, time_out: t.Union[int, None] = 60, sleep_time: t.Union[float, None] = 5.0):
+    def __init__(self, n_tries: int | None = 3, time_out: int | None = 60, sleep_time: float | None = 5.0):
         """
         :param n_tries: The number of times to try to make a request (can succeed the first time, or any of n_tries, or none of the tries).
         :param time_out: The number of seconds to wait for a request until marking it as timed out.
@@ -59,7 +59,7 @@ class KEGGrest:
         if self._n_tries < 1:
             raise ValueError(f'{self._n_tries} is not a valid number of tries to make a KEGG request.')
 
-    def request(self, KEGGurl: type = None, kegg_url: ku.AbstractKEGGurl = None, **kwargs) -> KEGGresponse:
+    def request(self, KEGGurl: type[ku.AbstractKEGGurl] = None, kegg_url: ku.AbstractKEGGurl = None, **kwargs) -> KEGGresponse:
         """ General KEGG request function based on a given KEGG URL (either a class that is instantiated or an already instantiated KEGG URL object).
 
         :param KEGGurl: Optional KEGG URL class (extended from AbstractKEGGurl) that's instantiated with provided keyword arguments.
@@ -67,11 +67,11 @@ class KEGGrest:
         :param kwargs: The keyword arguments used to instantiate the KEGGurl class, if provided.
         :return: The KEGG response.
         """
-        kegg_url: ku.AbstractKEGGurl = KEGGrest._get_kegg_url(KEGGurl=KEGGurl, kegg_url=kegg_url, **kwargs)
-        status = None
+        kegg_url = KEGGrest._get_kegg_url(KEGGurl=KEGGurl, kegg_url=kegg_url, **kwargs)
+        status: KEGGresponse.Status | None = None
         for _ in range(self._n_tries):
             try:
-                response: rq.Response = rq.get(url=kegg_url.url, timeout=self._time_out)
+                response = rq.get(url=kegg_url.url, timeout=self._time_out)
                 if response.status_code == 200:
                     return KEGGresponse(
                         status=KEGGresponse.Status.SUCCESS, kegg_url=kegg_url, text_body=response.text, binary_body=response.content)
@@ -87,7 +87,8 @@ class KEGGrest:
         return KEGGresponse(status=status, kegg_url=kegg_url)
 
     @staticmethod
-    def _get_kegg_url(KEGGurl: type = None, kegg_url: ku.AbstractKEGGurl = None, **kwargs) -> ku.AbstractKEGGurl:
+    def _get_kegg_url(
+            KEGGurl: type[ku.AbstractKEGGurl] | None = None, kegg_url: ku.AbstractKEGGurl | None = None, **kwargs) -> ku.AbstractKEGGurl:
         """ Gets the KEGGurl object to be used to make the request to KEGG.
 
         :param KEGGurl: Optional KEGGurl class to instantiate a KEGGurl object using keyword arguments.
@@ -109,10 +110,12 @@ class KEGGrest:
             raise ValueError(
                 f'The value for KEGGurl must be an inherited class of {ku.AbstractKEGGurl.__name__}. '
                 f'The class "{KEGGurl.__name__}" is not.')
-        kegg_url: ku.AbstractKEGGurl = KEGGurl(**kwargs)
+        kegg_url = KEGGurl(**kwargs)
         return kegg_url
 
-    def test(self, KEGGurl: type = None, kegg_url: ku.AbstractKEGGurl = None, **kwargs) -> bool:
+    def test(
+            self, KEGGurl: type[ku.AbstractKEGGurl] | None = None, kegg_url: ku.AbstractKEGGurl | None = None,
+            **kwargs) -> bool:
         """ Tests if a KEGGurl will succeed upon being used in a request to the KEGG REST API.
 
         :param KEGGurl: Optional KEGGurl class used to instantiate a KEGGurl object given keyword arguments.
@@ -120,10 +123,10 @@ class KEGGrest:
         :param kwargs: The keyword arguments used to instantiated the KEGGurl object from the KEGGurl class, if provided.
         :return: True if the URL would succeed, false if it would fail or time out.
         """
-        kegg_url: ku.AbstractKEGGurl = KEGGrest._get_kegg_url(KEGGurl=KEGGurl, kegg_url=kegg_url, **kwargs)
+        kegg_url = KEGGrest._get_kegg_url(KEGGurl=KEGGurl, kegg_url=kegg_url, **kwargs)
         for _ in range(self._n_tries):
             try:
-                response: rq.Response = rq.head(url=kegg_url.url, timeout=self._time_out)
+                response = rq.head(url=kegg_url.url, timeout=self._time_out)
                 if response.status_code == 200:
                     return True
             except rq.exceptions.Timeout:
@@ -138,7 +141,7 @@ class KEGGrest:
         """
         return self.request(KEGGurl=ku.ListKEGGurl, database=database)
 
-    def get(self, entry_ids: list, entry_field: str = None) -> KEGGresponse:
+    def get(self, entry_ids: t.List[str], entry_field: str | None = None) -> KEGGresponse:
         """ Executes the "get" KEGG API operation, pulling the entries of the provided entry IDs.
 
         :param entry_ids: The IDs of entries to pull.
@@ -155,7 +158,7 @@ class KEGGrest:
         """
         return self.request(KEGGurl=ku.InfoKEGGurl, database=database)
 
-    def keywords_find(self, database: str, keywords: list) -> KEGGresponse:
+    def keywords_find(self, database: str, keywords: t.List[str]) -> KEGGresponse:
         """ Executes the "find" KEGG API operation, finding entry IDs based on keywords to search in entries.
 
         :param database: The name of the database containing entries to search for.
@@ -165,8 +168,8 @@ class KEGGrest:
         return self.request(KEGGurl=ku.KeywordsFindKEGGurl, database=database, keywords=keywords)
 
     def molecular_find(
-            self, database: str, formula: str = None, exact_mass: t.Union[float, tuple] = None,
-            molecular_weight: t.Union[int, tuple] = None) -> KEGGresponse:
+            self, database: str, formula: str | None = None, exact_mass: float | tuple[float, float] | None = None,
+            molecular_weight: int | tuple[int, int] | None = None) -> KEGGresponse:
         """ Executes the "find" KEGG API operation, finding entry IDs in chemical databases based on one (and only one) choice of three molecular attributes of the entries.
 
         :param database: The name of the chemical database to search for entries in.
@@ -187,7 +190,7 @@ class KEGGrest:
         """
         return self.request(KEGGurl=ku.DatabaseConvKEGGurl, kegg_database=kegg_database, outside_database=outside_database)
 
-    def entries_conv(self, target_database: str, entry_ids: list) -> KEGGresponse:
+    def entries_conv(self, target_database: str, entry_ids: t.List[str]) -> KEGGresponse:
         """ Executes the "conv" KEGG API operation, converting provided entry IDs from one database to the form of a target database.
 
         :param target_database: The name of the database to get converted entry IDs from.
@@ -205,7 +208,7 @@ class KEGGrest:
         """
         return self.request(KEGGurl=ku.DatabaseLinkKEGGurl, target_database=target_database, source_database=source_database)
 
-    def entries_link(self, target_database: str, entry_ids: list) -> KEGGresponse:
+    def entries_link(self, target_database: str, entry_ids: t.List[str]) -> KEGGresponse:
         """ Executes the "link" KEGG API operation, showing the IDs of entries that are connected/related to entries of a provided databases.
 
         :param target_database: The KEGG database to find links to the provided entries.
@@ -214,7 +217,7 @@ class KEGGrest:
         """
         return self.request(KEGGurl=ku.EntriesLinkKEGGurl, target_database=target_database, entry_ids=entry_ids)
 
-    def ddi(self, drug_entry_ids: list) -> KEGGresponse:
+    def ddi(self, drug_entry_ids: t.List[str]) -> KEGGresponse:
         """ Executes the "ddi" KEGG API operation, searching for drug to drug interactions. Providing one entry ID reports all known interactions, while providing multiple checks if any drug pair in a given set of drugs is CI or P. If providing multiple, all entries must belong to the same database.
 
         :param drug_entry_ids: The IDs of the drug entries within which search for drug interactions.
@@ -223,7 +226,9 @@ class KEGGrest:
         return self.request(KEGGurl=ku.DdiKEGGurl, drug_entry_ids=drug_entry_ids)
 
 
-def request_and_check_error(kegg_rest: KEGGrest = None, KEGGurl: type = None, kegg_url: ku.AbstractKEGGurl = None, **kwargs) -> KEGGresponse:
+def request_and_check_error(
+        kegg_rest: KEGGrest | None = None, KEGGurl: type[ku.AbstractKEGGurl] | None = None,
+        kegg_url: ku.AbstractKEGGurl = None, **kwargs) -> KEGGresponse:
     """ Makes a general request to the KEGG REST API using a KEGGrest object. Creates the KEGGrest object if one is not provided.
     Additionally, raises an exception if the request is not successful, specifying the URL that was unsuccessful.
 
@@ -235,7 +240,7 @@ def request_and_check_error(kegg_rest: KEGGrest = None, KEGGurl: type = None, ke
     :raises RuntimeError: Raised if the request fails or times out.
     """
     kegg_rest = kegg_rest if kegg_rest is not None else KEGGrest()
-    kegg_response: KEGGresponse = kegg_rest.request(KEGGurl=KEGGurl, kegg_url=kegg_url, **kwargs)
+    kegg_response = kegg_rest.request(KEGGurl=KEGGurl, kegg_url=kegg_url, **kwargs)
     if kegg_response.status == KEGGresponse.Status.FAILED:
         raise RuntimeError(f'The KEGG request failed with the following URL: {kegg_response.kegg_url.url}')
     elif kegg_response.status == KEGGresponse.Status.TIMEOUT:

@@ -57,7 +57,7 @@ def test_request_and_test_success(mocker):
     head_mock: mocker.MagicMock = mocker.patch('kegg_pull.rest.rq.head', return_value=response_mock)
     success: bool = kegg_rest.test(kegg_url=kegg_url_mock)
     head_mock.assert_called_once_with(url=url_mock, timeout=60)
-    assert success == True
+    assert success
 
 
 def test_request_and_test_failed(mocker):
@@ -111,7 +111,7 @@ test_rest_method_data = [
     (ku.GetKEGGurl, r.KEGGrest.get, {'entry_ids': ['xyz'], 'entry_field': None}),
     (ku.InfoKEGGurl, r.KEGGrest.info, {'database': 'pathway'}),
     (ku.KeywordsFindKEGGurl, r.KEGGrest.keywords_find, {'database': '', 'keywords': ['a', 'b']}),
-    (ku.MolecularFindKEGGurl, r.KEGGrest.molecular_find,{'database': '', 'formula': 'abc', 'exact_mass': None, 'molecular_weight': None}),
+    (ku.MolecularFindKEGGurl, r.KEGGrest.molecular_find, {'database': '', 'formula': 'abc', 'exact_mass': None, 'molecular_weight': None}),
     (ku.DatabaseConvKEGGurl, r.KEGGrest.database_conv, {'kegg_database': 'a', 'outside_database': 'b'}),
     (ku.EntriesConvKEGGurl, r.KEGGrest.entries_conv, {'target_database': 'module', 'entry_ids': ['123', 'abc']}),
     (ku.DatabaseLinkKEGGurl, r.KEGGrest.database_link, {'target_database': 'x', 'source_database': 'y'}),
