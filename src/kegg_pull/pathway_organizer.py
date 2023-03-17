@@ -9,6 +9,11 @@ import typing as t
 from . import rest as r
 from . import _utils as u
 
+RawHierarchyNode = t.TypedDict('RawHierarchyNode', {'name': str, 'children': list[dict] | None})
+HierarchyNode = t.TypedDict(
+    'HierarchyNode', {'name': str, 'level': int, 'parent': str | None, 'children': list[str] | None, 'entry_id': str | None})
+HierarchyNodes = dict[str, HierarchyNode]
+
 
 class PathwayOrganizer(u.NonInstantiable):
     """
@@ -27,11 +32,13 @@ class PathwayOrganizer(u.NonInstantiable):
     """
     def __init__(self) -> None:
         super(PathwayOrganizer, self).__init__()
-        self.hierarchy_nodes: dict = None
-        self._filter_nodes: set = None
+        self.hierarchy_nodes: HierarchyNodes | None = None
+        self._filter_nodes: set[str] | None = None
 
     @staticmethod
-    def load_from_kegg(top_level_nodes: set = None, filter_nodes: set = None, kegg_rest: r.KEGGrest = None):
+    def load_from_kegg(
+            top_level_nodes: set[str] | None = None, filter_nodes: set[str] | None = None,
+            kegg_rest: r.KEGGrest | None = None):
         """ Pulls the Brite hierarchy from the KEGG REST API and converts it to the hierarchy_nodes mapping.
 
         :param top_level_nodes: Node names in the highest level of the hierarchy to select from. If None, all top level nodes are traversed to create the hierarchy_nodes.
@@ -40,10 +47,10 @@ class PathwayOrganizer(u.NonInstantiable):
         :returns PathwayOrganizer: The resulting PathwayOrganizer object.
         """
         pathway_org = PathwayOrganizer()
-        pathway_org.hierarchy_nodes = {}
+        pathway_org.hierarchy_nodes = HierarchyNodes()
         pathway_org._filter_nodes = filter_nodes
-        hierarchy: list = PathwayOrganizer._get_hierarchy(kegg_rest=kegg_rest)
-        valid_top_level_nodes: list = sorted(top_level_node['name'] for top_level_node in hierarchy)
+        hierarchy = PathwayOrganizer._get_hierarchy(kegg_rest=kegg_rest)
+        valid_top_level_nodes = sorted(top_level_node['name'] for top_level_node in hierarchy)
         if top_level_nodes is not None:
             for top_level_node in list(top_level_nodes):
                 if top_level_node not in valid_top_level_nodes:
@@ -51,56 +58,54 @@ class PathwayOrganizer(u.NonInstantiable):
                         f'Top level node name "{top_level_node}" is not recognized and will be ignored. Valid values are: '
                         f'"{", ".join(valid_top_level_nodes)}"')
                     top_level_nodes.remove(top_level_node)
-            hierarchy: list = [top_level_node for top_level_node in hierarchy if top_level_node['name'] in top_level_nodes]
-        pathway_org._parse_hierarchy(level=1, hierarchy_nodes=hierarchy, parent_name=None)
-        for node_key, node in pathway_org.hierarchy_nodes.items():
-            node['children'] = sorted(node['children']) if node['children'] is not None else None
+            hierarchy = [top_level_node for top_level_node in hierarchy if top_level_node['name'] in top_level_nodes]
+        pathway_org._parse_hierarchy(level=1, raw_hierarchy_nodes=hierarchy, parent_name=None)
         return pathway_org
 
     @staticmethod
-    def _get_hierarchy(kegg_rest: t.Union[r.KEGGrest, None]) -> list:
+    def _get_hierarchy(kegg_rest: r.KEGGrest | None) -> list[RawHierarchyNode]:
         """ Pulls the Brite hierarchy (to be converted to hierarchy_nodes) from the KEGG REST API.
 
         :return: The list of top level nodes that branch out into the rest of the hierarchy until reaching leaf nodes.
         """
         kegg_rest = kegg_rest if kegg_rest is not None else r.KEGGrest()
-        kegg_response: r.KEGGresponse = kegg_rest.get(entry_ids=['br:br08901'], entry_field='json')
-        text_body: str = kegg_response.text_body.strip()
+        kegg_response = kegg_rest.get(entry_ids=['br:br08901'], entry_field='json')
+        text_body = kegg_response.text_body.strip()
         brite_hierarchy: dict = json.loads(s=text_body)
         return brite_hierarchy['children']
 
-    def _parse_hierarchy(self, level: int, hierarchy_nodes: list, parent_name: str) -> set:
+    def _parse_hierarchy(self, level: int, raw_hierarchy_nodes: list[RawHierarchyNode], parent_name: str | None) -> set[str]:
         """ Recursively traverses the Brite hierarchy to create the hierarchy_nodes mapping.
 
         :param level: The current level of recursion representing the level of the node in the hierarchy.
-        :param hierarchy_nodes: The list of nodes in the current branch of the hierarchy being traversed.
+        :param raw_hierarchy_nodes: The list of nodes in the current branch of the hierarchy being traversed.
         :param parent_name: The node key of the parent node of the current branch of the hierarchy.
         :return: The keys of the nodes added to the hierarchy_nodes property representing the children of the parent node.
         """
-        nodes_added = set()
-        for hierarchy_node in hierarchy_nodes:
-            node_name: str = hierarchy_node['name']
+        nodes_added = set[str]()
+        for raw_hierarchy_node in raw_hierarchy_nodes:
+            node_name = raw_hierarchy_node['name']
             if self._filter_nodes is None or node_name not in self._filter_nodes:
-                if 'children' in hierarchy_node.keys():
-                    node_children: set = self._parse_hierarchy(
-                        level=level+1, hierarchy_nodes=hierarchy_node['children'], parent_name=node_name)
+                if 'children' in raw_hierarchy_node.keys():
+                    node_children = self._parse_hierarchy(
+                        level=level+1, raw_hierarchy_nodes=raw_hierarchy_node['children'], parent_name=node_name)
                     if self._filter_nodes is not None:
-                        expected_n_children_added: int = len(
-                            [child for child in hierarchy_node['children'] if child['name'] not in self._filter_nodes])
+                        expected_n_children_added = len(
+                            [child for child in raw_hierarchy_node['children'] if child['name'] not in self._filter_nodes])
                     else:
-                        expected_n_children_added: int = len(hierarchy_node['children'])
+                        expected_n_children_added = len(raw_hierarchy_node['children'])
                     assert len(node_children) == expected_n_children_added, f'Not all children added for node: {node_name}'
-                    node_key: str = self._add_hierarchy_node(
+                    node_key = self._add_hierarchy_node(
                         name=node_name, level=level, parent=parent_name, children=node_children, entry_id=None)
                 else:
-                    entry_id: str = node_name.split(' ')[0]
+                    entry_id = node_name.split(' ')[0]
                     entry_id = f'path:map{entry_id}'
-                    node_key: str = self._add_hierarchy_node(
+                    node_key = self._add_hierarchy_node(
                         name=node_name, level=level, parent=parent_name, children=None, entry_id=entry_id)
                 nodes_added.add(node_key)
         return nodes_added
 
-    def _add_hierarchy_node(self, name: str, level: int, parent: str, children: set, entry_id: str) -> str:
+    def _add_hierarchy_node(self, name: str, level: int, parent: str, children: set[str] | None, entry_id: str | None) -> str:
         """ Adds a Brite hierarchy node representation to the hierarchy_nodes property.
 
         :param name: The name of the node obtained directly from the Brite hierarchy.
@@ -110,9 +115,10 @@ class PathwayOrganizer(u.NonInstantiable):
         :param entry_id: The entry ID of the node; string if it represents a KEGG pathway mapping, else None.
         :return: The key chosen for the node, equal to its entry ID if not None, else the name of the Node.
         """
-        key: str = entry_id if entry_id is not None else name
+        key = entry_id if entry_id is not None else name
         assert key not in self.hierarchy_nodes.keys(), f'Duplicate brite hierarchy node name {key}'
-        self.hierarchy_nodes[key] = {'name': name, 'level': level, 'parent': parent, 'children': children, 'entry-id': entry_id}
+        children = sorted(children) if children is not None else None
+        self.hierarchy_nodes[key] = HierarchyNode(name=name, level=level, parent=parent, children=children, entry_id=entry_id)
         return key
 
     def __str__(self) -> str:
@@ -129,7 +135,7 @@ class PathwayOrganizer(u.NonInstantiable):
         'patternProperties': {
             '^.+$': {
                 'type': 'object',
-                'required': ['name', 'level', 'parent', 'children', 'entry-id'],
+                'required': ['name', 'level', 'parent', 'children', 'entry_id'],
                 'additionalProperties': False,
                 'properties': {
                     'name': {
@@ -152,7 +158,7 @@ class PathwayOrganizer(u.NonInstantiable):
                             'minLength': 1
                         }
                     },
-                    'entry-id': {
+                    'entry_id': {
                         'type': ['string', 'null'],
                         'minLength': 1
                     }
@@ -170,7 +176,7 @@ class PathwayOrganizer(u.NonInstantiable):
         :raises ValidationError: Raised if the JSON file does not follow the correct JSON schema. Should follow the correct schema if hierarchy_nodes was cached using load_from_kegg followed by save_to_json.
         """
         pathway_org = PathwayOrganizer()
-        hierarchy_nodes: dict = u.load_json_file(
+        hierarchy_nodes: HierarchyNodes = u.load_json_file(
             file_path=file_path, json_schema=PathwayOrganizer._schema,
             validation_error_message=f'Failed to load the hierarchy nodes. The pathway organizer JSON file at {file_path} is '
                                      f'corrupted and will need to be re-created.')
@@ -182,5 +188,5 @@ class PathwayOrganizer(u.NonInstantiable):
 
         :param file_path: The path to the JSON file to save the hierarchy_nodes mapping. If saving in a ZIP archive, the file path must be in the following format: /path/to/zip-archive.zip:/path/to/file (e.g. ./archive.zip:hierarchy-nodes.json).
         """
-        json_string: str = str(self)
+        json_string = str(self)
         u.save_output(output_target=file_path, output_content=json_string)

@@ -15,7 +15,7 @@ def test_load_from_kegg_warning(mocker, caplog):
         message='Top level node name "invalid-top-level-node" is not recognized and will be ignored. Valid values are: "Cellular '
                 'Processes, Drug Development, Environmental Information Processing, Genetic Information Processing, '
                 'Human Diseases, Metabolism, Organismal Systems"', caplog=caplog)
-    parse_hierarchy_spy.assert_called_once_with(pathway_org, level=1, hierarchy_nodes=[], parent_name=None)
+    parse_hierarchy_spy.assert_called_once_with(pathway_org, level=1, raw_hierarchy_nodes=[], parent_name=None)
     assert pathway_org.hierarchy_nodes == dict()
 
 
@@ -73,26 +73,26 @@ def test_load_from_json(json_file_path: str):
 test_invalid_load_from_json_data = [
     1, 'a', [], [1, 2], ['a', 'b'], [[], []], [[1], [2]], [['a'], ['b']], [{}, {}], [{'a': {}, 'b': []}], {}, {'a': []}, {'a': {}},
     {'a': {'b': 1}}, {'a': {'name': 'b'}}, {'a': {'level': 1, 'b': 'c'}},
-    {'a': {'name': 'b', 'level': 1, 'parent': 'c', 'children': None, 'entry-id': 'x'},
-     '': {'name': 'b', 'level': 1, 'parent': 'c', 'children': ['d'], 'entry-id': None}},
-    {'a': {'name': 'b', 'level': 1, 'parent': 'c', 'children': None, 'entry-id': None, 'x': 'y'}},
-    {'a': {'name': 2, 'level': 1, 'parent': 'c', 'children': None, 'entry-id': None}},
-    {'a': {'name': '', 'level': 1, 'parent': 'c', 'children': None, 'entry-id': None}},
-    {'a': {'name': None, 'level': 1, 'parent': 'c', 'children': None, 'entry-id': None}},
-    {'a': {'name': 'b', 'level': '1', 'parent': 'c', 'children': None, 'entry-id': None}},
-    {'a': {'name': 'b', 'level': None, 'parent': 'c', 'children': None, 'entry-id': None}},
-    {'a': {'name': 'b', 'level': 0, 'parent': 'c', 'children': None, 'entry-id': None}},
-    {'a': {'name': 'b', 'level': 1, 'parent': '', 'children': None, 'entry-id': None}},
-    {'a': {'name': 'b', 'level': 1, 'parent': 2, 'children': None, 'entry-id': None}},
-    {'a': {'name': 'b', 'level': 1, 'parent': 'c', 'children': [], 'entry-id': None}},
-    {'a': {'name': 'b', 'level': 1, 'parent': 'c', 'children': [1], 'entry-id': None}},
-    {'a': {'name': 'b', 'level': 1, 'parent': 'c', 'children': [''], 'entry-id': None}},
-    {'a': {'name': 'b', 'level': 1, 'parent': 'c', 'children': ['a'], 'entry-id': 1}},
-    {'a': {'name': 'b', 'level': 1, 'parent': 'c', 'children': ['a'], 'entry-id': ''}}]
+    {'a': {'name': 'b', 'level': 1, 'parent': 'c', 'children': None, 'entry_id': 'x'},
+     '': {'name': 'b', 'level': 1, 'parent': 'c', 'children': ['d'], 'entry_id': None}},
+    {'a': {'name': 'b', 'level': 1, 'parent': 'c', 'children': None, 'entry_id': None, 'x': 'y'}},
+    {'a': {'name': 2, 'level': 1, 'parent': 'c', 'children': None, 'entry_id': None}},
+    {'a': {'name': '', 'level': 1, 'parent': 'c', 'children': None, 'entry_id': None}},
+    {'a': {'name': None, 'level': 1, 'parent': 'c', 'children': None, 'entry_id': None}},
+    {'a': {'name': 'b', 'level': '1', 'parent': 'c', 'children': None, 'entry_id': None}},
+    {'a': {'name': 'b', 'level': None, 'parent': 'c', 'children': None, 'entry_id': None}},
+    {'a': {'name': 'b', 'level': 0, 'parent': 'c', 'children': None, 'entry_id': None}},
+    {'a': {'name': 'b', 'level': 1, 'parent': '', 'children': None, 'entry_id': None}},
+    {'a': {'name': 'b', 'level': 1, 'parent': 2, 'children': None, 'entry_id': None}},
+    {'a': {'name': 'b', 'level': 1, 'parent': 'c', 'children': [], 'entry_id': None}},
+    {'a': {'name': 'b', 'level': 1, 'parent': 'c', 'children': [1], 'entry_id': None}},
+    {'a': {'name': 'b', 'level': 1, 'parent': 'c', 'children': [''], 'entry_id': None}},
+    {'a': {'name': 'b', 'level': 1, 'parent': 'c', 'children': ['a'], 'entry_id': 1}},
+    {'a': {'name': 'b', 'level': 1, 'parent': 'c', 'children': ['a'], 'entry_id': ''}}]
 
 
 @pt.mark.parametrize('invalid_json_object', test_invalid_load_from_json_data)
-def test_invalid_load_from_json(caplog, json_file_path: str, invalid_json_object: t.Union[list, dict, int, float, str]):
+def test_invalid_load_from_json(caplog, json_file_path: str, invalid_json_object: list | dict | int | float | str):
     expected_error_message = f'Failed to load the hierarchy nodes. The pathway organizer JSON file at {json_file_path} is ' \
                              f'corrupted and will need to be re-created.'
     u.test_invalid_load_from_json(

@@ -1,6 +1,5 @@
 # noinspection PyPackageRequirements
 import pytest as pt
-import typing as t
 import kegg_pull.map_cli as map_cli
 import dev.utils as u
 
@@ -38,7 +37,7 @@ test_data = [
       'add_glycans': True, 'add_drugs': True}, None)]
 
 
-def _prepare_input(args: list, method: str) -> t.Tuple[list, str, str]:
+def _prepare_input(args: list, method: str) -> tuple[list, str, str]:
     args = ['map'] + args
     method = f'map_cli.kmap.{method}'
     expected_output = '{\n  "k1": [\n    "v1"\n  ],\n  "k2": [\n    "v1",\n    "v2"\n  ],\n  "k3": [\n    "v3",\n    "v4"\n  ]\n}'

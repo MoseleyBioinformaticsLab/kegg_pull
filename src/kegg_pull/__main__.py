@@ -18,7 +18,7 @@ from . import pathway_organizer_cli as po_cli
 from . import rest_cli as r_cli
 
 
-def main():
+def main() -> None:
     first_arg: str = sys.argv[1] if len(sys.argv) > 1 else None
     if first_arg == 'pull':
         p_cli.main()

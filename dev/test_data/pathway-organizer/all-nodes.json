@@ -4,77 +4,77 @@
   "level": 3,
   "parent": "Global and overview maps",
   "children": null,
-  "entry-id": "path:map01100"
+  "entry_id": "path:map01100"
  },
  "path:map01110": {
   "name": "01110  Biosynthesis of secondary metabolites",
   "level": 3,
   "parent": "Global and overview maps",
   "children": null,
-  "entry-id": "path:map01110"
+  "entry_id": "path:map01110"
  },
  "path:map01120": {
   "name": "01120  Microbial metabolism in diverse environments",
   "level": 3,
   "parent": "Global and overview maps",
   "children": null,
-  "entry-id": "path:map01120"
+  "entry_id": "path:map01120"
  },
  "path:map01200": {
   "name": "01200  Carbon metabolism",
   "level": 3,
   "parent": "Global and overview maps",
   "children": null,
-  "entry-id": "path:map01200"
+  "entry_id": "path:map01200"
  },
  "path:map01210": {
   "name": "01210  2-Oxocarboxylic acid metabolism",
   "level": 3,
   "parent": "Global and overview maps",
   "children": null,
-  "entry-id": "path:map01210"
+  "entry_id": "path:map01210"
  },
  "path:map01212": {
   "name": "01212  Fatty acid metabolism",
   "level": 3,
   "parent": "Global and overview maps",
   "children": null,
-  "entry-id": "path:map01212"
+  "entry_id": "path:map01212"
  },
  "path:map01230": {
   "name": "01230  Biosynthesis of amino acids",
   "level": 3,
   "parent": "Global and overview maps",
   "children": null,
-  "entry-id": "path:map01230"
+  "entry_id": "path:map01230"
  },
  "path:map01232": {
   "name": "01232  Nucleotide metabolism",
   "level": 3,
   "parent": "Global and overview maps",
   "children": null,
-  "entry-id": "path:map01232"
+  "entry_id": "path:map01232"
  },
  "path:map01250": {
   "name": "01250  Biosynthesis of nucleotide sugars",
   "level": 3,
   "parent": "Global and overview maps",
   "children": null,
-  "entry-id": "path:map01250"
+  "entry_id": "path:map01250"
  },
  "path:map01240": {
   "name": "01240  Biosynthesis of cofactors",
   "level": 3,
   "parent": "Global and overview maps",
   "children": null,
-  "entry-id": "path:map01240"
+  "entry_id": "path:map01240"
  },
  "path:map01220": {
   "name": "01220  Degradation of aromatic compounds",
   "level": 3,
   "parent": "Global and overview maps",
   "children": null,
-  "entry-id": "path:map01220"
+  "entry_id": "path:map01220"
  },
  "Global and overview maps": {
   "name": "Global and overview maps",
@@ -93,112 +93,112 @@
    "path:map01240",
    "path:map01250"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map00010": {
   "name": "00010  Glycolysis / Gluconeogenesis",
   "level": 3,
   "parent": "Carbohydrate metabolism",
   "children": null,
-  "entry-id": "path:map00010"
+  "entry_id": "path:map00010"
  },
  "path:map00020": {
   "name": "00020  Citrate cycle (TCA cycle)",
   "level": 3,
   "parent": "Carbohydrate metabolism",
   "children": null,
-  "entry-id": "path:map00020"
+  "entry_id": "path:map00020"
  },
  "path:map00030": {
   "name": "00030  Pentose phosphate pathway",
   "level": 3,
   "parent": "Carbohydrate metabolism",
   "children": null,
-  "entry-id": "path:map00030"
+  "entry_id": "path:map00030"
  },
  "path:map00040": {
   "name": "00040  Pentose and glucuronate interconversions",
   "level": 3,
   "parent": "Carbohydrate metabolism",
   "children": null,
-  "entry-id": "path:map00040"
+  "entry_id": "path:map00040"
  },
  "path:map00051": {
   "name": "00051  Fructose and mannose metabolism",
   "level": 3,
   "parent": "Carbohydrate metabolism",
   "children": null,
-  "entry-id": "path:map00051"
+  "entry_id": "path:map00051"
  },
  "path:map00052": {
   "name": "00052  Galactose metabolism",
   "level": 3,
   "parent": "Carbohydrate metabolism",
   "children": null,
-  "entry-id": "path:map00052"
+  "entry_id": "path:map00052"
  },
  "path:map00053": {
   "name": "00053  Ascorbate and aldarate metabolism",
   "level": 3,
   "parent": "Carbohydrate metabolism",
   "children": null,
-  "entry-id": "path:map00053"
+  "entry_id": "path:map00053"
  },
  "path:map00500": {
   "name": "00500  Starch and sucrose metabolism",
   "level": 3,
   "parent": "Carbohydrate metabolism",
   "children": null,
-  "entry-id": "path:map00500"
+  "entry_id": "path:map00500"
  },
  "path:map00520": {
   "name": "00520  Amino sugar and nucleotide sugar metabolism",
   "level": 3,
   "parent": "Carbohydrate metabolism",
   "children": null,
-  "entry-id": "path:map00520"
+  "entry_id": "path:map00520"
  },
  "path:map00620": {
   "name": "00620  Pyruvate metabolism",
   "level": 3,
   "parent": "Carbohydrate metabolism",
   "children": null,
-  "entry-id": "path:map00620"
+  "entry_id": "path:map00620"
  },
  "path:map00630": {
   "name": "00630  Glyoxylate and dicarboxylate metabolism",
   "level": 3,
   "parent": "Carbohydrate metabolism",
   "children": null,
-  "entry-id": "path:map00630"
+  "entry_id": "path:map00630"
  },
  "path:map00640": {
   "name": "00640  Propanoate metabolism",
   "level": 3,
   "parent": "Carbohydrate metabolism",
   "children": null,
-  "entry-id": "path:map00640"
+  "entry_id": "path:map00640"
  },
  "path:map00650": {
   "name": "00650  Butanoate metabolism",
   "level": 3,
   "parent": "Carbohydrate metabolism",
   "children": null,
-  "entry-id": "path:map00650"
+  "entry_id": "path:map00650"
  },
  "path:map00660": {
   "name": "00660  C5-Branched dibasic acid metabolism",
   "level": 3,
   "parent": "Carbohydrate metabolism",
   "children": null,
-  "entry-id": "path:map00660"
+  "entry_id": "path:map00660"
  },
  "path:map00562": {
   "name": "00562  Inositol phosphate metabolism",
   "level": 3,
   "parent": "Carbohydrate metabolism",
   "children": null,
-  "entry-id": "path:map00562"
+  "entry_id": "path:map00562"
  },
  "Carbohydrate metabolism": {
   "name": "Carbohydrate metabolism",
@@ -221,63 +221,63 @@
    "path:map00650",
    "path:map00660"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map00190": {
   "name": "00190  Oxidative phosphorylation",
   "level": 3,
   "parent": "Energy metabolism",
   "children": null,
-  "entry-id": "path:map00190"
+  "entry_id": "path:map00190"
  },
  "path:map00195": {
   "name": "00195  Photosynthesis",
   "level": 3,
   "parent": "Energy metabolism",
   "children": null,
-  "entry-id": "path:map00195"
+  "entry_id": "path:map00195"
  },
  "path:map00196": {
   "name": "00196  Photosynthesis - antenna proteins",
   "level": 3,
   "parent": "Energy metabolism",
   "children": null,
-  "entry-id": "path:map00196"
+  "entry_id": "path:map00196"
  },
  "path:map00710": {
   "name": "00710  Carbon fixation in photosynthetic organisms",
   "level": 3,
   "parent": "Energy metabolism",
   "children": null,
-  "entry-id": "path:map00710"
+  "entry_id": "path:map00710"
  },
  "path:map00720": {
   "name": "00720  Carbon fixation pathways in prokaryotes",
   "level": 3,
   "parent": "Energy metabolism",
   "children": null,
-  "entry-id": "path:map00720"
+  "entry_id": "path:map00720"
  },
  "path:map00680": {
   "name": "00680  Methane metabolism",
   "level": 3,
   "parent": "Energy metabolism",
   "children": null,
-  "entry-id": "path:map00680"
+  "entry_id": "path:map00680"
  },
  "path:map00910": {
   "name": "00910  Nitrogen metabolism",
   "level": 3,
   "parent": "Energy metabolism",
   "children": null,
-  "entry-id": "path:map00910"
+  "entry_id": "path:map00910"
  },
  "path:map00920": {
   "name": "00920  Sulfur metabolism",
   "level": 3,
   "parent": "Energy metabolism",
   "children": null,
-  "entry-id": "path:map00920"
+  "entry_id": "path:map00920"
  },
  "Energy metabolism": {
   "name": "Energy metabolism",
@@ -293,119 +293,119 @@
    "path:map00910",
    "path:map00920"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map00061": {
   "name": "00061  Fatty acid biosynthesis",
   "level": 3,
   "parent": "Lipid metabolism",
   "children": null,
-  "entry-id": "path:map00061"
+  "entry_id": "path:map00061"
  },
  "path:map00062": {
   "name": "00062  Fatty acid elongation",
   "level": 3,
   "parent": "Lipid metabolism",
   "children": null,
-  "entry-id": "path:map00062"
+  "entry_id": "path:map00062"
  },
  "path:map00071": {
   "name": "00071  Fatty acid degradation",
   "level": 3,
   "parent": "Lipid metabolism",
   "children": null,
-  "entry-id": "path:map00071"
+  "entry_id": "path:map00071"
  },
  "path:map00073": {
   "name": "00073  Cutin, suberine and wax biosynthesis",
   "level": 3,
   "parent": "Lipid metabolism",
   "children": null,
-  "entry-id": "path:map00073"
+  "entry_id": "path:map00073"
  },
  "path:map00100": {
   "name": "00100  Steroid biosynthesis",
   "level": 3,
   "parent": "Lipid metabolism",
   "children": null,
-  "entry-id": "path:map00100"
+  "entry_id": "path:map00100"
  },
  "path:map00120": {
   "name": "00120  Primary bile acid biosynthesis",
   "level": 3,
   "parent": "Lipid metabolism",
   "children": null,
-  "entry-id": "path:map00120"
+  "entry_id": "path:map00120"
  },
  "path:map00121": {
   "name": "00121  Secondary bile acid biosynthesis",
   "level": 3,
   "parent": "Lipid metabolism",
   "children": null,
-  "entry-id": "path:map00121"
+  "entry_id": "path:map00121"
  },
  "path:map00140": {
   "name": "00140  Steroid hormone biosynthesis",
   "level": 3,
   "parent": "Lipid metabolism",
   "children": null,
-  "entry-id": "path:map00140"
+  "entry_id": "path:map00140"
  },
  "path:map00561": {
   "name": "00561  Glycerolipid metabolism",
   "level": 3,
   "parent": "Lipid metabolism",
   "children": null,
-  "entry-id": "path:map00561"
+  "entry_id": "path:map00561"
  },
  "path:map00564": {
   "name": "00564  Glycerophospholipid metabolism",
   "level": 3,
   "parent": "Lipid metabolism",
   "children": null,
-  "entry-id": "path:map00564"
+  "entry_id": "path:map00564"
  },
  "path:map00565": {
   "name": "00565  Ether lipid metabolism",
   "level": 3,
   "parent": "Lipid metabolism",
   "children": null,
-  "entry-id": "path:map00565"
+  "entry_id": "path:map00565"
  },
  "path:map00600": {
   "name": "00600  Sphingolipid metabolism",
   "level": 3,
   "parent": "Lipid metabolism",
   "children": null,
-  "entry-id": "path:map00600"
+  "entry_id": "path:map00600"
  },
  "path:map00590": {
   "name": "00590  Arachidonic acid metabolism",
   "level": 3,
   "parent": "Lipid metabolism",
   "children": null,
-  "entry-id": "path:map00590"
+  "entry_id": "path:map00590"
  },
  "path:map00591": {
   "name": "00591  Linoleic acid metabolism",
   "level": 3,
   "parent": "Lipid metabolism",
   "children": null,
-  "entry-id": "path:map00591"
+  "entry_id": "path:map00591"
  },
  "path:map00592": {
   "name": "00592  alpha-Linolenic acid metabolism",
   "level": 3,
   "parent": "Lipid metabolism",
   "children": null,
-  "entry-id": "path:map00592"
+  "entry_id": "path:map00592"
  },
  "path:map01040": {
   "name": "01040  Biosynthesis of unsaturated fatty acids",
   "level": 3,
   "parent": "Lipid metabolism",
   "children": null,
-  "entry-id": "path:map01040"
+  "entry_id": "path:map01040"
  },
  "Lipid metabolism": {
   "name": "Lipid metabolism",
@@ -429,21 +429,21 @@
    "path:map00600",
    "path:map01040"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map00230": {
   "name": "00230  Purine metabolism",
   "level": 3,
   "parent": "Nucleotide metabolism",
   "children": null,
-  "entry-id": "path:map00230"
+  "entry_id": "path:map00230"
  },
  "path:map00240": {
   "name": "00240  Pyrimidine metabolism",
   "level": 3,
   "parent": "Nucleotide metabolism",
   "children": null,
-  "entry-id": "path:map00240"
+  "entry_id": "path:map00240"
  },
  "Nucleotide metabolism": {
   "name": "Nucleotide metabolism",
@@ -453,105 +453,105 @@
    "path:map00230",
    "path:map00240"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map00250": {
   "name": "00250  Alanine, aspartate and glutamate metabolism",
   "level": 3,
   "parent": "Amino acid metabolism",
   "children": null,
-  "entry-id": "path:map00250"
+  "entry_id": "path:map00250"
  },
  "path:map00260": {
   "name": "00260  Glycine, serine and threonine metabolism",
   "level": 3,
   "parent": "Amino acid metabolism",
   "children": null,
-  "entry-id": "path:map00260"
+  "entry_id": "path:map00260"
  },
  "path:map00270": {
   "name": "00270  Cysteine and methionine metabolism",
   "level": 3,
   "parent": "Amino acid metabolism",
   "children": null,
-  "entry-id": "path:map00270"
+  "entry_id": "path:map00270"
  },
  "path:map00280": {
   "name": "00280  Valine, leucine and isoleucine degradation",
   "level": 3,
   "parent": "Amino acid metabolism",
   "children": null,
-  "entry-id": "path:map00280"
+  "entry_id": "path:map00280"
  },
  "path:map00290": {
   "name": "00290  Valine, leucine and isoleucine biosynthesis",
   "level": 3,
   "parent": "Amino acid metabolism",
   "children": null,
-  "entry-id": "path:map00290"
+  "entry_id": "path:map00290"
  },
  "path:map00300": {
   "name": "00300  Lysine biosynthesis",
   "level": 3,
   "parent": "Amino acid metabolism",
   "children": null,
-  "entry-id": "path:map00300"
+  "entry_id": "path:map00300"
  },
  "path:map00310": {
   "name": "00310  Lysine degradation",
   "level": 3,
   "parent": "Amino acid metabolism",
   "children": null,
-  "entry-id": "path:map00310"
+  "entry_id": "path:map00310"
  },
  "path:map00220": {
   "name": "00220  Arginine biosynthesis",
   "level": 3,
   "parent": "Amino acid metabolism",
   "children": null,
-  "entry-id": "path:map00220"
+  "entry_id": "path:map00220"
  },
  "path:map00330": {
   "name": "00330  Arginine and proline metabolism",
   "level": 3,
   "parent": "Amino acid metabolism",
   "children": null,
-  "entry-id": "path:map00330"
+  "entry_id": "path:map00330"
  },
  "path:map00340": {
   "name": "00340  Histidine metabolism",
   "level": 3,
   "parent": "Amino acid metabolism",
   "children": null,
-  "entry-id": "path:map00340"
+  "entry_id": "path:map00340"
  },
  "path:map00350": {
   "name": "00350  Tyrosine metabolism",
   "level": 3,
   "parent": "Amino acid metabolism",
   "children": null,
-  "entry-id": "path:map00350"
+  "entry_id": "path:map00350"
  },
  "path:map00360": {
   "name": "00360  Phenylalanine metabolism",
   "level": 3,
   "parent": "Amino acid metabolism",
   "children": null,
-  "entry-id": "path:map00360"
+  "entry_id": "path:map00360"
  },
  "path:map00380": {
   "name": "00380  Tryptophan metabolism",
   "level": 3,
   "parent": "Amino acid metabolism",
   "children": null,
-  "entry-id": "path:map00380"
+  "entry_id": "path:map00380"
  },
  "path:map00400": {
   "name": "00400  Phenylalanine, tyrosine and tryptophan biosynthesis",
   "level": 3,
   "parent": "Amino acid metabolism",
   "children": null,
-  "entry-id": "path:map00400"
+  "entry_id": "path:map00400"
  },
  "Amino acid metabolism": {
   "name": "Amino acid metabolism",
@@ -573,56 +573,56 @@
    "path:map00380",
    "path:map00400"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map00410": {
   "name": "00410  beta-Alanine metabolism",
   "level": 3,
   "parent": "Metabolism of other amino acids",
   "children": null,
-  "entry-id": "path:map00410"
+  "entry_id": "path:map00410"
  },
  "path:map00430": {
   "name": "00430  Taurine and hypotaurine metabolism",
   "level": 3,
   "parent": "Metabolism of other amino acids",
   "children": null,
-  "entry-id": "path:map00430"
+  "entry_id": "path:map00430"
  },
  "path:map00440": {
   "name": "00440  Phosphonate and phosphinate metabolism",
   "level": 3,
   "parent": "Metabolism of other amino acids",
   "children": null,
-  "entry-id": "path:map00440"
+  "entry_id": "path:map00440"
  },
  "path:map00450": {
   "name": "00450  Selenocompound metabolism",
   "level": 3,
   "parent": "Metabolism of other amino acids",
   "children": null,
-  "entry-id": "path:map00450"
+  "entry_id": "path:map00450"
  },
  "path:map00460": {
   "name": "00460  Cyanoamino acid metabolism",
   "level": 3,
   "parent": "Metabolism of other amino acids",
   "children": null,
-  "entry-id": "path:map00460"
+  "entry_id": "path:map00460"
  },
  "path:map00470": {
   "name": "00470  D-Amino acid metabolism",
   "level": 3,
   "parent": "Metabolism of other amino acids",
   "children": null,
-  "entry-id": "path:map00470"
+  "entry_id": "path:map00470"
  },
  "path:map00480": {
   "name": "00480  Glutathione metabolism",
   "level": 3,
   "parent": "Metabolism of other amino acids",
   "children": null,
-  "entry-id": "path:map00480"
+  "entry_id": "path:map00480"
  },
  "Metabolism of other amino acids": {
   "name": "Metabolism of other amino acids",
@@ -637,161 +637,161 @@
    "path:map00470",
    "path:map00480"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map00510": {
   "name": "00510  N-Glycan biosynthesis",
   "level": 3,
   "parent": "Glycan biosynthesis and metabolism",
   "children": null,
-  "entry-id": "path:map00510"
+  "entry_id": "path:map00510"
  },
  "path:map00513": {
   "name": "00513  Various types of N-glycan biosynthesis",
   "level": 3,
   "parent": "Glycan biosynthesis and metabolism",
   "children": null,
-  "entry-id": "path:map00513"
+  "entry_id": "path:map00513"
  },
  "path:map00512": {
   "name": "00512  Mucin type O-glycan biosynthesis",
   "level": 3,
   "parent": "Glycan biosynthesis and metabolism",
   "children": null,
-  "entry-id": "path:map00512"
+  "entry_id": "path:map00512"
  },
  "path:map00515": {
   "name": "00515  Mannose type O-glycan biosynthesis",
   "level": 3,
   "parent": "Glycan biosynthesis and metabolism",
   "children": null,
-  "entry-id": "path:map00515"
+  "entry_id": "path:map00515"
  },
  "path:map00514": {
   "name": "00514  Other types of O-glycan biosynthesis",
   "level": 3,
   "parent": "Glycan biosynthesis and metabolism",
   "children": null,
-  "entry-id": "path:map00514"
+  "entry_id": "path:map00514"
  },
  "path:map00532": {
   "name": "00532  Glycosaminoglycan biosynthesis - chondroitin sulfate / dermatan sulfate",
   "level": 3,
   "parent": "Glycan biosynthesis and metabolism",
   "children": null,
-  "entry-id": "path:map00532"
+  "entry_id": "path:map00532"
  },
  "path:map00534": {
   "name": "00534  Glycosaminoglycan biosynthesis - heparan sulfate / heparin",
   "level": 3,
   "parent": "Glycan biosynthesis and metabolism",
   "children": null,
-  "entry-id": "path:map00534"
+  "entry_id": "path:map00534"
  },
  "path:map00533": {
   "name": "00533  Glycosaminoglycan biosynthesis - keratan sulfate",
   "level": 3,
   "parent": "Glycan biosynthesis and metabolism",
   "children": null,
-  "entry-id": "path:map00533"
+  "entry_id": "path:map00533"
  },
  "path:map00531": {
   "name": "00531  Glycosaminoglycan degradation",
   "level": 3,
   "parent": "Glycan biosynthesis and metabolism",
   "children": null,
-  "entry-id": "path:map00531"
+  "entry_id": "path:map00531"
  },
  "path:map00563": {
   "name": "00563  Glycosylphosphatidylinositol (GPI)-anchor biosynthesis",
   "level": 3,
   "parent": "Glycan biosynthesis and metabolism",
   "children": null,
-  "entry-id": "path:map00563"
+  "entry_id": "path:map00563"
  },
  "path:map00601": {
   "name": "00601  Glycosphingolipid biosynthesis - lacto and neolacto series",
   "level": 3,
   "parent": "Glycan biosynthesis and metabolism",
   "children": null,
-  "entry-id": "path:map00601"
+  "entry_id": "path:map00601"
  },
  "path:map00603": {
   "name": "00603  Glycosphingolipid biosynthesis - globo and isoglobo series",
   "level": 3,
   "parent": "Glycan biosynthesis and metabolism",
   "children": null,
-  "entry-id": "path:map00603"
+  "entry_id": "path:map00603"
  },
  "path:map00604": {
   "name": "00604  Glycosphingolipid biosynthesis - ganglio series",
   "level": 3,
   "parent": "Glycan biosynthesis and metabolism",
   "children": null,
-  "entry-id": "path:map00604"
+  "entry_id": "path:map00604"
  },
  "path:map00511": {
   "name": "00511  Other glycan degradation",
   "level": 3,
   "parent": "Glycan biosynthesis and metabolism",
   "children": null,
-  "entry-id": "path:map00511"
+  "entry_id": "path:map00511"
  },
  "path:map00540": {
   "name": "00540  Lipopolysaccharide biosynthesis",
   "level": 3,
   "parent": "Glycan biosynthesis and metabolism",
   "children": null,
-  "entry-id": "path:map00540"
+  "entry_id": "path:map00540"
  },
  "path:map00542": {
   "name": "00542  O-Antigen repeat unit biosynthesis",
   "level": 3,
   "parent": "Glycan biosynthesis and metabolism",
   "children": null,
-  "entry-id": "path:map00542"
+  "entry_id": "path:map00542"
  },
  "path:map00541": {
   "name": "00541  O-Antigen nucleotide sugar biosynthesis",
   "level": 3,
   "parent": "Glycan biosynthesis and metabolism",
   "children": null,
-  "entry-id": "path:map00541"
+  "entry_id": "path:map00541"
  },
  "path:map00550": {
   "name": "00550  Peptidoglycan biosynthesis",
   "level": 3,
   "parent": "Glycan biosynthesis and metabolism",
   "children": null,
-  "entry-id": "path:map00550"
+  "entry_id": "path:map00550"
  },
  "path:map00552": {
   "name": "00552  Teichoic acid biosynthesis",
   "level": 3,
   "parent": "Glycan biosynthesis and metabolism",
   "children": null,
-  "entry-id": "path:map00552"
+  "entry_id": "path:map00552"
  },
  "path:map00571": {
   "name": "00571  Lipoarabinomannan (LAM) biosynthesis",
   "level": 3,
   "parent": "Glycan biosynthesis and metabolism",
   "children": null,
-  "entry-id": "path:map00571"
+  "entry_id": "path:map00571"
  },
  "path:map00572": {
   "name": "00572  Arabinogalactan biosynthesis - Mycobacterium",
   "level": 3,
   "parent": "Glycan biosynthesis and metabolism",
   "children": null,
-  "entry-id": "path:map00572"
+  "entry_id": "path:map00572"
  },
  "path:map00543": {
   "name": "00543  Exopolysaccharide biosynthesis",
   "level": 3,
   "parent": "Glycan biosynthesis and metabolism",
   "children": null,
-  "entry-id": "path:map00543"
+  "entry_id": "path:map00543"
  },
  "Glycan biosynthesis and metabolism": {
   "name": "Glycan biosynthesis and metabolism",
@@ -821,91 +821,91 @@
    "path:map00603",
    "path:map00604"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map00730": {
   "name": "00730  Thiamine metabolism",
   "level": 3,
   "parent": "Metabolism of cofactors and vitamins",
   "children": null,
-  "entry-id": "path:map00730"
+  "entry_id": "path:map00730"
  },
  "path:map00740": {
   "name": "00740  Riboflavin metabolism",
   "level": 3,
   "parent": "Metabolism of cofactors and vitamins",
   "children": null,
-  "entry-id": "path:map00740"
+  "entry_id": "path:map00740"
  },
  "path:map00750": {
   "name": "00750  Vitamin B6 metabolism",
   "level": 3,
   "parent": "Metabolism of cofactors and vitamins",
   "children": null,
-  "entry-id": "path:map00750"
+  "entry_id": "path:map00750"
  },
  "path:map00760": {
   "name": "00760  Nicotinate and nicotinamide metabolism",
   "level": 3,
   "parent": "Metabolism of cofactors and vitamins",
   "children": null,
-  "entry-id": "path:map00760"
+  "entry_id": "path:map00760"
  },
  "path:map00770": {
   "name": "00770  Pantothenate and CoA biosynthesis",
   "level": 3,
   "parent": "Metabolism of cofactors and vitamins",
   "children": null,
-  "entry-id": "path:map00770"
+  "entry_id": "path:map00770"
  },
  "path:map00780": {
   "name": "00780  Biotin metabolism",
   "level": 3,
   "parent": "Metabolism of cofactors and vitamins",
   "children": null,
-  "entry-id": "path:map00780"
+  "entry_id": "path:map00780"
  },
  "path:map00785": {
   "name": "00785  Lipoic acid metabolism",
   "level": 3,
   "parent": "Metabolism of cofactors and vitamins",
   "children": null,
-  "entry-id": "path:map00785"
+  "entry_id": "path:map00785"
  },
  "path:map00790": {
   "name": "00790  Folate biosynthesis",
   "level": 3,
   "parent": "Metabolism of cofactors and vitamins",
   "children": null,
-  "entry-id": "path:map00790"
+  "entry_id": "path:map00790"
  },
  "path:map00670": {
   "name": "00670  One carbon pool by folate",
   "level": 3,
   "parent": "Metabolism of cofactors and vitamins",
   "children": null,
-  "entry-id": "path:map00670"
+  "entry_id": "path:map00670"
  },
  "path:map00830": {
   "name": "00830  Retinol metabolism",
   "level": 3,
   "parent": "Metabolism of cofactors and vitamins",
   "children": null,
-  "entry-id": "path:map00830"
+  "entry_id": "path:map00830"
  },
  "path:map00860": {
   "name": "00860  Porphyrin metabolism",
   "level": 3,
   "parent": "Metabolism of cofactors and vitamins",
   "children": null,
-  "entry-id": "path:map00860"
+  "entry_id": "path:map00860"
  },
  "path:map00130": {
   "name": "00130  Ubiquinone and other terpenoid-quinone biosynthesis",
   "level": 3,
   "parent": "Metabolism of cofactors and vitamins",
   "children": null,
-  "entry-id": "path:map00130"
+  "entry_id": "path:map00130"
  },
  "Metabolism of cofactors and vitamins": {
   "name": "Metabolism of cofactors and vitamins",
@@ -925,154 +925,154 @@
    "path:map00830",
    "path:map00860"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map00900": {
   "name": "00900  Terpenoid backbone biosynthesis",
   "level": 3,
   "parent": "Metabolism of terpenoids and polyketides",
   "children": null,
-  "entry-id": "path:map00900"
+  "entry_id": "path:map00900"
  },
  "path:map00902": {
   "name": "00902  Monoterpenoid biosynthesis",
   "level": 3,
   "parent": "Metabolism of terpenoids and polyketides",
   "children": null,
-  "entry-id": "path:map00902"
+  "entry_id": "path:map00902"
  },
  "path:map00909": {
   "name": "00909  Sesquiterpenoid and triterpenoid biosynthesis",
   "level": 3,
   "parent": "Metabolism of terpenoids and polyketides",
   "children": null,
-  "entry-id": "path:map00909"
+  "entry_id": "path:map00909"
  },
  "path:map00904": {
   "name": "00904  Diterpenoid biosynthesis",
   "level": 3,
   "parent": "Metabolism of terpenoids and polyketides",
   "children": null,
-  "entry-id": "path:map00904"
+  "entry_id": "path:map00904"
  },
  "path:map00906": {
   "name": "00906  Carotenoid biosynthesis",
   "level": 3,
   "parent": "Metabolism of terpenoids and polyketides",
   "children": null,
-  "entry-id": "path:map00906"
+  "entry_id": "path:map00906"
  },
  "path:map00905": {
   "name": "00905  Brassinosteroid biosynthesis",
   "level": 3,
   "parent": "Metabolism of terpenoids and polyketides",
   "children": null,
-  "entry-id": "path:map00905"
+  "entry_id": "path:map00905"
  },
  "path:map00981": {
   "name": "00981  Insect hormone biosynthesis",
   "level": 3,
   "parent": "Metabolism of terpenoids and polyketides",
   "children": null,
-  "entry-id": "path:map00981"
+  "entry_id": "path:map00981"
  },
  "path:map00908": {
   "name": "00908  Zeatin biosynthesis",
   "level": 3,
   "parent": "Metabolism of terpenoids and polyketides",
   "children": null,
-  "entry-id": "path:map00908"
+  "entry_id": "path:map00908"
  },
  "path:map00903": {
   "name": "00903  Limonene and pinene degradation",
   "level": 3,
   "parent": "Metabolism of terpenoids and polyketides",
   "children": null,
-  "entry-id": "path:map00903"
+  "entry_id": "path:map00903"
  },
  "path:map00281": {
   "name": "00281  Geraniol degradation",
   "level": 3,
   "parent": "Metabolism of terpenoids and polyketides",
   "children": null,
-  "entry-id": "path:map00281"
+  "entry_id": "path:map00281"
  },
  "path:map01052": {
   "name": "01052  Type I polyketide structures",
   "level": 3,
   "parent": "Metabolism of terpenoids and polyketides",
   "children": null,
-  "entry-id": "path:map01052"
+  "entry_id": "path:map01052"
  },
  "path:map00522": {
   "name": "00522  Biosynthesis of 12-, 14- and 16-membered macrolides",
   "level": 3,
   "parent": "Metabolism of terpenoids and polyketides",
   "children": null,
-  "entry-id": "path:map00522"
+  "entry_id": "path:map00522"
  },
  "path:map01051": {
   "name": "01051  Biosynthesis of ansamycins",
   "level": 3,
   "parent": "Metabolism of terpenoids and polyketides",
   "children": null,
-  "entry-id": "path:map01051"
+  "entry_id": "path:map01051"
  },
  "path:map01059": {
   "name": "01059  Biosynthesis of enediyne antibiotics",
   "level": 3,
   "parent": "Metabolism of terpenoids and polyketides",
   "children": null,
-  "entry-id": "path:map01059"
+  "entry_id": "path:map01059"
  },
  "path:map01056": {
   "name": "01056  Biosynthesis of type II polyketide backbone",
   "level": 3,
   "parent": "Metabolism of terpenoids and polyketides",
   "children": null,
-  "entry-id": "path:map01056"
+  "entry_id": "path:map01056"
  },
  "path:map01057": {
   "name": "01057  Biosynthesis of type II polyketide products",
   "level": 3,
   "parent": "Metabolism of terpenoids and polyketides",
   "children": null,
-  "entry-id": "path:map01057"
+  "entry_id": "path:map01057"
  },
  "path:map00253": {
   "name": "00253  Tetracycline biosynthesis",
   "level": 3,
   "parent": "Metabolism of terpenoids and polyketides",
   "children": null,
-  "entry-id": "path:map00253"
+  "entry_id": "path:map00253"
  },
  "path:map00523": {
   "name": "00523  Polyketide sugar unit biosynthesis",
   "level": 3,
   "parent": "Metabolism of terpenoids and polyketides",
   "children": null,
-  "entry-id": "path:map00523"
+  "entry_id": "path:map00523"
  },
  "path:map01054": {
   "name": "01054  Nonribosomal peptide structures",
   "level": 3,
   "parent": "Metabolism of terpenoids and polyketides",
   "children": null,
-  "entry-id": "path:map01054"
+  "entry_id": "path:map01054"
  },
  "path:map01053": {
   "name": "01053  Biosynthesis of siderophore group nonribosomal peptides",
   "level": 3,
   "parent": "Metabolism of terpenoids and polyketides",
   "children": null,
-  "entry-id": "path:map01053"
+  "entry_id": "path:map01053"
  },
  "path:map01055": {
   "name": "01055  Biosynthesis of vancomycin group antibiotics",
   "level": 3,
   "parent": "Metabolism of terpenoids and polyketides",
   "children": null,
-  "entry-id": "path:map01055"
+  "entry_id": "path:map01055"
  },
  "Metabolism of terpenoids and polyketides": {
   "name": "Metabolism of terpenoids and polyketides",
@@ -1101,224 +1101,224 @@
    "path:map01057",
    "path:map01059"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map00940": {
   "name": "00940  Phenylpropanoid biosynthesis",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00940"
+  "entry_id": "path:map00940"
  },
  "path:map00945": {
   "name": "00945  Stilbenoid, diarylheptanoid and gingerol biosynthesis",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00945"
+  "entry_id": "path:map00945"
  },
  "path:map00941": {
   "name": "00941  Flavonoid biosynthesis",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00941"
+  "entry_id": "path:map00941"
  },
  "path:map00944": {
   "name": "00944  Flavone and flavonol biosynthesis",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00944"
+  "entry_id": "path:map00944"
  },
  "path:map00942": {
   "name": "00942  Anthocyanin biosynthesis",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00942"
+  "entry_id": "path:map00942"
  },
  "path:map00943": {
   "name": "00943  Isoflavonoid biosynthesis",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00943"
+  "entry_id": "path:map00943"
  },
  "path:map00946": {
   "name": "00946  Degradation of flavonoids",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00946"
+  "entry_id": "path:map00946"
  },
  "path:map00901": {
   "name": "00901  Indole alkaloid biosynthesis",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00901"
+  "entry_id": "path:map00901"
  },
  "path:map00403": {
   "name": "00403  Indole diterpene alkaloid biosynthesis",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00403"
+  "entry_id": "path:map00403"
  },
  "path:map00950": {
   "name": "00950  Isoquinoline alkaloid biosynthesis",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00950"
+  "entry_id": "path:map00950"
  },
  "path:map00960": {
   "name": "00960  Tropane, piperidine and pyridine alkaloid biosynthesis",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00960"
+  "entry_id": "path:map00960"
  },
  "path:map00996": {
   "name": "00996  Biosynthesis of various alkaloids",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00996"
+  "entry_id": "path:map00996"
  },
  "path:map00232": {
   "name": "00232  Caffeine metabolism",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00232"
+  "entry_id": "path:map00232"
  },
  "path:map00965": {
   "name": "00965  Betalain biosynthesis",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00965"
+  "entry_id": "path:map00965"
  },
  "path:map00966": {
   "name": "00966  Glucosinolate biosynthesis",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00966"
+  "entry_id": "path:map00966"
  },
  "path:map00402": {
   "name": "00402  Benzoxazinoid biosynthesis",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00402"
+  "entry_id": "path:map00402"
  },
  "path:map00311": {
   "name": "00311  Penicillin and cephalosporin biosynthesis",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00311"
+  "entry_id": "path:map00311"
  },
  "path:map00332": {
   "name": "00332  Carbapenem biosynthesis",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00332"
+  "entry_id": "path:map00332"
  },
  "path:map00261": {
   "name": "00261  Monobactam biosynthesis",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00261"
+  "entry_id": "path:map00261"
  },
  "path:map00331": {
   "name": "00331  Clavulanic acid biosynthesis",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00331"
+  "entry_id": "path:map00331"
  },
  "path:map00521": {
   "name": "00521  Streptomycin biosynthesis",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00521"
+  "entry_id": "path:map00521"
  },
  "path:map00524": {
   "name": "00524  Neomycin, kanamycin and gentamicin biosynthesis",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00524"
+  "entry_id": "path:map00524"
  },
  "path:map00525": {
   "name": "00525  Acarbose and validamycin biosynthesis",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00525"
+  "entry_id": "path:map00525"
  },
  "path:map00401": {
   "name": "00401  Novobiocin biosynthesis",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00401"
+  "entry_id": "path:map00401"
  },
  "path:map00404": {
   "name": "00404  Staurosporine biosynthesis",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00404"
+  "entry_id": "path:map00404"
  },
  "path:map00405": {
   "name": "00405  Phenazine biosynthesis",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00405"
+  "entry_id": "path:map00405"
  },
  "path:map00333": {
   "name": "00333  Prodigiosin biosynthesis",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00333"
+  "entry_id": "path:map00333"
  },
  "path:map00254": {
   "name": "00254  Aflatoxin biosynthesis",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00254"
+  "entry_id": "path:map00254"
  },
  "path:map00998": {
   "name": "00998  Biosynthesis of various antibiotics",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00998"
+  "entry_id": "path:map00998"
  },
  "path:map00999": {
   "name": "00999  Biosynthesis of various plant secondary metabolites",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00999"
+  "entry_id": "path:map00999"
  },
  "path:map00997": {
   "name": "00997  Biosynthesis of various other secondary metabolites",
   "level": 3,
   "parent": "Biosynthesis of other secondary metabolites",
   "children": null,
-  "entry-id": "path:map00997"
+  "entry_id": "path:map00997"
  },
  "Biosynthesis of other secondary metabolites": {
   "name": "Biosynthesis of other secondary metabolites",
@@ -1357,154 +1357,154 @@
    "path:map00998",
    "path:map00999"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map00362": {
   "name": "00362  Benzoate degradation",
   "level": 3,
   "parent": "Xenobiotics biodegradation and metabolism",
   "children": null,
-  "entry-id": "path:map00362"
+  "entry_id": "path:map00362"
  },
  "path:map00627": {
   "name": "00627  Aminobenzoate degradation",
   "level": 3,
   "parent": "Xenobiotics biodegradation and metabolism",
   "children": null,
-  "entry-id": "path:map00627"
+  "entry_id": "path:map00627"
  },
  "path:map00364": {
   "name": "00364  Fluorobenzoate degradation",
   "level": 3,
   "parent": "Xenobiotics biodegradation and metabolism",
   "children": null,
-  "entry-id": "path:map00364"
+  "entry_id": "path:map00364"
  },
  "path:map00625": {
   "name": "00625  Chloroalkane and chloroalkene degradation",
   "level": 3,
   "parent": "Xenobiotics biodegradation and metabolism",
   "children": null,
-  "entry-id": "path:map00625"
+  "entry_id": "path:map00625"
  },
  "path:map00361": {
   "name": "00361  Chlorocyclohexane and chlorobenzene degradation",
   "level": 3,
   "parent": "Xenobiotics biodegradation and metabolism",
   "children": null,
-  "entry-id": "path:map00361"
+  "entry_id": "path:map00361"
  },
  "path:map00623": {
   "name": "00623  Toluene degradation",
   "level": 3,
   "parent": "Xenobiotics biodegradation and metabolism",
   "children": null,
-  "entry-id": "path:map00623"
+  "entry_id": "path:map00623"
  },
  "path:map00622": {
   "name": "00622  Xylene degradation",
   "level": 3,
   "parent": "Xenobiotics biodegradation and metabolism",
   "children": null,
-  "entry-id": "path:map00622"
+  "entry_id": "path:map00622"
  },
  "path:map00633": {
   "name": "00633  Nitrotoluene degradation",
   "level": 3,
   "parent": "Xenobiotics biodegradation and metabolism",
   "children": null,
-  "entry-id": "path:map00633"
+  "entry_id": "path:map00633"
  },
  "path:map00642": {
   "name": "00642  Ethylbenzene degradation",
   "level": 3,
   "parent": "Xenobiotics biodegradation and metabolism",
   "children": null,
-  "entry-id": "path:map00642"
+  "entry_id": "path:map00642"
  },
  "path:map00643": {
   "name": "00643  Styrene degradation",
   "level": 3,
   "parent": "Xenobiotics biodegradation and metabolism",
   "children": null,
-  "entry-id": "path:map00643"
+  "entry_id": "path:map00643"
  },
  "path:map00791": {
   "name": "00791  Atrazine degradation",
   "level": 3,
   "parent": "Xenobiotics biodegradation and metabolism",
   "children": null,
-  "entry-id": "path:map00791"
+  "entry_id": "path:map00791"
  },
  "path:map00930": {
   "name": "00930  Caprolactam degradation",
   "level": 3,
   "parent": "Xenobiotics biodegradation and metabolism",
   "children": null,
-  "entry-id": "path:map00930"
+  "entry_id": "path:map00930"
  },
  "path:map00363": {
   "name": "00363  Bisphenol degradation",
   "level": 3,
   "parent": "Xenobiotics biodegradation and metabolism",
   "children": null,
-  "entry-id": "path:map00363"
+  "entry_id": "path:map00363"
  },
  "path:map00621": {
   "name": "00621  Dioxin degradation",
   "level": 3,
   "parent": "Xenobiotics biodegradation and metabolism",
   "children": null,
-  "entry-id": "path:map00621"
+  "entry_id": "path:map00621"
  },
  "path:map00626": {
   "name": "00626  Naphthalene degradation",
   "level": 3,
   "parent": "Xenobiotics biodegradation and metabolism",
   "children": null,
-  "entry-id": "path:map00626"
+  "entry_id": "path:map00626"
  },
  "path:map00624": {
   "name": "00624  Polycyclic aromatic hydrocarbon degradation",
   "level": 3,
   "parent": "Xenobiotics biodegradation and metabolism",
   "children": null,
-  "entry-id": "path:map00624"
+  "entry_id": "path:map00624"
  },
  "path:map00365": {
   "name": "00365  Furfural degradation",
   "level": 3,
   "parent": "Xenobiotics biodegradation and metabolism",
   "children": null,
-  "entry-id": "path:map00365"
+  "entry_id": "path:map00365"
  },
  "path:map00984": {
   "name": "00984  Steroid degradation",
   "level": 3,
   "parent": "Xenobiotics biodegradation and metabolism",
   "children": null,
-  "entry-id": "path:map00984"
+  "entry_id": "path:map00984"
  },
  "path:map00980": {
   "name": "00980  Metabolism of xenobiotics by cytochrome P450",
   "level": 3,
   "parent": "Xenobiotics biodegradation and metabolism",
   "children": null,
-  "entry-id": "path:map00980"
+  "entry_id": "path:map00980"
  },
  "path:map00982": {
   "name": "00982  Drug metabolism - cytochrome P450",
   "level": 3,
   "parent": "Xenobiotics biodegradation and metabolism",
   "children": null,
-  "entry-id": "path:map00982"
+  "entry_id": "path:map00982"
  },
  "path:map00983": {
   "name": "00983  Drug metabolism - other enzymes",
   "level": 3,
   "parent": "Xenobiotics biodegradation and metabolism",
   "children": null,
-  "entry-id": "path:map00983"
+  "entry_id": "path:map00983"
  },
  "Xenobiotics biodegradation and metabolism": {
   "name": "Xenobiotics biodegradation and metabolism",
@@ -1533,70 +1533,70 @@
    "path:map00983",
    "path:map00984"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map01010": {
   "name": "01010  Overview of biosynthetic pathways",
   "level": 3,
   "parent": "Chemical structure transformation maps",
   "children": null,
-  "entry-id": "path:map01010"
+  "entry_id": "path:map01010"
  },
  "path:map01060": {
   "name": "01060  Biosynthesis of plant secondary metabolites",
   "level": 3,
   "parent": "Chemical structure transformation maps",
   "children": null,
-  "entry-id": "path:map01060"
+  "entry_id": "path:map01060"
  },
  "path:map01061": {
   "name": "01061  Biosynthesis of phenylpropanoids",
   "level": 3,
   "parent": "Chemical structure transformation maps",
   "children": null,
-  "entry-id": "path:map01061"
+  "entry_id": "path:map01061"
  },
  "path:map01062": {
   "name": "01062  Biosynthesis of terpenoids and steroids",
   "level": 3,
   "parent": "Chemical structure transformation maps",
   "children": null,
-  "entry-id": "path:map01062"
+  "entry_id": "path:map01062"
  },
  "path:map01063": {
   "name": "01063  Biosynthesis of alkaloids derived from shikimate pathway",
   "level": 3,
   "parent": "Chemical structure transformation maps",
   "children": null,
-  "entry-id": "path:map01063"
+  "entry_id": "path:map01063"
  },
  "path:map01064": {
   "name": "01064  Biosynthesis of alkaloids derived from ornithine, lysine and nicotinic acid",
   "level": 3,
   "parent": "Chemical structure transformation maps",
   "children": null,
-  "entry-id": "path:map01064"
+  "entry_id": "path:map01064"
  },
  "path:map01065": {
   "name": "01065  Biosynthesis of alkaloids derived from histidine and purine",
   "level": 3,
   "parent": "Chemical structure transformation maps",
   "children": null,
-  "entry-id": "path:map01065"
+  "entry_id": "path:map01065"
  },
  "path:map01066": {
   "name": "01066  Biosynthesis of alkaloids derived from terpenoid and polyketide",
   "level": 3,
   "parent": "Chemical structure transformation maps",
   "children": null,
-  "entry-id": "path:map01066"
+  "entry_id": "path:map01066"
  },
  "path:map01070": {
   "name": "01070  Biosynthesis of plant hormones",
   "level": 3,
   "parent": "Chemical structure transformation maps",
   "children": null,
-  "entry-id": "path:map01070"
+  "entry_id": "path:map01070"
  },
  "Chemical structure transformation maps": {
   "name": "Chemical structure transformation maps",
@@ -1613,7 +1613,7 @@
    "path:map01066",
    "path:map01070"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "Metabolism": {
   "name": "Metabolism",
@@ -1634,28 +1634,28 @@
    "Nucleotide metabolism",
    "Xenobiotics biodegradation and metabolism"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map03020": {
   "name": "03020  RNA polymerase",
   "level": 3,
   "parent": "Transcription",
   "children": null,
-  "entry-id": "path:map03020"
+  "entry_id": "path:map03020"
  },
  "path:map03022": {
   "name": "03022  Basal transcription factors",
   "level": 3,
   "parent": "Transcription",
   "children": null,
-  "entry-id": "path:map03022"
+  "entry_id": "path:map03022"
  },
  "path:map03040": {
   "name": "03040  Spliceosome",
   "level": 3,
   "parent": "Transcription",
   "children": null,
-  "entry-id": "path:map03040"
+  "entry_id": "path:map03040"
  },
  "Transcription": {
   "name": "Transcription",
@@ -1666,42 +1666,42 @@
    "path:map03022",
    "path:map03040"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map03010": {
   "name": "03010  Ribosome",
   "level": 3,
   "parent": "Translation",
   "children": null,
-  "entry-id": "path:map03010"
+  "entry_id": "path:map03010"
  },
  "path:map00970": {
   "name": "00970  Aminoacyl-tRNA biosynthesis",
   "level": 3,
   "parent": "Translation",
   "children": null,
-  "entry-id": "path:map00970"
+  "entry_id": "path:map00970"
  },
  "path:map03013": {
   "name": "03013  Nucleocytoplasmic transport",
   "level": 3,
   "parent": "Translation",
   "children": null,
-  "entry-id": "path:map03013"
+  "entry_id": "path:map03013"
  },
  "path:map03015": {
   "name": "03015  mRNA surveillance pathway",
   "level": 3,
   "parent": "Translation",
   "children": null,
-  "entry-id": "path:map03015"
+  "entry_id": "path:map03015"
  },
  "path:map03008": {
   "name": "03008  Ribosome biogenesis in eukaryotes",
   "level": 3,
   "parent": "Translation",
   "children": null,
-  "entry-id": "path:map03008"
+  "entry_id": "path:map03008"
  },
  "Translation": {
   "name": "Translation",
@@ -1714,56 +1714,56 @@
    "path:map03013",
    "path:map03015"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map03060": {
   "name": "03060  Protein export",
   "level": 3,
   "parent": "Folding, sorting and degradation",
   "children": null,
-  "entry-id": "path:map03060"
+  "entry_id": "path:map03060"
  },
  "path:map04141": {
   "name": "04141  Protein processing in endoplasmic reticulum",
   "level": 3,
   "parent": "Folding, sorting and degradation",
   "children": null,
-  "entry-id": "path:map04141"
+  "entry_id": "path:map04141"
  },
  "path:map04130": {
   "name": "04130  SNARE interactions in vesicular transport",
   "level": 3,
   "parent": "Folding, sorting and degradation",
   "children": null,
-  "entry-id": "path:map04130"
+  "entry_id": "path:map04130"
  },
  "path:map04120": {
   "name": "04120  Ubiquitin mediated proteolysis",
   "level": 3,
   "parent": "Folding, sorting and degradation",
   "children": null,
-  "entry-id": "path:map04120"
+  "entry_id": "path:map04120"
  },
  "path:map04122": {
   "name": "04122  Sulfur relay system",
   "level": 3,
   "parent": "Folding, sorting and degradation",
   "children": null,
-  "entry-id": "path:map04122"
+  "entry_id": "path:map04122"
  },
  "path:map03050": {
   "name": "03050  Proteasome",
   "level": 3,
   "parent": "Folding, sorting and degradation",
   "children": null,
-  "entry-id": "path:map03050"
+  "entry_id": "path:map03050"
  },
  "path:map03018": {
   "name": "03018  RNA degradation",
   "level": 3,
   "parent": "Folding, sorting and degradation",
   "children": null,
-  "entry-id": "path:map03018"
+  "entry_id": "path:map03018"
  },
  "Folding, sorting and degradation": {
   "name": "Folding, sorting and degradation",
@@ -1778,56 +1778,56 @@
    "path:map04130",
    "path:map04141"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map03030": {
   "name": "03030  DNA replication",
   "level": 3,
   "parent": "Replication and repair",
   "children": null,
-  "entry-id": "path:map03030"
+  "entry_id": "path:map03030"
  },
  "path:map03410": {
   "name": "03410  Base excision repair",
   "level": 3,
   "parent": "Replication and repair",
   "children": null,
-  "entry-id": "path:map03410"
+  "entry_id": "path:map03410"
  },
  "path:map03420": {
   "name": "03420  Nucleotide excision repair",
   "level": 3,
   "parent": "Replication and repair",
   "children": null,
-  "entry-id": "path:map03420"
+  "entry_id": "path:map03420"
  },
  "path:map03430": {
   "name": "03430  Mismatch repair",
   "level": 3,
   "parent": "Replication and repair",
   "children": null,
-  "entry-id": "path:map03430"
+  "entry_id": "path:map03430"
  },
  "path:map03440": {
   "name": "03440  Homologous recombination",
   "level": 3,
   "parent": "Replication and repair",
   "children": null,
-  "entry-id": "path:map03440"
+  "entry_id": "path:map03440"
  },
  "path:map03450": {
   "name": "03450  Non-homologous end-joining",
   "level": 3,
   "parent": "Replication and repair",
   "children": null,
-  "entry-id": "path:map03450"
+  "entry_id": "path:map03450"
  },
  "path:map03460": {
   "name": "03460  Fanconi anemia pathway",
   "level": 3,
   "parent": "Replication and repair",
   "children": null,
-  "entry-id": "path:map03460"
+  "entry_id": "path:map03460"
  },
  "Replication and repair": {
   "name": "Replication and repair",
@@ -1842,84 +1842,84 @@
    "path:map03450",
    "path:map03460"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map03230": {
   "name": "03230  Viral genome structure",
   "level": 3,
   "parent": "Information processing in viruses",
   "children": null,
-  "entry-id": "path:map03230"
+  "entry_id": "path:map03230"
  },
  "path:map03240": {
   "name": "03240  Viral replication",
   "level": 3,
   "parent": "Information processing in viruses",
   "children": null,
-  "entry-id": "path:map03240"
+  "entry_id": "path:map03240"
  },
  "path:map03250": {
   "name": "03250  Viral life cycle - HIV-1",
   "level": 3,
   "parent": "Information processing in viruses",
   "children": null,
-  "entry-id": "path:map03250"
+  "entry_id": "path:map03250"
  },
  "path:map03260": {
   "name": "03260  Virion - Human immunodeficiency virus",
   "level": 3,
   "parent": "Information processing in viruses",
   "children": null,
-  "entry-id": "path:map03260"
+  "entry_id": "path:map03260"
  },
  "path:map03261": {
   "name": "03261  Virion - Influenza A virus",
   "level": 3,
   "parent": "Information processing in viruses",
   "children": null,
-  "entry-id": "path:map03261"
+  "entry_id": "path:map03261"
  },
  "path:map03263": {
   "name": "03263  Virion - Enterovirus",
   "level": 3,
   "parent": "Information processing in viruses",
   "children": null,
-  "entry-id": "path:map03263"
+  "entry_id": "path:map03263"
  },
  "path:map03264": {
   "name": "03264  Virion - Flavivirus",
   "level": 3,
   "parent": "Information processing in viruses",
   "children": null,
-  "entry-id": "path:map03264"
+  "entry_id": "path:map03264"
  },
  "path:map03265": {
   "name": "03265  Virion - Lyssavirus",
   "level": 3,
   "parent": "Information processing in viruses",
   "children": null,
-  "entry-id": "path:map03265"
+  "entry_id": "path:map03265"
  },
  "path:map03266": {
   "name": "03266  Virion - Herpesvirus",
   "level": 3,
   "parent": "Information processing in viruses",
   "children": null,
-  "entry-id": "path:map03266"
+  "entry_id": "path:map03266"
  },
  "path:map03268": {
   "name": "03268  Virion - Orthopoxvirus",
   "level": 3,
   "parent": "Information processing in viruses",
   "children": null,
-  "entry-id": "path:map03268"
+  "entry_id": "path:map03268"
  },
  "path:map03267": {
   "name": "03267  Virion - Adenovirus",
   "level": 3,
   "parent": "Information processing in viruses",
   "children": null,
-  "entry-id": "path:map03267"
+  "entry_id": "path:map03267"
  },
  "Information processing in viruses": {
   "name": "Information processing in viruses",
@@ -1938,7 +1938,7 @@
    "path:map03267",
    "path:map03268"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "Genetic Information Processing": {
   "name": "Genetic Information Processing",
@@ -1951,28 +1951,28 @@
    "Transcription",
    "Translation"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map02010": {
   "name": "02010  ABC transporters",
   "level": 3,
   "parent": "Membrane transport",
   "children": null,
-  "entry-id": "path:map02010"
+  "entry_id": "path:map02010"
  },
  "path:map02060": {
   "name": "02060  Phosphotransferase system (PTS)",
   "level": 3,
   "parent": "Membrane transport",
   "children": null,
-  "entry-id": "path:map02060"
+  "entry_id": "path:map02060"
  },
  "path:map03070": {
   "name": "03070  Bacterial secretion system",
   "level": 3,
   "parent": "Membrane transport",
   "children": null,
-  "entry-id": "path:map03070"
+  "entry_id": "path:map03070"
  },
  "Membrane transport": {
   "name": "Membrane transport",
@@ -1983,238 +1983,238 @@
    "path:map02060",
    "path:map03070"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map02020": {
   "name": "02020  Two-component system",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map02020"
+  "entry_id": "path:map02020"
  },
  "path:map04010": {
   "name": "04010  MAPK signaling pathway",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04010"
+  "entry_id": "path:map04010"
  },
  "path:map04013": {
   "name": "04013  MAPK signaling pathway - fly",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04013"
+  "entry_id": "path:map04013"
  },
  "path:map04016": {
   "name": "04016  MAPK signaling pathway - plant",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04016"
+  "entry_id": "path:map04016"
  },
  "path:map04011": {
   "name": "04011  MAPK signaling pathway - yeast",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04011"
+  "entry_id": "path:map04011"
  },
  "path:map04012": {
   "name": "04012  ErbB signaling pathway",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04012"
+  "entry_id": "path:map04012"
  },
  "path:map04014": {
   "name": "04014  Ras signaling pathway",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04014"
+  "entry_id": "path:map04014"
  },
  "path:map04015": {
   "name": "04015  Rap1 signaling pathway",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04015"
+  "entry_id": "path:map04015"
  },
  "path:map04310": {
   "name": "04310  Wnt signaling pathway",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04310"
+  "entry_id": "path:map04310"
  },
  "path:map04330": {
   "name": "04330  Notch signaling pathway",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04330"
+  "entry_id": "path:map04330"
  },
  "path:map04340": {
   "name": "04340  Hedgehog signaling pathway",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04340"
+  "entry_id": "path:map04340"
  },
  "path:map04341": {
   "name": "04341  Hedgehog signaling pathway - fly",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04341"
+  "entry_id": "path:map04341"
  },
  "path:map04350": {
   "name": "04350  TGF-beta signaling pathway",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04350"
+  "entry_id": "path:map04350"
  },
  "path:map04390": {
   "name": "04390  Hippo signaling pathway",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04390"
+  "entry_id": "path:map04390"
  },
  "path:map04391": {
   "name": "04391  Hippo signaling pathway - fly",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04391"
+  "entry_id": "path:map04391"
  },
  "path:map04392": {
   "name": "04392  Hippo signaling pathway - multiple species",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04392"
+  "entry_id": "path:map04392"
  },
  "path:map04370": {
   "name": "04370  VEGF signaling pathway",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04370"
+  "entry_id": "path:map04370"
  },
  "path:map04371": {
   "name": "04371  Apelin signaling pathway",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04371"
+  "entry_id": "path:map04371"
  },
  "path:map04630": {
   "name": "04630  JAK-STAT signaling pathway",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04630"
+  "entry_id": "path:map04630"
  },
  "path:map04064": {
   "name": "04064  NF-kappa B signaling pathway",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04064"
+  "entry_id": "path:map04064"
  },
  "path:map04668": {
   "name": "04668  TNF signaling pathway",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04668"
+  "entry_id": "path:map04668"
  },
  "path:map04066": {
   "name": "04066  HIF-1 signaling pathway",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04066"
+  "entry_id": "path:map04066"
  },
  "path:map04068": {
   "name": "04068  FoxO signaling pathway",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04068"
+  "entry_id": "path:map04068"
  },
  "path:map04020": {
   "name": "04020  Calcium signaling pathway",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04020"
+  "entry_id": "path:map04020"
  },
  "path:map04070": {
   "name": "04070  Phosphatidylinositol signaling system",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04070"
+  "entry_id": "path:map04070"
  },
  "path:map04072": {
   "name": "04072  Phospholipase D signaling pathway",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04072"
+  "entry_id": "path:map04072"
  },
  "path:map04071": {
   "name": "04071  Sphingolipid signaling pathway",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04071"
+  "entry_id": "path:map04071"
  },
  "path:map04024": {
   "name": "04024  cAMP signaling pathway",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04024"
+  "entry_id": "path:map04024"
  },
  "path:map04022": {
   "name": "04022  cGMP-PKG signaling pathway",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04022"
+  "entry_id": "path:map04022"
  },
  "path:map04151": {
   "name": "04151  PI3K-Akt signaling pathway",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04151"
+  "entry_id": "path:map04151"
  },
  "path:map04152": {
   "name": "04152  AMPK signaling pathway",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04152"
+  "entry_id": "path:map04152"
  },
  "path:map04150": {
   "name": "04150  mTOR signaling pathway",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04150"
+  "entry_id": "path:map04150"
  },
  "path:map04075": {
   "name": "04075  Plant hormone signal transduction",
   "level": 3,
   "parent": "Signal transduction",
   "children": null,
-  "entry-id": "path:map04075"
+  "entry_id": "path:map04075"
  },
  "Signal transduction": {
   "name": "Signal transduction",
@@ -2255,42 +2255,42 @@
    "path:map04630",
    "path:map04668"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map04080": {
   "name": "04080  Neuroactive ligand-receptor interaction",
   "level": 3,
   "parent": "Signaling molecules and interaction",
   "children": null,
-  "entry-id": "path:map04080"
+  "entry_id": "path:map04080"
  },
  "path:map04060": {
   "name": "04060  Cytokine-cytokine receptor interaction",
   "level": 3,
   "parent": "Signaling molecules and interaction",
   "children": null,
-  "entry-id": "path:map04060"
+  "entry_id": "path:map04060"
  },
  "path:map04061": {
   "name": "04061  Viral protein interaction with cytokine and cytokine receptor",
   "level": 3,
   "parent": "Signaling molecules and interaction",
   "children": null,
-  "entry-id": "path:map04061"
+  "entry_id": "path:map04061"
  },
  "path:map04512": {
   "name": "04512  ECM-receptor interaction",
   "level": 3,
   "parent": "Signaling molecules and interaction",
   "children": null,
-  "entry-id": "path:map04512"
+  "entry_id": "path:map04512"
  },
  "path:map04514": {
   "name": "04514  Cell adhesion molecules",
   "level": 3,
   "parent": "Signaling molecules and interaction",
   "children": null,
-  "entry-id": "path:map04514"
+  "entry_id": "path:map04514"
  },
  "Signaling molecules and interaction": {
   "name": "Signaling molecules and interaction",
@@ -2303,7 +2303,7 @@
    "path:map04512",
    "path:map04514"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "Environmental Information Processing": {
   "name": "Environmental Information Processing",
@@ -2314,70 +2314,70 @@
    "Signal transduction",
    "Signaling molecules and interaction"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map04144": {
   "name": "04144  Endocytosis",
   "level": 3,
   "parent": "Transport and catabolism",
   "children": null,
-  "entry-id": "path:map04144"
+  "entry_id": "path:map04144"
  },
  "path:map04145": {
   "name": "04145  Phagosome",
   "level": 3,
   "parent": "Transport and catabolism",
   "children": null,
-  "entry-id": "path:map04145"
+  "entry_id": "path:map04145"
  },
  "path:map04142": {
   "name": "04142  Lysosome",
   "level": 3,
   "parent": "Transport and catabolism",
   "children": null,
-  "entry-id": "path:map04142"
+  "entry_id": "path:map04142"
  },
  "path:map04146": {
   "name": "04146  Peroxisome",
   "level": 3,
   "parent": "Transport and catabolism",
   "children": null,
-  "entry-id": "path:map04146"
+  "entry_id": "path:map04146"
  },
  "path:map04140": {
   "name": "04140  Autophagy - animal",
   "level": 3,
   "parent": "Transport and catabolism",
   "children": null,
-  "entry-id": "path:map04140"
+  "entry_id": "path:map04140"
  },
  "path:map04138": {
   "name": "04138  Autophagy - yeast",
   "level": 3,
   "parent": "Transport and catabolism",
   "children": null,
-  "entry-id": "path:map04138"
+  "entry_id": "path:map04138"
  },
  "path:map04136": {
   "name": "04136  Autophagy - other",
   "level": 3,
   "parent": "Transport and catabolism",
   "children": null,
-  "entry-id": "path:map04136"
+  "entry_id": "path:map04136"
  },
  "path:map04137": {
   "name": "04137  Mitophagy - animal",
   "level": 3,
   "parent": "Transport and catabolism",
   "children": null,
-  "entry-id": "path:map04137"
+  "entry_id": "path:map04137"
  },
  "path:map04139": {
   "name": "04139  Mitophagy - yeast",
   "level": 3,
   "parent": "Transport and catabolism",
   "children": null,
-  "entry-id": "path:map04139"
+  "entry_id": "path:map04139"
  },
  "Transport and catabolism": {
   "name": "Transport and catabolism",
@@ -2394,91 +2394,91 @@
    "path:map04145",
    "path:map04146"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map04110": {
   "name": "04110  Cell cycle",
   "level": 3,
   "parent": "Cell growth and death",
   "children": null,
-  "entry-id": "path:map04110"
+  "entry_id": "path:map04110"
  },
  "path:map04111": {
   "name": "04111  Cell cycle - yeast",
   "level": 3,
   "parent": "Cell growth and death",
   "children": null,
-  "entry-id": "path:map04111"
+  "entry_id": "path:map04111"
  },
  "path:map04112": {
   "name": "04112  Cell cycle - Caulobacter",
   "level": 3,
   "parent": "Cell growth and death",
   "children": null,
-  "entry-id": "path:map04112"
+  "entry_id": "path:map04112"
  },
  "path:map04113": {
   "name": "04113  Meiosis - yeast",
   "level": 3,
   "parent": "Cell growth and death",
   "children": null,
-  "entry-id": "path:map04113"
+  "entry_id": "path:map04113"
  },
  "path:map04114": {
   "name": "04114  Oocyte meiosis",
   "level": 3,
   "parent": "Cell growth and death",
   "children": null,
-  "entry-id": "path:map04114"
+  "entry_id": "path:map04114"
  },
  "path:map04210": {
   "name": "04210  Apoptosis",
   "level": 3,
   "parent": "Cell growth and death",
   "children": null,
-  "entry-id": "path:map04210"
+  "entry_id": "path:map04210"
  },
  "path:map04214": {
   "name": "04214  Apoptosis - fly",
   "level": 3,
   "parent": "Cell growth and death",
   "children": null,
-  "entry-id": "path:map04214"
+  "entry_id": "path:map04214"
  },
  "path:map04215": {
   "name": "04215  Apoptosis - multiple species",
   "level": 3,
   "parent": "Cell growth and death",
   "children": null,
-  "entry-id": "path:map04215"
+  "entry_id": "path:map04215"
  },
  "path:map04216": {
   "name": "04216  Ferroptosis",
   "level": 3,
   "parent": "Cell growth and death",
   "children": null,
-  "entry-id": "path:map04216"
+  "entry_id": "path:map04216"
  },
  "path:map04217": {
   "name": "04217  Necroptosis",
   "level": 3,
   "parent": "Cell growth and death",
   "children": null,
-  "entry-id": "path:map04217"
+  "entry_id": "path:map04217"
  },
  "path:map04115": {
   "name": "04115  p53 signaling pathway",
   "level": 3,
   "parent": "Cell growth and death",
   "children": null,
-  "entry-id": "path:map04115"
+  "entry_id": "path:map04115"
  },
  "path:map04218": {
   "name": "04218  Cellular senescence",
   "level": 3,
   "parent": "Cell growth and death",
   "children": null,
-  "entry-id": "path:map04218"
+  "entry_id": "path:map04218"
  },
  "Cell growth and death": {
   "name": "Cell growth and death",
@@ -2498,42 +2498,42 @@
    "path:map04217",
    "path:map04218"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map04510": {
   "name": "04510  Focal adhesion",
   "level": 3,
   "parent": "Cellular community - eukaryotes",
   "children": null,
-  "entry-id": "path:map04510"
+  "entry_id": "path:map04510"
  },
  "path:map04520": {
   "name": "04520  Adherens junction",
   "level": 3,
   "parent": "Cellular community - eukaryotes",
   "children": null,
-  "entry-id": "path:map04520"
+  "entry_id": "path:map04520"
  },
  "path:map04530": {
   "name": "04530  Tight junction",
   "level": 3,
   "parent": "Cellular community - eukaryotes",
   "children": null,
-  "entry-id": "path:map04530"
+  "entry_id": "path:map04530"
  },
  "path:map04540": {
   "name": "04540  Gap junction",
   "level": 3,
   "parent": "Cellular community - eukaryotes",
   "children": null,
-  "entry-id": "path:map04540"
+  "entry_id": "path:map04540"
  },
  "path:map04550": {
   "name": "04550  Signaling pathways regulating pluripotency of stem cells",
   "level": 3,
   "parent": "Cellular community - eukaryotes",
   "children": null,
-  "entry-id": "path:map04550"
+  "entry_id": "path:map04550"
  },
  "Cellular community - eukaryotes": {
   "name": "Cellular community - eukaryotes",
@@ -2546,35 +2546,35 @@
    "path:map04540",
    "path:map04550"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map02024": {
   "name": "02024  Quorum sensing",
   "level": 3,
   "parent": "Cellular community - prokaryotes",
   "children": null,
-  "entry-id": "path:map02024"
+  "entry_id": "path:map02024"
  },
  "path:map05111": {
   "name": "05111  Biofilm formation - Vibrio cholerae",
   "level": 3,
   "parent": "Cellular community - prokaryotes",
   "children": null,
-  "entry-id": "path:map05111"
+  "entry_id": "path:map05111"
  },
  "path:map02025": {
   "name": "02025  Biofilm formation - Pseudomonas aeruginosa",
   "level": 3,
   "parent": "Cellular community - prokaryotes",
   "children": null,
-  "entry-id": "path:map02025"
+  "entry_id": "path:map02025"
  },
  "path:map02026": {
   "name": "02026  Biofilm formation - Escherichia coli",
   "level": 3,
   "parent": "Cellular community - prokaryotes",
   "children": null,
-  "entry-id": "path:map02026"
+  "entry_id": "path:map02026"
  },
  "Cellular community - prokaryotes": {
   "name": "Cellular community - prokaryotes",
@@ -2586,28 +2586,28 @@
    "path:map02026",
    "path:map05111"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map02030": {
   "name": "02030  Bacterial chemotaxis",
   "level": 3,
   "parent": "Cell motility",
   "children": null,
-  "entry-id": "path:map02030"
+  "entry_id": "path:map02030"
  },
  "path:map02040": {
   "name": "02040  Flagellar assembly",
   "level": 3,
   "parent": "Cell motility",
   "children": null,
-  "entry-id": "path:map02040"
+  "entry_id": "path:map02040"
  },
  "path:map04810": {
   "name": "04810  Regulation of actin cytoskeleton",
   "level": 3,
   "parent": "Cell motility",
   "children": null,
-  "entry-id": "path:map04810"
+  "entry_id": "path:map04810"
  },
  "Cell motility": {
   "name": "Cell motility",
@@ -2618,7 +2618,7 @@
    "path:map02040",
    "path:map04810"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "Cellular Processes": {
   "name": "Cellular Processes",
@@ -2631,161 +2631,161 @@
    "Cellular community - prokaryotes",
    "Transport and catabolism"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map04640": {
   "name": "04640  Hematopoietic cell lineage",
   "level": 3,
   "parent": "Immune system",
   "children": null,
-  "entry-id": "path:map04640"
+  "entry_id": "path:map04640"
  },
  "path:map04610": {
   "name": "04610  Complement and coagulation cascades",
   "level": 3,
   "parent": "Immune system",
   "children": null,
-  "entry-id": "path:map04610"
+  "entry_id": "path:map04610"
  },
  "path:map04611": {
   "name": "04611  Platelet activation",
   "level": 3,
   "parent": "Immune system",
   "children": null,
-  "entry-id": "path:map04611"
+  "entry_id": "path:map04611"
  },
  "path:map04613": {
   "name": "04613  Neutrophil extracellular trap formation",
   "level": 3,
   "parent": "Immune system",
   "children": null,
-  "entry-id": "path:map04613"
+  "entry_id": "path:map04613"
  },
  "path:map04620": {
   "name": "04620  Toll-like receptor signaling pathway",
   "level": 3,
   "parent": "Immune system",
   "children": null,
-  "entry-id": "path:map04620"
+  "entry_id": "path:map04620"
  },
  "path:map04624": {
   "name": "04624  Toll and Imd signaling pathway",
   "level": 3,
   "parent": "Immune system",
   "children": null,
-  "entry-id": "path:map04624"
+  "entry_id": "path:map04624"
  },
  "path:map04621": {
   "name": "04621  NOD-like receptor signaling pathway",
   "level": 3,
   "parent": "Immune system",
   "children": null,
-  "entry-id": "path:map04621"
+  "entry_id": "path:map04621"
  },
  "path:map04622": {
   "name": "04622  RIG-I-like receptor signaling pathway",
   "level": 3,
   "parent": "Immune system",
   "children": null,
-  "entry-id": "path:map04622"
+  "entry_id": "path:map04622"
  },
  "path:map04623": {
   "name": "04623  Cytosolic DNA-sensing pathway",
   "level": 3,
   "parent": "Immune system",
   "children": null,
-  "entry-id": "path:map04623"
+  "entry_id": "path:map04623"
  },
  "path:map04625": {
   "name": "04625  C-type lectin receptor signaling pathway",
   "level": 3,
   "parent": "Immune system",
   "children": null,
-  "entry-id": "path:map04625"
+  "entry_id": "path:map04625"
  },
  "path:map04650": {
   "name": "04650  Natural killer cell mediated cytotoxicity",
   "level": 3,
   "parent": "Immune system",
   "children": null,
-  "entry-id": "path:map04650"
+  "entry_id": "path:map04650"
  },
  "path:map04612": {
   "name": "04612  Antigen processing and presentation",
   "level": 3,
   "parent": "Immune system",
   "children": null,
-  "entry-id": "path:map04612"
+  "entry_id": "path:map04612"
  },
  "path:map04660": {
   "name": "04660  T cell receptor signaling pathway",
   "level": 3,
   "parent": "Immune system",
   "children": null,
-  "entry-id": "path:map04660"
+  "entry_id": "path:map04660"
  },
  "path:map04658": {
   "name": "04658  Th1 and Th2 cell differentiation",
   "level": 3,
   "parent": "Immune system",
   "children": null,
-  "entry-id": "path:map04658"
+  "entry_id": "path:map04658"
  },
  "path:map04659": {
   "name": "04659  Th17 cell differentiation",
   "level": 3,
   "parent": "Immune system",
   "children": null,
-  "entry-id": "path:map04659"
+  "entry_id": "path:map04659"
  },
  "path:map04657": {
   "name": "04657  IL-17 signaling pathway",
   "level": 3,
   "parent": "Immune system",
   "children": null,
-  "entry-id": "path:map04657"
+  "entry_id": "path:map04657"
  },
  "path:map04662": {
   "name": "04662  B cell receptor signaling pathway",
   "level": 3,
   "parent": "Immune system",
   "children": null,
-  "entry-id": "path:map04662"
+  "entry_id": "path:map04662"
  },
  "path:map04664": {
   "name": "04664  Fc epsilon RI signaling pathway",
   "level": 3,
   "parent": "Immune system",
   "children": null,
-  "entry-id": "path:map04664"
+  "entry_id": "path:map04664"
  },
  "path:map04666": {
   "name": "04666  Fc gamma R-mediated phagocytosis",
   "level": 3,
   "parent": "Immune system",
   "children": null,
-  "entry-id": "path:map04666"
+  "entry_id": "path:map04666"
  },
  "path:map04670": {
   "name": "04670  Leukocyte transendothelial migration",
   "level": 3,
   "parent": "Immune system",
   "children": null,
-  "entry-id": "path:map04670"
+  "entry_id": "path:map04670"
  },
  "path:map04672": {
   "name": "04672  Intestinal immune network for IgA production",
   "level": 3,
   "parent": "Immune system",
   "children": null,
-  "entry-id": "path:map04672"
+  "entry_id": "path:map04672"
  },
  "path:map04062": {
   "name": "04062  Chemokine signaling pathway",
   "level": 3,
   "parent": "Immune system",
   "children": null,
-  "entry-id": "path:map04062"
+  "entry_id": "path:map04062"
  },
  "Immune system": {
   "name": "Immune system",
@@ -2815,168 +2815,168 @@
    "path:map04670",
    "path:map04672"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map04911": {
   "name": "04911  Insulin secretion",
   "level": 3,
   "parent": "Endocrine system",
   "children": null,
-  "entry-id": "path:map04911"
+  "entry_id": "path:map04911"
  },
  "path:map04910": {
   "name": "04910  Insulin signaling pathway",
   "level": 3,
   "parent": "Endocrine system",
   "children": null,
-  "entry-id": "path:map04910"
+  "entry_id": "path:map04910"
  },
  "path:map04922": {
   "name": "04922  Glucagon signaling pathway",
   "level": 3,
   "parent": "Endocrine system",
   "children": null,
-  "entry-id": "path:map04922"
+  "entry_id": "path:map04922"
  },
  "path:map04923": {
   "name": "04923  Regulation of lipolysis in adipocytes",
   "level": 3,
   "parent": "Endocrine system",
   "children": null,
-  "entry-id": "path:map04923"
+  "entry_id": "path:map04923"
  },
  "path:map04920": {
   "name": "04920  Adipocytokine signaling pathway",
   "level": 3,
   "parent": "Endocrine system",
   "children": null,
-  "entry-id": "path:map04920"
+  "entry_id": "path:map04920"
  },
  "path:map03320": {
   "name": "03320  PPAR signaling pathway",
   "level": 3,
   "parent": "Endocrine system",
   "children": null,
-  "entry-id": "path:map03320"
+  "entry_id": "path:map03320"
  },
  "path:map04929": {
   "name": "04929  GnRH secretion",
   "level": 3,
   "parent": "Endocrine system",
   "children": null,
-  "entry-id": "path:map04929"
+  "entry_id": "path:map04929"
  },
  "path:map04912": {
   "name": "04912  GnRH signaling pathway",
   "level": 3,
   "parent": "Endocrine system",
   "children": null,
-  "entry-id": "path:map04912"
+  "entry_id": "path:map04912"
  },
  "path:map04913": {
   "name": "04913  Ovarian steroidogenesis",
   "level": 3,
   "parent": "Endocrine system",
   "children": null,
-  "entry-id": "path:map04913"
+  "entry_id": "path:map04913"
  },
  "path:map04915": {
   "name": "04915  Estrogen signaling pathway",
   "level": 3,
   "parent": "Endocrine system",
   "children": null,
-  "entry-id": "path:map04915"
+  "entry_id": "path:map04915"
  },
  "path:map04914": {
   "name": "04914  Progesterone-mediated oocyte maturation",
   "level": 3,
   "parent": "Endocrine system",
   "children": null,
-  "entry-id": "path:map04914"
+  "entry_id": "path:map04914"
  },
  "path:map04917": {
   "name": "04917  Prolactin signaling pathway",
   "level": 3,
   "parent": "Endocrine system",
   "children": null,
-  "entry-id": "path:map04917"
+  "entry_id": "path:map04917"
  },
  "path:map04921": {
   "name": "04921  Oxytocin signaling pathway",
   "level": 3,
   "parent": "Endocrine system",
   "children": null,
-  "entry-id": "path:map04921"
+  "entry_id": "path:map04921"
  },
  "path:map04926": {
   "name": "04926  Relaxin signaling pathway",
   "level": 3,
   "parent": "Endocrine system",
   "children": null,
-  "entry-id": "path:map04926"
+  "entry_id": "path:map04926"
  },
  "path:map04935": {
   "name": "04935  Growth hormone synthesis, secretion and action",
   "level": 3,
   "parent": "Endocrine system",
   "children": null,
-  "entry-id": "path:map04935"
+  "entry_id": "path:map04935"
  },
  "path:map04918": {
   "name": "04918  Thyroid hormone synthesis",
   "level": 3,
   "parent": "Endocrine system",
   "children": null,
-  "entry-id": "path:map04918"
+  "entry_id": "path:map04918"
  },
  "path:map04919": {
   "name": "04919  Thyroid hormone signaling pathway",
   "level": 3,
   "parent": "Endocrine system",
   "children": null,
-  "entry-id": "path:map04919"
+  "entry_id": "path:map04919"
  },
  "path:map04928": {
   "name": "04928  Parathyroid hormone synthesis, secretion and action",
   "level": 3,
   "parent": "Endocrine system",
   "children": null,
-  "entry-id": "path:map04928"
+  "entry_id": "path:map04928"
  },
  "path:map04916": {
   "name": "04916  Melanogenesis",
   "level": 3,
   "parent": "Endocrine system",
   "children": null,
-  "entry-id": "path:map04916"
+  "entry_id": "path:map04916"
  },
  "path:map04924": {
   "name": "04924  Renin secretion",
   "level": 3,
   "parent": "Endocrine system",
   "children": null,
-  "entry-id": "path:map04924"
+  "entry_id": "path:map04924"
  },
  "path:map04614": {
   "name": "04614  Renin-angiotensin system",
   "level": 3,
   "parent": "Endocrine system",
   "children": null,
-  "entry-id": "path:map04614"
+  "entry_id": "path:map04614"
  },
  "path:map04925": {
   "name": "04925  Aldosterone synthesis and secretion",
   "level": 3,
   "parent": "Endocrine system",
   "children": null,
-  "entry-id": "path:map04925"
+  "entry_id": "path:map04925"
  },
  "path:map04927": {
   "name": "04927  Cortisol synthesis and secretion",
   "level": 3,
   "parent": "Endocrine system",
   "children": null,
-  "entry-id": "path:map04927"
+  "entry_id": "path:map04927"
  },
  "Endocrine system": {
   "name": "Endocrine system",
@@ -3007,28 +3007,28 @@
    "path:map04929",
    "path:map04935"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map04260": {
   "name": "04260  Cardiac muscle contraction",
   "level": 3,
   "parent": "Circulatory system",
   "children": null,
-  "entry-id": "path:map04260"
+  "entry_id": "path:map04260"
  },
  "path:map04261": {
   "name": "04261  Adrenergic signaling in cardiomyocytes",
   "level": 3,
   "parent": "Circulatory system",
   "children": null,
-  "entry-id": "path:map04261"
+  "entry_id": "path:map04261"
  },
  "path:map04270": {
   "name": "04270  Vascular smooth muscle contraction",
   "level": 3,
   "parent": "Circulatory system",
   "children": null,
-  "entry-id": "path:map04270"
+  "entry_id": "path:map04270"
  },
  "Circulatory system": {
   "name": "Circulatory system",
@@ -3039,77 +3039,77 @@
    "path:map04261",
    "path:map04270"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map04970": {
   "name": "04970  Salivary secretion",
   "level": 3,
   "parent": "Digestive system",
   "children": null,
-  "entry-id": "path:map04970"
+  "entry_id": "path:map04970"
  },
  "path:map04971": {
   "name": "04971  Gastric acid secretion",
   "level": 3,
   "parent": "Digestive system",
   "children": null,
-  "entry-id": "path:map04971"
+  "entry_id": "path:map04971"
  },
  "path:map04972": {
   "name": "04972  Pancreatic secretion",
   "level": 3,
   "parent": "Digestive system",
   "children": null,
-  "entry-id": "path:map04972"
+  "entry_id": "path:map04972"
  },
  "path:map04976": {
   "name": "04976  Bile secretion",
   "level": 3,
   "parent": "Digestive system",
   "children": null,
-  "entry-id": "path:map04976"
+  "entry_id": "path:map04976"
  },
  "path:map04973": {
   "name": "04973  Carbohydrate digestion and absorption",
   "level": 3,
   "parent": "Digestive system",
   "children": null,
-  "entry-id": "path:map04973"
+  "entry_id": "path:map04973"
  },
  "path:map04974": {
   "name": "04974  Protein digestion and absorption",
   "level": 3,
   "parent": "Digestive system",
   "children": null,
-  "entry-id": "path:map04974"
+  "entry_id": "path:map04974"
  },
  "path:map04975": {
   "name": "04975  Fat digestion and absorption",
   "level": 3,
   "parent": "Digestive system",
   "children": null,
-  "entry-id": "path:map04975"
+  "entry_id": "path:map04975"
  },
  "path:map04979": {
   "name": "04979  Cholesterol metabolism",
   "level": 3,
   "parent": "Digestive system",
   "children": null,
-  "entry-id": "path:map04979"
+  "entry_id": "path:map04979"
  },
  "path:map04977": {
   "name": "04977  Vitamin digestion and absorption",
   "level": 3,
   "parent": "Digestive system",
   "children": null,
-  "entry-id": "path:map04977"
+  "entry_id": "path:map04977"
  },
  "path:map04978": {
   "name": "04978  Mineral absorption",
   "level": 3,
   "parent": "Digestive system",
   "children": null,
-  "entry-id": "path:map04978"
+  "entry_id": "path:map04978"
  },
  "Digestive system": {
   "name": "Digestive system",
@@ -3127,42 +3127,42 @@
    "path:map04978",
    "path:map04979"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map04962": {
   "name": "04962  Vasopressin-regulated water reabsorption",
   "level": 3,
   "parent": "Excretory system",
   "children": null,
-  "entry-id": "path:map04962"
+  "entry_id": "path:map04962"
  },
  "path:map04960": {
   "name": "04960  Aldosterone-regulated sodium reabsorption",
   "level": 3,
   "parent": "Excretory system",
   "children": null,
-  "entry-id": "path:map04960"
+  "entry_id": "path:map04960"
  },
  "path:map04961": {
   "name": "04961  Endocrine and other factor-regulated calcium reabsorption",
   "level": 3,
   "parent": "Excretory system",
   "children": null,
-  "entry-id": "path:map04961"
+  "entry_id": "path:map04961"
  },
  "path:map04964": {
   "name": "04964  Proximal tubule bicarbonate reclamation",
   "level": 3,
   "parent": "Excretory system",
   "children": null,
-  "entry-id": "path:map04964"
+  "entry_id": "path:map04964"
  },
  "path:map04966": {
   "name": "04966  Collecting duct acid secretion",
   "level": 3,
   "parent": "Excretory system",
   "children": null,
-  "entry-id": "path:map04966"
+  "entry_id": "path:map04966"
  },
  "Excretory system": {
   "name": "Excretory system",
@@ -3175,77 +3175,77 @@
    "path:map04964",
    "path:map04966"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map04724": {
   "name": "04724  Glutamatergic synapse",
   "level": 3,
   "parent": "Nervous system",
   "children": null,
-  "entry-id": "path:map04724"
+  "entry_id": "path:map04724"
  },
  "path:map04727": {
   "name": "04727  GABAergic synapse",
   "level": 3,
   "parent": "Nervous system",
   "children": null,
-  "entry-id": "path:map04727"
+  "entry_id": "path:map04727"
  },
  "path:map04725": {
   "name": "04725  Cholinergic synapse",
   "level": 3,
   "parent": "Nervous system",
   "children": null,
-  "entry-id": "path:map04725"
+  "entry_id": "path:map04725"
  },
  "path:map04728": {
   "name": "04728  Dopaminergic synapse",
   "level": 3,
   "parent": "Nervous system",
   "children": null,
-  "entry-id": "path:map04728"
+  "entry_id": "path:map04728"
  },
  "path:map04726": {
   "name": "04726  Serotonergic synapse",
   "level": 3,
   "parent": "Nervous system",
   "children": null,
-  "entry-id": "path:map04726"
+  "entry_id": "path:map04726"
  },
  "path:map04720": {
   "name": "04720  Long-term potentiation",
   "level": 3,
   "parent": "Nervous system",
   "children": null,
-  "entry-id": "path:map04720"
+  "entry_id": "path:map04720"
  },
  "path:map04730": {
   "name": "04730  Long-term depression",
   "level": 3,
   "parent": "Nervous system",
   "children": null,
-  "entry-id": "path:map04730"
+  "entry_id": "path:map04730"
  },
  "path:map04723": {
   "name": "04723  Retrograde endocannabinoid signaling",
   "level": 3,
   "parent": "Nervous system",
   "children": null,
-  "entry-id": "path:map04723"
+  "entry_id": "path:map04723"
  },
  "path:map04721": {
   "name": "04721  Synaptic vesicle cycle",
   "level": 3,
   "parent": "Nervous system",
   "children": null,
-  "entry-id": "path:map04721"
+  "entry_id": "path:map04721"
  },
  "path:map04722": {
   "name": "04722  Neurotrophin signaling pathway",
   "level": 3,
   "parent": "Nervous system",
   "children": null,
-  "entry-id": "path:map04722"
+  "entry_id": "path:map04722"
  },
  "Nervous system": {
   "name": "Nervous system",
@@ -3263,42 +3263,42 @@
    "path:map04728",
    "path:map04730"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map04744": {
   "name": "04744  Phototransduction",
   "level": 3,
   "parent": "Sensory system",
   "children": null,
-  "entry-id": "path:map04744"
+  "entry_id": "path:map04744"
  },
  "path:map04745": {
   "name": "04745  Phototransduction - fly",
   "level": 3,
   "parent": "Sensory system",
   "children": null,
-  "entry-id": "path:map04745"
+  "entry_id": "path:map04745"
  },
  "path:map04740": {
   "name": "04740  Olfactory transduction",
   "level": 3,
   "parent": "Sensory system",
   "children": null,
-  "entry-id": "path:map04740"
+  "entry_id": "path:map04740"
  },
  "path:map04742": {
   "name": "04742  Taste transduction",
   "level": 3,
   "parent": "Sensory system",
   "children": null,
-  "entry-id": "path:map04742"
+  "entry_id": "path:map04742"
  },
  "path:map04750": {
   "name": "04750  Inflammatory mediator regulation of TRP channels",
   "level": 3,
   "parent": "Sensory system",
   "children": null,
-  "entry-id": "path:map04750"
+  "entry_id": "path:map04750"
  },
  "Sensory system": {
   "name": "Sensory system",
@@ -3311,35 +3311,35 @@
    "path:map04745",
    "path:map04750"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map04320": {
   "name": "04320  Dorso-ventral axis formation",
   "level": 3,
   "parent": "Development and regeneration",
   "children": null,
-  "entry-id": "path:map04320"
+  "entry_id": "path:map04320"
  },
  "path:map04360": {
   "name": "04360  Axon guidance",
   "level": 3,
   "parent": "Development and regeneration",
   "children": null,
-  "entry-id": "path:map04360"
+  "entry_id": "path:map04360"
  },
  "path:map04361": {
   "name": "04361  Axon regeneration",
   "level": 3,
   "parent": "Development and regeneration",
   "children": null,
-  "entry-id": "path:map04361"
+  "entry_id": "path:map04361"
  },
  "path:map04380": {
   "name": "04380  Osteoclast differentiation",
   "level": 3,
   "parent": "Development and regeneration",
   "children": null,
-  "entry-id": "path:map04380"
+  "entry_id": "path:map04380"
  },
  "Development and regeneration": {
   "name": "Development and regeneration",
@@ -3351,28 +3351,28 @@
    "path:map04361",
    "path:map04380"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map04211": {
   "name": "04211  Longevity regulating pathway",
   "level": 3,
   "parent": "Aging",
   "children": null,
-  "entry-id": "path:map04211"
+  "entry_id": "path:map04211"
  },
  "path:map04212": {
   "name": "04212  Longevity regulating pathway - worm",
   "level": 3,
   "parent": "Aging",
   "children": null,
-  "entry-id": "path:map04212"
+  "entry_id": "path:map04212"
  },
  "path:map04213": {
   "name": "04213  Longevity regulating pathway - multiple species",
   "level": 3,
   "parent": "Aging",
   "children": null,
-  "entry-id": "path:map04213"
+  "entry_id": "path:map04213"
  },
  "Aging": {
   "name": "Aging",
@@ -3383,49 +3383,49 @@
    "path:map04212",
    "path:map04213"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map04710": {
   "name": "04710  Circadian rhythm",
   "level": 3,
   "parent": "Environmental adaptation",
   "children": null,
-  "entry-id": "path:map04710"
+  "entry_id": "path:map04710"
  },
  "path:map04713": {
   "name": "04713  Circadian entrainment",
   "level": 3,
   "parent": "Environmental adaptation",
   "children": null,
-  "entry-id": "path:map04713"
+  "entry_id": "path:map04713"
  },
  "path:map04711": {
   "name": "04711  Circadian rhythm - fly",
   "level": 3,
   "parent": "Environmental adaptation",
   "children": null,
-  "entry-id": "path:map04711"
+  "entry_id": "path:map04711"
  },
  "path:map04712": {
   "name": "04712  Circadian rhythm - plant",
   "level": 3,
   "parent": "Environmental adaptation",
   "children": null,
-  "entry-id": "path:map04712"
+  "entry_id": "path:map04712"
  },
  "path:map04714": {
   "name": "04714  Thermogenesis",
   "level": 3,
   "parent": "Environmental adaptation",
   "children": null,
-  "entry-id": "path:map04714"
+  "entry_id": "path:map04714"
  },
  "path:map04626": {
   "name": "04626  Plant-pathogen interaction",
   "level": 3,
   "parent": "Environmental adaptation",
   "children": null,
-  "entry-id": "path:map04626"
+  "entry_id": "path:map04626"
  },
  "Environmental adaptation": {
   "name": "Environmental adaptation",
@@ -3439,7 +3439,7 @@
    "path:map04713",
    "path:map04714"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "Organismal Systems": {
   "name": "Organismal Systems",
@@ -3457,84 +3457,84 @@
    "Nervous system",
    "Sensory system"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map05200": {
   "name": "05200  Pathways in cancer",
   "level": 3,
   "parent": "Cancer: overview",
   "children": null,
-  "entry-id": "path:map05200"
+  "entry_id": "path:map05200"
  },
  "path:map05202": {
   "name": "05202  Transcriptional misregulation in cancer",
   "level": 3,
   "parent": "Cancer: overview",
   "children": null,
-  "entry-id": "path:map05202"
+  "entry_id": "path:map05202"
  },
  "path:map05206": {
   "name": "05206  MicroRNAs in cancer",
   "level": 3,
   "parent": "Cancer: overview",
   "children": null,
-  "entry-id": "path:map05206"
+  "entry_id": "path:map05206"
  },
  "path:map05205": {
   "name": "05205  Proteoglycans in cancer",
   "level": 3,
   "parent": "Cancer: overview",
   "children": null,
-  "entry-id": "path:map05205"
+  "entry_id": "path:map05205"
  },
  "path:map05204": {
   "name": "05204  Chemical carcinogenesis - DNA adducts",
   "level": 3,
   "parent": "Cancer: overview",
   "children": null,
-  "entry-id": "path:map05204"
+  "entry_id": "path:map05204"
  },
  "path:map05207": {
   "name": "05207  Chemical carcinogenesis - receptor activation",
   "level": 3,
   "parent": "Cancer: overview",
   "children": null,
-  "entry-id": "path:map05207"
+  "entry_id": "path:map05207"
  },
  "path:map05208": {
   "name": "05208  Chemical carcinogenesis - reactive oxygen species",
   "level": 3,
   "parent": "Cancer: overview",
   "children": null,
-  "entry-id": "path:map05208"
+  "entry_id": "path:map05208"
  },
  "path:map05203": {
   "name": "05203  Viral carcinogenesis",
   "level": 3,
   "parent": "Cancer: overview",
   "children": null,
-  "entry-id": "path:map05203"
+  "entry_id": "path:map05203"
  },
  "path:map05230": {
   "name": "05230  Central carbon metabolism in cancer",
   "level": 3,
   "parent": "Cancer: overview",
   "children": null,
-  "entry-id": "path:map05230"
+  "entry_id": "path:map05230"
  },
  "path:map05231": {
   "name": "05231  Choline metabolism in cancer",
   "level": 3,
   "parent": "Cancer: overview",
   "children": null,
-  "entry-id": "path:map05231"
+  "entry_id": "path:map05231"
  },
  "path:map05235": {
   "name": "05235  PD-L1 expression and PD-1 checkpoint pathway in cancer",
   "level": 3,
   "parent": "Cancer: overview",
   "children": null,
-  "entry-id": "path:map05235"
+  "entry_id": "path:map05235"
  },
  "Cancer: overview": {
   "name": "Cancer: overview",
@@ -3553,126 +3553,126 @@
    "path:map05231",
    "path:map05235"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map05210": {
   "name": "05210  Colorectal cancer",
   "level": 3,
   "parent": "Cancer: specific types",
   "children": null,
-  "entry-id": "path:map05210"
+  "entry_id": "path:map05210"
  },
  "path:map05212": {
   "name": "05212  Pancreatic cancer",
   "level": 3,
   "parent": "Cancer: specific types",
   "children": null,
-  "entry-id": "path:map05212"
+  "entry_id": "path:map05212"
  },
  "path:map05225": {
   "name": "05225  Hepatocellular carcinoma",
   "level": 3,
   "parent": "Cancer: specific types",
   "children": null,
-  "entry-id": "path:map05225"
+  "entry_id": "path:map05225"
  },
  "path:map05226": {
   "name": "05226  Gastric cancer",
   "level": 3,
   "parent": "Cancer: specific types",
   "children": null,
-  "entry-id": "path:map05226"
+  "entry_id": "path:map05226"
  },
  "path:map05214": {
   "name": "05214  Glioma",
   "level": 3,
   "parent": "Cancer: specific types",
   "children": null,
-  "entry-id": "path:map05214"
+  "entry_id": "path:map05214"
  },
  "path:map05216": {
   "name": "05216  Thyroid cancer",
   "level": 3,
   "parent": "Cancer: specific types",
   "children": null,
-  "entry-id": "path:map05216"
+  "entry_id": "path:map05216"
  },
  "path:map05221": {
   "name": "05221  Acute myeloid leukemia",
   "level": 3,
   "parent": "Cancer: specific types",
   "children": null,
-  "entry-id": "path:map05221"
+  "entry_id": "path:map05221"
  },
  "path:map05220": {
   "name": "05220  Chronic myeloid leukemia",
   "level": 3,
   "parent": "Cancer: specific types",
   "children": null,
-  "entry-id": "path:map05220"
+  "entry_id": "path:map05220"
  },
  "path:map05217": {
   "name": "05217  Basal cell carcinoma",
   "level": 3,
   "parent": "Cancer: specific types",
   "children": null,
-  "entry-id": "path:map05217"
+  "entry_id": "path:map05217"
  },
  "path:map05218": {
   "name": "05218  Melanoma",
   "level": 3,
   "parent": "Cancer: specific types",
   "children": null,
-  "entry-id": "path:map05218"
+  "entry_id": "path:map05218"
  },
  "path:map05211": {
   "name": "05211  Renal cell carcinoma",
   "level": 3,
   "parent": "Cancer: specific types",
   "children": null,
-  "entry-id": "path:map05211"
+  "entry_id": "path:map05211"
  },
  "path:map05219": {
   "name": "05219  Bladder cancer",
   "level": 3,
   "parent": "Cancer: specific types",
   "children": null,
-  "entry-id": "path:map05219"
+  "entry_id": "path:map05219"
  },
  "path:map05215": {
   "name": "05215  Prostate cancer",
   "level": 3,
   "parent": "Cancer: specific types",
   "children": null,
-  "entry-id": "path:map05215"
+  "entry_id": "path:map05215"
  },
  "path:map05213": {
   "name": "05213  Endometrial cancer",
   "level": 3,
   "parent": "Cancer: specific types",
   "children": null,
-  "entry-id": "path:map05213"
+  "entry_id": "path:map05213"
  },
  "path:map05224": {
   "name": "05224  Breast cancer",
   "level": 3,
   "parent": "Cancer: specific types",
   "children": null,
-  "entry-id": "path:map05224"
+  "entry_id": "path:map05224"
  },
  "path:map05222": {
   "name": "05222  Small cell lung cancer",
   "level": 3,
   "parent": "Cancer: specific types",
   "children": null,
-  "entry-id": "path:map05222"
+  "entry_id": "path:map05222"
  },
  "path:map05223": {
   "name": "05223  Non-small cell lung cancer",
   "level": 3,
   "parent": "Cancer: specific types",
   "children": null,
-  "entry-id": "path:map05223"
+  "entry_id": "path:map05223"
  },
  "Cancer: specific types": {
   "name": "Cancer: specific types",
@@ -3697,91 +3697,91 @@
    "path:map05225",
    "path:map05226"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map05166": {
   "name": "05166  Human T-cell leukemia virus 1 infection",
   "level": 3,
   "parent": "Infectious disease: viral",
   "children": null,
-  "entry-id": "path:map05166"
+  "entry_id": "path:map05166"
  },
  "path:map05170": {
   "name": "05170  Human immunodeficiency virus 1 infection",
   "level": 3,
   "parent": "Infectious disease: viral",
   "children": null,
-  "entry-id": "path:map05170"
+  "entry_id": "path:map05170"
  },
  "path:map05161": {
   "name": "05161  Hepatitis B",
   "level": 3,
   "parent": "Infectious disease: viral",
   "children": null,
-  "entry-id": "path:map05161"
+  "entry_id": "path:map05161"
  },
  "path:map05160": {
   "name": "05160  Hepatitis C",
   "level": 3,
   "parent": "Infectious disease: viral",
   "children": null,
-  "entry-id": "path:map05160"
+  "entry_id": "path:map05160"
  },
  "path:map05171": {
   "name": "05171  Coronavirus disease - COVID-19",
   "level": 3,
   "parent": "Infectious disease: viral",
   "children": null,
-  "entry-id": "path:map05171"
+  "entry_id": "path:map05171"
  },
  "path:map05164": {
   "name": "05164  Influenza A",
   "level": 3,
   "parent": "Infectious disease: viral",
   "children": null,
-  "entry-id": "path:map05164"
+  "entry_id": "path:map05164"
  },
  "path:map05162": {
   "name": "05162  Measles",
   "level": 3,
   "parent": "Infectious disease: viral",
   "children": null,
-  "entry-id": "path:map05162"
+  "entry_id": "path:map05162"
  },
  "path:map05168": {
   "name": "05168  Herpes simplex virus 1 infection",
   "level": 3,
   "parent": "Infectious disease: viral",
   "children": null,
-  "entry-id": "path:map05168"
+  "entry_id": "path:map05168"
  },
  "path:map05163": {
   "name": "05163  Human cytomegalovirus infection",
   "level": 3,
   "parent": "Infectious disease: viral",
   "children": null,
-  "entry-id": "path:map05163"
+  "entry_id": "path:map05163"
  },
  "path:map05167": {
   "name": "05167  Kaposi sarcoma-associated herpesvirus infection",
   "level": 3,
   "parent": "Infectious disease: viral",
   "children": null,
-  "entry-id": "path:map05167"
+  "entry_id": "path:map05167"
  },
  "path:map05169": {
   "name": "05169  Epstein-Barr virus infection",
   "level": 3,
   "parent": "Infectious disease: viral",
   "children": null,
-  "entry-id": "path:map05169"
+  "entry_id": "path:map05169"
  },
  "path:map05165": {
   "name": "05165  Human papillomavirus infection",
   "level": 3,
   "parent": "Infectious disease: viral",
   "children": null,
-  "entry-id": "path:map05165"
+  "entry_id": "path:map05165"
  },
  "Infectious disease: viral": {
   "name": "Infectious disease: viral",
@@ -3801,84 +3801,84 @@
    "path:map05170",
    "path:map05171"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map05110": {
   "name": "05110  Vibrio cholerae infection",
   "level": 3,
   "parent": "Infectious disease: bacterial",
   "children": null,
-  "entry-id": "path:map05110"
+  "entry_id": "path:map05110"
  },
  "path:map05120": {
   "name": "05120  Epithelial cell signaling in Helicobacter pylori infection",
   "level": 3,
   "parent": "Infectious disease: bacterial",
   "children": null,
-  "entry-id": "path:map05120"
+  "entry_id": "path:map05120"
  },
  "path:map05130": {
   "name": "05130  Pathogenic Escherichia coli infection",
   "level": 3,
   "parent": "Infectious disease: bacterial",
   "children": null,
-  "entry-id": "path:map05130"
+  "entry_id": "path:map05130"
  },
  "path:map05132": {
   "name": "05132  Salmonella infection",
   "level": 3,
   "parent": "Infectious disease: bacterial",
   "children": null,
-  "entry-id": "path:map05132"
+  "entry_id": "path:map05132"
  },
  "path:map05131": {
   "name": "05131  Shigellosis",
   "level": 3,
   "parent": "Infectious disease: bacterial",
   "children": null,
-  "entry-id": "path:map05131"
+  "entry_id": "path:map05131"
  },
  "path:map05135": {
   "name": "05135  Yersinia infection",
   "level": 3,
   "parent": "Infectious disease: bacterial",
   "children": null,
-  "entry-id": "path:map05135"
+  "entry_id": "path:map05135"
  },
  "path:map05133": {
   "name": "05133  Pertussis",
   "level": 3,
   "parent": "Infectious disease: bacterial",
   "children": null,
-  "entry-id": "path:map05133"
+  "entry_id": "path:map05133"
  },
  "path:map05134": {
   "name": "05134  Legionellosis",
   "level": 3,
   "parent": "Infectious disease: bacterial",
   "children": null,
-  "entry-id": "path:map05134"
+  "entry_id": "path:map05134"
  },
  "path:map05150": {
   "name": "05150  Staphylococcus aureus infection",
   "level": 3,
   "parent": "Infectious disease: bacterial",
   "children": null,
-  "entry-id": "path:map05150"
+  "entry_id": "path:map05150"
  },
  "path:map05152": {
   "name": "05152  Tuberculosis",
   "level": 3,
   "parent": "Infectious disease: bacterial",
   "children": null,
-  "entry-id": "path:map05152"
+  "entry_id": "path:map05152"
  },
  "path:map05100": {
   "name": "05100  Bacterial invasion of epithelial cells",
   "level": 3,
   "parent": "Infectious disease: bacterial",
   "children": null,
-  "entry-id": "path:map05100"
+  "entry_id": "path:map05100"
  },
  "Infectious disease: bacterial": {
   "name": "Infectious disease: bacterial",
@@ -3897,49 +3897,49 @@
    "path:map05150",
    "path:map05152"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map05146": {
   "name": "05146  Amoebiasis",
   "level": 3,
   "parent": "Infectious disease: parasitic",
   "children": null,
-  "entry-id": "path:map05146"
+  "entry_id": "path:map05146"
  },
  "path:map05144": {
   "name": "05144  Malaria",
   "level": 3,
   "parent": "Infectious disease: parasitic",
   "children": null,
-  "entry-id": "path:map05144"
+  "entry_id": "path:map05144"
  },
  "path:map05145": {
   "name": "05145  Toxoplasmosis",
   "level": 3,
   "parent": "Infectious disease: parasitic",
   "children": null,
-  "entry-id": "path:map05145"
+  "entry_id": "path:map05145"
  },
  "path:map05140": {
   "name": "05140  Leishmaniasis",
   "level": 3,
   "parent": "Infectious disease: parasitic",
   "children": null,
-  "entry-id": "path:map05140"
+  "entry_id": "path:map05140"
  },
  "path:map05142": {
   "name": "05142  Chagas disease",
   "level": 3,
   "parent": "Infectious disease: parasitic",
   "children": null,
-  "entry-id": "path:map05142"
+  "entry_id": "path:map05142"
  },
  "path:map05143": {
   "name": "05143  African trypanosomiasis",
   "level": 3,
   "parent": "Infectious disease: parasitic",
   "children": null,
-  "entry-id": "path:map05143"
+  "entry_id": "path:map05143"
  },
  "Infectious disease: parasitic": {
   "name": "Infectious disease: parasitic",
@@ -3953,63 +3953,63 @@
    "path:map05145",
    "path:map05146"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map05310": {
   "name": "05310  Asthma",
   "level": 3,
   "parent": "Immune disease",
   "children": null,
-  "entry-id": "path:map05310"
+  "entry_id": "path:map05310"
  },
  "path:map05322": {
   "name": "05322  Systemic lupus erythematosus",
   "level": 3,
   "parent": "Immune disease",
   "children": null,
-  "entry-id": "path:map05322"
+  "entry_id": "path:map05322"
  },
  "path:map05323": {
   "name": "05323  Rheumatoid arthritis",
   "level": 3,
   "parent": "Immune disease",
   "children": null,
-  "entry-id": "path:map05323"
+  "entry_id": "path:map05323"
  },
  "path:map05320": {
   "name": "05320  Autoimmune thyroid disease",
   "level": 3,
   "parent": "Immune disease",
   "children": null,
-  "entry-id": "path:map05320"
+  "entry_id": "path:map05320"
  },
  "path:map05321": {
   "name": "05321  Inflammatory bowel disease",
   "level": 3,
   "parent": "Immune disease",
   "children": null,
-  "entry-id": "path:map05321"
+  "entry_id": "path:map05321"
  },
  "path:map05330": {
   "name": "05330  Allograft rejection",
   "level": 3,
   "parent": "Immune disease",
   "children": null,
-  "entry-id": "path:map05330"
+  "entry_id": "path:map05330"
  },
  "path:map05332": {
   "name": "05332  Graft-versus-host disease",
   "level": 3,
   "parent": "Immune disease",
   "children": null,
-  "entry-id": "path:map05332"
+  "entry_id": "path:map05332"
  },
  "path:map05340": {
   "name": "05340  Primary immunodeficiency",
   "level": 3,
   "parent": "Immune disease",
   "children": null,
-  "entry-id": "path:map05340"
+  "entry_id": "path:map05340"
  },
  "Immune disease": {
   "name": "Immune disease",
@@ -4025,56 +4025,56 @@
    "path:map05332",
    "path:map05340"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map05010": {
   "name": "05010  Alzheimer disease",
   "level": 3,
   "parent": "Neurodegenerative disease",
   "children": null,
-  "entry-id": "path:map05010"
+  "entry_id": "path:map05010"
  },
  "path:map05012": {
   "name": "05012  Parkinson disease",
   "level": 3,
   "parent": "Neurodegenerative disease",
   "children": null,
-  "entry-id": "path:map05012"
+  "entry_id": "path:map05012"
  },
  "path:map05014": {
   "name": "05014  Amyotrophic lateral sclerosis",
   "level": 3,
   "parent": "Neurodegenerative disease",
   "children": null,
-  "entry-id": "path:map05014"
+  "entry_id": "path:map05014"
  },
  "path:map05016": {
   "name": "05016  Huntington disease",
   "level": 3,
   "parent": "Neurodegenerative disease",
   "children": null,
-  "entry-id": "path:map05016"
+  "entry_id": "path:map05016"
  },
  "path:map05017": {
   "name": "05017  Spinocerebellar ataxia",
   "level": 3,
   "parent": "Neurodegenerative disease",
   "children": null,
-  "entry-id": "path:map05017"
+  "entry_id": "path:map05017"
  },
  "path:map05020": {
   "name": "05020  Prion disease",
   "level": 3,
   "parent": "Neurodegenerative disease",
   "children": null,
-  "entry-id": "path:map05020"
+  "entry_id": "path:map05020"
  },
  "path:map05022": {
   "name": "05022  Pathways of neurodegeneration - multiple diseases",
   "level": 3,
   "parent": "Neurodegenerative disease",
   "children": null,
-  "entry-id": "path:map05022"
+  "entry_id": "path:map05022"
  },
  "Neurodegenerative disease": {
   "name": "Neurodegenerative disease",
@@ -4089,42 +4089,42 @@
    "path:map05020",
    "path:map05022"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map05030": {
   "name": "05030  Cocaine addiction",
   "level": 3,
   "parent": "Substance dependence",
   "children": null,
-  "entry-id": "path:map05030"
+  "entry_id": "path:map05030"
  },
  "path:map05031": {
   "name": "05031  Amphetamine addiction",
   "level": 3,
   "parent": "Substance dependence",
   "children": null,
-  "entry-id": "path:map05031"
+  "entry_id": "path:map05031"
  },
  "path:map05032": {
   "name": "05032  Morphine addiction",
   "level": 3,
   "parent": "Substance dependence",
   "children": null,
-  "entry-id": "path:map05032"
+  "entry_id": "path:map05032"
  },
  "path:map05033": {
   "name": "05033  Nicotine addiction",
   "level": 3,
   "parent": "Substance dependence",
   "children": null,
-  "entry-id": "path:map05033"
+  "entry_id": "path:map05033"
  },
  "path:map05034": {
   "name": "05034  Alcoholism",
   "level": 3,
   "parent": "Substance dependence",
   "children": null,
-  "entry-id": "path:map05034"
+  "entry_id": "path:map05034"
  },
  "Substance dependence": {
   "name": "Substance dependence",
@@ -4137,56 +4137,56 @@
    "path:map05033",
    "path:map05034"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map05417": {
   "name": "05417  Lipid and atherosclerosis",
   "level": 3,
   "parent": "Cardiovascular disease",
   "children": null,
-  "entry-id": "path:map05417"
+  "entry_id": "path:map05417"
  },
  "path:map05418": {
   "name": "05418  Fluid shear stress and atherosclerosis",
   "level": 3,
   "parent": "Cardiovascular disease",
   "children": null,
-  "entry-id": "path:map05418"
+  "entry_id": "path:map05418"
  },
  "path:map05410": {
   "name": "05410  Hypertrophic cardiomyopathy",
   "level": 3,
   "parent": "Cardiovascular disease",
   "children": null,
-  "entry-id": "path:map05410"
+  "entry_id": "path:map05410"
  },
  "path:map05412": {
   "name": "05412  Arrhythmogenic right ventricular cardiomyopathy",
   "level": 3,
   "parent": "Cardiovascular disease",
   "children": null,
-  "entry-id": "path:map05412"
+  "entry_id": "path:map05412"
  },
  "path:map05414": {
   "name": "05414  Dilated cardiomyopathy",
   "level": 3,
   "parent": "Cardiovascular disease",
   "children": null,
-  "entry-id": "path:map05414"
+  "entry_id": "path:map05414"
  },
  "path:map05415": {
   "name": "05415  Diabetic cardiomyopathy",
   "level": 3,
   "parent": "Cardiovascular disease",
   "children": null,
-  "entry-id": "path:map05415"
+  "entry_id": "path:map05415"
  },
  "path:map05416": {
   "name": "05416  Viral myocarditis",
   "level": 3,
   "parent": "Cardiovascular disease",
   "children": null,
-  "entry-id": "path:map05416"
+  "entry_id": "path:map05416"
  },
  "Cardiovascular disease": {
   "name": "Cardiovascular disease",
@@ -4201,63 +4201,63 @@
    "path:map05417",
    "path:map05418"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map04930": {
   "name": "04930  Type II diabetes mellitus",
   "level": 3,
   "parent": "Endocrine and metabolic disease",
   "children": null,
-  "entry-id": "path:map04930"
+  "entry_id": "path:map04930"
  },
  "path:map04940": {
   "name": "04940  Type I diabetes mellitus",
   "level": 3,
   "parent": "Endocrine and metabolic disease",
   "children": null,
-  "entry-id": "path:map04940"
+  "entry_id": "path:map04940"
  },
  "path:map04950": {
   "name": "04950  Maturity onset diabetes of the young",
   "level": 3,
   "parent": "Endocrine and metabolic disease",
   "children": null,
-  "entry-id": "path:map04950"
+  "entry_id": "path:map04950"
  },
  "path:map04936": {
   "name": "04936  Alcoholic liver disease",
   "level": 3,
   "parent": "Endocrine and metabolic disease",
   "children": null,
-  "entry-id": "path:map04936"
+  "entry_id": "path:map04936"
  },
  "path:map04932": {
   "name": "04932  Non-alcoholic fatty liver disease",
   "level": 3,
   "parent": "Endocrine and metabolic disease",
   "children": null,
-  "entry-id": "path:map04932"
+  "entry_id": "path:map04932"
  },
  "path:map04931": {
   "name": "04931  Insulin resistance",
   "level": 3,
   "parent": "Endocrine and metabolic disease",
   "children": null,
-  "entry-id": "path:map04931"
+  "entry_id": "path:map04931"
  },
  "path:map04933": {
   "name": "04933  AGE-RAGE signaling pathway in diabetic complications",
   "level": 3,
   "parent": "Endocrine and metabolic disease",
   "children": null,
-  "entry-id": "path:map04933"
+  "entry_id": "path:map04933"
  },
  "path:map04934": {
   "name": "04934  Cushing syndrome",
   "level": 3,
   "parent": "Endocrine and metabolic disease",
   "children": null,
-  "entry-id": "path:map04934"
+  "entry_id": "path:map04934"
  },
  "Endocrine and metabolic disease": {
   "name": "Endocrine and metabolic disease",
@@ -4273,28 +4273,28 @@
    "path:map04940",
    "path:map04950"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map01501": {
   "name": "01501  beta-Lactam resistance",
   "level": 3,
   "parent": "Drug resistance: antimicrobial",
   "children": null,
-  "entry-id": "path:map01501"
+  "entry_id": "path:map01501"
  },
  "path:map01502": {
   "name": "01502  Vancomycin resistance",
   "level": 3,
   "parent": "Drug resistance: antimicrobial",
   "children": null,
-  "entry-id": "path:map01502"
+  "entry_id": "path:map01502"
  },
  "path:map01503": {
   "name": "01503  Cationic antimicrobial peptide (CAMP) resistance",
   "level": 3,
   "parent": "Drug resistance: antimicrobial",
   "children": null,
-  "entry-id": "path:map01503"
+  "entry_id": "path:map01503"
  },
  "Drug resistance: antimicrobial": {
   "name": "Drug resistance: antimicrobial",
@@ -4305,35 +4305,35 @@
    "path:map01502",
    "path:map01503"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map01521": {
   "name": "01521  EGFR tyrosine kinase inhibitor resistance",
   "level": 3,
   "parent": "Drug resistance: antineoplastic",
   "children": null,
-  "entry-id": "path:map01521"
+  "entry_id": "path:map01521"
  },
  "path:map01524": {
   "name": "01524  Platinum drug resistance",
   "level": 3,
   "parent": "Drug resistance: antineoplastic",
   "children": null,
-  "entry-id": "path:map01524"
+  "entry_id": "path:map01524"
  },
  "path:map01523": {
   "name": "01523  Antifolate resistance",
   "level": 3,
   "parent": "Drug resistance: antineoplastic",
   "children": null,
-  "entry-id": "path:map01523"
+  "entry_id": "path:map01523"
  },
  "path:map01522": {
   "name": "01522  Endocrine resistance",
   "level": 3,
   "parent": "Drug resistance: antineoplastic",
   "children": null,
-  "entry-id": "path:map01522"
+  "entry_id": "path:map01522"
  },
  "Drug resistance: antineoplastic": {
   "name": "Drug resistance: antineoplastic",
@@ -4345,7 +4345,7 @@
    "path:map01523",
    "path:map01524"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "Human Diseases": {
   "name": "Human Diseases",
@@ -4365,84 +4365,84 @@
    "Neurodegenerative disease",
    "Substance dependence"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map07011": {
   "name": "07011  Penicillins",
   "level": 3,
   "parent": "Chronology: Antiinfectives",
   "children": null,
-  "entry-id": "path:map07011"
+  "entry_id": "path:map07011"
  },
  "path:map07012": {
   "name": "07012  Cephalosporins - parenteral agents",
   "level": 3,
   "parent": "Chronology: Antiinfectives",
   "children": null,
-  "entry-id": "path:map07012"
+  "entry_id": "path:map07012"
  },
  "path:map07013": {
   "name": "07013  Cephalosporins - oral agents",
   "level": 3,
   "parent": "Chronology: Antiinfectives",
   "children": null,
-  "entry-id": "path:map07013"
+  "entry_id": "path:map07013"
  },
  "path:map07021": {
   "name": "07021  Aminoglycosides",
   "level": 3,
   "parent": "Chronology: Antiinfectives",
   "children": null,
-  "entry-id": "path:map07021"
+  "entry_id": "path:map07021"
  },
  "path:map07019": {
   "name": "07019  Tetracyclines",
   "level": 3,
   "parent": "Chronology: Antiinfectives",
   "children": null,
-  "entry-id": "path:map07019"
+  "entry_id": "path:map07019"
  },
  "path:map07020": {
   "name": "07020  Macrolides and ketolides",
   "level": 3,
   "parent": "Chronology: Antiinfectives",
   "children": null,
-  "entry-id": "path:map07020"
+  "entry_id": "path:map07020"
  },
  "path:map07014": {
   "name": "07014  Quinolones",
   "level": 3,
   "parent": "Chronology: Antiinfectives",
   "children": null,
-  "entry-id": "path:map07014"
+  "entry_id": "path:map07014"
  },
  "path:map07023": {
   "name": "07023  Rifamycins",
   "level": 3,
   "parent": "Chronology: Antiinfectives",
   "children": null,
-  "entry-id": "path:map07023"
+  "entry_id": "path:map07023"
  },
  "path:map07026": {
   "name": "07026  Antifungal agents",
   "level": 3,
   "parent": "Chronology: Antiinfectives",
   "children": null,
-  "entry-id": "path:map07026"
+  "entry_id": "path:map07026"
  },
  "path:map07044": {
   "name": "07044  Antiviral agents",
   "level": 3,
   "parent": "Chronology: Antiinfectives",
   "children": null,
-  "entry-id": "path:map07044"
+  "entry_id": "path:map07044"
  },
  "path:map07053": {
   "name": "07053  Anti-HIV agents",
   "level": 3,
   "parent": "Chronology: Antiinfectives",
   "children": null,
-  "entry-id": "path:map07053"
+  "entry_id": "path:map07053"
  },
  "Chronology: Antiinfectives": {
   "name": "Chronology: Antiinfectives",
@@ -4461,42 +4461,42 @@
    "path:map07044",
    "path:map07053"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map07040": {
   "name": "07040  Antineoplastics - alkylating agents",
   "level": 3,
   "parent": "Chronology: Antineoplastics",
   "children": null,
-  "entry-id": "path:map07040"
+  "entry_id": "path:map07040"
  },
  "path:map07041": {
   "name": "07041  Antineoplastics - antimetabolic agents",
   "level": 3,
   "parent": "Chronology: Antineoplastics",
   "children": null,
-  "entry-id": "path:map07041"
+  "entry_id": "path:map07041"
  },
  "path:map07042": {
   "name": "07042  Antineoplastics - agents from natural products",
   "level": 3,
   "parent": "Chronology: Antineoplastics",
   "children": null,
-  "entry-id": "path:map07042"
+  "entry_id": "path:map07042"
  },
  "path:map07043": {
   "name": "07043  Antineoplastics - hormones",
   "level": 3,
   "parent": "Chronology: Antineoplastics",
   "children": null,
-  "entry-id": "path:map07043"
+  "entry_id": "path:map07043"
  },
  "path:map07045": {
   "name": "07045  Antineoplastics - protein kinase inhibitors",
   "level": 3,
   "parent": "Chronology: Antineoplastics",
   "children": null,
-  "entry-id": "path:map07045"
+  "entry_id": "path:map07045"
  },
  "Chronology: Antineoplastics": {
   "name": "Chronology: Antineoplastics",
@@ -4509,84 +4509,84 @@
    "path:map07043",
    "path:map07045"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map07032": {
   "name": "07032  Hypnotics",
   "level": 3,
   "parent": "Chronology: Nervous system agents",
   "children": null,
-  "entry-id": "path:map07032"
+  "entry_id": "path:map07032"
  },
  "path:map07030": {
   "name": "07030  Anxiolytics",
   "level": 3,
   "parent": "Chronology: Nervous system agents",
   "children": null,
-  "entry-id": "path:map07030"
+  "entry_id": "path:map07030"
  },
  "path:map07033": {
   "name": "07033  Anticonvulsants",
   "level": 3,
   "parent": "Chronology: Nervous system agents",
   "children": null,
-  "entry-id": "path:map07033"
+  "entry_id": "path:map07033"
  },
  "path:map07015": {
   "name": "07015  Local analgesics",
   "level": 3,
   "parent": "Chronology: Nervous system agents",
   "children": null,
-  "entry-id": "path:map07015"
+  "entry_id": "path:map07015"
  },
  "path:map07039": {
   "name": "07039  Opioid analgesics",
   "level": 3,
   "parent": "Chronology: Nervous system agents",
   "children": null,
-  "entry-id": "path:map07039"
+  "entry_id": "path:map07039"
  },
  "path:map07028": {
   "name": "07028  Antipsychotics",
   "level": 3,
   "parent": "Chronology: Nervous system agents",
   "children": null,
-  "entry-id": "path:map07028"
+  "entry_id": "path:map07028"
  },
  "path:map07029": {
   "name": "07029  Antipsychotics - phenothiazines",
   "level": 3,
   "parent": "Chronology: Nervous system agents",
   "children": null,
-  "entry-id": "path:map07029"
+  "entry_id": "path:map07029"
  },
  "path:map07031": {
   "name": "07031  Antipsychotics - butyrophenones",
   "level": 3,
   "parent": "Chronology: Nervous system agents",
   "children": null,
-  "entry-id": "path:map07031"
+  "entry_id": "path:map07031"
  },
  "path:map07027": {
   "name": "07027  Antidepressants",
   "level": 3,
   "parent": "Chronology: Nervous system agents",
   "children": null,
-  "entry-id": "path:map07027"
+  "entry_id": "path:map07027"
  },
  "path:map07056": {
   "name": "07056  Agents for Alzheimer-type dementia",
   "level": 3,
   "parent": "Chronology: Nervous system agents",
   "children": null,
-  "entry-id": "path:map07056"
+  "entry_id": "path:map07056"
  },
  "path:map07057": {
   "name": "07057  Antiparkinsonian agents",
   "level": 3,
   "parent": "Chronology: Nervous system agents",
   "children": null,
-  "entry-id": "path:map07057"
+  "entry_id": "path:map07057"
  },
  "Chronology: Nervous system agents": {
   "name": "Chronology: Nervous system agents",
@@ -4605,105 +4605,105 @@
    "path:map07056",
    "path:map07057"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map07055": {
   "name": "07055  Sulfonamide derivatives - overview",
   "level": 3,
   "parent": "Chronology: Other drugs",
   "children": null,
-  "entry-id": "path:map07055"
+  "entry_id": "path:map07055"
  },
  "path:map07016": {
   "name": "07016  Sulfonamide derivatives - sulfa drugs",
   "level": 3,
   "parent": "Chronology: Other drugs",
   "children": null,
-  "entry-id": "path:map07016"
+  "entry_id": "path:map07016"
  },
  "path:map07017": {
   "name": "07017  Sulfonamide derivatives - diuretics",
   "level": 3,
   "parent": "Chronology: Other drugs",
   "children": null,
-  "entry-id": "path:map07017"
+  "entry_id": "path:map07017"
  },
  "path:map07018": {
   "name": "07018  Sulfonamide derivatives - hypoglycemic agents",
   "level": 3,
   "parent": "Chronology: Other drugs",
   "children": null,
-  "entry-id": "path:map07018"
+  "entry_id": "path:map07018"
  },
  "path:map07037": {
   "name": "07037  Antiarrhythmic drugs",
   "level": 3,
   "parent": "Chronology: Other drugs",
   "children": null,
-  "entry-id": "path:map07037"
+  "entry_id": "path:map07037"
  },
  "path:map07038": {
   "name": "07038  Antiulcer drugs",
   "level": 3,
   "parent": "Chronology: Other drugs",
   "children": null,
-  "entry-id": "path:map07038"
+  "entry_id": "path:map07038"
  },
  "path:map07046": {
   "name": "07046  Immunosuppressive agents",
   "level": 3,
   "parent": "Chronology: Other drugs",
   "children": null,
-  "entry-id": "path:map07046"
+  "entry_id": "path:map07046"
  },
  "path:map07047": {
   "name": "07047  Osteoporosis drugs",
   "level": 3,
   "parent": "Chronology: Other drugs",
   "children": null,
-  "entry-id": "path:map07047"
+  "entry_id": "path:map07047"
  },
  "path:map07048": {
   "name": "07048  Antimigraines",
   "level": 3,
   "parent": "Chronology: Other drugs",
   "children": null,
-  "entry-id": "path:map07048"
+  "entry_id": "path:map07048"
  },
  "path:map07049": {
   "name": "07049  Antithrombosis agents",
   "level": 3,
   "parent": "Chronology: Other drugs",
   "children": null,
-  "entry-id": "path:map07049"
+  "entry_id": "path:map07049"
  },
  "path:map07050": {
   "name": "07050  Antirheumatics - DMARDs and biological agents",
   "level": 3,
   "parent": "Chronology: Other drugs",
   "children": null,
-  "entry-id": "path:map07050"
+  "entry_id": "path:map07050"
  },
  "path:map07051": {
   "name": "07051  Antidiabetics",
   "level": 3,
   "parent": "Chronology: Other drugs",
   "children": null,
-  "entry-id": "path:map07051"
+  "entry_id": "path:map07051"
  },
  "path:map07052": {
   "name": "07052  Antidyslipidemic agents",
   "level": 3,
   "parent": "Chronology: Other drugs",
   "children": null,
-  "entry-id": "path:map07052"
+  "entry_id": "path:map07052"
  },
  "path:map07054": {
   "name": "07054  Antiglaucoma agents",
   "level": 3,
   "parent": "Chronology: Other drugs",
   "children": null,
-  "entry-id": "path:map07054"
+  "entry_id": "path:map07054"
  },
  "Chronology: Other drugs": {
   "name": "Chronology: Other drugs",
@@ -4725,77 +4725,77 @@
    "path:map07054",
    "path:map07055"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map07220": {
   "name": "07220  Cholinergic and anticholinergic drugs",
   "level": 3,
   "parent": "Target-based classification: G protein-coupled receptors",
   "children": null,
-  "entry-id": "path:map07220"
+  "entry_id": "path:map07220"
  },
  "path:map07215": {
   "name": "07215  alpha-Adrenergic receptor agonists/antagonists",
   "level": 3,
   "parent": "Target-based classification: G protein-coupled receptors",
   "children": null,
-  "entry-id": "path:map07215"
+  "entry_id": "path:map07215"
  },
  "path:map07214": {
   "name": "07214  beta-Adrenergic receptor agonists/antagonists",
   "level": 3,
   "parent": "Target-based classification: G protein-coupled receptors",
   "children": null,
-  "entry-id": "path:map07214"
+  "entry_id": "path:map07214"
  },
  "path:map07213": {
   "name": "07213  Dopamine receptor agonists/antagonists",
   "level": 3,
   "parent": "Target-based classification: G protein-coupled receptors",
   "children": null,
-  "entry-id": "path:map07213"
+  "entry_id": "path:map07213"
  },
  "path:map07212": {
   "name": "07212  Histamine H1 receptor antagonists",
   "level": 3,
   "parent": "Target-based classification: G protein-coupled receptors",
   "children": null,
-  "entry-id": "path:map07212"
+  "entry_id": "path:map07212"
  },
  "path:map07227": {
   "name": "07227  Histamine H2/H3 receptor agonists/antagonists",
   "level": 3,
   "parent": "Target-based classification: G protein-coupled receptors",
   "children": null,
-  "entry-id": "path:map07227"
+  "entry_id": "path:map07227"
  },
  "path:map07211": {
   "name": "07211  Serotonin receptor agonists/antagonists",
   "level": 3,
   "parent": "Target-based classification: G protein-coupled receptors",
   "children": null,
-  "entry-id": "path:map07211"
+  "entry_id": "path:map07211"
  },
  "path:map07228": {
   "name": "07228  Eicosanoid receptor agonists/antagonists",
   "level": 3,
   "parent": "Target-based classification: G protein-coupled receptors",
   "children": null,
-  "entry-id": "path:map07228"
+  "entry_id": "path:map07228"
  },
  "path:map07224": {
   "name": "07224  Opioid receptor agonists/antagonists",
   "level": 3,
   "parent": "Target-based classification: G protein-coupled receptors",
   "children": null,
-  "entry-id": "path:map07224"
+  "entry_id": "path:map07224"
  },
  "path:map07229": {
   "name": "07229  Angiotensin receptor and endothelin receptor antagonists",
   "level": 3,
   "parent": "Target-based classification: G protein-coupled receptors",
   "children": null,
-  "entry-id": "path:map07229"
+  "entry_id": "path:map07229"
  },
  "Target-based classification: G protein-coupled receptors": {
   "name": "Target-based classification: G protein-coupled receptors",
@@ -4813,35 +4813,35 @@
    "path:map07228",
    "path:map07229"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map07225": {
   "name": "07225  Glucocorticoid and mineralocorticoid receptor agonists/antagonists",
   "level": 3,
   "parent": "Target-based classification: Nuclear receptors",
   "children": null,
-  "entry-id": "path:map07225"
+  "entry_id": "path:map07225"
  },
  "path:map07226": {
   "name": "07226  Progesterone, androgen and estrogen receptor agonists/antagonists",
   "level": 3,
   "parent": "Target-based classification: Nuclear receptors",
   "children": null,
-  "entry-id": "path:map07226"
+  "entry_id": "path:map07226"
  },
  "path:map07223": {
   "name": "07223  Retinoic acid receptor (RAR) and retinoid X receptor (RXR) agonists/antagonists",
   "level": 3,
   "parent": "Target-based classification: Nuclear receptors",
   "children": null,
-  "entry-id": "path:map07223"
+  "entry_id": "path:map07223"
  },
  "path:map07222": {
   "name": "07222  Peroxisome proliferator-activated receptor (PPAR) agonists",
   "level": 3,
   "parent": "Target-based classification: Nuclear receptors",
   "children": null,
-  "entry-id": "path:map07222"
+  "entry_id": "path:map07222"
  },
  "Target-based classification: Nuclear receptors": {
   "name": "Target-based classification: Nuclear receptors",
@@ -4853,49 +4853,49 @@
    "path:map07225",
    "path:map07226"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map07221": {
   "name": "07221  Nicotinic cholinergic receptor antagonists",
   "level": 3,
   "parent": "Target-based classification: Ion channels",
   "children": null,
-  "entry-id": "path:map07221"
+  "entry_id": "path:map07221"
  },
  "path:map07230": {
   "name": "07230  GABA-A receptor agonists/antagonists",
   "level": 3,
   "parent": "Target-based classification: Ion channels",
   "children": null,
-  "entry-id": "path:map07230"
+  "entry_id": "path:map07230"
  },
  "path:map07036": {
   "name": "07036  Calcium channel blocking drugs",
   "level": 3,
   "parent": "Target-based classification: Ion channels",
   "children": null,
-  "entry-id": "path:map07036"
+  "entry_id": "path:map07036"
  },
  "path:map07231": {
   "name": "07231  Sodium channel blocking drugs",
   "level": 3,
   "parent": "Target-based classification: Ion channels",
   "children": null,
-  "entry-id": "path:map07231"
+  "entry_id": "path:map07231"
  },
  "path:map07232": {
   "name": "07232  Potassium channel blocking and opening drugs",
   "level": 3,
   "parent": "Target-based classification: Ion channels",
   "children": null,
-  "entry-id": "path:map07232"
+  "entry_id": "path:map07232"
  },
  "path:map07235": {
   "name": "07235  N-Methyl-D-aspartic acid (NMDA) receptor antagonists",
   "level": 3,
   "parent": "Target-based classification: Ion channels",
   "children": null,
-  "entry-id": "path:map07235"
+  "entry_id": "path:map07235"
  },
  "Target-based classification: Ion channels": {
   "name": "Target-based classification: Ion channels",
@@ -4909,21 +4909,21 @@
    "path:map07232",
    "path:map07235"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map07233": {
   "name": "07233  Ion transporter inhibitors",
   "level": 3,
   "parent": "Target-based classification: Transporters",
   "children": null,
-  "entry-id": "path:map07233"
+  "entry_id": "path:map07233"
  },
  "path:map07234": {
   "name": "07234  Neurotransmitter transporter inhibitors",
   "level": 3,
   "parent": "Target-based classification: Transporters",
   "children": null,
-  "entry-id": "path:map07234"
+  "entry_id": "path:map07234"
  },
  "Target-based classification: Transporters": {
   "name": "Target-based classification: Transporters",
@@ -4933,42 +4933,42 @@
    "path:map07233",
    "path:map07234"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map07216": {
   "name": "07216  Catecholamine transferase inhibitors",
   "level": 3,
   "parent": "Target-based classification: Enzymes",
   "children": null,
-  "entry-id": "path:map07216"
+  "entry_id": "path:map07216"
  },
  "path:map07219": {
   "name": "07219  Cyclooxygenase inhibitors",
   "level": 3,
   "parent": "Target-based classification: Enzymes",
   "children": null,
-  "entry-id": "path:map07219"
+  "entry_id": "path:map07219"
  },
  "path:map07024": {
   "name": "07024  HMG-CoA reductase inhibitors",
   "level": 3,
   "parent": "Target-based classification: Enzymes",
   "children": null,
-  "entry-id": "path:map07024"
+  "entry_id": "path:map07024"
  },
  "path:map07217": {
   "name": "07217  Renin-angiotensin system inhibitors",
   "level": 3,
   "parent": "Target-based classification: Enzymes",
   "children": null,
-  "entry-id": "path:map07217"
+  "entry_id": "path:map07217"
  },
  "path:map07218": {
   "name": "07218  HIV protease inhibitors",
   "level": 3,
   "parent": "Target-based classification: Enzymes",
   "children": null,
-  "entry-id": "path:map07218"
+  "entry_id": "path:map07218"
  },
  "Target-based classification: Enzymes": {
   "name": "Target-based classification: Enzymes",
@@ -4981,28 +4981,28 @@
    "path:map07218",
    "path:map07219"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map07025": {
   "name": "07025  Quinolines",
   "level": 3,
   "parent": "Structure-based classification",
   "children": null,
-  "entry-id": "path:map07025"
+  "entry_id": "path:map07025"
  },
  "path:map07034": {
   "name": "07034  Eicosanoids",
   "level": 3,
   "parent": "Structure-based classification",
   "children": null,
-  "entry-id": "path:map07034"
+  "entry_id": "path:map07034"
  },
  "path:map07035": {
   "name": "07035  Prostaglandins",
   "level": 3,
   "parent": "Structure-based classification",
   "children": null,
-  "entry-id": "path:map07035"
+  "entry_id": "path:map07035"
  },
  "Structure-based classification": {
   "name": "Structure-based classification",
@@ -5013,35 +5013,35 @@
    "path:map07034",
    "path:map07035"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "path:map07110": {
   "name": "07110  Benzoic acid family",
   "level": 3,
   "parent": "Skeleton-based classification",
   "children": null,
-  "entry-id": "path:map07110"
+  "entry_id": "path:map07110"
  },
  "path:map07112": {
   "name": "07112  1,2-Diphenyl substitution family",
   "level": 3,
   "parent": "Skeleton-based classification",
   "children": null,
-  "entry-id": "path:map07112"
+  "entry_id": "path:map07112"
  },
  "path:map07114": {
   "name": "07114  Naphthalene family",
   "level": 3,
   "parent": "Skeleton-based classification",
   "children": null,
-  "entry-id": "path:map07114"
+  "entry_id": "path:map07114"
  },
  "path:map07117": {
   "name": "07117  Benzodiazepine family",
   "level": 3,
   "parent": "Skeleton-based classification",
   "children": null,
-  "entry-id": "path:map07117"
+  "entry_id": "path:map07117"
  },
  "Skeleton-based classification": {
   "name": "Skeleton-based classification",
@@ -5053,7 +5053,7 @@
    "path:map07114",
    "path:map07117"
   ],
-  "entry-id": null
+  "entry_id": null
  },
  "Drug Development": {
   "name": "Drug Development",
@@ -5072,6 +5072,6 @@
    "Target-based classification: Nuclear receptors",
    "Target-based classification: Transporters"
   ],
-  "entry-id": null
+  "entry_id": null
  }
 }

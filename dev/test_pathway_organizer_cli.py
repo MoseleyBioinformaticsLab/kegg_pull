@@ -35,7 +35,7 @@ def test_print(mocker, args: list, kwargs: dict, stdin_mock: str):
 
 def _get_mock_pathway_org_and_expected_output(mocker):
     u.mock_non_instantiable(mocker=mocker)
-    hierarchy_nodes_mock = {'a': {'name': 'b', 'level': 1, 'parent': 'c', 'children': ['a'], 'entry-id': 'd'}}
+    hierarchy_nodes_mock: po.HierarchyNodes = {'a': {'name': 'b', 'level': 1, 'parent': 'c', 'children': ['a'], 'entry_id': 'd'}}
     pathway_org_mock = po.PathwayOrganizer()
     pathway_org_mock.hierarchy_nodes = hierarchy_nodes_mock
     expected_output: str = json.dumps(hierarchy_nodes_mock, indent=2)
