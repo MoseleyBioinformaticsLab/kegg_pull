@@ -173,6 +173,7 @@ def test_pull(mocker, args: list, output: str):
 
 
 test_map_data = [
+    (['link', 'entry-ids', 'mmu:620551', 'reaction'], None, 'empty'),
     (['conv', 'mmu', 'ncbi-geneid', '--reverse'], None, 'mmu-ncbi'),
     (['conv', 'entry-ids', 'cpd:C00001,cpd:C00002', 'pubchem'], None, 'pubchem'),
     (['link', 'entry-ids', '-', 'module', '--reverse'], '\nK12696\nK22365\nK22435\t', 'module'),

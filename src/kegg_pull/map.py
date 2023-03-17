@@ -52,10 +52,13 @@ def _to_dict(kegg_rest: r.KEGGrest | None, KEGGurl: type[ku.AbstractKEGGurl], **
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
     kegg_response = r.request_and_check_error(kegg_rest=kegg_rest, KEGGurl=KEGGurl, **kwargs)
-    mapped_ids = dict()
-    for one_to_one in kegg_response.text_body.strip().split('\n'):
-        [map_from_id, map_to_id] = one_to_one.strip().split('\t')
-        _add_to_dict(dictionary=mapped_ids, key=map_from_id, values={map_to_id})
+    text_body = kegg_response.text_body.strip()
+    mapped_ids = KEGGmapping()
+    # If a non-empty response was provided, fill in the mapping with the data
+    if text_body:
+        for one_to_one in text_body.split('\n'):
+            [map_from_id, map_to_id] = one_to_one.strip().split('\t')
+            _add_to_dict(dictionary=mapped_ids, key=map_from_id, values={map_to_id})
     return mapped_ids
 
 
@@ -297,7 +300,6 @@ def reverse(mapping: KEGGmapping) -> KEGGmapping:
 _reverse = reverse  # So functions can have a "reverse" boolean parameter without overriding the module-level "reverse" function.
 _mapping_schema = {
     'type': 'object',
-    'minProperties': 1,
     'additionalProperties': False,
     'patternProperties': {
         '^.+$': {
@@ -320,7 +322,7 @@ def to_json_string(mapping: KEGGmapping) -> str:
     :return: The JSON string.
     :raises ValidationError: Raised if the mapping does not follow the correct JSON schema. Should follow the correct schema if the dictionary was created with this map module.
     """
-    mapping_to_convert = dict()
+    mapping_to_convert = dict[str, list[str]]()
     for entry_id, entry_ids in mapping.items():
         mapping_to_convert[entry_id] = sorted(entry_ids)
     u.validate_json_object(
