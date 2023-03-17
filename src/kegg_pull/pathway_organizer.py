@@ -3,6 +3,7 @@ Flattening A Pathways Brite Hierarchy
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Functionality for flattening a pathways Brite hierarchy (ID: 'br:br08901') into a collection of its nodes, mapping a node ID to information about it, enabling combinations with other KEGG data.
 """
+from __future__ import annotations
 import json
 import logging as log
 import typing as t
@@ -38,7 +39,7 @@ class PathwayOrganizer(u.NonInstantiable):
     @staticmethod
     def load_from_kegg(
             top_level_nodes: set[str] | None = None, filter_nodes: set[str] | None = None,
-            kegg_rest: r.KEGGrest | None = None):
+            kegg_rest: r.KEGGrest | None = None) -> PathwayOrganizer:
         """ Pulls the Brite hierarchy from the KEGG REST API and converts it to the hierarchy_nodes mapping.
 
         :param top_level_nodes: Node names in the highest level of the hierarchy to select from. If None, all top level nodes are traversed to create the hierarchy_nodes.
@@ -168,7 +169,7 @@ class PathwayOrganizer(u.NonInstantiable):
     }
 
     @staticmethod
-    def load_from_json(file_path: str):
+    def load_from_json(file_path: str) -> PathwayOrganizer:
         """ Loads the hierarchy_nodes mapping that was cached in a JSON file using load_from_kegg followed by save_to_json.
 
         :param file_path: Path to the JSON file. If reading from a ZIP archive, the file path must be in the following format: /path/to/zip-archive.zip:/path/to/file (e.g. ./archive.zip:hierarchy-nodes.json).

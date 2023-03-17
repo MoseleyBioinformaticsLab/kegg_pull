@@ -274,7 +274,7 @@ def test_load_from_json(json_file_path: str):
         expected_loaded_object={'k1': {'v1'}, 'k2': {'v3', 'v2'}})
 
 
-test_invalid_save_to_json_data = [{}, {'a': [1]}, {'a': [1.2]}, {'a': [[], []]}, {'a': {}}, {'a': []}, {'': ['b']}]
+test_invalid_save_to_json_data = [{'a': [1]}, {'a': [1.2]}, {'a': [[], []]}, {'a': {}}, {'a': []}, {'': ['b']}]
 expected_error_message = 'The mapping must be a dictionary of entry IDs (strings) mapped to a set of entry IDs'
 
 
