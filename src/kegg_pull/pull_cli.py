@@ -37,8 +37,6 @@ def main():
     kegg_rest = r.KEGGrest(n_tries=n_tries, time_out=time_out, sleep_time=sleep_time)
     output = args['--output'] if args['--output'] is not None else '.'
     entry_field: str = args['--entry-field']
-    multiprocess_lock_save = args['--multi-process'] and output.endswith('.zip')
-    single_pull = p.SinglePull(output=output, kegg_rest=kegg_rest, multiprocess_lock_save=multiprocess_lock_save)
     force_single_entry: bool = args['--force-single-entry']
     if args['database']:
         database: str = args['<database>']
@@ -51,9 +49,9 @@ def main():
     if args['--multi-process']:
         n_workers = int(args['--n-workers']) if args['--n-workers'] is not None else None
         multiple_pull = p.MultiProcessMultiplePull(
-            single_pull=single_pull, unsuccessful_threshold=unsuccessful_threshold, n_workers=n_workers)
+            output=output, kegg_rest=kegg_rest, unsuccessful_threshold=unsuccessful_threshold, n_workers=n_workers)
     else:
-        multiple_pull = p.SingleProcessMultiplePull(single_pull=single_pull, unsuccessful_threshold=unsuccessful_threshold)
+        multiple_pull = p.SingleProcessMultiplePull(output=output, kegg_rest=kegg_rest, unsuccessful_threshold=unsuccessful_threshold)
     time1 = _testable_time()
     pull_result = multiple_pull.pull(entry_ids=entry_ids, entry_field=entry_field, force_single_entry=force_single_entry)
     time2 = _testable_time()

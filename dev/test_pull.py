@@ -217,9 +217,15 @@ def test_multiple_pull(mocker, MultiplePull: type, kwargs: dict, caplog, _):
         ['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9'], ['D0', 'D1']]
     entry_ids_mock = list(i.chain.from_iterable(expected_pull_calls))
     single_pull_mock = PickleableSinglePullMock()
+    SinglePullMock = mocker.patch('kegg_pull.pull.SinglePull', return_value=single_pull_mock)
     if MultiplePull is p.SingleProcessMultiplePull:
         single_pull_mock.pull = mocker.spy(single_pull_mock, 'pull')
-    multiple_pull = MultiplePull(single_pull=single_pull_mock, **kwargs)
+    kegg_rest_mock = mocker.MagicMock()
+    multiple_pull = MultiplePull(output='x', kegg_rest=kegg_rest_mock, **kwargs)
+    if MultiplePull is p.SingleProcessMultiplePull:
+        SinglePullMock.assert_called_once_with(output='x', kegg_rest=kegg_rest_mock)
+    else:
+        SinglePullMock.assert_called_once_with(output='x', kegg_rest=kegg_rest_mock, multiprocess_lock_save=False)
     if 'unsuccessful_threshold' in kwargs:
         with pt.raises(SystemExit) as error:
             multiple_pull.pull(entry_ids=entry_ids_mock)
@@ -282,10 +288,15 @@ class PickleableSinglePullMock:
 @pt.mark.parametrize('MultiplePull,kwargs', test_multiple_pull_data)
 def test_get_n_entries_per_url(mocker, MultiplePull: type, kwargs: dict):
     entry_ids_mock = ['eid1', 'eid2', 'eid3', 'eid4']
-    multiple_pull = MultiplePull(single_pull=PickleableSinglePullMock(), **kwargs)
+    SinglePullMock = mocker.patch('kegg_pull.pull.SinglePull', return_value=PickleableSinglePullMock())
+    multiple_pull = MultiplePull(output='x.zip', kegg_rest=None, **kwargs)
+    if MultiplePull is p.SingleProcessMultiplePull:
+        SinglePullMock.assert_called_once_with(output='x.zip', kegg_rest=None)
+    else:
+        SinglePullMock.assert_called_once_with(output='x.zip', kegg_rest=None, multiprocess_lock_save=True)
     group_entry_ids_spy: mocker.MagicMock = mocker.spy(multiple_pull, '_group_entry_ids')
     get_n_entries_per_url_spy: mocker.MagicMock = mocker.spy(p.AbstractMultiplePull, '_get_n_entries_per_url')
-    pull_mock: mocker.MagicMock = mocker.patch(f'kegg_pull.pull.{MultiplePull.__name__}._pull')
+    pull_mock = mocker.patch(f'kegg_pull.pull.{MultiplePull.__name__}._pull')
     multiple_pull.pull(entry_ids=entry_ids_mock, force_single_entry=True, entry_field='compound')
     group_entry_ids_spy.assert_called_once_with(entry_ids_to_group=entry_ids_mock)
     get_n_entries_per_url_spy.assert_called_once_with(multiple_pull)
@@ -315,10 +326,9 @@ def test_get_single_pull_result(mocker):
 
 
 @pt.mark.parametrize('unsuccessful_threshold', [1.2, -2.0])
-def test_multiple_pull_exception(mocker, unsuccessful_threshold):
-    single_pull_mock = mocker.MagicMock()
+def test_multiple_pull_exception(unsuccessful_threshold):
     expected_message = f'Unsuccessful threshold of {unsuccessful_threshold} is out of range. Valid values are within ' \
                        f'0.0 and 1.0, non-inclusive'
     with pt.raises(ValueError) as error:
-        p.SingleProcessMultiplePull(single_pull=single_pull_mock, unsuccessful_threshold=unsuccessful_threshold)
+        p.SingleProcessMultiplePull(output='x', kegg_rest=None, unsuccessful_threshold=unsuccessful_threshold)
     u.assert_exception(expected_message=expected_message, exception=error)

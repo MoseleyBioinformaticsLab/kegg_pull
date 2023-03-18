@@ -92,7 +92,7 @@ class SinglePull:
         self._entry_field = None
         self._multiprocess_lock = mp.Lock() if multiprocess_lock_save else None
 
-    def pull(self, entry_ids: list, entry_field: str = None) -> PullResult:
+    def pull(self, entry_ids: list[str], entry_field: str | None = None) -> PullResult:
         """ Makes a single request to the KEGG REST API to pull one or more entries and save them as files.
 
         :param entry_ids: The IDs of the entries to pull and save.
@@ -207,7 +207,7 @@ class SinglePull:
                 # noinspection PyProtectedMember
                 pull_result._add_entry_ids(entry_id, status=kegg_response.status)
 
-    def _save(self, entry_id: str, entry: str | bytes, entry_field: str) -> None:
+    def _save(self, entry_id: str, entry: str | bytes, entry_field: str | None) -> None:
         """ Saves a KEGG entry as a file.
 
         :param entry_id: The entry ID (part of the file name).
@@ -263,7 +263,7 @@ class AbstractMultiplePull(abc.ABC):
     """Abstract class that makes multiple requests to the KEGG REST API to pull and save entries of an arbitrary amount."""
     ABORTED_PULL_RESULTS_PATH = 'aborted-pull-results.json'
 
-    def __init__(self, single_pull: SinglePull, unsuccessful_threshold: float = None) -> None:
+    def __init__(self, single_pull: SinglePull, unsuccessful_threshold: float | None = None) -> None:
         """
         :param single_pull: The SinglePull object used for each pull.
         :param unsuccessful_threshold: If set, the ratio of unsuccessful entry IDs to total entry IDs at which execution stops. Details of the aborted process are logged.
@@ -276,7 +276,7 @@ class AbstractMultiplePull(abc.ABC):
         self._entry_field = None
         self._force_single_entry = None
 
-    def pull(self, entry_ids: list, entry_field: str = None, force_single_entry: bool = False) -> PullResult:
+    def pull(self, entry_ids: list[str], entry_field: str | None = None, force_single_entry: bool = False) -> PullResult:
         """ Makes multiple requests to the KEGG REST API for an arbitrary amount of entry IDs.
 
         :param entry_ids: The IDs of the entries that are split into multiple pulls.
@@ -360,6 +360,14 @@ class AbstractMultiplePull(abc.ABC):
 
 class SingleProcessMultiplePull(AbstractMultiplePull):
     """Class that makes multiple requests to the KEGG REST API to pull entries within a single process."""
+    def __init__(self, output: str, kegg_rest: r.KEGGrest | None = None, unsuccessful_threshold: float | None = None) -> None:
+        """
+        :param output: The output directory to store the entry files.
+        :param kegg_rest: Optional KEGGrest object used to make the requests to the KEGG REST API (a KEGGrest object with the default settings is created if one is not provided).
+        :param unsuccessful_threshold: If set, the ratio of unsuccessful entry IDs to total entry IDs at which execution stops. Details of the aborted process are logged.
+        """
+        single_pull = SinglePull(output=output, kegg_rest=kegg_rest)
+        super(SingleProcessMultiplePull, self).__init__(single_pull=single_pull, unsuccessful_threshold=unsuccessful_threshold)
 
     def _pull(self, grouped_entry_ids: list[list[str]], check_progress: t.Callable[[PullResult, PullResult, list[list[str]]], None]) -> PullResult:
         """ Makes multiple requests to the KEGG REST API to pull entries within a single process.
@@ -377,12 +385,14 @@ class SingleProcessMultiplePull(AbstractMultiplePull):
 
 class MultiProcessMultiplePull(AbstractMultiplePull):
     """Class that makes multiple requests to the KEGG REST API to pull entries within multiple processes."""
-    def __init__(self, single_pull: SinglePull, unsuccessful_threshold: float | None = None, n_workers: int | None = None):
+    def __init__(self, output: str, kegg_rest: r.KEGGrest | None = None, unsuccessful_threshold: float | None = None, n_workers: int | None = None):
         """
-        :param single_pull: The SinglePull object used for each pull. If saving to a ZIP archive, must be instantiated with multiprocess_lock_save set to True.
+        :param output: The output directory to store the entry files.
+        :param kegg_rest: Optional KEGGrest object used to make the requests to the KEGG REST API (a KEGGrest object with the default settings is created if one is not provided).
         :param unsuccessful_threshold: If set, the ratio of unsuccessful entry IDs to total entry IDs at which execution stops. Details of the aborted process are logged.
         :param n_workers: The number of processes to use. If None, defaults to the number of cores available.
         """
+        single_pull = SinglePull(output=output, kegg_rest=kegg_rest, multiprocess_lock_save=output.endswith('.zip'))
         super(MultiProcessMultiplePull, self).__init__(single_pull=single_pull, unsuccessful_threshold=unsuccessful_threshold)
         self._n_workers = n_workers if n_workers is not None else os.cpu_count()
 
