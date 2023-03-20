@@ -163,7 +163,7 @@ def test_pull(mocker, args: list, output: str):
         with open(f'dev/test_data/brite-entries/{expected_output_file}.txt') as expected_file:
             expected_entry: str = expected_file.read()
         if '--print' in args:
-            print_mock.assert_any_call(successful_entry_id)
+            print_mock.assert_any_call(successful_entry_id.replace('_', ':'))
             print_mock.assert_any_call(f'{expected_entry}\n')
         else:
             if output.endswith('.zip'):
