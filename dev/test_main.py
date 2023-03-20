@@ -108,11 +108,11 @@ def test_rest(mocker, args: list, expected_output: str, print_output: bool):
     _test_output(mocker=mocker, args=args, expected_output=expected_output, print_output=print_output)
 
 
-@pt.fixture(name='output', params=['brite-entries.zip', 'brite-entries'])
+@pt.fixture(name='output', params=['brite-entries', 'brite-entries.zip'])
 def pull_output(request):
     output: str = request.param
     yield output
-    if output == 'brite-entries.zip':
+    if output == 'brite-entries.zip' and os.path.isfile(output):
         os.remove(output)
     else:
         sh.rmtree(output, ignore_errors=True)
@@ -120,7 +120,8 @@ def pull_output(request):
 
 
 test_pull_data = [
-    ['--multi-process', '--n-workers=2'], ['--force-single-entry', '--multi-process', '--n-workers=2'], ['--force-single-entry']]
+    ['--print'], ['--print', '--multi-process'], ['--force-single-entry', '--multi-process', '--n-workers=2'],
+    ['--multi-process', '--n-workers=2'], ['--force-single-entry']]
 
 
 @pt.mark.parametrize('args', test_pull_data)
@@ -136,7 +137,7 @@ def test_pull(mocker, args: list, output: str):
     stdin_mock: mocker.MagicMock = mocker.patch('kegg_pull._utils.sys.stdin.read', return_value=stdin_mock)
     successful_entry_ids = ['br:br08005', 'br:br08902', 'br:br08431']
     # The expected output file names have underscores instead of colons in case testing on Windows.
-    expected_output_files: list = [entry_id.replace(':', '_') for entry_id in successful_entry_ids]
+    expected_output_files = [entry_id.replace(':', '_') for entry_id in successful_entry_ids]
     expected_pull_results = {
         'successful-entry-ids': successful_entry_ids,
         'failed-entry-ids': ['br:br03220', 'br:br03222'],
@@ -147,26 +148,31 @@ def test_pull(mocker, args: list, output: str):
         'num-total': 5,
         'percent-success': 60.0,
         'pull-minutes': 1.0}
-    args: list = ['kegg_pull', 'pull', 'entry-ids', '-'] + args + [f'--output={output}']
+    args = ['kegg_pull', 'pull', 'entry-ids', '-'] + args + [f'--output={output}']
     mocker.patch('sys.argv', args)
     time_mock: mocker.MagicMock = mocker.patch('kegg_pull.pull_cli._testable_time', side_effect=[30, 90])
+    print_mock = mocker.patch('builtins.print')
     m.main()
     stdin_mock.assert_called_once_with()
     assert time_mock.call_count == 2
     # If running on Windows, change the actual files names to have underscores instead of colons.
     if os.name == 'nt':  # pragma: no cover
-        expected_output_files: list = expected_output_files[:-1]  # The last brite gives different output on Windows
-        successful_entry_ids: list = expected_output_files  # pragma: no cover
+        expected_output_files = expected_output_files[:-1]  # The last brite gives different output on Windows
+        successful_entry_ids = expected_output_files  # pragma: no cover
     for successful_entry_id, expected_output_file in zip(successful_entry_ids, expected_output_files):
-        if output.endswith('.zip'):
-            with zf.ZipFile(output, 'r') as actual_zip:
-                actual_entry: str = actual_zip.read(successful_entry_id + '.txt').decode()
-        else:
-            with open(f'{output}/{successful_entry_id}.txt') as actual_file:
-                actual_entry: str = actual_file.read()
         with open(f'dev/test_data/brite-entries/{expected_output_file}.txt') as expected_file:
             expected_entry: str = expected_file.read()
-        assert actual_entry == expected_entry
+        if '--print' in args:
+            print_mock.assert_any_call(successful_entry_id)
+            print_mock.assert_any_call(f'{expected_entry}\n')
+        else:
+            if output.endswith('.zip'):
+                with zf.ZipFile(output, 'r') as actual_zip:
+                    actual_entry: str = actual_zip.read(successful_entry_id + '.txt').decode()
+            else:
+                with open(f'{output}/{successful_entry_id}.txt') as actual_file:
+                    actual_entry: str = actual_file.read()
+            assert actual_entry == expected_entry
     with open('pull-results.json', 'r') as file:
         actual_pull_results: dict = json.load(file)
     assert actual_pull_results == expected_pull_results
