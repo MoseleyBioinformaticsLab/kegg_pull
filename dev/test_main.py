@@ -108,7 +108,7 @@ def test_rest(mocker, args: list, expected_output: str, print_output: bool):
     _test_output(mocker=mocker, args=args, expected_output=expected_output, print_output=print_output)
 
 
-@pt.fixture(name='output', params=['brite-entries', 'brite-entries.zip'])
+@pt.fixture(name='output', params=['brite-entries.zip', 'brite-entries'])
 def pull_output(request):
     output: str = request.param
     yield output
@@ -120,7 +120,7 @@ def pull_output(request):
 
 
 test_pull_data = [
-    ['--print'], ['--print', '--multi-process'], ['--force-single-entry', '--multi-process', '--n-workers=2'],
+    ['--force-single-entry', '--multi-process', '--n-workers=2'], ['--print'], ['--print', '--multi-process'],
     ['--multi-process', '--n-workers=2'], ['--force-single-entry']]
 
 
@@ -183,7 +183,7 @@ test_map_data = [
     (['conv', 'mmu', 'ncbi-geneid', '--reverse'], None, 'mmu-ncbi'),
     (['conv', 'entry-ids', 'cpd:C00001,cpd:C00002', 'pubchem'], None, 'pubchem'),
     (['link', 'entry-ids', '-', 'module', '--reverse'], '\nK12696\nK22365\nK22435\t', 'module'),
-    (['link', 'pathway', 'ko'], None, 'pathway-gene'),
+    (['link', 'pathway', 'ko', '--deduplicate'], None, 'pathway-gene'),
     (['link', 'compound', 'reaction', 'pathway', '--add-glycans', '--add-drugs', '--deduplicate'], None, 'compound-reaction-pathway')]
 
 

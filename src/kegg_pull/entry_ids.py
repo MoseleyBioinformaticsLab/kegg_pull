@@ -10,12 +10,15 @@ from . import kegg_url as ku
 def from_database(database: str, kegg_rest: r.KEGGrest | None = None) -> list[str]:
     """ Pulls the KEGG entry IDs of a given database.
 
-    :param database: The KEGG database to pull the entry IDs from.
+    :param database: The KEGG database to pull the entry IDs from. If equal to "brite", the "br:" prefix is prepended to each entry ID such that they succeed if used in downstream use of the KEGG "get" operation (e.g. for the "pull" API module or CLI subcommand).
     :param kegg_rest: The KEGGrest object to request the entry IDs. If None, one is created with the default parameters.
     :return: The list of resulting entry IDs.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
-    return _process_response(KEGGurl=ku.ListKEGGurl, kegg_rest=kegg_rest, database=database)
+    entry_ids = _process_response(KEGGurl=ku.ListKEGGurl, kegg_rest=kegg_rest, database=database)
+    if database == 'brite':
+        entry_ids = [f'br:{entry_id}' for entry_id in entry_ids if not entry_id.startswith('br:')]
+    return entry_ids
 
 
 def _process_response(KEGGurl: type[ku.AbstractKEGGurl], kegg_rest: r.KEGGrest | None, **kwargs) -> list[str]:

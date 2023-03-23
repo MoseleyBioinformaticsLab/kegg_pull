@@ -3269,6 +3269,9 @@
   "mmu:100561": [
     "ncbi-geneid:100561"
   ],
+  "mmu:100579149": [
+    "ncbi-geneid:100579149"
+  ],
   "mmu:100604": [
     "ncbi-geneid:100604"
   ],
@@ -54524,9 +54527,6 @@
   "mmu:434689": [
     "ncbi-geneid:434689"
   ],
-  "mmu:434693": [
-    "ncbi-geneid:434693"
-  ],
   "mmu:434701": [
     "ncbi-geneid:434701"
   ],
@@ -54895,9 +54895,6 @@
   ],
   "mmu:503610": [
     "ncbi-geneid:503610"
-  ],
-  "mmu:503692": [
-    "ncbi-geneid:503692"
   ],
   "mmu:503844": [
     "ncbi-geneid:503844"
@@ -58495,6 +58492,9 @@
   ],
   "mmu:57423": [
     "ncbi-geneid:57423"
+  ],
+  "mmu:57425": [
+    "ncbi-geneid:57425"
   ],
   "mmu:57426": [
     "ncbi-geneid:57426"
@@ -68005,6 +68005,9 @@
   ],
   "mmu:69944": [
     "ncbi-geneid:69944"
+  ],
+  "mmu:69952": [
+    "ncbi-geneid:69952"
   ],
   "mmu:69955": [
     "ncbi-geneid:69955"

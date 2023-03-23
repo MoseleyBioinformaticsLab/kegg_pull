@@ -81,26 +81,27 @@ class PullResult(u.NonInstantiable):
 
 class SinglePull:
     """Class capable of performing a single request to the KEGG REST API for pulling up to a maximum number of entries."""
-    def __init__(self, kegg_rest: r.KEGGrest | None = None) -> None:
+    def __init__(self, kegg_rest: r.KEGGrest | None = None, multiprocess_lock_save: bool = False) -> None:
         """
         :param kegg_rest: Optional KEGGrest object used to make the requests to the KEGG REST API (a KEGGrest object with the default settings is created if one is not provided).
+        :param multiprocess_lock_save: Whether to block the code that saves KEGG entries in order to be multiprocess safe. Should not be needed unless pulling across multiple processes.
         """
         self._output = None
         self._kegg_rest = kegg_rest if kegg_rest is not None else r.KEGGrest()
         self._entry_field = None
-        self._multiprocess_lock = None
+        self._multiprocess_lock = mp.Lock() if multiprocess_lock_save else None
         self._in_memory_entries = None
 
-    def pull(self, entry_ids: list[str], output: str, entry_field: str | None = None, multiprocess_lock_save: bool = False) -> PullResult:
+    def pull(self, entry_ids: list[str], output: str, entry_field: str | None = None) -> PullResult:
         """ Makes a single request to the KEGG REST API to pull one or more entries and save them as files.
 
         :param entry_ids: The IDs of the entries to pull and save.
         :param output: Path to the location where entries are saved. Treated like a ZIP file if ends in ".zip", else a directory. If a directory, the directory is created if it doesn't already exist.
         :param entry_field: An optional field of the entries to pull.
-        :param multiprocess_lock_save: Whether to block the code that saves KEGG entries in order to be multiprocess safe. Should not be needed unless pulling across multiple processes.
         :return: The pull result.
         """
-        self._multiprocess_lock = mp.Lock() if multiprocess_lock_save else None
+        if output is None:
+            raise ValueError('"output" cannot be None')
         return self._pull(entry_ids=entry_ids, entry_field=entry_field, output=output)
 
     def pull_dict(self, entry_ids: list[str], entry_field: str | None = None) -> tuple[PullResult, KEGGentryMapping]:
@@ -316,6 +317,8 @@ class AbstractMultiplePull(abc.ABC):
         :param force_single_entry: Whether to pull only one entry at a time regardless of the entry field specified. Recommended if there are Brite entry IDs.
         :return: The pull result.
         """
+        if output is None:
+            raise ValueError('"output" cannot be None')
         return self._pull(entry_ids=entry_ids, output=output, entry_field=entry_field, force_single_entry=force_single_entry)
 
     def pull_dict(self, entry_ids: list[str], entry_field: str | None = None, force_single_entry: bool = False) -> tuple[PullResult, KEGGentryMapping]:
@@ -457,7 +460,7 @@ class MultiProcessMultiplePull(AbstractMultiplePull):
         :param unsuccessful_threshold: If set, the ratio of unsuccessful entry IDs to total entry IDs at which execution stops. Details of the aborted process are logged.
         :param n_workers: The number of processes to use. If None, defaults to the number of cores available.
         """
-        single_pull = SinglePull(kegg_rest=kegg_rest)
+        single_pull = SinglePull(kegg_rest=kegg_rest, multiprocess_lock_save=True)
         super(MultiProcessMultiplePull, self).__init__(single_pull=single_pull, unsuccessful_threshold=unsuccessful_threshold)
         self._n_workers = n_workers if n_workers is not None else os.cpu_count()
 
@@ -517,7 +520,6 @@ def _get_single_pull_result(entry_ids: list) -> bytes:
     """
     if _global_output is not None:
         return p.dumps(_global_single_pull.pull(
-            entry_ids=entry_ids, output=_global_output, entry_field=_global_entry_field,
-            multiprocess_lock_save=True))
+            entry_ids=entry_ids, output=_global_output, entry_field=_global_entry_field))
     else:
         return p.dumps(_global_single_pull.pull_dict(entry_ids=entry_ids, entry_field=_global_entry_field))

@@ -10,10 +10,23 @@ import typing as t
 from . import rest as r
 from . import _utils as u
 
-RawHierarchyNode = t.TypedDict('RawHierarchyNode', {'name': str, 'children': list[dict] | None})
-HierarchyNode = t.TypedDict(
-    'HierarchyNode', {'name': str, 'level': int, 'parent': str | None, 'children': list[str] | None, 'entry_id': str | None})
+
+class HierarchyNode(t.TypedDict):
+    """A dictionary  with the following keys:"""
+    name: str
+    """The name of the node obtained directly from the Brite hierarchy."""
+    level: int
+    """The level that the node appears in the hierarchy."""
+    parent: str | None
+    """The key (not the name) of the parent node (None if top level node)."""
+    children: list[str] | None
+    """The keys (not the names) of the node's children (None if leaf node)."""
+    entry_id: str | None
+    """The entry ID of the node (None if the node does not correspond to a KEGG entry)."""
+
+
 HierarchyNodes = dict[str, HierarchyNode]
+_RawHierarchyNode = t.TypedDict('_RawHierarchyNode', {'name': str, 'children': list[dict] | None})
 
 
 class PathwayOrganizer(u.NonInstantiable):
@@ -23,13 +36,7 @@ class PathwayOrganizer(u.NonInstantiable):
     ``PathwayOrganizer.load_from_json``. The ``__init__`` is not meant to be called directly. The ``__str__`` method returns a JSON
     string of ``hierarchy_nodes``.
 
-    :ivar dict hierarchy_nodes: The mapping of node keys to node information managed by the PathwayOrganizer. The node information fields include:
-
-                - **name**: The name of the node obtained directly from the Brite hierarchy.
-                - **level**: The level that the node appears in the hierarchy.
-                - **parent**: The key (not the name) of the parent node (None if top level node).
-                - **children**: The keys (not the names) of the node's children (None if leaf node).
-                - **entry_id**: The entry ID of the node (None if the node does not correspond to a KEGG entry).
+    :ivar dict[str, HierarchyNode] hierarchy_nodes: The mapping of node keys to node information managed by the PathwayOrganizer.
     """
     def __init__(self) -> None:
         super(PathwayOrganizer, self).__init__()
@@ -40,12 +47,12 @@ class PathwayOrganizer(u.NonInstantiable):
     def load_from_kegg(
             top_level_nodes: set[str] | None = None, filter_nodes: set[str] | None = None,
             kegg_rest: r.KEGGrest | None = None) -> PathwayOrganizer:
-        """ Pulls the Brite hierarchy from the KEGG REST API and converts it to the hierarchy_nodes mapping.
+        """ Pulls the Brite hierarchy from the KEGG REST API and converts it to the ``hierarchy_nodes`` mapping.
 
-        :param top_level_nodes: Node names in the highest level of the hierarchy to select from. If None, all top level nodes are traversed to create the hierarchy_nodes.
-        :param filter_nodes: Names (not keys) of nodes to exclude from the hierarchy_nodes mapping. Neither these nodes nor any of their children will be included.
+        :param top_level_nodes: Node names in the highest level of the hierarchy to select from. If None, all top level nodes are traversed to create the ``hierarchy_nodes``.
+        :param filter_nodes: Names (not keys) of nodes to exclude from the ``hierarchy_nodes`` mapping. Neither these nodes nor any of their children will be included.
         :param kegg_rest: Optional KEGGrest object for obtaining the Brite hierarchy. A new KEGGrest object is created by default.
-        :returns PathwayOrganizer: The resulting PathwayOrganizer object.
+        :returns: The resulting PathwayOrganizer object.
         """
         pathway_org = PathwayOrganizer()
         pathway_org.hierarchy_nodes = HierarchyNodes()
@@ -64,7 +71,7 @@ class PathwayOrganizer(u.NonInstantiable):
         return pathway_org
 
     @staticmethod
-    def _get_hierarchy(kegg_rest: r.KEGGrest | None) -> list[RawHierarchyNode]:
+    def _get_hierarchy(kegg_rest: r.KEGGrest | None) -> list[_RawHierarchyNode]:
         """ Pulls the Brite hierarchy (to be converted to hierarchy_nodes) from the KEGG REST API.
 
         :return: The list of top level nodes that branch out into the rest of the hierarchy until reaching leaf nodes.
@@ -75,7 +82,7 @@ class PathwayOrganizer(u.NonInstantiable):
         brite_hierarchy: dict = json.loads(s=text_body)
         return brite_hierarchy['children']
 
-    def _parse_hierarchy(self, level: int, raw_hierarchy_nodes: list[RawHierarchyNode], parent_name: str | None) -> set[str]:
+    def _parse_hierarchy(self, level: int, raw_hierarchy_nodes: list[_RawHierarchyNode], parent_name: str | None) -> set[str]:
         """ Recursively traverses the Brite hierarchy to create the hierarchy_nodes mapping.
 
         :param level: The current level of recursion representing the level of the node in the hierarchy.
@@ -170,11 +177,11 @@ class PathwayOrganizer(u.NonInstantiable):
 
     @staticmethod
     def load_from_json(file_path: str) -> PathwayOrganizer:
-        """ Loads the hierarchy_nodes mapping that was cached in a JSON file using load_from_kegg followed by save_to_json.
+        """ Loads the ``hierarchy_nodes`` mapping that was cached in a JSON file using ``load_from_kegg`` followed by ``save_to_json``.
 
         :param file_path: Path to the JSON file. If reading from a ZIP archive, the file path must be in the following format: /path/to/zip-archive.zip:/path/to/file (e.g. ./archive.zip:hierarchy-nodes.json).
-        :returns PathwayOrganizer: The resulting PathwayOrganizer object.
-        :raises ValidationError: Raised if the JSON file does not follow the correct JSON schema. Should follow the correct schema if hierarchy_nodes was cached using load_from_kegg followed by save_to_json.
+        :returns: The resulting PathwayOrganizer object.
+        :raises ValidationError: Raised if the JSON file does not follow the correct JSON schema. Should follow the correct schema if ``hierarchy_nodes`` was cached using ``load_from_kegg`` followed by ``save_to_json`` and without any additional alteration.
         """
         pathway_org = PathwayOrganizer()
         hierarchy_nodes: HierarchyNodes = u.load_json_file(
@@ -185,9 +192,9 @@ class PathwayOrganizer(u.NonInstantiable):
         return pathway_org
 
     def save_to_json(self, file_path: str) -> None:
-        """ Saves the hierarchy_nodes mapping to a JSON file to cache it.
+        """ Saves the ``hierarchy_nodes`` mapping to a JSON file to cache it.
 
-        :param file_path: The path to the JSON file to save the hierarchy_nodes mapping. If saving in a ZIP archive, the file path must be in the following format: /path/to/zip-archive.zip:/path/to/file (e.g. ./archive.zip:hierarchy-nodes.json).
+        :param file_path: The path to the JSON file to save the ``hierarchy_nodes`` mapping. If saving in a ZIP archive, the file path must be in the following format: /path/to/zip-archive.zip:/path/to/file (e.g. ./archive.zip:hierarchy-nodes.json).
         """
         json_string = str(self)
         u.save_output(output_target=file_path, output_content=json_string)

@@ -21,7 +21,7 @@ Options:
     --add-drugs             Whether to add the corresponding compound IDs of equivalent drug entries. Logs a warning if neither the source nor the target database are "compound".
     entry-ids               Create a mapping to a target database from a list of specific entry IDs.
     <entry-ids>             Comma separated list of entry IDs (e.g. Id1,Id2,Id3 etc.). Or if equal to "-", entry IDs are read from standard input, one entry ID per line; Press CTRL+D to finalize input or pipe (e.g. cat file.txt | kegg_pull map entry-ids drug - ...).
-    <intermediate-database> The name of an intermediate KEGG database with which to find cross-references to cross-references e.g. "kegg_pull map ko reaction compound" creates a mapping from ko-to-compound via ko-to-reaction cross-references connected to reaction-to-compound cross-references.
+    <intermediate-database> The name of an intermediate KEGG database with which to find cross-references to cross-references e.g. "kegg_pull map link ko reaction compound" creates a mapping from ko-to-compound via ko-to-reaction cross-references connected to reaction-to-compound cross-references.
 """
 import docopt as doc
 from . import map as kmap

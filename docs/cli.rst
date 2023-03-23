@@ -67,11 +67,11 @@ If the ``--unsuccessful-threshold`` option is set and surpassed, an ``aborted-pu
     :end-before: """
     :language: none
 
-.. include:: ../src/kegg_pull/link_to_dict.py
+.. include:: ../src/kegg_pull/map.py
     :start-after: """
     :end-before: """
 
-.. literalinclude:: ../src/kegg_pull/link_to_dict_cli.py
+.. literalinclude:: ../src/kegg_pull/map_cli.py
     :start-at: Usage:
     :end-before: """
     :language: none
