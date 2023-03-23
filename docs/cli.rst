@@ -76,15 +76,6 @@ If the ``--unsuccessful-threshold`` option is set and surpassed, an ``aborted-pu
     :end-before: """
     :language: none
 
-.. include:: ../src/kegg_pull/pathway_organizer.py
-    :start-after: """
-    :end-before: """
-
-.. literalinclude:: ../src/kegg_pull/pathway_organizer_cli.py
-    :start-at: Usage:
-    :end-before: """
-    :language: none
-
 .. include:: ../src/kegg_pull/rest.py
     :start-after: """
     :end-before: """

@@ -320,24 +320,6 @@ operation or “conv” operation into dictionaries usable in python code.
     {'cpd:C00001': {'pubchem:3303'}, 'cpd:C00002': {'pubchem:3304'}}
 
 
-Pathway Organizer
-~~~~~~~~~~~~~~~~~
-
-The ``pathway_organizer`` module flattens a brite hierarchy into a
-mapping of the IDs of its nodes to information about those nodes.
-
-.. code:: python3
-
-    import kegg_pull.pathway_organizer as po
-    pathway_org = po.PathwayOrganizer.load_from_kegg()
-    print(pathway_org.hierarchy_nodes['Metabolism'])
-
-
-.. parsed-literal::
-
-    {'name': 'Metabolism', 'level': 1, 'parent': None, 'children': ['Amino acid metabolism', 'Biosynthesis of other secondary metabolites', 'Carbohydrate metabolism', 'Chemical structure transformation maps', 'Energy metabolism', 'Global and overview maps', 'Glycan biosynthesis and metabolism', 'Lipid metabolism', 'Metabolism of cofactors and vitamins', 'Metabolism of other amino acids', 'Metabolism of terpenoids and polyketides', 'Nucleotide metabolism', 'Xenobiotics biodegradation and metabolism'], 'entry_id': None}
-
-
 Rest API
 ~~~~~~~~
 
@@ -701,29 +683,6 @@ map
         "cpd:C00068",
         "cpd:C00074",
         "cpd:C00084",
-
-
-pathway-organizer
-~~~~~~~~~~~~~~~~~
-
-.. code:: none
-
-    % kegg_pull pathway-organizer --tln=Metabolism --fn="Global and overview maps,Carbohydrate metabolism" --output=hierarchy-nodes.json
-    % head hierarchy-nodes.json
-
-
-.. parsed-literal::
-
-    {
-      "path:map00190": {
-        "name": "00190  Oxidative phosphorylation",
-        "level": 3,
-        "parent": "Energy metabolism",
-        "children": null,
-        "entry_id": "path:map00190"
-      },
-      "path:map00195": {
-        "name": "00195  Photosynthesis",
 
 
 rest

@@ -5,7 +5,6 @@ import kegg_pull._utils as utils
 import dev.utils as u
 import kegg_pull.pull as p
 import kegg_pull.rest as r
-import kegg_pull.pathway_organizer as po
 
 
 @pt.mark.parametrize('comma_separated_list', [',,', ',', ''])
@@ -34,7 +33,7 @@ def test_get_range_values_exception():
 
 
 @pt.mark.parametrize(
-    'NonInstantiable,kwargs', [(p.PullResult, {}), (r.KEGGresponse, {'status': None, 'kegg_url': None}), (po.PathwayOrganizer, {})])
+    'NonInstantiable,kwargs', [(p.PullResult, {}), (r.KEGGresponse, {'status': None, 'kegg_url': None})])
 def test_non_instantiable(NonInstantiable: type, kwargs: dict):
     expected_error_message = f'The class "{NonInstantiable.__name__}" cannot be instantiated outside of its module.'
     with pt.raises(RuntimeError) as error:

@@ -7,8 +7,6 @@ This package has the following modules:
 
 ``map``
 
-``pathway_organizer``
-
 ``rest``
 
 ``kegg_url``
