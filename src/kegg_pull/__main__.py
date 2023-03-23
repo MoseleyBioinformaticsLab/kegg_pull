@@ -5,7 +5,7 @@ Usage:
     kegg_pull --full-help           Show the help message of all sub commands.
     kegg_pull pull ...              Pull, separate, and store an arbitrary number of KEGG entries to the local file system.
     kegg_pull entry-ids ...         Obtain a list of KEGG entry IDs.
-    kegg_pull map ...               Obtain a mapping of KEGG entries to the IDs of related entries.
+    kegg_pull map ...               Obtain a mapping of entry IDs (KEGG or outside databases) to the IDs of related entries.
     kegg_pull pathway-organizer ... Creates a flattened version of a pathways Brite hierarchy.
     kegg_pull rest ...              Executes one of the KEGG REST API operations.
 """

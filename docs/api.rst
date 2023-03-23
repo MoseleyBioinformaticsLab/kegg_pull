@@ -12,7 +12,7 @@ API
     :members:
     :undoc-members:
 
-.. automodule:: kegg_pull.link_to_dict
+.. automodule:: kegg_pull.map
     :members:
     :undoc-members:
 

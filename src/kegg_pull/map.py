@@ -1,7 +1,7 @@
 """
-Creating Dictionaries From KEGG Link Requests
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Functionality for converting the output from the KEGG "link" or "conv" REST operations into dictionaries mapping the entry IDs from one database to the IDs of related entries.
+Constructing Mappings From KEGG "link" And "conv" Operations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Functionality for converting the output from the KEGG "link" or "conv" REST operations into mappings of the entry IDs from one database to the IDs of related entries.
 """
 import typing as t
 import json
@@ -17,12 +17,11 @@ KEGGmapping = dict[str, set[str]]
 def database_link(
         source_database: str, target_database: str, deduplicate: bool = False, add_glycans: bool = False,
         add_drugs: bool = False, kegg_rest: r.KEGGrest | None = None) -> KEGGmapping:
-    """ Converts the output of the KEGG "link" operation (of the form that maps the entry IDs of one database to the entry
-     IDs of another) into a dictionary along with other helpful optional functionality.
+    """ Converts the output of the KEGG "link" operation (of the form that maps the entry IDs of one database to the entry IDs of another) into a dictionary along with other helpful optional functionality.
 
     :param source_database: The name of the database with entry IDs mapped to the target database.
     :param target_database: The name of the database with entry IDs mapped from the source database.
-    :param deduplicate: Some mappings including pathway entry IDs result in half beginning with the normal "path:map" prefix but the other half with a different prefix. If True, removes the IDs corresponding to identical entries but with a different prefix.
+    :param deduplicate: Some mappings including "pathway" entry IDs result in half beginning with the normal "path:map" prefix but the other half with a different prefix. If True, removes the IDs corresponding to entries that are identical but with a different prefix.
     :param add_glycans: Whether to add the corresponding compound IDs of equivalent glycan entries. Logs a warning if neither the source nor the target database is "compound".
     :param add_drugs: Whether to add the corresponding compound IDs of equivalent drug entries. Logs a warning if neither the source nor the target database is "compound".
     :param kegg_rest: The KEGGrest object to perform the "link" operation. If None, one is created with the default  parameters.
@@ -165,9 +164,8 @@ def _add_glycans_or_drugs(
 
 # noinspection PyShadowingNames
 def database_conv(
-        kegg_database: str, outside_database: str, reverse: bool, kegg_rest: r.KEGGrest | None = None) -> KEGGmapping:
-    """ Converts the output of the KEGG "conv" operation (of the form that maps the entry IDs of one database to the entry
-     IDs of another) into a dictionary.
+        kegg_database: str, outside_database: str, reverse: bool = False, kegg_rest: r.KEGGrest | None = None) -> KEGGmapping:
+    """ Converts the output of the KEGG "conv" operation (of the form that maps the entry IDs of one database to the entry IDs of another) into a dictionary.
 
     :param kegg_database: The name of the KEGG database with entry IDs mapped to the outside database.
     :param outside_database: The name of the outside database with entry IDs mapped from the KEGG database.
@@ -236,7 +234,7 @@ def indirect_link(
     :param source_database: The name of the database with entry IDs to map to the target database.
     :param intermediate_database: The name of the database with which two mappings are made i.e. source-to-intermediate and intermediate-to-target, both of which are merged to create source-to-target.
     :param target_database: The name of the database with entry IDs to which those of the source database are mapped.
-    :param deduplicate: Some mappings including pathway entry IDs result in half beginning with the normal "path:map" prefix but the other half with a different prefix. If True, removes the IDs corresponding to identical entries but with a different prefix.
+    :param deduplicate: Some mappings including "pathway" entry IDs result in half beginning with the normal "path:map" prefix but the other half with a different prefix. If True, removes the IDs corresponding to entries that are identical but with a different prefix.
     :param add_glycans: Whether to add the corresponding compound IDs of equivalent glycan entries. Logs a warning if neither the source nor the target database are "compound".
     :param add_drugs: Whether to add the corresponding compound IDs of equivalent drug entries. Logs a warning if neither the source nor the target database are "compound".
     :param kegg_rest: The KEGGrest object to perform the "link" operations. If None, one is created with the default parameters.
@@ -285,9 +283,9 @@ def combine_mappings(mapping1: KEGGmapping, mapping2: KEGGmapping) -> KEGGmappin
 
 
 def reverse(mapping: KEGGmapping) -> KEGGmapping:
-    """ Reverses the dictionary mapping entry IDs of one database to IDs of related entries, turning keys into values and values into keys.
+    """ Reverses the dictionary (mapping entry IDs of one database to IDs of related entries) turning keys into values and values into keys.
 
-    :param mapping: The dictionary, of entry IDs (strings) to sets of entry IDs, to reverse.
+    :param mapping: The dictionary (of entry IDs (strings) to sets of entry IDs) to reverse.
     :return: The reversed mapping.
     """
     reversed_mapping = dict()

@@ -28,8 +28,8 @@ def test_multiprocess_locking(mocker, zip_file_path: str):
     get_mock: mocker.MagicMock = mocker.patch('kegg_pull.pull.r.KEGGrest.get', return_value=kegg_response_mock)
     lock_mock = mocker.MagicMock(acquire=mocker.MagicMock(), release=mocker.MagicMock())
     LockMock: mocker.MagicMock = mocker.patch('kegg_pull.pull.mp.Lock', return_value=lock_mock)
-    single_pull = p.SinglePull()
-    pull_result: p.PullResult = single_pull.pull(entry_ids=entry_ids_mock, output=zip_file_path, multiprocess_lock_save=True)
+    single_pull = p.SinglePull(multiprocess_lock_save=True)
+    pull_result: p.PullResult = single_pull.pull(entry_ids=entry_ids_mock, output=zip_file_path)
     assert single_pull._multiprocess_lock == lock_mock
     LockMock.assert_called_once_with()
     get_mock.assert_called_once_with(entry_ids=entry_ids_mock, entry_field=None)
@@ -257,7 +257,10 @@ def test_multiple_pull(
         single_pull_mock.pull_dict = mocker.spy(single_pull_mock, 'pull_dict')
     kegg_rest_mock = mocker.MagicMock()
     multiple_pull = MultiplePull(kegg_rest=kegg_rest_mock, **kwargs)
-    SinglePullMock.assert_called_once_with(kegg_rest=kegg_rest_mock)
+    if MultiplePull is p.MultiProcessMultiplePull:
+        SinglePullMock.assert_called_once_with(kegg_rest=kegg_rest_mock, multiprocess_lock_save=True)
+    else:
+        SinglePullMock.assert_called_once_with(kegg_rest=kegg_rest_mock)
     if 'unsuccessful_threshold' in kwargs:
         with pt.raises(SystemExit) as error:
             if multiple_pull_output:
@@ -342,7 +345,10 @@ def test_get_n_entries_per_url(mocker, MultiplePull: type, kwargs: dict):
     entry_ids_mock = ['eid1', 'eid2', 'eid3', 'eid4']
     SinglePullMock = mocker.patch('kegg_pull.pull.SinglePull', return_value=PickleableSinglePullMock())
     multiple_pull = MultiplePull(kegg_rest=None, **kwargs)
-    SinglePullMock.assert_called_once_with(kegg_rest=None)
+    if MultiplePull is p.MultiProcessMultiplePull:
+        SinglePullMock.assert_called_once_with(kegg_rest=None, multiprocess_lock_save=True)
+    else:
+        SinglePullMock.assert_called_once_with(kegg_rest=None)
     group_entry_ids_spy: mocker.MagicMock = mocker.spy(multiple_pull, '_group_entry_ids')
     get_n_entries_per_url_spy: mocker.MagicMock = mocker.spy(p.AbstractMultiplePull, '_get_n_entries_per_url')
     pull_mock = mocker.patch(f'kegg_pull.pull.{MultiplePull.__name__}._concrete_pull')
@@ -379,17 +385,33 @@ def test_get_single_pull_result(mocker, output_mock: str | None, entry_field_moc
     actual_result: bytes = p._get_single_pull_result(entry_ids=testing_entry_ids)
     if output_mock:
         single_pull_mock.pull.assert_called_once_with(
-            entry_ids=testing_entry_ids, output=output_mock, entry_field=entry_field_mock,
-            multiprocess_lock_save=True)
+            entry_ids=testing_entry_ids, output=output_mock, entry_field=entry_field_mock)
     else:
         single_pull_mock.pull_dict.assert_called_once_with(entry_ids=testing_entry_ids, entry_field=entry_field_mock)
     assert actual_result == p.p.dumps(return_value)
 
 
 @pt.mark.parametrize('unsuccessful_threshold', [1.2, -2.0])
-def test_multiple_pull_exception(unsuccessful_threshold):
+def test_unsuccessful_threshold_exception(unsuccessful_threshold):
     expected_message = f'Unsuccessful threshold of {unsuccessful_threshold} is out of range. Valid values are within ' \
                        f'0.0 and 1.0, non-inclusive'
     with pt.raises(ValueError) as error:
         p.SingleProcessMultiplePull(kegg_rest=None, unsuccessful_threshold=unsuccessful_threshold)
     u.assert_exception(expected_message=expected_message, exception=error)
+
+
+# noinspection PyTypeChecker
+def test_pull_output_exception():
+    single_pull = p.SinglePull()
+    multi_pull = p.SingleProcessMultiplePull()
+    message = '"output" cannot be None'
+    with pt.raises(ValueError) as error:
+        single_pull.pull(entry_ids=[], output=None)
+    u.assert_exception(expected_message=message, exception=error)
+    with pt.raises(ValueError) as error:
+        multi_pull.pull(entry_ids=[], output=None)
+    u.assert_exception(expected_message=message, exception=error)
+    multi_pull = p.MultiProcessMultiplePull()
+    with pt.raises(ValueError) as error:
+        multi_pull.pull(entry_ids=[], output=None)
+    u.assert_exception(expected_message=message, exception=error)
