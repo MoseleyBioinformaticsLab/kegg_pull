@@ -1,3 +1,6 @@
+.. |Functionality| replace:: Provides commandline functionality
+.. |Interface for| replace:: Provides commandline functionality for accessing
+
 CLI
 ===
 **Note:** Many KEGG entry IDs contain colons and ``kegg_pull`` saves KEGG entry files with their ID in the file name. When running on Windows, all file names with colons will have their colons replaced with underscores.
@@ -11,9 +14,11 @@ Top-level commandline interface.
     :end-before: """
     :language: none
 
-Pulling, Parsing, and Saving KEGG Entries
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Functionality for getting KEGG entries from the KEGG REST API, parsing them, and saving the entries as files. A JSON file, called ``pull-results.json``, is saved describing the results of the pull. Below is the interpretation of each of the fields:
+.. include:: ../src/kegg_pull/pull.py
+    :start-after: """
+    :end-before: """
+
+A JSON file, called ``pull-results.json``, is saved, describing the results of the pull. Below is the interpretation of each of the fields:
 
 **percent-success:** The percentage of the requested entries that were successfully pulled and saved in a file.
 
@@ -56,18 +61,27 @@ If the ``--unsuccessful-threshold`` option is set and surpassed, an ``aborted-pu
     :end-before: """
     :language: none
 
-Getting Lists of KEGG Entry IDs
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Functionality for getting lists of KEGG entry IDs from the KEGG REST API.
+.. include:: ../src/kegg_pull/entry_ids.py
+    :start-after: """
+    :end-before: """
 
 .. literalinclude:: ../src/kegg_pull/entry_ids_cli.py
     :start-at: Usage:
     :end-before: """
     :language: none
 
-KEGG REST API Operations
-~~~~~~~~~~~~~~~~~~~~~~~~
-Interface for the KEGG REST API including all its operations.
+.. include:: ../src/kegg_pull/map.py
+    :start-after: """
+    :end-before: """
+
+.. literalinclude:: ../src/kegg_pull/map_cli.py
+    :start-at: Usage:
+    :end-before: """
+    :language: none
+
+.. include:: ../src/kegg_pull/rest.py
+    :start-after: """
+    :end-before: """
 
 .. literalinclude:: ../src/kegg_pull/rest_cli.py
     :start-at: Usage:

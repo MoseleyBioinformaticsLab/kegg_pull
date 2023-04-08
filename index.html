@@ -4,14 +4,13 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to kegg_pull’s documentation! &mdash; kegg_pull 2.1.0 documentation</title>
+  <title>Welcome to kegg_pull’s documentation! &mdash; kegg_pull 3.0.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
@@ -33,7 +32,7 @@
             kegg_pull
           </a>
               <div class="version">
-                2.1.0
+                3.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -93,41 +92,12 @@
 <li class="toctree-l1"><a class="reference internal" href="cli.html">CLI</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="cli.html#kegg-pull-commandline-interface">kegg_pull Commandline Interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cli.html#pulling-parsing-and-saving-kegg-entries">Pulling, Parsing, and Saving KEGG Entries</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cli.html#getting-lists-of-kegg-entry-ids">Getting Lists of KEGG Entry IDs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#pulling-lists-of-kegg-entry-ids">Pulling Lists of KEGG Entry IDs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#constructing-mappings-from-kegg-link-and-conv-operations">Constructing Mappings From KEGG “link” And “conv” Operations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cli.html#kegg-rest-api-operations">KEGG REST API Operations</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api.html#pulling-parsing-and-saving-kegg-entries">Pulling, Parsing, and Saving KEGG Entries</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#kegg_pull.pull.PullResult"><code class="docutils literal notranslate"><span class="pre">PullResult</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#kegg_pull.pull.SinglePull"><code class="docutils literal notranslate"><span class="pre">SinglePull</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#kegg_pull.pull.AbstractMultiplePull"><code class="docutils literal notranslate"><span class="pre">AbstractMultiplePull</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#kegg_pull.pull.SingleProcessMultiplePull"><code class="docutils literal notranslate"><span class="pre">SingleProcessMultiplePull</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#kegg_pull.pull.MultiProcessMultiplePull"><code class="docutils literal notranslate"><span class="pre">MultiProcessMultiplePull</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#pulling-lists-of-kegg-entry-ids">Pulling Lists of KEGG Entry IDs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#kegg_pull.entry_ids.from_database"><code class="docutils literal notranslate"><span class="pre">from_database()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#kegg_pull.entry_ids.from_file"><code class="docutils literal notranslate"><span class="pre">from_file()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#kegg_pull.entry_ids.from_keywords"><code class="docutils literal notranslate"><span class="pre">from_keywords()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#kegg_pull.entry_ids.from_molecular_attribute"><code class="docutils literal notranslate"><span class="pre">from_molecular_attribute()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#kegg-rest-api-operations">KEGG REST API Operations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#kegg_pull.rest.KEGGresponse"><code class="docutils literal notranslate"><span class="pre">KEGGresponse</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#kegg_pull.rest.KEGGrest"><code class="docutils literal notranslate"><span class="pre">KEGGrest</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#constructing-urls-for-the-kegg-rest-api">Constructing URLs for the KEGG REST API</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#kegg_pull.kegg_url.AbstractKEGGurl"><code class="docutils literal notranslate"><span class="pre">AbstractKEGGurl</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#kegg_pull.kegg_url.ListKEGGurl"><code class="docutils literal notranslate"><span class="pre">ListKEGGurl</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#kegg_pull.kegg_url.InfoKEGGurl"><code class="docutils literal notranslate"><span class="pre">InfoKEGGurl</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#kegg_pull.kegg_url.GetKEGGurl"><code class="docutils literal notranslate"><span class="pre">GetKEGGurl</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#kegg_pull.kegg_url.KeywordsFindKEGGurl"><code class="docutils literal notranslate"><span class="pre">KeywordsFindKEGGurl</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#kegg_pull.kegg_url.MolecularFindKEGGurl"><code class="docutils literal notranslate"><span class="pre">MolecularFindKEGGurl</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#kegg_pull.kegg_url.AbstractConvKEGGurl"><code class="docutils literal notranslate"><span class="pre">AbstractConvKEGGurl</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#kegg_pull.kegg_url.DatabaseConvKEGGurl"><code class="docutils literal notranslate"><span class="pre">DatabaseConvKEGGurl</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#kegg_pull.kegg_url.EntriesConvKEGGurl"><code class="docutils literal notranslate"><span class="pre">EntriesConvKEGGurl</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#kegg_pull.kegg_url.AbstractLinkKEGGurl"><code class="docutils literal notranslate"><span class="pre">AbstractLinkKEGGurl</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#kegg_pull.kegg_url.DatabaseLinkKEGGurl"><code class="docutils literal notranslate"><span class="pre">DatabaseLinkKEGGurl</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#kegg_pull.kegg_url.EntriesLinkKEGGurl"><code class="docutils literal notranslate"><span class="pre">EntriesLinkKEGGurl</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="api.html#kegg_pull.kegg_url.DdiKEGGurl"><code class="docutils literal notranslate"><span class="pre">DdiKEGGurl</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
 </ul>
 </div>
@@ -137,7 +107,6 @@
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
 </section>
 

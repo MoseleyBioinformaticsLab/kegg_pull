@@ -4,14 +4,13 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CLI &mdash; kegg_pull 2.1.0 documentation</title>
+  <title>CLI &mdash; kegg_pull 3.0.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
@@ -34,7 +33,7 @@
             kegg_pull
           </a>
               <div class="version">
-                2.1.0
+                3.0.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -51,7 +50,8 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">CLI</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#kegg-pull-commandline-interface">kegg_pull Commandline Interface</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#pulling-parsing-and-saving-kegg-entries">Pulling, Parsing, and Saving KEGG Entries</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#getting-lists-of-kegg-entry-ids">Getting Lists of KEGG Entry IDs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pulling-lists-of-kegg-entry-ids">Pulling Lists of KEGG Entry IDs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#constructing-mappings-from-kegg-link-and-conv-operations">Constructing Mappings From KEGG “link” And “conv” Operations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#kegg-rest-api-operations">KEGG REST API Operations</a></li>
 </ul>
 </li>
@@ -90,18 +90,20 @@
 <h2>kegg_pull Commandline Interface<a class="headerlink" href="#kegg-pull-commandline-interface" title="Permalink to this heading"></a></h2>
 <p>Top-level commandline interface.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Usage:
-    kegg_pull -h | --help       Show this help message.
-    kegg_pull -v | --version    Displays the package version.
-    kegg_pull --full-help       Show the help message of all sub commands.
-    kegg_pull pull ...          Pull, separate, and store an arbitrary number of KEGG entries to the local file system.
-    kegg_pull entry-ids ...     Obtain a list of KEGG entry IDs.
-    kegg_pull rest ...          Executes one of the KEGG REST API operations.
+    kegg_pull -h | --help           Show this help message.
+    kegg_pull -v | --version        Displays the package version.
+    kegg_pull --full-help           Show the help message of all sub commands.
+    kegg_pull pull ...              Pull, separate, and store an arbitrary number of KEGG entries to the local file system.
+    kegg_pull entry-ids ...         Obtain a list of KEGG entry IDs.
+    kegg_pull map ...               Obtain a mapping of entry IDs (KEGG or outside databases) to the IDs of related entries.
+    kegg_pull rest ...              Executes one of the KEGG REST API operations.
 </pre></div>
 </div>
 </section>
 <section id="pulling-parsing-and-saving-kegg-entries">
 <h2>Pulling, Parsing, and Saving KEGG Entries<a class="headerlink" href="#pulling-parsing-and-saving-kegg-entries" title="Permalink to this heading"></a></h2>
-<p>Functionality for getting KEGG entries from the KEGG REST API, parsing them, and saving the entries as files. A JSON file, called <code class="docutils literal notranslate"><span class="pre">pull-results.json</span></code>, is saved describing the results of the pull. Below is the interpretation of each of the fields:</p>
+<p>Provides commandline functionality for pulling KEGG entries from the KEGG REST API, parsing them, and saving the entries as files.</p>
+<p>A JSON file, called <code class="docutils literal notranslate"><span class="pre">pull-results.json</span></code>, is saved, describing the results of the pull. Below is the interpretation of each of the fields:</p>
 <p><strong>percent-success:</strong> The percentage of the requested entries that were successfully pulled and saved in a file.</p>
 <p><strong>pull-minutes:</strong> The number of minutes that the pull took to complete.</p>
 <p><strong>num-successful:</strong> The number of entries that were successfully pulled and saved in a file.</p>
@@ -122,17 +124,19 @@
 <p><strong>timed-out-entry-ids:</strong> The IDs of the timed out entries.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Usage:
     kegg_pull pull -h | --help
-    kegg_pull pull database &lt;database-name&gt; [--force-single-entry] [--multi-process] [--n-workers=&lt;n-workers&gt;] [--output=&lt;output&gt;] [--entry-field=&lt;entry-field&gt;] [--n-tries=&lt;n-tries&gt;] [--time-out=&lt;time-out&gt;] [--sleep-time=&lt;sleep-time&gt;] [--ut=&lt;unsuccessful-threshold&gt;]
-    kegg_pull pull entry-ids &lt;entry-ids&gt; [--force-single-entry] [--multi-process] [--n-workers=&lt;n-workers&gt;] [--output=&lt;output&gt;] [--entry-field=&lt;entry-field&gt;] [--n-tries=&lt;n-tries&gt;] [--time-out=&lt;time-out&gt;] [--sleep-time=&lt;sleep-time&gt;] [--ut=&lt;unsuccessful-threshold&gt;]
+    kegg_pull pull database &lt;database&gt; [--force-single-entry] [--multi-process] [--n-workers=&lt;n-workers&gt;] [--output=&lt;output&gt;] [--print] [--sep=&lt;print-separator&gt;] [--entry-field=&lt;entry-field&gt;] [--n-tries=&lt;n-tries&gt;] [--time-out=&lt;time-out&gt;] [--sleep-time=&lt;sleep-time&gt;] [--ut=&lt;unsuccessful-threshold&gt;]
+    kegg_pull pull entry-ids &lt;entry-ids&gt; [--force-single-entry] [--multi-process] [--n-workers=&lt;n-workers&gt;] [--output=&lt;output&gt;] [--print] [--sep=&lt;print-separator&gt;] [--entry-field=&lt;entry-field&gt;] [--n-tries=&lt;n-tries&gt;] [--time-out=&lt;time-out&gt;] [--sleep-time=&lt;sleep-time&gt;] [--ut=&lt;unsuccessful-threshold&gt;]
 
 Options:
     -h --help                       Show this help message.
     database                        Pulls all the entries in a KEGG database.
-    &lt;database-name&gt;                 The KEGG database from which to pull entries.
-    --force-single-entry            Forces pulling only one entry at a time for every request to the KEGG web API. This flag is automatically set if &lt;database-name&gt; is &quot;brite&quot;.
+    &lt;database&gt;                      The KEGG database from which to pull entries.
+    --force-single-entry            Forces pulling only one entry at a time for every request to the KEGG web API. This flag is automatically set if &lt;database&gt; is &quot;brite&quot;.
     --multi-process                 If set, the entries are pulled across multiple processes to increase speed. Otherwise, the entries are pulled sequentially in a single process.
     --n-workers=&lt;n-workers&gt;         The number of sub-processes to create when pulling. Defaults to the number of cores available. Ignored if --multi-process is not set.
-    --output=&lt;output&gt;               The directory where the pulled KEGG entries will be stored. Defaults to the current working directory. If ends in &quot;.zip&quot;, entries are saved to a ZIP archive instead of a directory.
+    --output=&lt;output&gt;               The directory where the pulled KEGG entries will be stored. Defaults to the current working directory. If ends in &quot;.zip&quot;, entries are saved to a ZIP archive instead of a directory. Ignored if --print is set.
+    --print                         If set, prints the entries to the screen rather than saving them to the file system. Separates entries by the --sep option if set.
+    --sep=&lt;print-separator&gt;         The string that separates the entries which are printed to the screen when the --print option is set. Ignored if the --print option is not set. Defaults to printing the entry id, followed by the entry, followed by a newline.
     --entry-field=&lt;entry-field&gt;     Optional field to extract from the entries pulled rather than the standard flat file format (or &quot;htext&quot; in the case of brite entries).
     --n-tries=&lt;n-tries&gt;             The number of times to attempt a KEGG request before marking it as timed out or failed. Defaults to 3.
     --time-out=&lt;time-out&gt;           The number of seconds to wait for a KEGG request before marking it as timed out. Defaults to 60.
@@ -143,70 +147,98 @@ Options:
 </pre></div>
 </div>
 </section>
-<section id="getting-lists-of-kegg-entry-ids">
-<h2>Getting Lists of KEGG Entry IDs<a class="headerlink" href="#getting-lists-of-kegg-entry-ids" title="Permalink to this heading"></a></h2>
-<p>Functionality for getting lists of KEGG entry IDs from the KEGG REST API.</p>
+<section id="pulling-lists-of-kegg-entry-ids">
+<h2>Pulling Lists of KEGG Entry IDs<a class="headerlink" href="#pulling-lists-of-kegg-entry-ids" title="Permalink to this heading"></a></h2>
+<p>Provides commandline functionality for pulling lists of KEGG entry IDs from the KEGG REST API.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Usage:
     kegg_pull entry-ids -h | --help
-    kegg_pull entry-ids database &lt;database-name&gt; [--output=&lt;output&gt;]
-    kegg_pull entry-ids keywords &lt;database-name&gt; &lt;keywords&gt; [--output=&lt;output&gt;]
-    kegg_pull entry-ids molecular-attribute &lt;database-name&gt; (--formula=&lt;formula&gt;|--em=&lt;exact-mass&gt;...|--mw=&lt;molecular-weight&gt;...) [--output=&lt;output&gt;]
+    kegg_pull entry-ids database &lt;database&gt; [--output=&lt;output&gt;]
+    kegg_pull entry-ids keywords &lt;database&gt; &lt;keywords&gt; [--output=&lt;output&gt;]
+    kegg_pull entry-ids molec-attr &lt;database&gt; (--formula=&lt;formula&gt;|--em=&lt;exact-mass&gt;...|--mw=&lt;molecular-weight&gt;...) [--output=&lt;output&gt;]
 
 Options:
     -h --help               Show this help message.
     database                Pulls all the entry IDs within a given database.
-    &lt;database-name&gt;         The KEGG database from which to pull a list of entry IDs.
+    &lt;database&gt;              The KEGG database from which to pull a list of entry IDs.
     --output=&lt;output&gt;       Path to the file (either in a directory or ZIP archive) to store the output (1 entry ID per line). Prints to the console if not specified. If a ZIP archive, the file path must be in the form of /path/to/zip-archive.zip:/path/to/file (e.g. ./archive.zip:file.txt).
     keywords                Searches for entries within a database based on provided keywords.
     &lt;keywords&gt;              Comma separated list of keywords to search entries with (e.g. kw1,kw2,kw3 etc.). Or if equal to &quot;-&quot;, keywords are read from standard input, one keyword per line; Press CTRL+D to finalize input or pipe (e.g. cat file.txt | kegg_pull rest find brite - ...).
-    molecular-attribute     Searches a database of molecule-type KEGG entries by molecular attributes.
+    molec-attr              Searches a database of molecule-type KEGG entries by molecular attributes.
     --formula=&lt;formula&gt;     Sequence of atoms in a chemical formula format to search for (e.g. &quot;O5C7&quot; searches for molecule entries containing 5 oxygen atoms and/or 7 carbon atoms).
     --em=&lt;exact-mass&gt;       Either a single number (e.g. &quot;--em=155.5&quot;) or two numbers (e.g. &quot;--em=155.5 --em=244.4&quot;). If a single number, searches for molecule entries with an exact mass equal to that value rounded by the last decimal point. If two numbers, searches for molecule entries with an exact mass within the two values (a range).
     --mw=&lt;molecular-weight&gt; Same as &quot;--em=&lt;exact-mass&gt;&quot; but searches based on the molecular weight.
 </pre></div>
 </div>
 </section>
+<section id="constructing-mappings-from-kegg-link-and-conv-operations">
+<h2>Constructing Mappings From KEGG “link” And “conv” Operations<a class="headerlink" href="#constructing-mappings-from-kegg-link-and-conv-operations" title="Permalink to this heading"></a></h2>
+<p>Provides commandline functionality for converting the output from the KEGG “link” or “conv” REST operations into mappings of the entry IDs from one database to the IDs of related entries.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Usage:
+    kegg_pull map -h | --help
+    kegg_pull map conv &lt;kegg-database&gt; &lt;outside-database&gt; [--reverse] [--output=&lt;output&gt;]
+    kegg_pull map link &lt;source-database&gt; &lt;target-database&gt; [--deduplicate] [--add-glycans] [--add-drugs] [--output=&lt;output&gt;]
+    kegg_pull map (link|conv) entry-ids &lt;entry-ids&gt; &lt;target-database&gt; [--reverse] [--output=&lt;output&gt;]
+    kegg_pull map link &lt;source-database&gt; &lt;intermediate-database&gt; &lt;target-database&gt; [--deduplicate] [--add-glycans] [--add-drugs] [--output=&lt;output&gt;]
+
+Options:
+    -h --help               Show this help message.
+    conv                    Converts the output of the KEGG &quot;conv&quot; operation into a JSON mapping.
+    &lt;kegg-database&gt;         The name of the KEGG database with entry IDs mapped to the outside database.
+    &lt;outside-database&gt;      The name of the outside database with entry IDs mapped from the KEGG database.
+    --reverse               Reverses the mapping with the target becoming the source and the source becoming the target.
+    --output=&lt;output&gt;       The location (either a directory or ZIP archive) of the JSON file to store the mapping. If not set, prints a JSON representation of the mapping to the console. If a ZIP archive, the file path must be in the form of /path/to/zip-archive.zip:/path/to/file (e.g. ./archive.zip:mapping.json).
+    link                    Converts the output of the KEGG &quot;link&quot; operation into a JSON mapping.
+    &lt;source-database&gt;       The name of the database with entry IDs mapped to the target database.
+    &lt;target-database&gt;       The name of the database with entry IDs mapped from the source database.
+    --deduplicate           Some mappings including pathway entry IDs result in half beginning with the normal &quot;path:map&quot; prefix but the other half with a different prefix. If set, removes the IDs corresponding to identical entries but with a different prefix. Raises an exception if neither the source nor the target database are &quot;pathway&quot;.
+    --add-glycans           Whether to add the corresponding compound IDs of equivalent glycan entries. Logs a warning if neither the source nor the target database are &quot;compound&quot;.
+    --add-drugs             Whether to add the corresponding compound IDs of equivalent drug entries. Logs a warning if neither the source nor the target database are &quot;compound&quot;.
+    entry-ids               Create a mapping to a target database from a list of specific entry IDs.
+    &lt;entry-ids&gt;             Comma separated list of entry IDs (e.g. Id1,Id2,Id3 etc.). Or if equal to &quot;-&quot;, entry IDs are read from standard input, one entry ID per line; Press CTRL+D to finalize input or pipe (e.g. cat file.txt | kegg_pull map entry-ids drug - ...).
+    &lt;intermediate-database&gt; The name of an intermediate KEGG database with which to find cross-references to cross-references e.g. &quot;kegg_pull map link ko reaction compound&quot; creates a mapping from ko-to-compound via ko-to-reaction cross-references connected to reaction-to-compound cross-references.
+</pre></div>
+</div>
+</section>
 <section id="kegg-rest-api-operations">
 <h2>KEGG REST API Operations<a class="headerlink" href="#kegg-rest-api-operations" title="Permalink to this heading"></a></h2>
-<p>Interface for the KEGG REST API including all its operations.</p>
+<p>Provides commandline functionality for accessing the KEGG REST API including all its operations.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Usage:
     kegg_pull rest -h | --help
-    kegg_pull rest info &lt;database-name&gt; [--test] [--output=&lt;output&gt;]
-    kegg_pull rest list &lt;database-name&gt; [--test] [--output=&lt;output&gt;]
+    kegg_pull rest info &lt;database&gt; [--test] [--output=&lt;output&gt;]
+    kegg_pull rest list &lt;database&gt; [--test] [--output=&lt;output&gt;]
     kegg_pull rest get &lt;entry-ids&gt; [--entry-field=&lt;entry-field&gt;] [--test] [--output=&lt;output&gt;]
-    kegg_pull rest find &lt;database-name&gt; &lt;keywords&gt; [--test] [--output=&lt;output&gt;]
-    kegg_pull rest find &lt;database-name&gt; (--formula=&lt;formula&gt;|--em=&lt;exact-mass&gt;...|--mw=&lt;molecular-weight&gt;...) [--test] [--output=&lt;output&gt;]
-    kegg_pull rest conv &lt;kegg-database-name&gt; &lt;outside-database-name&gt; [--test] [--output=&lt;output&gt;]
-    kegg_pull rest conv --conv-target=&lt;target-database-name&gt; &lt;entry-ids&gt; [--test] [--output=&lt;output&gt;]
-    kegg_pull rest link &lt;target-database-name&gt; &lt;source-database-name&gt; [--test] [--output=&lt;output&gt;]
-    kegg_pull rest link --link-target=&lt;target-database-name&gt; &lt;entry-ids&gt; [--test] [--output=&lt;output&gt;]
+    kegg_pull rest find &lt;database&gt; &lt;keywords&gt; [--test] [--output=&lt;output&gt;]
+    kegg_pull rest find &lt;database&gt; (--formula=&lt;formula&gt;|--em=&lt;exact-mass&gt;...|--mw=&lt;molecular-weight&gt;...) [--test] [--output=&lt;output&gt;]
+    kegg_pull rest conv &lt;kegg-database&gt; &lt;outside-database&gt; [--test] [--output=&lt;output&gt;]
+    kegg_pull rest conv entry-ids &lt;entry-ids&gt; &lt;target-database&gt; [--test] [--output=&lt;output&gt;]
+    kegg_pull rest link &lt;target-database&gt; &lt;source-database&gt; [--test] [--output=&lt;output&gt;]
+    kegg_pull rest link entry-ids &lt;entry-ids&gt; &lt;target-database&gt; [--test] [--output=&lt;output&gt;]
     kegg_pull rest ddi &lt;drug-entry-ids&gt; [--test] [--output=&lt;output&gt;]
 
 Options:
-    -h --help                               Show this help message.
-    info                                    Executes the &quot;info&quot; KEGG API operation, pulling information about a KEGG database.
-    &lt;database-name&gt;                         The name of the database to pull information about or entry IDs from.
-    --test                                  If set, test the request to ensure it works rather than sending it. Print True if the request would succeed and False if the request would fail. Ignores --output if this options is set along with --test.
-    --output=&lt;output&gt;                       Path to the file (either in a directory or ZIP archive) to store the response body from the KEGG web API operation. Prints to the console if not specified. If a ZIP archive, the file path must be in the form of /path/to/zip-archive.zip:/path/to/file (e.g. ./archive.zip:file.txt).
-    list                                    Executes the &quot;list&quot; KEGG API operation, pulling the entry IDs of the provided database.
-    get                                     Executes the &quot;get&quot; KEGG API operation, pulling the entries of the provided entry IDs.
-    &lt;entry-ids&gt;                             Comma separated list of entry IDs (e.g. id1,id2,id3 etc.). Or if equal to &quot;-&quot;, entry IDs are read from standard input, one entry ID per line; Press CTRL+D to finalize input or pipe (e.g. cat file.txt | kegg_pull rest get - ...).
-    --entry-field=&lt;entry-field&gt;             Optional field to extract from an entry instead of the default entry info (i.e. flat file or htext in the case of brite entries).
-    find                                    Executes the &quot;find&quot; KEGG API operation, finding entry IDs based on provided queries.
-    &lt;keywords&gt;                              Comma separated list of keywords to search entries with (e.g. kw1,kw2,kw3 etc.). Or if equal to &quot;-&quot;, keywords are read from standard input, one keyword per line; Press CTRL+D to finalize input or pipe (e.g. cat file.txt | kegg_pull rest find brite - ...).
-    --formula=&lt;formula&gt;                     Sequence of atoms in a chemical formula format to search for (e.g. &quot;O5C7&quot; searches for molecule entries containing 5 oxygen atoms and/or 7 carbon atoms).
-    --em=&lt;exact-mass&gt;                       Either a single number (e.g. --em=155.5) or two numbers (e.g. --em=155.5 --em=244.4). If a single number, searches for molecule entries with an exact mass equal to that value rounded by the last decimal point. If two numbers, searches for molecule entries with an exact mass within the two values (a range).
-    --mw=&lt;molecular-weight&gt;                 Same as --em but searches based on the molecular weight.
-    conv                                    Executes the &quot;conv&quot; KEGG API operation, converting entry IDs from an outside database to those of a KEGG database and vice versa.
-    &lt;kegg-database-name&gt;                    The name of the KEGG database from which to view equivalent outside database entry IDs.
-    &lt;outside-database-name&gt;                 The name of the non-KEGG database from which to view equivalent KEGG database entry IDs.
-    --conv-target=&lt;target-database-name&gt;    The outside or KEGG database from which to view equivalent versions of the provided entry IDs. If a KEGG database, the provided entry IDs must be from an outside database and vice versa.
-    link                                    Executes the &quot;link&quot; KEGG API operation, showing the IDs of entries that are connected/related to entries of other databases.
-    &lt;target-database-name&gt;                  The name of the database to find cross-references in the source database.
-    &lt;source-database-name&gt;                  The name of the database from which cross-references are found in the target database.
-    --link-target-&lt;target-database-name&gt;    The name of the database to find cross-references in the provided entry IDs.
-    ddi                                     Executes the &quot;ddi&quot; KEGG API operation, searching for drug to drug interactions. Providing one entry ID reports all known interactions, while providing multiple checks if any drug pair in a given set of drugs is CI or P. If providing multiple, all entries must belong to the same database.
-    &lt;drug-entry-ids&gt;                        Comma separated list of drug entry IDs from the following databases: drug, ndc, or yj (e.g. id1,id2,id3 etc.). Or if equal to &quot;-&quot;, entry IDs are read from standard input, one entry ID per line; Press CTRL+D to finalize input or pipe (e.g. cat file.txt | kegg_pull rest ddi - ...).
+    -h --help                   Show this help message.
+    info                        Executes the &quot;info&quot; KEGG API operation, pulling information about a KEGG database.
+    &lt;database&gt;                  The name of the database to pull information about or entry IDs from.
+    --test                      If set, test the request to ensure it works rather than sending it. Print True if the request would succeed and False if the request would fail. Ignores --output if this options is set along with --test.
+    --output=&lt;output&gt;           Path to the file (either in a directory or ZIP archive) to store the response body from the KEGG web API operation. Prints to the console if not specified. If a ZIP archive, the file path must be in the form of /path/to/zip-archive.zip:/path/to/file (e.g. ./archive.zip:file.txt).
+    list                        Executes the &quot;list&quot; KEGG API operation, pulling the entry IDs of the provided database.
+    get                         Executes the &quot;get&quot; KEGG API operation, pulling the entries of the provided entry IDs.
+    &lt;entry-ids&gt;                 Comma separated list of entry IDs (e.g. id1,id2,id3 etc.). Or if equal to &quot;-&quot;, entry IDs are read from standard input, one entry ID per line; Press CTRL+D to finalize input or pipe (e.g. cat file.txt | kegg_pull rest get - ...).
+    --entry-field=&lt;entry-field&gt; Optional field to extract from an entry instead of the default entry info (i.e. flat file or htext in the case of brite entries).
+    find                        Executes the &quot;find&quot; KEGG API operation, finding entry IDs based on provided queries.
+    &lt;keywords&gt;                  Comma separated list of keywords to search entries with (e.g. kw1,kw2,kw3 etc.). Or if equal to &quot;-&quot;, keywords are read from standard input, one keyword per line; Press CTRL+D to finalize input or pipe (e.g. cat file.txt | kegg_pull rest find brite - ...).
+    --formula=&lt;formula&gt;         Sequence of atoms in a chemical formula format to search for (e.g. &quot;O5C7&quot; searches for molecule entries containing 5 oxygen atoms and/or 7 carbon atoms).
+    --em=&lt;exact-mass&gt;           Either a single number (e.g. --em=155.5) or two numbers (e.g. --em=155.5 --em=244.4). If a single number, searches for molecule entries with an exact mass equal to that value rounded by the last decimal point. If two numbers, searches for molecule entries with an exact mass within the two values (a range).
+    --mw=&lt;molecular-weight&gt;     Same as --em but searches based on the molecular weight.
+    conv                        Executes the &quot;conv&quot; KEGG API operation, converting entry IDs from an outside database to those of a KEGG database and vice versa.
+    &lt;kegg-database&gt;             The name of the KEGG database from which to view equivalent outside database entry IDs.
+    &lt;outside-database&gt;          The name of the non-KEGG database from which to view equivalent KEGG database entry IDs.
+    entry-ids                   Perform the &quot;conv&quot; or &quot;link&quot; operation of the form that maps specific provided entry IDs to a target database.
+    link                        Executes the &quot;link&quot; KEGG API operation, showing the IDs of entries that are connected/related to entries of other databases.
+    &lt;target-database&gt;           The name of the database that the entry IDs of the source database or provided entry IDs are mapped to.
+    &lt;source-database&gt;           The name of the database from which cross-references are found in the target database.
+    ddi                         Executes the &quot;ddi&quot; KEGG API operation, searching for drug to drug interactions. Providing one entry ID reports all known interactions, while providing multiple checks if any drug pair in a given set of drugs is CI or P. If providing multiple, all entries must belong to the same database.
+    &lt;drug-entry-ids&gt;            Comma separated list of drug entry IDs from the following databases: drug, ndc, or yj (e.g. id1,id2,id3 etc.). Or if equal to &quot;-&quot;, entry IDs are read from standard input, one entry ID per line; Press CTRL+D to finalize input or pipe (e.g. cat file.txt | kegg_pull rest ddi - ...).
 </pre></div>
 </div>
 </section>
