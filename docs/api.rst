@@ -1,3 +1,6 @@
+.. |Functionality| replace:: Provides API functionality
+.. |Interface for| replace:: Provides wrapper methods for
+
 API
 ===
 **Note:** Many KEGG entry IDs contain colons and ``kegg_pull`` saves KEGG entry files with their ID in the file name. When running on Windows, all file names with colons will have their colons replaced with underscores.
@@ -9,6 +12,10 @@ API
     :undoc-members:
 
 .. automodule:: kegg_pull.entry_ids
+    :members:
+    :undoc-members:
+
+.. automodule:: kegg_pull.map
     :members:
     :undoc-members:
 

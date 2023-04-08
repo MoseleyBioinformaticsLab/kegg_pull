@@ -12,7 +12,7 @@ sys.path.insert(0, os.path.abspath('../src'))
 from kegg_pull import __version__
 
 def skip_organism_set(app, what, name, obj, skip, options) -> bool:
-    if name in { 'organism_set', 'add_entry_ids', 'merge_pull_results'}:
+    if name in {'organism_set'}:
         return True
 
 def setup(app):
@@ -43,7 +43,7 @@ extensions = [
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
-
+latex_elements = {'preamble': r'\usepackage{pmboxdraw}'}
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

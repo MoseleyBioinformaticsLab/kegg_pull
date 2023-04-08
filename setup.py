@@ -5,7 +5,8 @@ import re
 requirements = [
     'docopt',
     'requests',
-    'tqdm'
+    'tqdm',
+    'jsonschema'
 ]
 
 
@@ -16,11 +17,9 @@ def _readme() -> str:
 
 def _get_version() -> str:
     with open('src/kegg_pull/__init__.py', 'r') as fd:
-        version: str = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
-                            fd.read(), re.MULTILINE).group(1)
+        version: str = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', fd.read(), re.MULTILINE).group(1)
     if not version:
         raise RuntimeError('Cannot find version information')
-
     return version
 
 
@@ -36,5 +35,4 @@ st.setup(
     url='https://github.com/MoseleyBioinformaticsLab/KEGGpull',
     description='Pulls any and all entries from any and all KEGG databases, pulls KEGG entry IDs, and wraps all the KEGG REST API operations in both Python API and the command line.',
     long_description_content_type='text/x-rst',
-    long_description=_readme()
-)
+    long_description=_readme())

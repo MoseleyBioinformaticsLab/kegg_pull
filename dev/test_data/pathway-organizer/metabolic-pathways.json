@@ -1,0 +1,1542 @@
+{
+  "path:map00010": {
+    "name": "00010  Glycolysis / Gluconeogenesis",
+    "level": 3,
+    "parent": "Carbohydrate metabolism",
+    "children": null,
+    "entry_id": "path:map00010"
+  },
+  "path:map00020": {
+    "name": "00020  Citrate cycle (TCA cycle)",
+    "level": 3,
+    "parent": "Carbohydrate metabolism",
+    "children": null,
+    "entry_id": "path:map00020"
+  },
+  "path:map00030": {
+    "name": "00030  Pentose phosphate pathway",
+    "level": 3,
+    "parent": "Carbohydrate metabolism",
+    "children": null,
+    "entry_id": "path:map00030"
+  },
+  "path:map00040": {
+    "name": "00040  Pentose and glucuronate interconversions",
+    "level": 3,
+    "parent": "Carbohydrate metabolism",
+    "children": null,
+    "entry_id": "path:map00040"
+  },
+  "path:map00051": {
+    "name": "00051  Fructose and mannose metabolism",
+    "level": 3,
+    "parent": "Carbohydrate metabolism",
+    "children": null,
+    "entry_id": "path:map00051"
+  },
+  "path:map00052": {
+    "name": "00052  Galactose metabolism",
+    "level": 3,
+    "parent": "Carbohydrate metabolism",
+    "children": null,
+    "entry_id": "path:map00052"
+  },
+  "path:map00053": {
+    "name": "00053  Ascorbate and aldarate metabolism",
+    "level": 3,
+    "parent": "Carbohydrate metabolism",
+    "children": null,
+    "entry_id": "path:map00053"
+  },
+  "path:map00500": {
+    "name": "00500  Starch and sucrose metabolism",
+    "level": 3,
+    "parent": "Carbohydrate metabolism",
+    "children": null,
+    "entry_id": "path:map00500"
+  },
+  "path:map00520": {
+    "name": "00520  Amino sugar and nucleotide sugar metabolism",
+    "level": 3,
+    "parent": "Carbohydrate metabolism",
+    "children": null,
+    "entry_id": "path:map00520"
+  },
+  "path:map00620": {
+    "name": "00620  Pyruvate metabolism",
+    "level": 3,
+    "parent": "Carbohydrate metabolism",
+    "children": null,
+    "entry_id": "path:map00620"
+  },
+  "path:map00630": {
+    "name": "00630  Glyoxylate and dicarboxylate metabolism",
+    "level": 3,
+    "parent": "Carbohydrate metabolism",
+    "children": null,
+    "entry_id": "path:map00630"
+  },
+  "path:map00640": {
+    "name": "00640  Propanoate metabolism",
+    "level": 3,
+    "parent": "Carbohydrate metabolism",
+    "children": null,
+    "entry_id": "path:map00640"
+  },
+  "path:map00650": {
+    "name": "00650  Butanoate metabolism",
+    "level": 3,
+    "parent": "Carbohydrate metabolism",
+    "children": null,
+    "entry_id": "path:map00650"
+  },
+  "path:map00660": {
+    "name": "00660  C5-Branched dibasic acid metabolism",
+    "level": 3,
+    "parent": "Carbohydrate metabolism",
+    "children": null,
+    "entry_id": "path:map00660"
+  },
+  "path:map00562": {
+    "name": "00562  Inositol phosphate metabolism",
+    "level": 3,
+    "parent": "Carbohydrate metabolism",
+    "children": null,
+    "entry_id": "path:map00562"
+  },
+  "Carbohydrate metabolism": {
+    "name": "Carbohydrate metabolism",
+    "level": 2,
+    "parent": "Metabolism",
+    "children": [
+      "path:map00010",
+      "path:map00020",
+      "path:map00030",
+      "path:map00040",
+      "path:map00051",
+      "path:map00052",
+      "path:map00053",
+      "path:map00500",
+      "path:map00520",
+      "path:map00562",
+      "path:map00620",
+      "path:map00630",
+      "path:map00640",
+      "path:map00650",
+      "path:map00660"
+    ],
+    "entry_id": null
+  },
+  "path:map00190": {
+    "name": "00190  Oxidative phosphorylation",
+    "level": 3,
+    "parent": "Energy metabolism",
+    "children": null,
+    "entry_id": "path:map00190"
+  },
+  "path:map00195": {
+    "name": "00195  Photosynthesis",
+    "level": 3,
+    "parent": "Energy metabolism",
+    "children": null,
+    "entry_id": "path:map00195"
+  },
+  "path:map00196": {
+    "name": "00196  Photosynthesis - antenna proteins",
+    "level": 3,
+    "parent": "Energy metabolism",
+    "children": null,
+    "entry_id": "path:map00196"
+  },
+  "path:map00710": {
+    "name": "00710  Carbon fixation in photosynthetic organisms",
+    "level": 3,
+    "parent": "Energy metabolism",
+    "children": null,
+    "entry_id": "path:map00710"
+  },
+  "path:map00720": {
+    "name": "00720  Carbon fixation pathways in prokaryotes",
+    "level": 3,
+    "parent": "Energy metabolism",
+    "children": null,
+    "entry_id": "path:map00720"
+  },
+  "path:map00680": {
+    "name": "00680  Methane metabolism",
+    "level": 3,
+    "parent": "Energy metabolism",
+    "children": null,
+    "entry_id": "path:map00680"
+  },
+  "path:map00910": {
+    "name": "00910  Nitrogen metabolism",
+    "level": 3,
+    "parent": "Energy metabolism",
+    "children": null,
+    "entry_id": "path:map00910"
+  },
+  "path:map00920": {
+    "name": "00920  Sulfur metabolism",
+    "level": 3,
+    "parent": "Energy metabolism",
+    "children": null,
+    "entry_id": "path:map00920"
+  },
+  "Energy metabolism": {
+    "name": "Energy metabolism",
+    "level": 2,
+    "parent": "Metabolism",
+    "children": [
+      "path:map00190",
+      "path:map00195",
+      "path:map00196",
+      "path:map00680",
+      "path:map00710",
+      "path:map00720",
+      "path:map00910",
+      "path:map00920"
+    ],
+    "entry_id": null
+  },
+  "path:map00061": {
+    "name": "00061  Fatty acid biosynthesis",
+    "level": 3,
+    "parent": "Lipid metabolism",
+    "children": null,
+    "entry_id": "path:map00061"
+  },
+  "path:map00062": {
+    "name": "00062  Fatty acid elongation",
+    "level": 3,
+    "parent": "Lipid metabolism",
+    "children": null,
+    "entry_id": "path:map00062"
+  },
+  "path:map00071": {
+    "name": "00071  Fatty acid degradation",
+    "level": 3,
+    "parent": "Lipid metabolism",
+    "children": null,
+    "entry_id": "path:map00071"
+  },
+  "path:map00073": {
+    "name": "00073  Cutin, suberine and wax biosynthesis",
+    "level": 3,
+    "parent": "Lipid metabolism",
+    "children": null,
+    "entry_id": "path:map00073"
+  },
+  "path:map00100": {
+    "name": "00100  Steroid biosynthesis",
+    "level": 3,
+    "parent": "Lipid metabolism",
+    "children": null,
+    "entry_id": "path:map00100"
+  },
+  "path:map00120": {
+    "name": "00120  Primary bile acid biosynthesis",
+    "level": 3,
+    "parent": "Lipid metabolism",
+    "children": null,
+    "entry_id": "path:map00120"
+  },
+  "path:map00121": {
+    "name": "00121  Secondary bile acid biosynthesis",
+    "level": 3,
+    "parent": "Lipid metabolism",
+    "children": null,
+    "entry_id": "path:map00121"
+  },
+  "path:map00140": {
+    "name": "00140  Steroid hormone biosynthesis",
+    "level": 3,
+    "parent": "Lipid metabolism",
+    "children": null,
+    "entry_id": "path:map00140"
+  },
+  "path:map00561": {
+    "name": "00561  Glycerolipid metabolism",
+    "level": 3,
+    "parent": "Lipid metabolism",
+    "children": null,
+    "entry_id": "path:map00561"
+  },
+  "path:map00564": {
+    "name": "00564  Glycerophospholipid metabolism",
+    "level": 3,
+    "parent": "Lipid metabolism",
+    "children": null,
+    "entry_id": "path:map00564"
+  },
+  "path:map00565": {
+    "name": "00565  Ether lipid metabolism",
+    "level": 3,
+    "parent": "Lipid metabolism",
+    "children": null,
+    "entry_id": "path:map00565"
+  },
+  "path:map00600": {
+    "name": "00600  Sphingolipid metabolism",
+    "level": 3,
+    "parent": "Lipid metabolism",
+    "children": null,
+    "entry_id": "path:map00600"
+  },
+  "path:map00590": {
+    "name": "00590  Arachidonic acid metabolism",
+    "level": 3,
+    "parent": "Lipid metabolism",
+    "children": null,
+    "entry_id": "path:map00590"
+  },
+  "path:map00591": {
+    "name": "00591  Linoleic acid metabolism",
+    "level": 3,
+    "parent": "Lipid metabolism",
+    "children": null,
+    "entry_id": "path:map00591"
+  },
+  "path:map00592": {
+    "name": "00592  alpha-Linolenic acid metabolism",
+    "level": 3,
+    "parent": "Lipid metabolism",
+    "children": null,
+    "entry_id": "path:map00592"
+  },
+  "path:map01040": {
+    "name": "01040  Biosynthesis of unsaturated fatty acids",
+    "level": 3,
+    "parent": "Lipid metabolism",
+    "children": null,
+    "entry_id": "path:map01040"
+  },
+  "Lipid metabolism": {
+    "name": "Lipid metabolism",
+    "level": 2,
+    "parent": "Metabolism",
+    "children": [
+      "path:map00061",
+      "path:map00062",
+      "path:map00071",
+      "path:map00073",
+      "path:map00100",
+      "path:map00120",
+      "path:map00121",
+      "path:map00140",
+      "path:map00561",
+      "path:map00564",
+      "path:map00565",
+      "path:map00590",
+      "path:map00591",
+      "path:map00592",
+      "path:map00600",
+      "path:map01040"
+    ],
+    "entry_id": null
+  },
+  "path:map00230": {
+    "name": "00230  Purine metabolism",
+    "level": 3,
+    "parent": "Nucleotide metabolism",
+    "children": null,
+    "entry_id": "path:map00230"
+  },
+  "path:map00240": {
+    "name": "00240  Pyrimidine metabolism",
+    "level": 3,
+    "parent": "Nucleotide metabolism",
+    "children": null,
+    "entry_id": "path:map00240"
+  },
+  "Nucleotide metabolism": {
+    "name": "Nucleotide metabolism",
+    "level": 2,
+    "parent": "Metabolism",
+    "children": [
+      "path:map00230",
+      "path:map00240"
+    ],
+    "entry_id": null
+  },
+  "path:map00250": {
+    "name": "00250  Alanine, aspartate and glutamate metabolism",
+    "level": 3,
+    "parent": "Amino acid metabolism",
+    "children": null,
+    "entry_id": "path:map00250"
+  },
+  "path:map00260": {
+    "name": "00260  Glycine, serine and threonine metabolism",
+    "level": 3,
+    "parent": "Amino acid metabolism",
+    "children": null,
+    "entry_id": "path:map00260"
+  },
+  "path:map00270": {
+    "name": "00270  Cysteine and methionine metabolism",
+    "level": 3,
+    "parent": "Amino acid metabolism",
+    "children": null,
+    "entry_id": "path:map00270"
+  },
+  "path:map00280": {
+    "name": "00280  Valine, leucine and isoleucine degradation",
+    "level": 3,
+    "parent": "Amino acid metabolism",
+    "children": null,
+    "entry_id": "path:map00280"
+  },
+  "path:map00290": {
+    "name": "00290  Valine, leucine and isoleucine biosynthesis",
+    "level": 3,
+    "parent": "Amino acid metabolism",
+    "children": null,
+    "entry_id": "path:map00290"
+  },
+  "path:map00300": {
+    "name": "00300  Lysine biosynthesis",
+    "level": 3,
+    "parent": "Amino acid metabolism",
+    "children": null,
+    "entry_id": "path:map00300"
+  },
+  "path:map00310": {
+    "name": "00310  Lysine degradation",
+    "level": 3,
+    "parent": "Amino acid metabolism",
+    "children": null,
+    "entry_id": "path:map00310"
+  },
+  "path:map00220": {
+    "name": "00220  Arginine biosynthesis",
+    "level": 3,
+    "parent": "Amino acid metabolism",
+    "children": null,
+    "entry_id": "path:map00220"
+  },
+  "path:map00330": {
+    "name": "00330  Arginine and proline metabolism",
+    "level": 3,
+    "parent": "Amino acid metabolism",
+    "children": null,
+    "entry_id": "path:map00330"
+  },
+  "path:map00340": {
+    "name": "00340  Histidine metabolism",
+    "level": 3,
+    "parent": "Amino acid metabolism",
+    "children": null,
+    "entry_id": "path:map00340"
+  },
+  "path:map00350": {
+    "name": "00350  Tyrosine metabolism",
+    "level": 3,
+    "parent": "Amino acid metabolism",
+    "children": null,
+    "entry_id": "path:map00350"
+  },
+  "path:map00360": {
+    "name": "00360  Phenylalanine metabolism",
+    "level": 3,
+    "parent": "Amino acid metabolism",
+    "children": null,
+    "entry_id": "path:map00360"
+  },
+  "path:map00380": {
+    "name": "00380  Tryptophan metabolism",
+    "level": 3,
+    "parent": "Amino acid metabolism",
+    "children": null,
+    "entry_id": "path:map00380"
+  },
+  "path:map00400": {
+    "name": "00400  Phenylalanine, tyrosine and tryptophan biosynthesis",
+    "level": 3,
+    "parent": "Amino acid metabolism",
+    "children": null,
+    "entry_id": "path:map00400"
+  },
+  "Amino acid metabolism": {
+    "name": "Amino acid metabolism",
+    "level": 2,
+    "parent": "Metabolism",
+    "children": [
+      "path:map00220",
+      "path:map00250",
+      "path:map00260",
+      "path:map00270",
+      "path:map00280",
+      "path:map00290",
+      "path:map00300",
+      "path:map00310",
+      "path:map00330",
+      "path:map00340",
+      "path:map00350",
+      "path:map00360",
+      "path:map00380",
+      "path:map00400"
+    ],
+    "entry_id": null
+  },
+  "path:map00410": {
+    "name": "00410  beta-Alanine metabolism",
+    "level": 3,
+    "parent": "Metabolism of other amino acids",
+    "children": null,
+    "entry_id": "path:map00410"
+  },
+  "path:map00430": {
+    "name": "00430  Taurine and hypotaurine metabolism",
+    "level": 3,
+    "parent": "Metabolism of other amino acids",
+    "children": null,
+    "entry_id": "path:map00430"
+  },
+  "path:map00440": {
+    "name": "00440  Phosphonate and phosphinate metabolism",
+    "level": 3,
+    "parent": "Metabolism of other amino acids",
+    "children": null,
+    "entry_id": "path:map00440"
+  },
+  "path:map00450": {
+    "name": "00450  Selenocompound metabolism",
+    "level": 3,
+    "parent": "Metabolism of other amino acids",
+    "children": null,
+    "entry_id": "path:map00450"
+  },
+  "path:map00460": {
+    "name": "00460  Cyanoamino acid metabolism",
+    "level": 3,
+    "parent": "Metabolism of other amino acids",
+    "children": null,
+    "entry_id": "path:map00460"
+  },
+  "path:map00470": {
+    "name": "00470  D-Amino acid metabolism",
+    "level": 3,
+    "parent": "Metabolism of other amino acids",
+    "children": null,
+    "entry_id": "path:map00470"
+  },
+  "path:map00480": {
+    "name": "00480  Glutathione metabolism",
+    "level": 3,
+    "parent": "Metabolism of other amino acids",
+    "children": null,
+    "entry_id": "path:map00480"
+  },
+  "Metabolism of other amino acids": {
+    "name": "Metabolism of other amino acids",
+    "level": 2,
+    "parent": "Metabolism",
+    "children": [
+      "path:map00410",
+      "path:map00430",
+      "path:map00440",
+      "path:map00450",
+      "path:map00460",
+      "path:map00470",
+      "path:map00480"
+    ],
+    "entry_id": null
+  },
+  "path:map00510": {
+    "name": "00510  N-Glycan biosynthesis",
+    "level": 3,
+    "parent": "Glycan biosynthesis and metabolism",
+    "children": null,
+    "entry_id": "path:map00510"
+  },
+  "path:map00513": {
+    "name": "00513  Various types of N-glycan biosynthesis",
+    "level": 3,
+    "parent": "Glycan biosynthesis and metabolism",
+    "children": null,
+    "entry_id": "path:map00513"
+  },
+  "path:map00512": {
+    "name": "00512  Mucin type O-glycan biosynthesis",
+    "level": 3,
+    "parent": "Glycan biosynthesis and metabolism",
+    "children": null,
+    "entry_id": "path:map00512"
+  },
+  "path:map00515": {
+    "name": "00515  Mannose type O-glycan biosynthesis",
+    "level": 3,
+    "parent": "Glycan biosynthesis and metabolism",
+    "children": null,
+    "entry_id": "path:map00515"
+  },
+  "path:map00514": {
+    "name": "00514  Other types of O-glycan biosynthesis",
+    "level": 3,
+    "parent": "Glycan biosynthesis and metabolism",
+    "children": null,
+    "entry_id": "path:map00514"
+  },
+  "path:map00532": {
+    "name": "00532  Glycosaminoglycan biosynthesis - chondroitin sulfate / dermatan sulfate",
+    "level": 3,
+    "parent": "Glycan biosynthesis and metabolism",
+    "children": null,
+    "entry_id": "path:map00532"
+  },
+  "path:map00534": {
+    "name": "00534  Glycosaminoglycan biosynthesis - heparan sulfate / heparin",
+    "level": 3,
+    "parent": "Glycan biosynthesis and metabolism",
+    "children": null,
+    "entry_id": "path:map00534"
+  },
+  "path:map00533": {
+    "name": "00533  Glycosaminoglycan biosynthesis - keratan sulfate",
+    "level": 3,
+    "parent": "Glycan biosynthesis and metabolism",
+    "children": null,
+    "entry_id": "path:map00533"
+  },
+  "path:map00531": {
+    "name": "00531  Glycosaminoglycan degradation",
+    "level": 3,
+    "parent": "Glycan biosynthesis and metabolism",
+    "children": null,
+    "entry_id": "path:map00531"
+  },
+  "path:map00563": {
+    "name": "00563  Glycosylphosphatidylinositol (GPI)-anchor biosynthesis",
+    "level": 3,
+    "parent": "Glycan biosynthesis and metabolism",
+    "children": null,
+    "entry_id": "path:map00563"
+  },
+  "path:map00601": {
+    "name": "00601  Glycosphingolipid biosynthesis - lacto and neolacto series",
+    "level": 3,
+    "parent": "Glycan biosynthesis and metabolism",
+    "children": null,
+    "entry_id": "path:map00601"
+  },
+  "path:map00603": {
+    "name": "00603  Glycosphingolipid biosynthesis - globo and isoglobo series",
+    "level": 3,
+    "parent": "Glycan biosynthesis and metabolism",
+    "children": null,
+    "entry_id": "path:map00603"
+  },
+  "path:map00604": {
+    "name": "00604  Glycosphingolipid biosynthesis - ganglio series",
+    "level": 3,
+    "parent": "Glycan biosynthesis and metabolism",
+    "children": null,
+    "entry_id": "path:map00604"
+  },
+  "path:map00511": {
+    "name": "00511  Other glycan degradation",
+    "level": 3,
+    "parent": "Glycan biosynthesis and metabolism",
+    "children": null,
+    "entry_id": "path:map00511"
+  },
+  "path:map00540": {
+    "name": "00540  Lipopolysaccharide biosynthesis",
+    "level": 3,
+    "parent": "Glycan biosynthesis and metabolism",
+    "children": null,
+    "entry_id": "path:map00540"
+  },
+  "path:map00542": {
+    "name": "00542  O-Antigen repeat unit biosynthesis",
+    "level": 3,
+    "parent": "Glycan biosynthesis and metabolism",
+    "children": null,
+    "entry_id": "path:map00542"
+  },
+  "path:map00541": {
+    "name": "00541  O-Antigen nucleotide sugar biosynthesis",
+    "level": 3,
+    "parent": "Glycan biosynthesis and metabolism",
+    "children": null,
+    "entry_id": "path:map00541"
+  },
+  "path:map00550": {
+    "name": "00550  Peptidoglycan biosynthesis",
+    "level": 3,
+    "parent": "Glycan biosynthesis and metabolism",
+    "children": null,
+    "entry_id": "path:map00550"
+  },
+  "path:map00552": {
+    "name": "00552  Teichoic acid biosynthesis",
+    "level": 3,
+    "parent": "Glycan biosynthesis and metabolism",
+    "children": null,
+    "entry_id": "path:map00552"
+  },
+  "path:map00571": {
+    "name": "00571  Lipoarabinomannan (LAM) biosynthesis",
+    "level": 3,
+    "parent": "Glycan biosynthesis and metabolism",
+    "children": null,
+    "entry_id": "path:map00571"
+  },
+  "path:map00572": {
+    "name": "00572  Arabinogalactan biosynthesis - Mycobacterium",
+    "level": 3,
+    "parent": "Glycan biosynthesis and metabolism",
+    "children": null,
+    "entry_id": "path:map00572"
+  },
+  "path:map00543": {
+    "name": "00543  Exopolysaccharide biosynthesis",
+    "level": 3,
+    "parent": "Glycan biosynthesis and metabolism",
+    "children": null,
+    "entry_id": "path:map00543"
+  },
+  "Glycan biosynthesis and metabolism": {
+    "name": "Glycan biosynthesis and metabolism",
+    "level": 2,
+    "parent": "Metabolism",
+    "children": [
+      "path:map00510",
+      "path:map00511",
+      "path:map00512",
+      "path:map00513",
+      "path:map00514",
+      "path:map00515",
+      "path:map00531",
+      "path:map00532",
+      "path:map00533",
+      "path:map00534",
+      "path:map00540",
+      "path:map00541",
+      "path:map00542",
+      "path:map00543",
+      "path:map00550",
+      "path:map00552",
+      "path:map00563",
+      "path:map00571",
+      "path:map00572",
+      "path:map00601",
+      "path:map00603",
+      "path:map00604"
+    ],
+    "entry_id": null
+  },
+  "path:map00730": {
+    "name": "00730  Thiamine metabolism",
+    "level": 3,
+    "parent": "Metabolism of cofactors and vitamins",
+    "children": null,
+    "entry_id": "path:map00730"
+  },
+  "path:map00740": {
+    "name": "00740  Riboflavin metabolism",
+    "level": 3,
+    "parent": "Metabolism of cofactors and vitamins",
+    "children": null,
+    "entry_id": "path:map00740"
+  },
+  "path:map00750": {
+    "name": "00750  Vitamin B6 metabolism",
+    "level": 3,
+    "parent": "Metabolism of cofactors and vitamins",
+    "children": null,
+    "entry_id": "path:map00750"
+  },
+  "path:map00760": {
+    "name": "00760  Nicotinate and nicotinamide metabolism",
+    "level": 3,
+    "parent": "Metabolism of cofactors and vitamins",
+    "children": null,
+    "entry_id": "path:map00760"
+  },
+  "path:map00770": {
+    "name": "00770  Pantothenate and CoA biosynthesis",
+    "level": 3,
+    "parent": "Metabolism of cofactors and vitamins",
+    "children": null,
+    "entry_id": "path:map00770"
+  },
+  "path:map00780": {
+    "name": "00780  Biotin metabolism",
+    "level": 3,
+    "parent": "Metabolism of cofactors and vitamins",
+    "children": null,
+    "entry_id": "path:map00780"
+  },
+  "path:map00785": {
+    "name": "00785  Lipoic acid metabolism",
+    "level": 3,
+    "parent": "Metabolism of cofactors and vitamins",
+    "children": null,
+    "entry_id": "path:map00785"
+  },
+  "path:map00790": {
+    "name": "00790  Folate biosynthesis",
+    "level": 3,
+    "parent": "Metabolism of cofactors and vitamins",
+    "children": null,
+    "entry_id": "path:map00790"
+  },
+  "path:map00670": {
+    "name": "00670  One carbon pool by folate",
+    "level": 3,
+    "parent": "Metabolism of cofactors and vitamins",
+    "children": null,
+    "entry_id": "path:map00670"
+  },
+  "path:map00830": {
+    "name": "00830  Retinol metabolism",
+    "level": 3,
+    "parent": "Metabolism of cofactors and vitamins",
+    "children": null,
+    "entry_id": "path:map00830"
+  },
+  "path:map00860": {
+    "name": "00860  Porphyrin metabolism",
+    "level": 3,
+    "parent": "Metabolism of cofactors and vitamins",
+    "children": null,
+    "entry_id": "path:map00860"
+  },
+  "path:map00130": {
+    "name": "00130  Ubiquinone and other terpenoid-quinone biosynthesis",
+    "level": 3,
+    "parent": "Metabolism of cofactors and vitamins",
+    "children": null,
+    "entry_id": "path:map00130"
+  },
+  "Metabolism of cofactors and vitamins": {
+    "name": "Metabolism of cofactors and vitamins",
+    "level": 2,
+    "parent": "Metabolism",
+    "children": [
+      "path:map00130",
+      "path:map00670",
+      "path:map00730",
+      "path:map00740",
+      "path:map00750",
+      "path:map00760",
+      "path:map00770",
+      "path:map00780",
+      "path:map00785",
+      "path:map00790",
+      "path:map00830",
+      "path:map00860"
+    ],
+    "entry_id": null
+  },
+  "path:map00900": {
+    "name": "00900  Terpenoid backbone biosynthesis",
+    "level": 3,
+    "parent": "Metabolism of terpenoids and polyketides",
+    "children": null,
+    "entry_id": "path:map00900"
+  },
+  "path:map00902": {
+    "name": "00902  Monoterpenoid biosynthesis",
+    "level": 3,
+    "parent": "Metabolism of terpenoids and polyketides",
+    "children": null,
+    "entry_id": "path:map00902"
+  },
+  "path:map00909": {
+    "name": "00909  Sesquiterpenoid and triterpenoid biosynthesis",
+    "level": 3,
+    "parent": "Metabolism of terpenoids and polyketides",
+    "children": null,
+    "entry_id": "path:map00909"
+  },
+  "path:map00904": {
+    "name": "00904  Diterpenoid biosynthesis",
+    "level": 3,
+    "parent": "Metabolism of terpenoids and polyketides",
+    "children": null,
+    "entry_id": "path:map00904"
+  },
+  "path:map00906": {
+    "name": "00906  Carotenoid biosynthesis",
+    "level": 3,
+    "parent": "Metabolism of terpenoids and polyketides",
+    "children": null,
+    "entry_id": "path:map00906"
+  },
+  "path:map00905": {
+    "name": "00905  Brassinosteroid biosynthesis",
+    "level": 3,
+    "parent": "Metabolism of terpenoids and polyketides",
+    "children": null,
+    "entry_id": "path:map00905"
+  },
+  "path:map00981": {
+    "name": "00981  Insect hormone biosynthesis",
+    "level": 3,
+    "parent": "Metabolism of terpenoids and polyketides",
+    "children": null,
+    "entry_id": "path:map00981"
+  },
+  "path:map00908": {
+    "name": "00908  Zeatin biosynthesis",
+    "level": 3,
+    "parent": "Metabolism of terpenoids and polyketides",
+    "children": null,
+    "entry_id": "path:map00908"
+  },
+  "path:map00903": {
+    "name": "00903  Limonene degradation",
+    "level": 3,
+    "parent": "Metabolism of terpenoids and polyketides",
+    "children": null,
+    "entry_id": "path:map00903"
+  },
+  "path:map00907": {
+    "name": "00907  Pinene, camphor and geraniol degradation",
+    "level": 3,
+    "parent": "Metabolism of terpenoids and polyketides",
+    "children": null,
+    "entry_id": "path:map00907"
+  },
+  "path:map01052": {
+    "name": "01052  Type I polyketide structures",
+    "level": 3,
+    "parent": "Metabolism of terpenoids and polyketides",
+    "children": null,
+    "entry_id": "path:map01052"
+  },
+  "path:map00522": {
+    "name": "00522  Biosynthesis of 12-, 14- and 16-membered macrolides",
+    "level": 3,
+    "parent": "Metabolism of terpenoids and polyketides",
+    "children": null,
+    "entry_id": "path:map00522"
+  },
+  "path:map01051": {
+    "name": "01051  Biosynthesis of ansamycins",
+    "level": 3,
+    "parent": "Metabolism of terpenoids and polyketides",
+    "children": null,
+    "entry_id": "path:map01051"
+  },
+  "path:map01059": {
+    "name": "01059  Biosynthesis of enediyne antibiotics",
+    "level": 3,
+    "parent": "Metabolism of terpenoids and polyketides",
+    "children": null,
+    "entry_id": "path:map01059"
+  },
+  "path:map01056": {
+    "name": "01056  Biosynthesis of type II polyketide backbone",
+    "level": 3,
+    "parent": "Metabolism of terpenoids and polyketides",
+    "children": null,
+    "entry_id": "path:map01056"
+  },
+  "path:map01057": {
+    "name": "01057  Biosynthesis of type II polyketide products",
+    "level": 3,
+    "parent": "Metabolism of terpenoids and polyketides",
+    "children": null,
+    "entry_id": "path:map01057"
+  },
+  "path:map00253": {
+    "name": "00253  Tetracycline biosynthesis",
+    "level": 3,
+    "parent": "Metabolism of terpenoids and polyketides",
+    "children": null,
+    "entry_id": "path:map00253"
+  },
+  "path:map00523": {
+    "name": "00523  Polyketide sugar unit biosynthesis",
+    "level": 3,
+    "parent": "Metabolism of terpenoids and polyketides",
+    "children": null,
+    "entry_id": "path:map00523"
+  },
+  "path:map01054": {
+    "name": "01054  Nonribosomal peptide structures",
+    "level": 3,
+    "parent": "Metabolism of terpenoids and polyketides",
+    "children": null,
+    "entry_id": "path:map01054"
+  },
+  "path:map01053": {
+    "name": "01053  Biosynthesis of siderophore group nonribosomal peptides",
+    "level": 3,
+    "parent": "Metabolism of terpenoids and polyketides",
+    "children": null,
+    "entry_id": "path:map01053"
+  },
+  "path:map01055": {
+    "name": "01055  Biosynthesis of vancomycin group antibiotics",
+    "level": 3,
+    "parent": "Metabolism of terpenoids and polyketides",
+    "children": null,
+    "entry_id": "path:map01055"
+  },
+  "Metabolism of terpenoids and polyketides": {
+    "name": "Metabolism of terpenoids and polyketides",
+    "level": 2,
+    "parent": "Metabolism",
+    "children": [
+      "path:map00253",
+      "path:map00522",
+      "path:map00523",
+      "path:map00900",
+      "path:map00902",
+      "path:map00903",
+      "path:map00904",
+      "path:map00905",
+      "path:map00906",
+      "path:map00907",
+      "path:map00908",
+      "path:map00909",
+      "path:map00981",
+      "path:map01051",
+      "path:map01052",
+      "path:map01053",
+      "path:map01054",
+      "path:map01055",
+      "path:map01056",
+      "path:map01057",
+      "path:map01059"
+    ],
+    "entry_id": null
+  },
+  "path:map00940": {
+    "name": "00940  Phenylpropanoid biosynthesis",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00940"
+  },
+  "path:map00945": {
+    "name": "00945  Stilbenoid, diarylheptanoid and gingerol biosynthesis",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00945"
+  },
+  "path:map00941": {
+    "name": "00941  Flavonoid biosynthesis",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00941"
+  },
+  "path:map00944": {
+    "name": "00944  Flavone and flavonol biosynthesis",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00944"
+  },
+  "path:map00942": {
+    "name": "00942  Anthocyanin biosynthesis",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00942"
+  },
+  "path:map00943": {
+    "name": "00943  Isoflavonoid biosynthesis",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00943"
+  },
+  "path:map00946": {
+    "name": "00946  Degradation of flavonoids",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00946"
+  },
+  "path:map00901": {
+    "name": "00901  Indole alkaloid biosynthesis",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00901"
+  },
+  "path:map00403": {
+    "name": "00403  Indole diterpene alkaloid biosynthesis",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00403"
+  },
+  "path:map00950": {
+    "name": "00950  Isoquinoline alkaloid biosynthesis",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00950"
+  },
+  "path:map00960": {
+    "name": "00960  Tropane, piperidine and pyridine alkaloid biosynthesis",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00960"
+  },
+  "path:map00996": {
+    "name": "00996  Biosynthesis of various alkaloids",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00996"
+  },
+  "path:map00232": {
+    "name": "00232  Caffeine metabolism",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00232"
+  },
+  "path:map00965": {
+    "name": "00965  Betalain biosynthesis",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00965"
+  },
+  "path:map00966": {
+    "name": "00966  Glucosinolate biosynthesis",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00966"
+  },
+  "path:map00402": {
+    "name": "00402  Benzoxazinoid biosynthesis",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00402"
+  },
+  "path:map00311": {
+    "name": "00311  Penicillin and cephalosporin biosynthesis",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00311"
+  },
+  "path:map00332": {
+    "name": "00332  Carbapenem biosynthesis",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00332"
+  },
+  "path:map00261": {
+    "name": "00261  Monobactam biosynthesis",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00261"
+  },
+  "path:map00331": {
+    "name": "00331  Clavulanic acid biosynthesis",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00331"
+  },
+  "path:map00521": {
+    "name": "00521  Streptomycin biosynthesis",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00521"
+  },
+  "path:map00524": {
+    "name": "00524  Neomycin, kanamycin and gentamicin biosynthesis",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00524"
+  },
+  "path:map00525": {
+    "name": "00525  Acarbose and validamycin biosynthesis",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00525"
+  },
+  "path:map00401": {
+    "name": "00401  Novobiocin biosynthesis",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00401"
+  },
+  "path:map00404": {
+    "name": "00404  Staurosporine biosynthesis",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00404"
+  },
+  "path:map00405": {
+    "name": "00405  Phenazine biosynthesis",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00405"
+  },
+  "path:map00333": {
+    "name": "00333  Prodigiosin biosynthesis",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00333"
+  },
+  "path:map00254": {
+    "name": "00254  Aflatoxin biosynthesis",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00254"
+  },
+  "path:map00998": {
+    "name": "00998  Biosynthesis of various antibiotics",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00998"
+  },
+  "path:map00999": {
+    "name": "00999  Biosynthesis of various plant secondary metabolites",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00999"
+  },
+  "path:map00997": {
+    "name": "00997  Biosynthesis of various other secondary metabolites",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00997"
+  },
+  "Biosynthesis of other secondary metabolites": {
+    "name": "Biosynthesis of other secondary metabolites",
+    "level": 2,
+    "parent": "Metabolism",
+    "children": [
+      "path:map00232",
+      "path:map00254",
+      "path:map00261",
+      "path:map00311",
+      "path:map00331",
+      "path:map00332",
+      "path:map00333",
+      "path:map00401",
+      "path:map00402",
+      "path:map00403",
+      "path:map00404",
+      "path:map00405",
+      "path:map00521",
+      "path:map00524",
+      "path:map00525",
+      "path:map00901",
+      "path:map00940",
+      "path:map00941",
+      "path:map00942",
+      "path:map00943",
+      "path:map00944",
+      "path:map00945",
+      "path:map00946",
+      "path:map00950",
+      "path:map00960",
+      "path:map00965",
+      "path:map00966",
+      "path:map00996",
+      "path:map00997",
+      "path:map00998",
+      "path:map00999"
+    ],
+    "entry_id": null
+  },
+  "path:map00362": {
+    "name": "00362  Benzoate degradation",
+    "level": 3,
+    "parent": "Xenobiotics biodegradation and metabolism",
+    "children": null,
+    "entry_id": "path:map00362"
+  },
+  "path:map00627": {
+    "name": "00627  Aminobenzoate degradation",
+    "level": 3,
+    "parent": "Xenobiotics biodegradation and metabolism",
+    "children": null,
+    "entry_id": "path:map00627"
+  },
+  "path:map00364": {
+    "name": "00364  Fluorobenzoate degradation",
+    "level": 3,
+    "parent": "Xenobiotics biodegradation and metabolism",
+    "children": null,
+    "entry_id": "path:map00364"
+  },
+  "path:map00625": {
+    "name": "00625  Chloroalkane and chloroalkene degradation",
+    "level": 3,
+    "parent": "Xenobiotics biodegradation and metabolism",
+    "children": null,
+    "entry_id": "path:map00625"
+  },
+  "path:map00361": {
+    "name": "00361  Chlorocyclohexane and chlorobenzene degradation",
+    "level": 3,
+    "parent": "Xenobiotics biodegradation and metabolism",
+    "children": null,
+    "entry_id": "path:map00361"
+  },
+  "path:map00623": {
+    "name": "00623  Toluene degradation",
+    "level": 3,
+    "parent": "Xenobiotics biodegradation and metabolism",
+    "children": null,
+    "entry_id": "path:map00623"
+  },
+  "path:map00622": {
+    "name": "00622  Xylene degradation",
+    "level": 3,
+    "parent": "Xenobiotics biodegradation and metabolism",
+    "children": null,
+    "entry_id": "path:map00622"
+  },
+  "path:map00633": {
+    "name": "00633  Nitrotoluene degradation",
+    "level": 3,
+    "parent": "Xenobiotics biodegradation and metabolism",
+    "children": null,
+    "entry_id": "path:map00633"
+  },
+  "path:map00642": {
+    "name": "00642  Ethylbenzene degradation",
+    "level": 3,
+    "parent": "Xenobiotics biodegradation and metabolism",
+    "children": null,
+    "entry_id": "path:map00642"
+  },
+  "path:map00643": {
+    "name": "00643  Styrene degradation",
+    "level": 3,
+    "parent": "Xenobiotics biodegradation and metabolism",
+    "children": null,
+    "entry_id": "path:map00643"
+  },
+  "path:map00791": {
+    "name": "00791  Atrazine degradation",
+    "level": 3,
+    "parent": "Xenobiotics biodegradation and metabolism",
+    "children": null,
+    "entry_id": "path:map00791"
+  },
+  "path:map00930": {
+    "name": "00930  Caprolactam degradation",
+    "level": 3,
+    "parent": "Xenobiotics biodegradation and metabolism",
+    "children": null,
+    "entry_id": "path:map00930"
+  },
+  "path:map00363": {
+    "name": "00363  Bisphenol degradation",
+    "level": 3,
+    "parent": "Xenobiotics biodegradation and metabolism",
+    "children": null,
+    "entry_id": "path:map00363"
+  },
+  "path:map00621": {
+    "name": "00621  Dioxin degradation",
+    "level": 3,
+    "parent": "Xenobiotics biodegradation and metabolism",
+    "children": null,
+    "entry_id": "path:map00621"
+  },
+  "path:map00626": {
+    "name": "00626  Naphthalene degradation",
+    "level": 3,
+    "parent": "Xenobiotics biodegradation and metabolism",
+    "children": null,
+    "entry_id": "path:map00626"
+  },
+  "path:map00624": {
+    "name": "00624  Polycyclic aromatic hydrocarbon degradation",
+    "level": 3,
+    "parent": "Xenobiotics biodegradation and metabolism",
+    "children": null,
+    "entry_id": "path:map00624"
+  },
+  "path:map00365": {
+    "name": "00365  Furfural degradation",
+    "level": 3,
+    "parent": "Xenobiotics biodegradation and metabolism",
+    "children": null,
+    "entry_id": "path:map00365"
+  },
+  "path:map00984": {
+    "name": "00984  Steroid degradation",
+    "level": 3,
+    "parent": "Xenobiotics biodegradation and metabolism",
+    "children": null,
+    "entry_id": "path:map00984"
+  },
+  "path:map00980": {
+    "name": "00980  Metabolism of xenobiotics by cytochrome P450",
+    "level": 3,
+    "parent": "Xenobiotics biodegradation and metabolism",
+    "children": null,
+    "entry_id": "path:map00980"
+  },
+  "path:map00982": {
+    "name": "00982  Drug metabolism - cytochrome P450",
+    "level": 3,
+    "parent": "Xenobiotics biodegradation and metabolism",
+    "children": null,
+    "entry_id": "path:map00982"
+  },
+  "path:map00983": {
+    "name": "00983  Drug metabolism - other enzymes",
+    "level": 3,
+    "parent": "Xenobiotics biodegradation and metabolism",
+    "children": null,
+    "entry_id": "path:map00983"
+  },
+  "Xenobiotics biodegradation and metabolism": {
+    "name": "Xenobiotics biodegradation and metabolism",
+    "level": 2,
+    "parent": "Metabolism",
+    "children": [
+      "path:map00361",
+      "path:map00362",
+      "path:map00363",
+      "path:map00364",
+      "path:map00365",
+      "path:map00621",
+      "path:map00622",
+      "path:map00623",
+      "path:map00624",
+      "path:map00625",
+      "path:map00626",
+      "path:map00627",
+      "path:map00633",
+      "path:map00642",
+      "path:map00643",
+      "path:map00791",
+      "path:map00930",
+      "path:map00980",
+      "path:map00982",
+      "path:map00983",
+      "path:map00984"
+    ],
+    "entry_id": null
+  },
+  "path:map01010": {
+    "name": "01010  Overview of biosynthetic pathways",
+    "level": 3,
+    "parent": "Chemical structure transformation maps",
+    "children": null,
+    "entry_id": "path:map01010"
+  },
+  "path:map01060": {
+    "name": "01060  Biosynthesis of plant secondary metabolites",
+    "level": 3,
+    "parent": "Chemical structure transformation maps",
+    "children": null,
+    "entry_id": "path:map01060"
+  },
+  "path:map01061": {
+    "name": "01061  Biosynthesis of phenylpropanoids",
+    "level": 3,
+    "parent": "Chemical structure transformation maps",
+    "children": null,
+    "entry_id": "path:map01061"
+  },
+  "path:map01062": {
+    "name": "01062  Biosynthesis of terpenoids and steroids",
+    "level": 3,
+    "parent": "Chemical structure transformation maps",
+    "children": null,
+    "entry_id": "path:map01062"
+  },
+  "path:map01063": {
+    "name": "01063  Biosynthesis of alkaloids derived from shikimate pathway",
+    "level": 3,
+    "parent": "Chemical structure transformation maps",
+    "children": null,
+    "entry_id": "path:map01063"
+  },
+  "path:map01064": {
+    "name": "01064  Biosynthesis of alkaloids derived from ornithine, lysine and nicotinic acid",
+    "level": 3,
+    "parent": "Chemical structure transformation maps",
+    "children": null,
+    "entry_id": "path:map01064"
+  },
+  "path:map01065": {
+    "name": "01065  Biosynthesis of alkaloids derived from histidine and purine",
+    "level": 3,
+    "parent": "Chemical structure transformation maps",
+    "children": null,
+    "entry_id": "path:map01065"
+  },
+  "path:map01066": {
+    "name": "01066  Biosynthesis of alkaloids derived from terpenoid and polyketide",
+    "level": 3,
+    "parent": "Chemical structure transformation maps",
+    "children": null,
+    "entry_id": "path:map01066"
+  },
+  "path:map01070": {
+    "name": "01070  Biosynthesis of plant hormones",
+    "level": 3,
+    "parent": "Chemical structure transformation maps",
+    "children": null,
+    "entry_id": "path:map01070"
+  },
+  "Chemical structure transformation maps": {
+    "name": "Chemical structure transformation maps",
+    "level": 2,
+    "parent": "Metabolism",
+    "children": [
+      "path:map01010",
+      "path:map01060",
+      "path:map01061",
+      "path:map01062",
+      "path:map01063",
+      "path:map01064",
+      "path:map01065",
+      "path:map01066",
+      "path:map01070"
+    ],
+    "entry_id": null
+  },
+  "Metabolism": {
+    "name": "Metabolism",
+    "level": 1,
+    "parent": null,
+    "children": [
+      "Amino acid metabolism",
+      "Biosynthesis of other secondary metabolites",
+      "Carbohydrate metabolism",
+      "Chemical structure transformation maps",
+      "Energy metabolism",
+      "Glycan biosynthesis and metabolism",
+      "Lipid metabolism",
+      "Metabolism of cofactors and vitamins",
+      "Metabolism of other amino acids",
+      "Metabolism of terpenoids and polyketides",
+      "Nucleotide metabolism",
+      "Xenobiotics biodegradation and metabolism"
+    ],
+    "entry_id": null
+  }
+}
