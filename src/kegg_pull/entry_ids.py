@@ -1,7 +1,7 @@
 """
 Pulling Lists of KEGG Entry IDs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Functionality for pulling lists of KEGG entry IDs from the KEGG REST API.
+|Functionality| for pulling lists of KEGG entry IDs from the KEGG REST API.
 """
 from . import rest as r
 from . import kegg_url as ku
