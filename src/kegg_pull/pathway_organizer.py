@@ -1,7 +1,7 @@
 """
 Flattening A Pathways Brite Hierarchy
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Functionality for flattening a pathways Brite hierarchy (ID: 'br:br08901') into a collection of its nodes, mapping a node ID to information about it, enabling combinations with other KEGG data.
+|Functionality| for flattening a pathways Brite hierarchy (ID: 'br:br08901') into a collection of its nodes, mapping a node ID to information about it, enabling combinations with other KEGG data.
 """
 from __future__ import annotations
 import json

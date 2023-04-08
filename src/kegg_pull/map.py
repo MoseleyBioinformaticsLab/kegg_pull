@@ -1,7 +1,7 @@
 """
 Constructing Mappings From KEGG "link" And "conv" Operations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Functionality for converting the output from the KEGG "link" or "conv" REST operations into mappings of the entry IDs from one database to the IDs of related entries.
+|Functionality| for converting the output from the KEGG "link" or "conv" REST operations into mappings of the entry IDs from one database to the IDs of related entries.
 """
 import typing as t
 import json
@@ -246,7 +246,7 @@ def indirect_link(
         raise ValueError(
             f'The source, intermediate, and target database must all be unique. Databases specified: {source_database}, '
             f'{intermediate_database}, {target_database}.')
-    source_to_target = dict()
+    source_to_target = KEGGmapping()
     source_to_intermediate = _to_dict(
         kegg_rest=kegg_rest, KEGGurl=ku.DatabaseLinkKEGGurl, source_database=source_database,
         target_database=intermediate_database)

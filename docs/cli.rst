@@ -1,3 +1,6 @@
+.. |Functionality| replace:: Provides commandline functionality
+.. |Interface for| replace:: Provides commandline functionality for accessing
+
 CLI
 ===
 **Note:** Many KEGG entry IDs contain colons and ``kegg_pull`` saves KEGG entry files with their ID in the file name. When running on Windows, all file names with colons will have their colons replaced with underscores.
@@ -15,7 +18,7 @@ Top-level commandline interface.
     :start-after: """
     :end-before: """
 
-A JSON file, called ``pull-results.json``, is saved describing the results of the pull. Below is the interpretation of each of the fields:
+A JSON file, called ``pull-results.json``, is saved, describing the results of the pull. Below is the interpretation of each of the fields:
 
 **percent-success:** The percentage of the requested entries that were successfully pulled and saved in a file.
 

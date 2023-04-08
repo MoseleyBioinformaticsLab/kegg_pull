@@ -1,7 +1,7 @@
 """
 KEGG REST API Operations
 ~~~~~~~~~~~~~~~~~~~~~~~~
-Interface for the KEGG REST API including all its operations.
+|Interface for| the KEGG REST API including all its operations.
 """
 import typing as t
 import enum as e
