@@ -6,7 +6,7 @@ authors:
 - family-names: "Moseley"
   given-names: "Hunter"
 title: "kegg-pull"
-version: 2.1.0
+version: 3.0.0
 date-released: 2023-02-15
 url: "https://github.com/MoseleyBioinformaticsLab/kegg_pull"
 references:
