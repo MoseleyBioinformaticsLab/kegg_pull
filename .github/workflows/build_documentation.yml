@@ -20,7 +20,7 @@ jobs:
     - uses: ammaraskar/sphinx-action@master
       with:
         docs-folder: "docs/"
-        python-version: '3.11'
+        pre-build-command: "apt-get update -y && apt-get install -y python3"
     # Create an artifact of the html output.
     - uses: actions/upload-artifact@v1
       with:
