@@ -96,7 +96,6 @@ B  Drug classifications
 C    br08303  Anatomical Therapeutic Chemical (ATC) classification
 C    br08302  USP drug classification
 C    br08301  Therapeutic category of drugs in Japan
-C    br08303_ndc  Anatomical Therapeutic Chemical (ATC) classification + Product (NDC)
 C    br08313  Classification of Japanese OTC drugs
 C    br08312  Risk category of Japanese OTC drugs
 C    br08304  Traditional Chinese Medicine in Japan
@@ -111,11 +110,9 @@ C    br08327  Antimicrobials abbreviations
 C    br08311  Drugs listed in the Japanese Pharmacopoeia
 ADiseases
 B  Human diseases
-C    br08402  Human diseases
-C    br08401  Infectious diseases
-C    br08402_gene  Human diseases + Genes
-C    br08401_genome  Infectious diseases + Genomes
 C    br08403  Human diseases in ICD-11 classification
+C    br08402  Pathway-based classification of diseases
+C    br08401  Genome-based classification of infectious diseases
 C    br08411  ICD-11 International Classification of Diseases
 C    br08410  ICD-10 International Classification of Diseases
 C    br08420  ICD-O-3 International Classification of Diseases for Oncology
@@ -134,5 +131,5 @@ B  Organism information
 C    br08605  Plant pathogens
 !
 #
-#Last updated: April 4, 2023
+#Last updated: June 1, 2023
 #&raquo; Japanese version
