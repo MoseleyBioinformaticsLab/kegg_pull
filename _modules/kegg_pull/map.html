@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kegg_pull.map &mdash; kegg_pull 3.0.0 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            kegg_pull
+          </a>
+              <div class="version">
+                3.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../guide.html">Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli.html">CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">kegg_pull</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">kegg_pull.map</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for kegg_pull.map</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Constructing Mappings From KEGG &quot;link&quot; And &quot;conv&quot; Operations</span>
+<span class="sd">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="sd">|Functionality| for converting the output from the KEGG &quot;link&quot; or &quot;conv&quot; REST operations into mappings of the entry IDs from one database to the IDs of related entries.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">copy</span> <span class="k">as</span> <span class="nn">cp</span>
+<span class="kn">import</span> <span class="nn">logging</span> <span class="k">as</span> <span class="nn">log</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">rest</span> <span class="k">as</span> <span class="n">r</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">kegg_url</span> <span class="k">as</span> <span class="n">ku</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">_utils</span> <span class="k">as</span> <span class="n">u</span>
+
+<span class="n">KEGGmapping</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+
+
+<div class="viewcode-block" id="database_link"><a class="viewcode-back" href="../../api.html#kegg_pull.map.database_link">[docs]</a><span class="k">def</span> <span class="nf">database_link</span><span class="p">(</span>
+        <span class="n">source_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">deduplicate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">add_glycans</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">add_drugs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">kegg_rest</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGrest</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGmapping</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Converts the output of the KEGG &quot;link&quot; operation (of the form that maps the entry IDs of one database to the entry IDs of another) into a dictionary along with other helpful optional functionality.</span>
+
+<span class="sd">    :param source_database: The name of the database with entry IDs mapped to the target database.</span>
+<span class="sd">    :param target_database: The name of the database with entry IDs mapped from the source database.</span>
+<span class="sd">    :param deduplicate: Some mappings including &quot;pathway&quot; entry IDs result in half beginning with the normal &quot;path:map&quot; prefix but the other half with a different prefix. If True, removes the IDs corresponding to entries that are identical but with a different prefix.</span>
+<span class="sd">    :param add_glycans: Whether to add the corresponding compound IDs of equivalent glycan entries. Logs a warning if neither the source nor the target database is &quot;compound&quot;.</span>
+<span class="sd">    :param add_drugs: Whether to add the corresponding compound IDs of equivalent drug entries. Logs a warning if neither the source nor the target database is &quot;compound&quot;.</span>
+<span class="sd">    :param kegg_rest: The KEGGrest object to perform the &quot;link&quot; operation. If None, one is created with the default  parameters.</span>
+<span class="sd">    :return: The dictionary.</span>
+<span class="sd">    :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.</span>
+<span class="sd">    :raises ValueError: Raised if deduplicate is True but neither source_database nor target_database is &quot;pathway&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mapping</span> <span class="o">=</span> <span class="n">_to_dict</span><span class="p">(</span>
+        <span class="n">kegg_rest</span><span class="o">=</span><span class="n">kegg_rest</span><span class="p">,</span> <span class="n">KEGGurl</span><span class="o">=</span><span class="n">ku</span><span class="o">.</span><span class="n">DatabaseLinkKEGGurl</span><span class="p">,</span> <span class="n">target_database</span><span class="o">=</span><span class="n">target_database</span><span class="p">,</span>
+        <span class="n">source_database</span><span class="o">=</span><span class="n">source_database</span><span class="p">)</span>
+    <span class="n">mapping</span> <span class="o">=</span> <span class="n">_deduplicate_pathway_ids</span><span class="p">(</span>
+        <span class="n">mapping</span><span class="o">=</span><span class="n">mapping</span><span class="p">,</span> <span class="n">deduplicate</span><span class="o">=</span><span class="n">deduplicate</span><span class="p">,</span> <span class="n">source_database</span><span class="o">=</span><span class="n">source_database</span><span class="p">,</span>
+        <span class="n">target_database</span><span class="o">=</span><span class="n">target_database</span><span class="p">)</span>
+    <span class="n">mapping</span> <span class="o">=</span> <span class="n">_add_glycans_or_drugs</span><span class="p">(</span>
+        <span class="n">mapping</span><span class="o">=</span><span class="n">mapping</span><span class="p">,</span> <span class="n">source_database</span><span class="o">=</span><span class="n">source_database</span><span class="p">,</span> <span class="n">target_database</span><span class="o">=</span><span class="n">target_database</span><span class="p">,</span>
+        <span class="n">add_glycans</span><span class="o">=</span><span class="n">add_glycans</span><span class="p">,</span> <span class="n">add_drugs</span><span class="o">=</span><span class="n">add_drugs</span><span class="p">,</span> <span class="n">kegg_rest</span><span class="o">=</span><span class="n">kegg_rest</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mapping</span></div>
+
+
+<span class="k">def</span> <span class="nf">_to_dict</span><span class="p">(</span><span class="n">kegg_rest</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGrest</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">KEGGurl</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">ku</span><span class="o">.</span><span class="n">AbstractKEGGurl</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGmapping</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Converts output from the KEGG &quot;link&quot; operation into a dictionary.</span>
+
+<span class="sd">    :param kegg_rest: The KEGGrest object to perform the &quot;link&quot; operation. If None, one is created with the default parameters.</span>
+<span class="sd">    :param KEGGurl: The class extending AbstractKEGGurl used to form the URL for the &quot;link&quot; operation.</span>
+<span class="sd">    :param kwargs: The keyword arguments for constructing the URL.</span>
+<span class="sd">    :return: The dictionary.</span>
+<span class="sd">    :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">kegg_response</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">request_and_check_error</span><span class="p">(</span><span class="n">kegg_rest</span><span class="o">=</span><span class="n">kegg_rest</span><span class="p">,</span> <span class="n">KEGGurl</span><span class="o">=</span><span class="n">KEGGurl</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">text_body</span> <span class="o">=</span> <span class="n">kegg_response</span><span class="o">.</span><span class="n">text_body</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">mapped_ids</span> <span class="o">=</span> <span class="n">KEGGmapping</span><span class="p">()</span>
+    <span class="c1"># If a non-empty response was provided, fill in the mapping with the data</span>
+    <span class="k">if</span> <span class="n">text_body</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">one_to_one</span> <span class="ow">in</span> <span class="n">text_body</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
+            <span class="p">[</span><span class="n">map_from_id</span><span class="p">,</span> <span class="n">map_to_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">one_to_one</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">_add_to_dict</span><span class="p">(</span><span class="n">dictionary</span><span class="o">=</span><span class="n">mapped_ids</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">map_from_id</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">{</span><span class="n">map_to_id</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">mapped_ids</span>
+
+
+<span class="k">def</span> <span class="nf">_add_to_dict</span><span class="p">(</span><span class="n">dictionary</span><span class="p">:</span> <span class="n">KEGGmapping</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Adds a set of values to a set mapped from a given key in a dictionary.</span>
+
+<span class="sd">    :param dictionary: The dictionary mapping to sets, one of which the values will be added to.</span>
+<span class="sd">    :param key: The key in the dictionary mapping to the set that the values will be added to.</span>
+<span class="sd">    :param values: The values to add to the set mapped to by the key.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">dictionary</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dictionary</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>  <span class="c1"># In case &quot;values&quot; is referenced elsewhere, we don&#39;t want to update a shallow copy</span>
+
+
+<span class="k">def</span> <span class="nf">_deduplicate_pathway_ids</span><span class="p">(</span><span class="n">mapping</span><span class="p">:</span> <span class="n">KEGGmapping</span><span class="p">,</span> <span class="n">deduplicate</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">source_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGmapping</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; If requested, removes entry IDs corresponding to duplicate pathway map entries (different ID, same entry).</span>
+
+<span class="sd">    :param mapping: The mapping to deduplicate.</span>
+<span class="sd">    :param deduplicate: Whether or not to deduplicate.</span>
+<span class="sd">    :param source_database: The name of the source database of the mapping to validate.</span>
+<span class="sd">    :param target_database: The name of the target database of the mapping to validate.</span>
+<span class="sd">    :raises ValueError: Raised if deduplicate is True but neither source_database nor target_database is &quot;pathway&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">deduplicate</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">source_database</span> <span class="o">!=</span> <span class="s1">&#39;pathway&#39;</span> <span class="ow">and</span> <span class="n">target_database</span> <span class="o">!=</span> <span class="s1">&#39;pathway&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;Cannot deduplicate path:map entry ids when neither the source database nor the target database is set to &#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;&quot;pathway&quot;. Databases specified: </span><span class="si">{</span><span class="n">source_database</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">target_database</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># noinspection PyShadowingNames</span>
+        <span class="k">def</span> <span class="nf">deduplicate_pathway_ids</span><span class="p">(</span><span class="n">mapping</span><span class="p">:</span> <span class="n">KEGGmapping</span><span class="p">,</span> <span class="o">**</span><span class="n">_</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGmapping</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">pathway_id</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">pathway_id</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;path:map&#39;</span><span class="p">):</span>
+                    <span class="k">del</span> <span class="n">mapping</span><span class="p">[</span><span class="n">pathway_id</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">mapping</span>
+        <span class="n">mapping</span> <span class="o">=</span> <span class="n">_process_mapping</span><span class="p">(</span>
+            <span class="n">mapping</span><span class="o">=</span><span class="n">mapping</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="n">deduplicate_pathway_ids</span><span class="p">,</span> <span class="n">source_database</span><span class="o">=</span><span class="n">source_database</span><span class="p">,</span>
+            <span class="n">target_database</span><span class="o">=</span><span class="n">target_database</span><span class="p">,</span> <span class="n">relevant_database</span><span class="o">=</span><span class="s1">&#39;pathway&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mapping</span>
+
+
+<span class="k">def</span> <span class="nf">_process_mapping</span><span class="p">(</span>
+        <span class="n">mapping</span><span class="p">:</span> <span class="n">KEGGmapping</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">KEGGmapping</span><span class="p">],</span> <span class="n">source_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">relevant_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGmapping</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Performs additional processing on a mapping according to a provided function.</span>
+
+<span class="sd">    :param mapping: The mapping to process.</span>
+<span class="sd">    :param func: The function that processes the mapping.</span>
+<span class="sd">    :param source_database: The name of the source database of the mapping.</span>
+<span class="sd">    :param target_database: The name of the target database of the mapping.</span>
+<span class="sd">    :param relevant_database: The name of the database (expected to be either the source or the target) to which the processing is relevant.</span>
+<span class="sd">    :return: The processed mapping.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">double_reverse</span> <span class="o">=</span> <span class="n">target_database</span> <span class="o">==</span> <span class="n">relevant_database</span>
+    <span class="k">if</span> <span class="n">double_reverse</span><span class="p">:</span>
+        <span class="n">mapping</span> <span class="o">=</span> <span class="n">_reverse</span><span class="p">(</span><span class="n">mapping</span><span class="o">=</span><span class="n">mapping</span><span class="p">)</span>
+        <span class="n">target_database</span> <span class="o">=</span> <span class="n">source_database</span>
+    <span class="n">mapping</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">mapping</span><span class="o">=</span><span class="n">mapping</span><span class="p">,</span> <span class="n">target_database</span><span class="o">=</span><span class="n">target_database</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">double_reverse</span><span class="p">:</span>
+        <span class="n">mapping</span> <span class="o">=</span> <span class="n">_reverse</span><span class="p">(</span><span class="n">mapping</span><span class="o">=</span><span class="n">mapping</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mapping</span>
+
+
+<span class="k">def</span> <span class="nf">_add_glycans_or_drugs</span><span class="p">(</span>
+        <span class="n">mapping</span><span class="p">:</span> <span class="n">KEGGmapping</span><span class="p">,</span> <span class="n">source_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">add_glycans</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">add_drugs</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">kegg_rest</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGrest</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGmapping</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; If requested, adds the corresponding compound IDs of equivalent glycan and/or drug entries to a mapping (assuming mapping from &quot;compound&quot; to some target database).</span>
+
+<span class="sd">    :param mapping: The mapping to add the IDs of compound-equivalents which cross-reference the target database.</span>
+<span class="sd">    :param source_database: Logs a warning if not equal to &quot;compound&quot; and if the target database name is also not equal to &quot;compound&quot;.</span>
+<span class="sd">    :param target_database: The database with IDs to which compound IDs are mapped.</span>
+<span class="sd">    :param add_glycans: Whether to add the corresponding compound IDs of KEGG glycan entries.</span>
+<span class="sd">    :param add_drugs: Whether to add the corresponding compound IDs of KEGG drug entries.</span>
+<span class="sd">    :param kegg_rest: The KEGGrest object to perform the &quot;link&quot; operation(s). If None, one is created with the default parameters.</span>
+<span class="sd">    :return: The dictionary.</span>
+<span class="sd">    :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">add_glycans</span> <span class="ow">or</span> <span class="n">add_drugs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">source_database</span> <span class="o">!=</span> <span class="s1">&#39;compound&#39;</span> <span class="ow">and</span> <span class="n">target_database</span> <span class="o">!=</span> <span class="s1">&#39;compound&#39;</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;Adding compound IDs (corresponding to equivalent glycan and/or drug entries) to a mapping where neither the source&#39;</span>
+                <span class="sa">f</span><span class="s1">&#39; database nor the target database are &quot;compound&quot;. Databases specified: </span><span class="si">{</span><span class="n">source_database</span><span class="si">}</span><span class="s1">, &#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">target_database</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># noinspection PyShadowingNames</span>
+        <span class="k">def</span> <span class="nf">add_glycans_or_drugs</span><span class="p">(</span><span class="n">mapping</span><span class="p">:</span> <span class="n">KEGGmapping</span><span class="p">,</span> <span class="n">target_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGmapping</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">add_glycans</span><span class="p">:</span>
+                <span class="n">glycan_to_database</span> <span class="o">=</span> <span class="n">indirect_link</span><span class="p">(</span>
+                    <span class="n">source_database</span><span class="o">=</span><span class="s1">&#39;compound&#39;</span><span class="p">,</span> <span class="n">intermediate_database</span><span class="o">=</span><span class="s1">&#39;glycan&#39;</span><span class="p">,</span> <span class="n">target_database</span><span class="o">=</span><span class="n">target_database</span><span class="p">,</span>
+                    <span class="n">kegg_rest</span><span class="o">=</span><span class="n">kegg_rest</span><span class="p">)</span>
+                <span class="n">mapping</span> <span class="o">=</span> <span class="n">combine_mappings</span><span class="p">(</span><span class="n">mapping1</span><span class="o">=</span><span class="n">mapping</span><span class="p">,</span> <span class="n">mapping2</span><span class="o">=</span><span class="n">glycan_to_database</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">add_drugs</span><span class="p">:</span>
+                <span class="n">drug_to_database</span> <span class="o">=</span> <span class="n">indirect_link</span><span class="p">(</span>
+                    <span class="n">source_database</span><span class="o">=</span><span class="s1">&#39;compound&#39;</span><span class="p">,</span> <span class="n">intermediate_database</span><span class="o">=</span><span class="s1">&#39;drug&#39;</span><span class="p">,</span> <span class="n">target_database</span><span class="o">=</span><span class="n">target_database</span><span class="p">,</span>
+                    <span class="n">kegg_rest</span><span class="o">=</span><span class="n">kegg_rest</span><span class="p">)</span>
+                <span class="n">mapping</span> <span class="o">=</span> <span class="n">combine_mappings</span><span class="p">(</span><span class="n">mapping1</span><span class="o">=</span><span class="n">mapping</span><span class="p">,</span> <span class="n">mapping2</span><span class="o">=</span><span class="n">drug_to_database</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">mapping</span>
+        <span class="n">mapping</span> <span class="o">=</span> <span class="n">_process_mapping</span><span class="p">(</span>
+            <span class="n">mapping</span><span class="o">=</span><span class="n">mapping</span><span class="p">,</span> <span class="n">func</span><span class="o">=</span><span class="n">add_glycans_or_drugs</span><span class="p">,</span> <span class="n">source_database</span><span class="o">=</span><span class="n">source_database</span><span class="p">,</span>
+            <span class="n">target_database</span><span class="o">=</span><span class="n">target_database</span><span class="p">,</span> <span class="n">relevant_database</span><span class="o">=</span><span class="s1">&#39;compound&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mapping</span>
+
+
+<span class="c1"># noinspection PyShadowingNames</span>
+<div class="viewcode-block" id="database_conv"><a class="viewcode-back" href="../../api.html#kegg_pull.map.database_conv">[docs]</a><span class="k">def</span> <span class="nf">database_conv</span><span class="p">(</span>
+        <span class="n">kegg_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">outside_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">reverse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">kegg_rest</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGrest</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGmapping</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Converts the output of the KEGG &quot;conv&quot; operation (of the form that maps the entry IDs of one database to the entry IDs of another) into a dictionary.</span>
+
+<span class="sd">    :param kegg_database: The name of the KEGG database with entry IDs mapped to the outside database.</span>
+<span class="sd">    :param outside_database: The name of the outside database with entry IDs mapped from the KEGG database.</span>
+<span class="sd">    :param reverse: Reverses the mapping with the target becoming the source and the source becoming the target. Equivalent to calling the reverse() function of this module.</span>
+<span class="sd">    :param kegg_rest: The KEGGrest object to perform the &quot;conv&quot; operation. If None, one is created with the default parameters.</span>
+<span class="sd">    :return: The dictionary.</span>
+<span class="sd">    :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_map_and_reverse</span><span class="p">(</span>
+        <span class="n">reverse</span><span class="o">=</span><span class="n">reverse</span><span class="p">,</span> <span class="n">kegg_rest</span><span class="o">=</span><span class="n">kegg_rest</span><span class="p">,</span> <span class="n">KEGGurl</span><span class="o">=</span><span class="n">ku</span><span class="o">.</span><span class="n">DatabaseConvKEGGurl</span><span class="p">,</span> <span class="n">kegg_database</span><span class="o">=</span><span class="n">kegg_database</span><span class="p">,</span>
+        <span class="n">outside_database</span><span class="o">=</span><span class="n">outside_database</span><span class="p">)</span></div>
+
+
+<span class="c1"># noinspection PyShadowingNames</span>
+<span class="k">def</span> <span class="nf">_map_and_reverse</span><span class="p">(</span><span class="n">reverse</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGmapping</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Helper function for general mapping functionality (&quot;link&quot; or &quot;conv&quot;) that creates a mapping with the option to reverse.</span>
+
+<span class="sd">    :param reverse: Reverses the mapping with the target becoming the source and the source becoming the target.</span>
+<span class="sd">    :param kwargs: The arguments for the _to_dict helper method.</span>
+<span class="sd">    :return:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mapping</span> <span class="o">=</span> <span class="n">_to_dict</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">reverse</span><span class="p">:</span>
+        <span class="n">mapping</span> <span class="o">=</span> <span class="n">_reverse</span><span class="p">(</span><span class="n">mapping</span><span class="o">=</span><span class="n">mapping</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mapping</span>
+
+
+<span class="c1"># noinspection PyShadowingNames</span>
+<div class="viewcode-block" id="entries_link"><a class="viewcode-back" href="../../api.html#kegg_pull.map.entries_link">[docs]</a><span class="k">def</span> <span class="nf">entries_link</span><span class="p">(</span>
+        <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">target_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">reverse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">kegg_rest</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGrest</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGmapping</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Converts the output of the KEGG &quot;link&quot; operation (of the form that maps specific provided entry IDs to the IDs of a target database) to a dictionary.</span>
+
+<span class="sd">    :param entry_ids: The IDs of the entries to map to entries in the target database.</span>
+<span class="sd">    :param target_database: The name of the database with entry IDs mapped to from the provided entry IDs.</span>
+<span class="sd">    :param reverse: Reverses the mapping with the target becoming the source and the source becoming the target. Equivalent to calling the reverse() function of this module.</span>
+<span class="sd">    :param kegg_rest: The KEGGrest object to perform the &quot;link&quot; operation. If None, one is created with the default parameters.</span>
+<span class="sd">    :return: The dictionary.</span>
+<span class="sd">    :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_map_and_reverse</span><span class="p">(</span>
+        <span class="n">reverse</span><span class="o">=</span><span class="n">reverse</span><span class="p">,</span> <span class="n">kegg_rest</span><span class="o">=</span><span class="n">kegg_rest</span><span class="p">,</span> <span class="n">KEGGurl</span><span class="o">=</span><span class="n">ku</span><span class="o">.</span><span class="n">EntriesLinkKEGGurl</span><span class="p">,</span> <span class="n">target_database</span><span class="o">=</span><span class="n">target_database</span><span class="p">,</span> <span class="n">entry_ids</span><span class="o">=</span><span class="n">entry_ids</span><span class="p">)</span></div>
+
+
+<span class="c1"># noinspection PyShadowingNames</span>
+<div class="viewcode-block" id="entries_conv"><a class="viewcode-back" href="../../api.html#kegg_pull.map.entries_conv">[docs]</a><span class="k">def</span> <span class="nf">entries_conv</span><span class="p">(</span>
+        <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">target_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">reverse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">kegg_rest</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGrest</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGmapping</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Converts the output of the KEGG &quot;conv&quot; operation (of the form that maps specific provided entry IDs to the IDs of a target database) to a dictionary.</span>
+
+<span class="sd">    :param entry_ids: The IDs of the entries to map to entries in the target database.</span>
+<span class="sd">    :param target_database: The name of the database with entry IDs mapped to from the provided entry IDs.</span>
+<span class="sd">    :param reverse: Reverses the mapping with the target becoming the source and the source becoming the target. Equivalent to calling the reverse() function of this module.</span>
+<span class="sd">    :param kegg_rest: The KEGGrest object to perform the &quot;link&quot; operation. If None, one is created with the default parameters.</span>
+<span class="sd">    :return: The dictionary.</span>
+<span class="sd">    :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">_map_and_reverse</span><span class="p">(</span>
+        <span class="n">reverse</span><span class="o">=</span><span class="n">reverse</span><span class="p">,</span> <span class="n">kegg_rest</span><span class="o">=</span><span class="n">kegg_rest</span><span class="p">,</span> <span class="n">KEGGurl</span><span class="o">=</span><span class="n">ku</span><span class="o">.</span><span class="n">EntriesConvKEGGurl</span><span class="p">,</span> <span class="n">target_database</span><span class="o">=</span><span class="n">target_database</span><span class="p">,</span> <span class="n">entry_ids</span><span class="o">=</span><span class="n">entry_ids</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="indirect_link"><a class="viewcode-back" href="../../api.html#kegg_pull.map.indirect_link">[docs]</a><span class="k">def</span> <span class="nf">indirect_link</span><span class="p">(</span>
+        <span class="n">source_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">intermediate_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">deduplicate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">add_glycans</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">add_drugs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">kegg_rest</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGrest</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGmapping</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Creates a dictionary that maps the entry IDs of a source database to those of a target database using an intermediate database (&quot;link&quot; operation) e.g. ko-to-compound where the intermediate is reaction (connecting cross-references of ko-to-reaction and reaction-to-compound).</span>
+
+<span class="sd">    :param source_database: The name of the database with entry IDs to map to the target database.</span>
+<span class="sd">    :param intermediate_database: The name of the database with which two mappings are made i.e. source-to-intermediate and intermediate-to-target, both of which are merged to create source-to-target.</span>
+<span class="sd">    :param target_database: The name of the database with entry IDs to which those of the source database are mapped.</span>
+<span class="sd">    :param deduplicate: Some mappings including &quot;pathway&quot; entry IDs result in half beginning with the normal &quot;path:map&quot; prefix but the other half with a different prefix. If True, removes the IDs corresponding to entries that are identical but with a different prefix.</span>
+<span class="sd">    :param add_glycans: Whether to add the corresponding compound IDs of equivalent glycan entries. Logs a warning if neither the source nor the target database are &quot;compound&quot;.</span>
+<span class="sd">    :param add_drugs: Whether to add the corresponding compound IDs of equivalent drug entries. Logs a warning if neither the source nor the target database are &quot;compound&quot;.</span>
+<span class="sd">    :param kegg_rest: The KEGGrest object to perform the &quot;link&quot; operations. If None, one is created with the default parameters.</span>
+<span class="sd">    :return: The dictionary.</span>
+<span class="sd">    :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.</span>
+<span class="sd">    :raises ValueError: Raised if deduplicate is True but neither source_database nor target_database is &quot;pathway&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">({</span><span class="n">source_database</span><span class="p">,</span> <span class="n">intermediate_database</span><span class="p">,</span> <span class="n">target_database</span><span class="p">})</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;The source, intermediate, and target database must all be unique. Databases specified: </span><span class="si">{</span><span class="n">source_database</span><span class="si">}</span><span class="s1">, &#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">intermediate_database</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">target_database</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+    <span class="n">source_to_target</span> <span class="o">=</span> <span class="n">KEGGmapping</span><span class="p">()</span>
+    <span class="n">source_to_intermediate</span> <span class="o">=</span> <span class="n">_to_dict</span><span class="p">(</span>
+        <span class="n">kegg_rest</span><span class="o">=</span><span class="n">kegg_rest</span><span class="p">,</span> <span class="n">KEGGurl</span><span class="o">=</span><span class="n">ku</span><span class="o">.</span><span class="n">DatabaseLinkKEGGurl</span><span class="p">,</span> <span class="n">source_database</span><span class="o">=</span><span class="n">source_database</span><span class="p">,</span>
+        <span class="n">target_database</span><span class="o">=</span><span class="n">intermediate_database</span><span class="p">)</span>
+    <span class="n">intermediate_to_target</span> <span class="o">=</span> <span class="n">_to_dict</span><span class="p">(</span>
+        <span class="n">kegg_rest</span><span class="o">=</span><span class="n">kegg_rest</span><span class="p">,</span> <span class="n">KEGGurl</span><span class="o">=</span><span class="n">ku</span><span class="o">.</span><span class="n">DatabaseLinkKEGGurl</span><span class="p">,</span> <span class="n">source_database</span><span class="o">=</span><span class="n">intermediate_database</span><span class="p">,</span>
+        <span class="n">target_database</span><span class="o">=</span><span class="n">target_database</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">source_id</span><span class="p">,</span> <span class="n">intermediate_ids</span> <span class="ow">in</span> <span class="n">source_to_intermediate</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">intermediate_id</span> <span class="ow">in</span> <span class="n">intermediate_ids</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">intermediate_id</span> <span class="ow">in</span> <span class="n">intermediate_to_target</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">target_ids</span> <span class="o">=</span> <span class="n">intermediate_to_target</span><span class="p">[</span><span class="n">intermediate_id</span><span class="p">]</span>
+                <span class="n">_add_to_dict</span><span class="p">(</span><span class="n">dictionary</span><span class="o">=</span><span class="n">source_to_target</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">source_id</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">target_ids</span><span class="p">)</span>
+    <span class="n">source_to_target</span> <span class="o">=</span> <span class="n">_deduplicate_pathway_ids</span><span class="p">(</span>
+        <span class="n">mapping</span><span class="o">=</span><span class="n">source_to_target</span><span class="p">,</span> <span class="n">deduplicate</span><span class="o">=</span><span class="n">deduplicate</span><span class="p">,</span> <span class="n">source_database</span><span class="o">=</span><span class="n">source_database</span><span class="p">,</span>
+        <span class="n">target_database</span><span class="o">=</span><span class="n">target_database</span><span class="p">)</span>
+    <span class="n">source_to_target</span> <span class="o">=</span> <span class="n">_add_glycans_or_drugs</span><span class="p">(</span>
+        <span class="n">mapping</span><span class="o">=</span><span class="n">source_to_target</span><span class="p">,</span> <span class="n">source_database</span><span class="o">=</span><span class="n">source_database</span><span class="p">,</span> <span class="n">target_database</span><span class="o">=</span><span class="n">target_database</span><span class="p">,</span>
+        <span class="n">add_glycans</span><span class="o">=</span><span class="n">add_glycans</span><span class="p">,</span> <span class="n">add_drugs</span><span class="o">=</span><span class="n">add_drugs</span><span class="p">,</span> <span class="n">kegg_rest</span><span class="o">=</span><span class="n">kegg_rest</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">source_to_target</span></div>
+
+
+<div class="viewcode-block" id="combine_mappings"><a class="viewcode-back" href="../../api.html#kegg_pull.map.combine_mappings">[docs]</a><span class="k">def</span> <span class="nf">combine_mappings</span><span class="p">(</span><span class="n">mapping1</span><span class="p">:</span> <span class="n">KEGGmapping</span><span class="p">,</span> <span class="n">mapping2</span><span class="p">:</span> <span class="n">KEGGmapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGmapping</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Combines two mappings together. If a key in mapping 2 is already in mapping 1, their values are merged in the combined mapping e.g. X -&gt; {A,B} and X -&gt; {B,C} becomes X -&gt; {A,B,C}.</span>
+
+<span class="sd">    :param mapping1: The first mapping to combine.</span>
+<span class="sd">    :param mapping2: The second mapping to combine.</span>
+<span class="sd">    :return: The combined mapping.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">combined</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">key1</span><span class="p">,</span> <span class="n">values1</span> <span class="ow">in</span> <span class="n">mapping1</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">_add_to_dict</span><span class="p">(</span><span class="n">dictionary</span><span class="o">=</span><span class="n">combined</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key1</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">values1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key2</span><span class="p">,</span> <span class="n">values2</span> <span class="ow">in</span> <span class="n">mapping2</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">_add_to_dict</span><span class="p">(</span><span class="n">dictionary</span><span class="o">=</span><span class="n">combined</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key2</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">values2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">combined</span></div>
+
+
+<div class="viewcode-block" id="reverse"><a class="viewcode-back" href="../../api.html#kegg_pull.map.reverse">[docs]</a><span class="k">def</span> <span class="nf">reverse</span><span class="p">(</span><span class="n">mapping</span><span class="p">:</span> <span class="n">KEGGmapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGmapping</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Reverses the dictionary (mapping entry IDs of one database to IDs of related entries) turning keys into values and values into keys.</span>
+
+<span class="sd">    :param mapping: The dictionary (of entry IDs (strings) to sets of entry IDs) to reverse.</span>
+<span class="sd">    :return: The reversed mapping.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">reversed_mapping</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+            <span class="n">_add_to_dict</span><span class="p">(</span><span class="n">dictionary</span><span class="o">=</span><span class="n">reversed_mapping</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">{</span><span class="n">key</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">reversed_mapping</span></div>
+
+
+<span class="n">_reverse</span> <span class="o">=</span> <span class="n">reverse</span>  <span class="c1"># So functions can have a &quot;reverse&quot; boolean parameter without overriding the module-level &quot;reverse&quot; function.</span>
+<span class="n">_mapping_schema</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;additionalProperties&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s1">&#39;patternProperties&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;^.+$&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;array&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;minItems&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s1">&#39;items&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;minLength&#39;</span><span class="p">:</span> <span class="mi">1</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="n">_validation_error_message</span> <span class="o">=</span> <span class="s1">&#39;The mapping must be a dictionary of entry IDs (strings) mapped to a set of entry IDs&#39;</span>
+
+
+<div class="viewcode-block" id="to_json_string"><a class="viewcode-back" href="../../api.html#kegg_pull.map.to_json_string">[docs]</a><span class="k">def</span> <span class="nf">to_json_string</span><span class="p">(</span><span class="n">mapping</span><span class="p">:</span> <span class="n">KEGGmapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Converts a mapping of entry IDs (dictionary created with this map module) to a JSON string.</span>
+
+<span class="sd">    :param mapping: The dictionary to convert.</span>
+<span class="sd">    :return: The JSON string.</span>
+<span class="sd">    :raises ValidationError: Raised if the mapping does not follow the correct JSON schema. Should follow the correct schema if the dictionary was created with this map module.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mapping_to_convert</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]()</span>
+    <span class="k">for</span> <span class="n">entry_id</span><span class="p">,</span> <span class="n">entry_ids</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">mapping_to_convert</span><span class="p">[</span><span class="n">entry_id</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">entry_ids</span><span class="p">)</span>
+    <span class="n">u</span><span class="o">.</span><span class="n">validate_json_object</span><span class="p">(</span>
+        <span class="n">json_object</span><span class="o">=</span><span class="n">mapping_to_convert</span><span class="p">,</span> <span class="n">json_schema</span><span class="o">=</span><span class="n">_mapping_schema</span><span class="p">,</span> <span class="n">validation_error_message</span><span class="o">=</span><span class="n">_validation_error_message</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">mapping_to_convert</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="save_to_json"><a class="viewcode-back" href="../../api.html#kegg_pull.map.save_to_json">[docs]</a><span class="k">def</span> <span class="nf">save_to_json</span><span class="p">(</span><span class="n">mapping</span><span class="p">:</span> <span class="n">KEGGmapping</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Saves a mapping of entry IDs (dictionary created with this map module) to a JSON file, either in a</span>
+<span class="sd">    regular directory or ZIP archive.</span>
+
+<span class="sd">    :param mapping: The mapping to save.</span>
+<span class="sd">    :param file_path: The path to the JSON file. If in a ZIP archive, the file path must be in the following format: /path/to/zip-archive.zip:/path/to/file (e.g. ./archive.zip:mapping.json).</span>
+<span class="sd">    :raises ValidationError: Raised if the mapping does not follow the correct JSON schema. Should follow the correct schema if the dictionary was created with this map module.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mapping_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">to_json_string</span><span class="p">(</span><span class="n">mapping</span><span class="o">=</span><span class="n">mapping</span><span class="p">)</span>
+    <span class="n">u</span><span class="o">.</span><span class="n">save_output</span><span class="p">(</span><span class="n">output_target</span><span class="o">=</span><span class="n">file_path</span><span class="p">,</span> <span class="n">output_content</span><span class="o">=</span><span class="n">mapping_str</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_from_json"><a class="viewcode-back" href="../../api.html#kegg_pull.map.load_from_json">[docs]</a><span class="k">def</span> <span class="nf">load_from_json</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGmapping</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Loads a mapping of entry IDs (dictionary created with this map module) to a JSON file, either in a</span>
+<span class="sd">    regular directory or ZIP archive.</span>
+
+<span class="sd">    :param file_path: The path to the JSON file. If in a ZIP archive, the file path must be in the following format: /path/to/zip-archive.zip:/path/to/file (e.g. ./archive.zip:mapping.json).</span>
+<span class="sd">    :return: The mapping.</span>
+<span class="sd">    :raises ValidationError: Raised if the mapping does not follow the correct JSON schema. Should follow the correct schema if the dictionary was created with this map module.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mapping</span><span class="p">:</span> <span class="n">KEGGmapping</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">load_json_file</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">file_path</span><span class="p">,</span> <span class="n">json_schema</span><span class="o">=</span><span class="n">_mapping_schema</span><span class="p">,</span> <span class="n">validation_error_message</span><span class="o">=</span><span class="n">_validation_error_message</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">entry_id</span><span class="p">,</span> <span class="n">entry_ids</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">mapping</span><span class="p">[</span><span class="n">entry_id</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">entry_ids</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mapping</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Erik Huckvale.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
