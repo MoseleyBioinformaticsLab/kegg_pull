@@ -12,6 +12,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
     # Standard drop-in approach that should work for most people.
     - uses: ammaraskar/sphinx-action@master
       with:
