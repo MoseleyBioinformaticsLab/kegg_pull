@@ -13,4 +13,4 @@ This package has the following modules:
 
 ``kegg_url``
 """
-__version__ = '3.0.0'
+__version__ = '3.1.0'

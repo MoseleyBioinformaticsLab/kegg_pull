@@ -85,7 +85,7 @@ C    br08007  Pesticides
 C    br08009  Natural toxins
 C    br08021  Glycosides
 B  Glycans
-C    br08120  O-antigen
+C    br08120  O-antigens
 B  Reactions
 C    br08201  Enzymatic reactions
 C    br08202  IUBMB reaction hierarchy
@@ -131,5 +131,5 @@ B  Organism information
 C    br08605  Plant pathogens
 !
 #
-#Last updated: June 1, 2023
+#Last updated: July 10, 2023
 #&raquo; Japanese version
