@@ -1,0 +1,13 @@
+{
+"percent-success": 100.0,
+"pull-minutes": 0.03,
+"num-successful": 1,
+"num-failed": 0,
+"num-timed-out": 0,
+"num-total": 1,
+"successful-entry-ids": [
+"br:br08902"
+],
+"failed-entry-ids": [],
+"timed-out-entry-ids": []
+}

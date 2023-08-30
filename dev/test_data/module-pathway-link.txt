@@ -120,6 +120,7 @@ path:map00254	md:M00937
 path:map00260	md:M00020
 path:map00260	md:M00033
 path:map00260	md:M00338
+path:map00260	md:M00047
 path:map00260	md:M00018
 path:map00260	md:M00555
 path:map00260	md:M00621
@@ -418,6 +419,7 @@ path:map00910	md:M00531
 path:map00910	md:M00530
 path:map00910	md:M00175
 path:map00910	md:M00804
+path:map00910	md:M00973
 path:map00920	md:M00021
 path:map00920	md:M00176
 path:map00920	md:M00595
@@ -849,6 +851,7 @@ path:map01100	md:M00967
 path:map01100	md:M00952
 path:map01100	md:M00953
 path:map01100	md:M00960
+path:map01100	md:M00973
 path:map01100	md:M00943
 path:map01100	md:M00905
 path:map01100	md:M00911
@@ -1106,6 +1109,7 @@ path:map01120	md:M00878
 path:map01120	md:M00956
 path:map01120	md:M00957
 path:map01120	md:M00960
+path:map01120	md:M00973
 path:map01120	md:M00915
 path:map01120	md:M00919
 path:map01200	md:M00020

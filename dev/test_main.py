@@ -9,6 +9,7 @@ import kegg_pull.entry_ids_cli as ei_cli
 import kegg_pull.rest_cli as r_cli
 import kegg_pull.pull_cli as p_cli
 import kegg_pull.map_cli as map_cli
+import kegg_pull.pathway_organizer_cli as po_cli
 import dev.utils as u
 
 
@@ -19,7 +20,7 @@ def test_help(mocker):
     delimiter: str = '-'*80
     expected_print_call_args = [
         (m.__doc__,), (delimiter,), (p_cli.__doc__,), (delimiter,), (ei_cli.__doc__,), (delimiter,), (map_cli.__doc__,),
-        (delimiter,), (r_cli.__doc__,)]
+        (delimiter,), (po_cli.__doc__,), (delimiter,), (r_cli.__doc__,)]
     u.assert_call_args(function_mock=print_mock, expected_call_args_list=expected_print_call_args, do_kwargs=False)
     for help_arg in (['--help'], ['-h'], []):
         help_args = ['kegg_pull']
@@ -198,3 +199,10 @@ def test_map(mocker, print_output: bool, args: list, stdin_mock_str: str, expect
         json_output=True)
     if stdin_mock:
         stdin_mock.assert_called_once_with()
+
+
+def test_pathway_organizer(mocker, print_output: bool):
+    args = ['kegg_pull', 'pathway-organizer', '--tln=Metabolism', '--fn=Global and overview maps']
+    _test_output(
+        mocker=mocker, args=args, expected_output='dev/test_data/pathway-organizer/metabolic-pathways.json',
+        print_output=print_output, json_output=True)

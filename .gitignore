@@ -1,5 +1,6 @@
 .coverage
 .env/
+.pypi-env/
 .idea/
 __pycache__/
 src/kegg_pull.egg-info/
