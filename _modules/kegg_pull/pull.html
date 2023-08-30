@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kegg_pull.pull &mdash; kegg_pull 3.0.0 documentation</title>
+  <title>kegg_pull.pull &mdash; kegg_pull 3.1.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=dd1205ac"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -32,7 +32,7 @@
             kegg_pull
           </a>
               <div class="version">
-                3.0.0
+                3.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -96,7 +96,9 @@
 <span class="n">KEGGentryMapping</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">bytes</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="PullResult"><a class="viewcode-back" href="../../api.html#kegg_pull.pull.PullResult">[docs]</a><span class="k">class</span> <span class="nc">PullResult</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">NonInstantiable</span><span class="p">):</span>
+<div class="viewcode-block" id="PullResult">
+<a class="viewcode-back" href="../../api.html#kegg_pull.pull.PullResult">[docs]</a>
+<span class="k">class</span> <span class="nc">PullResult</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">NonInstantiable</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The collections of entry IDs, each of which resulted in a particular KEGG Response status after a pull.&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">PullResult</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -157,7 +159,10 @@
         <span class="k">return</span> <span class="n">n_entry_ids_processed</span></div>
 
 
-<div class="viewcode-block" id="SinglePull"><a class="viewcode-back" href="../../api.html#kegg_pull.pull.SinglePull">[docs]</a><span class="k">class</span> <span class="nc">SinglePull</span><span class="p">:</span>
+
+<div class="viewcode-block" id="SinglePull">
+<a class="viewcode-back" href="../../api.html#kegg_pull.pull.SinglePull">[docs]</a>
+<span class="k">class</span> <span class="nc">SinglePull</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class capable of performing a single request to the KEGG REST API for pulling up to a maximum number of entries.&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kegg_rest</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGrest</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">multiprocess_lock_save</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -170,7 +175,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_multiprocess_lock</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span> <span class="k">if</span> <span class="n">multiprocess_lock_save</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_in_memory_entries</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="SinglePull.pull"><a class="viewcode-back" href="../../api.html#kegg_pull.pull.SinglePull.pull">[docs]</a>    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">output</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entry_field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PullResult</span><span class="p">:</span>
+<div class="viewcode-block" id="SinglePull.pull">
+<a class="viewcode-back" href="../../api.html#kegg_pull.pull.SinglePull.pull">[docs]</a>
+    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">output</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entry_field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PullResult</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Makes a single request to the KEGG REST API to pull one or more entries and save them as files.</span>
 
 <span class="sd">        :param entry_ids: The IDs of the entries to pull and save.</span>
@@ -182,7 +189,10 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;&quot;output&quot; cannot be None&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pull</span><span class="p">(</span><span class="n">entry_ids</span><span class="o">=</span><span class="n">entry_ids</span><span class="p">,</span> <span class="n">entry_field</span><span class="o">=</span><span class="n">entry_field</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">output</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="SinglePull.pull_dict"><a class="viewcode-back" href="../../api.html#kegg_pull.pull.SinglePull.pull_dict">[docs]</a>    <span class="k">def</span> <span class="nf">pull_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">entry_field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">PullResult</span><span class="p">,</span> <span class="n">KEGGentryMapping</span><span class="p">]:</span>
+
+<div class="viewcode-block" id="SinglePull.pull_dict">
+<a class="viewcode-back" href="../../api.html#kegg_pull.pull.SinglePull.pull_dict">[docs]</a>
+    <span class="k">def</span> <span class="nf">pull_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">entry_field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">PullResult</span><span class="p">,</span> <span class="n">KEGGentryMapping</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Rather than saving the KEGG entries to the file system, stores them in-memory as a mapping from the ID to the corresponding entry.</span>
 
 <span class="sd">        :param entry_ids: The IDs of the entries to pull and include in the mapping.</span>
@@ -194,6 +204,7 @@
         <span class="n">tmp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_memory_entries</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_in_memory_entries</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">pull_result</span><span class="p">,</span> <span class="n">tmp</span></div>
+
 
     <span class="k">def</span> <span class="nf">_pull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">output</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">entry_field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PullResult</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Generic pull helper function that saves to the file system if output is provided, otherwise saves entries in-memory.</span>
@@ -367,7 +378,10 @@
             <span class="n">pull_result</span><span class="o">.</span><span class="n">_add_entry_ids</span><span class="p">(</span><span class="n">entry_id</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="AbstractMultiplePull"><a class="viewcode-back" href="../../api.html#kegg_pull.pull.AbstractMultiplePull">[docs]</a><span class="k">class</span> <span class="nc">AbstractMultiplePull</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AbstractMultiplePull">
+<a class="viewcode-back" href="../../api.html#kegg_pull.pull.AbstractMultiplePull">[docs]</a>
+<span class="k">class</span> <span class="nc">AbstractMultiplePull</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract class that makes multiple requests to the KEGG REST API to pull and save entries of an arbitrary amount.&quot;&quot;&quot;</span>
     <span class="n">ABORTED_PULL_RESULTS_PATH</span> <span class="o">=</span> <span class="s1">&#39;aborted-pull-results.json&#39;</span>
 
@@ -386,7 +400,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_output</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_in_memory_entries</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="AbstractMultiplePull.pull"><a class="viewcode-back" href="../../api.html#kegg_pull.pull.AbstractMultiplePull.pull">[docs]</a>    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">output</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entry_field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">force_single_entry</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PullResult</span><span class="p">:</span>
+<div class="viewcode-block" id="AbstractMultiplePull.pull">
+<a class="viewcode-back" href="../../api.html#kegg_pull.pull.AbstractMultiplePull.pull">[docs]</a>
+    <span class="k">def</span> <span class="nf">pull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">output</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entry_field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">force_single_entry</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PullResult</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Makes multiple requests to the KEGG REST API for an arbitrary amount of entry IDs.</span>
 
 <span class="sd">        :param entry_ids: The IDs that are split into multiple pulls, the entries of which are saved to the file system.</span>
@@ -399,7 +415,10 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;&quot;output&quot; cannot be None&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pull</span><span class="p">(</span><span class="n">entry_ids</span><span class="o">=</span><span class="n">entry_ids</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">output</span><span class="p">,</span> <span class="n">entry_field</span><span class="o">=</span><span class="n">entry_field</span><span class="p">,</span> <span class="n">force_single_entry</span><span class="o">=</span><span class="n">force_single_entry</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AbstractMultiplePull.pull_dict"><a class="viewcode-back" href="../../api.html#kegg_pull.pull.AbstractMultiplePull.pull_dict">[docs]</a>    <span class="k">def</span> <span class="nf">pull_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">entry_field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">force_single_entry</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">PullResult</span><span class="p">,</span> <span class="n">KEGGentryMapping</span><span class="p">]:</span>
+
+<div class="viewcode-block" id="AbstractMultiplePull.pull_dict">
+<a class="viewcode-back" href="../../api.html#kegg_pull.pull.AbstractMultiplePull.pull_dict">[docs]</a>
+    <span class="k">def</span> <span class="nf">pull_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">entry_field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">force_single_entry</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">PullResult</span><span class="p">,</span> <span class="n">KEGGentryMapping</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Rather than saving the KEGG entries to the file system, stores them in-memory as a mapping from the ID to the corresponding entry.</span>
 
 <span class="sd">        :param entry_ids: The IDs that are split into multiple pulls, the entries of which are stored in the mapping.</span>
@@ -412,6 +431,7 @@
         <span class="n">tmp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_in_memory_entries</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_in_memory_entries</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">pull_result</span><span class="p">,</span> <span class="n">tmp</span></div>
+
 
     <span class="k">def</span> <span class="nf">_pull</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">output</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">entry_field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">force_single_entry</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PullResult</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Generic pull helper function that saves to the file system if output is provided, otherwise saves entries in-memory.</span>
@@ -499,7 +519,10 @@
         <span class="k">pass</span>  <span class="c1"># pragma: no cover</span></div>
 
 
-<div class="viewcode-block" id="SingleProcessMultiplePull"><a class="viewcode-back" href="../../api.html#kegg_pull.pull.SingleProcessMultiplePull">[docs]</a><span class="k">class</span> <span class="nc">SingleProcessMultiplePull</span><span class="p">(</span><span class="n">AbstractMultiplePull</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SingleProcessMultiplePull">
+<a class="viewcode-back" href="../../api.html#kegg_pull.pull.SingleProcessMultiplePull">[docs]</a>
+<span class="k">class</span> <span class="nc">SingleProcessMultiplePull</span><span class="p">(</span><span class="n">AbstractMultiplePull</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class that makes multiple requests to the KEGG REST API to pull entries within a single process.&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kegg_rest</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGrest</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">unsuccessful_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -530,7 +553,10 @@
         <span class="k">return</span> <span class="n">multiple_pull_result</span></div>
 
 
-<div class="viewcode-block" id="MultiProcessMultiplePull"><a class="viewcode-back" href="../../api.html#kegg_pull.pull.MultiProcessMultiplePull">[docs]</a><span class="k">class</span> <span class="nc">MultiProcessMultiplePull</span><span class="p">(</span><span class="n">AbstractMultiplePull</span><span class="p">):</span>
+
+<div class="viewcode-block" id="MultiProcessMultiplePull">
+<a class="viewcode-back" href="../../api.html#kegg_pull.pull.MultiProcessMultiplePull">[docs]</a>
+<span class="k">class</span> <span class="nc">MultiProcessMultiplePull</span><span class="p">(</span><span class="n">AbstractMultiplePull</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class that makes multiple requests to the KEGG REST API to pull entries within multiple processes.&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kegg_rest</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGrest</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">unsuccessful_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">n_workers</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -567,6 +593,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">_in_memory_entries</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">in_memory_entries</span><span class="p">)</span>
                 <span class="n">check_progress</span><span class="p">(</span><span class="n">single_pull_result</span><span class="p">,</span> <span class="n">multiple_pull_result</span><span class="p">,</span> <span class="n">grouped_entry_ids</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">multiple_pull_result</span></div>
+
 
 
 <span class="n">_global_single_pull</span><span class="p">:</span> <span class="n">SinglePull</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>

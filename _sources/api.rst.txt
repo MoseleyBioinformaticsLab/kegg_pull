@@ -19,6 +19,10 @@ API
     :members:
     :undoc-members:
 
+.. automodule:: kegg_pull.pathway_organizer
+    :members:
+    :undoc-members:
+
 .. automodule:: kegg_pull.rest
     :members:
     :undoc-members:

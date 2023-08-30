@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kegg_pull.entry_ids &mdash; kegg_pull 3.0.0 documentation</title>
+  <title>kegg_pull.entry_ids &mdash; kegg_pull 3.1.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=dd1205ac"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -32,7 +32,7 @@
             kegg_pull
           </a>
               <div class="version">
-                3.0.0
+                3.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -85,7 +85,9 @@
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">kegg_url</span> <span class="k">as</span> <span class="n">ku</span>
 
 
-<div class="viewcode-block" id="from_database"><a class="viewcode-back" href="../../api.html#kegg_pull.entry_ids.from_database">[docs]</a><span class="k">def</span> <span class="nf">from_database</span><span class="p">(</span><span class="n">database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kegg_rest</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGrest</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="from_database">
+<a class="viewcode-back" href="../../api.html#kegg_pull.entry_ids.from_database">[docs]</a>
+<span class="k">def</span> <span class="nf">from_database</span><span class="p">(</span><span class="n">database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">kegg_rest</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGrest</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Pulls the KEGG entry IDs of a given database.</span>
 
 <span class="sd">    :param database: The KEGG database to pull the entry IDs from. If equal to &quot;brite&quot;, the &quot;br:&quot; prefix is prepended to each entry ID such that they succeed if used in downstream use of the KEGG &quot;get&quot; operation (e.g. for the &quot;pull&quot; API module or CLI subcommand).</span>
@@ -97,6 +99,7 @@
     <span class="k">if</span> <span class="n">database</span> <span class="o">==</span> <span class="s1">&#39;brite&#39;</span><span class="p">:</span>
         <span class="n">entry_ids</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;br:</span><span class="si">{</span><span class="n">entry_id</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">entry_id</span> <span class="ow">in</span> <span class="n">entry_ids</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">entry_id</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;br:&#39;</span><span class="p">)]</span>
     <span class="k">return</span> <span class="n">entry_ids</span></div>
+
 
 
 <span class="k">def</span> <span class="nf">_process_response</span><span class="p">(</span><span class="n">KEGGurl</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">ku</span><span class="o">.</span><span class="n">AbstractKEGGurl</span><span class="p">],</span> <span class="n">kegg_rest</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGrest</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
@@ -123,7 +126,9 @@
     <span class="k">return</span> <span class="p">[</span><span class="n">entry_id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">entry_id</span> <span class="ow">in</span> <span class="n">entry_ids</span> <span class="k">if</span> <span class="n">entry_id</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="from_file"><a class="viewcode-back" href="../../api.html#kegg_pull.entry_ids.from_file">[docs]</a><span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="from_file">
+<a class="viewcode-back" href="../../api.html#kegg_pull.entry_ids.from_file">[docs]</a>
+<span class="k">def</span> <span class="nf">from_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Loads KEGG entry IDs that are listed in a file with one entry ID on each line.</span>
 
 <span class="sd">    :param file_path: The path to the file containing the entry IDs.</span>
@@ -137,7 +142,10 @@
         <span class="k">return</span> <span class="n">_parse_entry_ids_string</span><span class="p">(</span><span class="n">entry_ids_string</span><span class="o">=</span><span class="n">entry_ids</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="from_keywords"><a class="viewcode-back" href="../../api.html#kegg_pull.entry_ids.from_keywords">[docs]</a><span class="k">def</span> <span class="nf">from_keywords</span><span class="p">(</span><span class="n">database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">keywords</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">kegg_rest</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGrest</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+
+<div class="viewcode-block" id="from_keywords">
+<a class="viewcode-back" href="../../api.html#kegg_pull.entry_ids.from_keywords">[docs]</a>
+<span class="k">def</span> <span class="nf">from_keywords</span><span class="p">(</span><span class="n">database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">keywords</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">kegg_rest</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGrest</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Pulls entry IDs from a KEGG database based on keywords searched in the entries.</span>
 
 <span class="sd">    :param database: The name of the database to pull entry IDs from.</span>
@@ -149,7 +157,10 @@
     <span class="k">return</span> <span class="n">_process_response</span><span class="p">(</span><span class="n">KEGGurl</span><span class="o">=</span><span class="n">ku</span><span class="o">.</span><span class="n">KeywordsFindKEGGurl</span><span class="p">,</span> <span class="n">kegg_rest</span><span class="o">=</span><span class="n">kegg_rest</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="n">database</span><span class="p">,</span> <span class="n">keywords</span><span class="o">=</span><span class="n">keywords</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="from_molecular_attribute"><a class="viewcode-back" href="../../api.html#kegg_pull.entry_ids.from_molecular_attribute">[docs]</a><span class="k">def</span> <span class="nf">from_molecular_attribute</span><span class="p">(</span>
+
+<div class="viewcode-block" id="from_molecular_attribute">
+<a class="viewcode-back" href="../../api.html#kegg_pull.entry_ids.from_molecular_attribute">[docs]</a>
+<span class="k">def</span> <span class="nf">from_molecular_attribute</span><span class="p">(</span>
         <span class="n">database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">formula</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">exact_mass</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">molecular_weight</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">kegg_rest</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGrest</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Pulls entry IDs from a KEGG database containing chemical entries based on one (and only one) of three molecular attributes of the entries.</span>
@@ -165,6 +176,7 @@
     <span class="k">return</span> <span class="n">_process_response</span><span class="p">(</span>
         <span class="n">KEGGurl</span><span class="o">=</span><span class="n">ku</span><span class="o">.</span><span class="n">MolecularFindKEGGurl</span><span class="p">,</span> <span class="n">kegg_rest</span><span class="o">=</span><span class="n">kegg_rest</span><span class="p">,</span> <span class="n">database</span><span class="o">=</span><span class="n">database</span><span class="p">,</span> <span class="n">formula</span><span class="o">=</span><span class="n">formula</span><span class="p">,</span> <span class="n">exact_mass</span><span class="o">=</span><span class="n">exact_mass</span><span class="p">,</span>
         <span class="n">molecular_weight</span><span class="o">=</span><span class="n">molecular_weight</span><span class="p">)</span></div>
+
 </pre></div>
 
            </div>

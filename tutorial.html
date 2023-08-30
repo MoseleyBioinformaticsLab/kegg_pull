@@ -4,18 +4,18 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tutorial &mdash; kegg_pull 3.0.0 documentation</title>
+  <title>Tutorial &mdash; kegg_pull 3.1.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="_static/jquery.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=dd1205ac"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -35,7 +35,7 @@
             kegg_pull
           </a>
               <div class="version">
-                3.0.0
+                3.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -62,6 +62,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#conv-operation">“conv” operation</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#pathway-organizer">Pathway Organizer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#rest-api">Rest API</a></li>
 </ul>
 </li>
@@ -74,6 +75,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#id2">entry-ids</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#map">map</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">pathway-organizer</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#rest">rest</a></li>
 </ul>
 </li>
@@ -109,15 +111,15 @@
            <div itemprop="articleBody">
              
   <section id="tutorial">
-<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this heading"></a></h1>
+<h1>Tutorial<a class="headerlink" href="#tutorial" title="Link to this heading"></a></h1>
 <p><strong>Note:</strong> Many KEGG entry IDs contain colons and <code class="docutils literal notranslate"><span class="pre">kegg_pull</span></code> saves
 KEGG entry files with their ID in the file name. When running on
 Windows, all file names with colons will have their colons replaced with
 underscores.</p>
 <section id="api">
-<h2>API<a class="headerlink" href="#api" title="Permalink to this heading"></a></h2>
+<h2>API<a class="headerlink" href="#api" title="Link to this heading"></a></h2>
 <section id="singlepull">
-<h3><code class="docutils literal notranslate"><span class="pre">SinglePull</span></code><a class="headerlink" href="#singlepull" title="Permalink to this heading"></a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">SinglePull</span></code><a class="headerlink" href="#singlepull" title="Link to this heading"></a></h3>
 <p>You can pull (request and save to the file system or save in memory) a
 limited number of KEGG entries using the <code class="docutils literal notranslate"><span class="pre">SinglePull</span></code> class with the
 list of entry IDs as input. The <code class="docutils literal notranslate"><span class="pre">pull</span></code> method stores the entries in
@@ -131,7 +133,7 @@ it ends in “.zip”. The <code class="docutils literal notranslate"><span clas
 which of the entry IDs succeeded, which failed, and which timed out. In
 this example, the entry ID succeeds.</p>
 <section id="pull">
-<h4><code class="docutils literal notranslate"><span class="pre">pull</span></code><a class="headerlink" href="#pull" title="Permalink to this heading"></a></h4>
+<h4><code class="docutils literal notranslate"><span class="pre">pull</span></code><a class="headerlink" href="#pull" title="Link to this heading"></a></h4>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kegg_pull.pull</span> <span class="k">as</span> <span class="nn">p</span>
 <span class="n">single_pull</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">SinglePull</span><span class="p">()</span>
 <span class="n">entry_ids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;br:br08902&#39;</span><span class="p">]</span>
@@ -179,7 +181,7 @@ automatically separated from one another and saved in individual files.</p>
 </div>
 </section>
 <section id="pull-dict">
-<h4><code class="docutils literal notranslate"><span class="pre">pull_dict</span></code><a class="headerlink" href="#pull-dict" title="Permalink to this heading"></a></h4>
+<h4><code class="docutils literal notranslate"><span class="pre">pull_dict</span></code><a class="headerlink" href="#pull-dict" title="Link to this heading"></a></h4>
 <p>The <code class="docutils literal notranslate"><span class="pre">pull_dict</span></code> method pulls entries just like the <code class="docutils literal notranslate"><span class="pre">pull</span></code> method
 except that it stores the entries in memory rather than in the file
 system. This is helpful if the user of the API wishes to use the entries
@@ -219,7 +221,7 @@ IDs as keys.</p>
 </section>
 </section>
 <section id="singleprocessmultiplepull-and-multiprocessmultiplepull">
-<h3><code class="docutils literal notranslate"><span class="pre">SingleProcessMultiplePull</span></code> and <code class="docutils literal notranslate"><span class="pre">MultiProcessMultiplePull</span></code><a class="headerlink" href="#singleprocessmultiplepull-and-multiprocessmultiplepull" title="Permalink to this heading"></a></h3>
+<h3><code class="docutils literal notranslate"><span class="pre">SingleProcessMultiplePull</span></code> and <code class="docutils literal notranslate"><span class="pre">MultiProcessMultiplePull</span></code><a class="headerlink" href="#singleprocessmultiplepull-and-multiprocessmultiplepull" title="Link to this heading"></a></h3>
 <p>To get past the limit on the number of entries that can be pulled at a
 time, we have two classes capable of pulling an arbitrary number of
 entries. There’s the <code class="docutils literal notranslate"><span class="pre">SingleProcessMultiplePull</span></code> and
@@ -296,7 +298,7 @@ $$$$
 </div>
 </section>
 <section id="entry-ids">
-<h3>Entry IDs<a class="headerlink" href="#entry-ids" title="Permalink to this heading"></a></h3>
+<h3>Entry IDs<a class="headerlink" href="#entry-ids" title="Link to this heading"></a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">entry_ids</span></code> module provides a number of different ways to pull a
 list of KEGG entry IDs.</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kegg_pull.entry_ids</span> <span class="k">as</span> <span class="nn">ei</span>
@@ -309,11 +311,11 @@ list of KEGG entry IDs.</p>
 </div>
 </section>
 <section id="entry-id-mappings">
-<h3>Entry ID Mappings<a class="headerlink" href="#entry-id-mappings" title="Permalink to this heading"></a></h3>
+<h3>Entry ID Mappings<a class="headerlink" href="#entry-id-mappings" title="Link to this heading"></a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">map</span></code> module converts the output of the KEGG REST API “link”
 operation or “conv” operation into dictionaries usable in python code.</p>
 <section id="link-operation">
-<h4>“link” operation<a class="headerlink" href="#link-operation" title="Permalink to this heading"></a></h4>
+<h4>“link” operation<a class="headerlink" href="#link-operation" title="Link to this heading"></a></h4>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kegg_pull.map</span> <span class="k">as</span> <span class="nn">kmap</span>
 
 <span class="n">pathway_to_compound</span> <span class="o">=</span> <span class="n">kmap</span><span class="o">.</span><span class="n">entries_link</span><span class="p">(</span><span class="n">entry_ids</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;path:map00010&#39;</span><span class="p">,</span> <span class="s1">&#39;path:map00020&#39;</span><span class="p">],</span> <span class="n">target_database</span><span class="o">=</span><span class="s1">&#39;compound&#39;</span><span class="p">)</span>
@@ -325,7 +327,7 @@ operation or “conv” operation into dictionaries usable in python code.</p>
 </div>
 </section>
 <section id="conv-operation">
-<h4>“conv” operation<a class="headerlink" href="#conv-operation" title="Permalink to this heading"></a></h4>
+<h4>“conv” operation<a class="headerlink" href="#conv-operation" title="Link to this heading"></a></h4>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">kegg_to_pubchem</span> <span class="o">=</span> <span class="n">kmap</span><span class="o">.</span><span class="n">entries_conv</span><span class="p">(</span><span class="n">entry_ids</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;cpd:C00001&#39;</span><span class="p">,</span> <span class="s1">&#39;cpd:C00002&#39;</span><span class="p">],</span> <span class="n">target_database</span><span class="o">=</span><span class="s1">&#39;pubchem&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">kegg_to_pubchem</span><span class="p">)</span>
 </pre></div>
@@ -335,8 +337,21 @@ operation or “conv” operation into dictionaries usable in python code.</p>
 </div>
 </section>
 </section>
+<section id="pathway-organizer">
+<h3>Pathway Organizer<a class="headerlink" href="#pathway-organizer" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">pathway_organizer</span></code> module flattens a brite hierarchy into a
+mapping of the IDs of its nodes to information about those nodes.</p>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kegg_pull.pathway_organizer</span> <span class="k">as</span> <span class="nn">po</span>
+<span class="n">pathway_org</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">PathwayOrganizer</span><span class="o">.</span><span class="n">load_from_kegg</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pathway_org</span><span class="o">.</span><span class="n">hierarchy_nodes</span><span class="p">[</span><span class="s1">&#39;Metabolism&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Metabolism&#39;</span><span class="p">,</span> <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;parent&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;children&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Amino acid metabolism&#39;</span><span class="p">,</span> <span class="s1">&#39;Biosynthesis of other secondary metabolites&#39;</span><span class="p">,</span> <span class="s1">&#39;Carbohydrate metabolism&#39;</span><span class="p">,</span> <span class="s1">&#39;Chemical structure transformation maps&#39;</span><span class="p">,</span> <span class="s1">&#39;Energy metabolism&#39;</span><span class="p">,</span> <span class="s1">&#39;Global and overview maps&#39;</span><span class="p">,</span> <span class="s1">&#39;Glycan biosynthesis and metabolism&#39;</span><span class="p">,</span> <span class="s1">&#39;Lipid metabolism&#39;</span><span class="p">,</span> <span class="s1">&#39;Metabolism of cofactors and vitamins&#39;</span><span class="p">,</span> <span class="s1">&#39;Metabolism of other amino acids&#39;</span><span class="p">,</span> <span class="s1">&#39;Metabolism of terpenoids and polyketides&#39;</span><span class="p">,</span> <span class="s1">&#39;Nucleotide metabolism&#39;</span><span class="p">,</span> <span class="s1">&#39;Xenobiotics biodegradation and metabolism&#39;</span><span class="p">],</span> <span class="s1">&#39;entry_id&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
 <section id="rest-api">
-<h3>Rest API<a class="headerlink" href="#rest-api" title="Permalink to this heading"></a></h3>
+<h3>Rest API<a class="headerlink" href="#rest-api" title="Link to this heading"></a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">KEGGrest</span></code> class provides low-level wrapper methods for the KEGG
 REST API, including all of its operations. The resulting
 <code class="docutils literal notranslate"><span class="pre">KEGGresponse</span></code> object contains both the text and binary versions of
@@ -371,14 +386,14 @@ interface.</p>
 </section>
 </section>
 <section id="cli">
-<h2>CLI<a class="headerlink" href="#cli" title="Permalink to this heading"></a></h2>
+<h2>CLI<a class="headerlink" href="#cli" title="Link to this heading"></a></h2>
 <p>The command line interface has 4 subcommands: <code class="docutils literal notranslate"><span class="pre">pull</span></code>, <code class="docutils literal notranslate"><span class="pre">entry-ids</span></code>,
 <code class="docutils literal notranslate"><span class="pre">map</span></code>, and <code class="docutils literal notranslate"><span class="pre">rest</span></code>. They are analogous to the API modules and
 methods.</p>
 <section id="id1">
-<h3>pull<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
+<h3>pull<a class="headerlink" href="#id1" title="Link to this heading"></a></h3>
 <section id="from-a-user-specified-list-of-entry-ids">
-<h4>From a user-specified list of entry IDs<a class="headerlink" href="#from-a-user-specified-list-of-entry-ids" title="Permalink to this heading"></a></h4>
+<h4>From a user-specified list of entry IDs<a class="headerlink" href="#from-a-user-specified-list-of-entry-ids" title="Link to this heading"></a></h4>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>% kegg_pull pull entry-ids cpd:C00001,cpd:C00002,cpd:C00003 --output=compound-entries/
 </pre></div>
 </div>
@@ -455,7 +470,7 @@ list. This example saves the entries to a ZIP archive.</p>
 </div>
 </section>
 <section id="from-a-database">
-<h4>From a database<a class="headerlink" href="#from-a-database" title="Permalink to this heading"></a></h4>
+<h4>From a database<a class="headerlink" href="#from-a-database" title="Link to this heading"></a></h4>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>% kegg_pull pull database brite --multi-process --n-workers=11 --output=brite-entries/
 </pre></div>
 </div>
@@ -508,7 +523,7 @@ list. This example saves the entries to a ZIP archive.</p>
 </div>
 </section>
 <section id="printing-entries">
-<h4>Printing Entries<a class="headerlink" href="#printing-entries" title="Permalink to this heading"></a></h4>
+<h4>Printing Entries<a class="headerlink" href="#printing-entries" title="Link to this heading"></a></h4>
 <p>Alternatively, you can print the KEGG entries to the screen rather than
 saving them in separate files.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>% kegg_pull pull entry-ids C00001,C00007 --entry-field=mol --print
@@ -550,7 +565,7 @@ cpd:C00007
 </section>
 </section>
 <section id="id2">
-<h3>entry-ids<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h3>
+<h3>entry-ids<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>% kegg_pull entry-ids database brite --output=brite-entry-ids.txt
 % head brite-entry-ids.txt
 </pre></div>
@@ -602,7 +617,7 @@ cpd:C00007
 </div>
 </section>
 <section id="map">
-<h3>map<a class="headerlink" href="#map" title="Permalink to this heading"></a></h3>
+<h3>map<a class="headerlink" href="#map" title="Link to this heading"></a></h3>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>% kegg_pull map link entry-ids path:map00010,path:map00020 compound --output=mapping.json
 % head mapping.json
 </pre></div>
@@ -620,8 +635,27 @@ cpd:C00007
 </pre></div>
 </div>
 </section>
+<section id="id3">
+<h3>pathway-organizer<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>% kegg_pull pathway-organizer --tln=Metabolism --fn=&quot;Global and overview maps,Carbohydrate metabolism&quot; --output=hierarchy-nodes.json
+% head hierarchy-nodes.json
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;path:map00190&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;00190  Oxidative phosphorylation&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s2">&quot;parent&quot;</span><span class="p">:</span> <span class="s2">&quot;Energy metabolism&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;children&quot;</span><span class="p">:</span> <span class="n">null</span><span class="p">,</span>
+    <span class="s2">&quot;entry_id&quot;</span><span class="p">:</span> <span class="s2">&quot;path:map00190&quot;</span>
+  <span class="p">},</span>
+  <span class="s2">&quot;path:map00195&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;00195  Photosynthesis&quot;</span><span class="p">,</span>
+</pre></div>
+</div>
+</section>
 <section id="rest">
-<h3>rest<a class="headerlink" href="#rest" title="Permalink to this heading"></a></h3>
+<h3>rest<a class="headerlink" href="#rest" title="Link to this heading"></a></h3>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>% kegg_pull rest info enzyme
 </pre></div>
 </div>

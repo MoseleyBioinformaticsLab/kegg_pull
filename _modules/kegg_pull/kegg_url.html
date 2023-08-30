@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kegg_pull.kegg_url &mdash; kegg_pull 3.0.0 documentation</title>
+  <title>kegg_pull.kegg_url &mdash; kegg_pull 3.1.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=dd1205ac"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -32,7 +32,7 @@
             kegg_pull
           </a>
               <div class="version">
-                3.0.0
+                3.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -90,7 +90,9 @@
 <span class="n">BASE_URL</span> <span class="o">=</span> <span class="s1">&#39;https://rest.kegg.jp&#39;</span>
 
 
-<div class="viewcode-block" id="AbstractKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.AbstractKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">AbstractKEGGurl</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractKEGGurl">
+<a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.AbstractKEGGurl">[docs]</a>
+<span class="k">class</span> <span class="nc">AbstractKEGGurl</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Abstract class which validates and constructs URLs for accessing the KEGG REST API and contains the base data and functionality for all KEGG URL classes.</span>
 
@@ -212,7 +214,10 @@
                 <span class="n">option_name</span><span class="o">=</span><span class="s1">&#39;database name&#39;</span><span class="p">,</span> <span class="n">option_value</span><span class="o">=</span><span class="n">database</span><span class="p">,</span> <span class="n">valid_rest_options</span><span class="o">=</span><span class="n">valid_databases</span><span class="p">,</span> <span class="n">add_org</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="ListKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.ListKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">ListKEGGurl</span><span class="p">(</span><span class="n">AbstractKEGGurl</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ListKEGGurl">
+<a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.ListKEGGurl">[docs]</a>
+<span class="k">class</span> <span class="nc">ListKEGGurl</span><span class="p">(</span><span class="n">AbstractKEGGurl</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Contains URL construction and validation functionality of the KEGG API list operation.&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -239,7 +244,10 @@
         <span class="k">return</span> <span class="n">database</span></div>
 
 
-<div class="viewcode-block" id="InfoKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.InfoKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">InfoKEGGurl</span><span class="p">(</span><span class="n">AbstractKEGGurl</span><span class="p">):</span>
+
+<div class="viewcode-block" id="InfoKEGGurl">
+<a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.InfoKEGGurl">[docs]</a>
+<span class="k">class</span> <span class="nc">InfoKEGGurl</span><span class="p">(</span><span class="n">AbstractKEGGurl</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Contains URL construction and validation functionality of the KEGG API info operation.&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -266,7 +274,10 @@
         <span class="k">return</span> <span class="n">database</span></div>
 
 
-<div class="viewcode-block" id="GetKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.GetKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">GetKEGGurl</span><span class="p">(</span><span class="n">AbstractKEGGurl</span><span class="p">):</span>
+
+<div class="viewcode-block" id="GetKEGGurl">
+<a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.GetKEGGurl">[docs]</a>
+<span class="k">class</span> <span class="nc">GetKEGGurl</span><span class="p">(</span><span class="n">AbstractKEGGurl</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Contains URL construction and validation functionality for the KEGG API get operation.</span>
 
@@ -314,7 +325,9 @@
                     <span class="n">reason</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;The KEGG entry field: &quot;</span><span class="si">{</span><span class="n">entry_field</span><span class="si">}</span><span class="s1">&quot; only supports requests of one KEGG entry &#39;</span>
                            <span class="sa">f</span><span class="s1">&#39;at a time but </span><span class="si">{</span><span class="n">n_entry_ids</span><span class="si">}</span><span class="s1"> entry IDs are provided&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="GetKEGGurl.only_one_entry"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.GetKEGGurl.only_one_entry">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GetKEGGurl.only_one_entry">
+<a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.GetKEGGurl.only_one_entry">[docs]</a>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">only_one_entry</span><span class="p">(</span><span class="n">entry_field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Determines whether a KEGG entry field can only be pulled in one entry at a time for the KEGG get API</span>
 <span class="sd">        operation.</span>
@@ -323,13 +336,17 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">entry_field</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">GetKEGGurl</span><span class="o">.</span><span class="n">_entry_fields</span><span class="p">[</span><span class="n">entry_field</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="GetKEGGurl.is_binary"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.GetKEGGurl.is_binary">[docs]</a>    <span class="nd">@staticmethod</span>
+
+<div class="viewcode-block" id="GetKEGGurl.is_binary">
+<a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.GetKEGGurl.is_binary">[docs]</a>
+    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">is_binary</span><span class="p">(</span><span class="n">entry_field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Determines if the entry field is a binary response or not.</span>
 
 <span class="sd">        :param entry_field: The KEGG entry field to check.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">entry_field</span> <span class="o">==</span> <span class="s1">&#39;image&#39;</span></div>
+
 
     <span class="k">def</span> <span class="nf">_create_rest_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">entry_field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Constructs the REST options for the KEGG API get operation.</span>
@@ -345,7 +362,10 @@
             <span class="k">return</span> <span class="n">entry_ids_url_option</span></div>
 
 
-<div class="viewcode-block" id="KeywordsFindKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.KeywordsFindKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">KeywordsFindKEGGurl</span><span class="p">(</span><span class="n">AbstractKEGGurl</span><span class="p">):</span>
+
+<div class="viewcode-block" id="KeywordsFindKEGGurl">
+<a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.KeywordsFindKEGGurl">[docs]</a>
+<span class="k">class</span> <span class="nc">KeywordsFindKEGGurl</span><span class="p">(</span><span class="n">AbstractKEGGurl</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Contains the URL construction and validation functionality for the KEGG API find operation based on the URL form that searches entries by keywords.&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">keywords</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -377,7 +397,10 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">database</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">keywords_string</span><span class="si">}</span><span class="s1">&#39;</span></div>
 
 
-<div class="viewcode-block" id="MolecularFindKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.MolecularFindKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">MolecularFindKEGGurl</span><span class="p">(</span><span class="n">AbstractKEGGurl</span><span class="p">):</span>
+
+<div class="viewcode-block" id="MolecularFindKEGGurl">
+<a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.MolecularFindKEGGurl">[docs]</a>
+<span class="k">class</span> <span class="nc">MolecularFindKEGGurl</span><span class="p">(</span><span class="n">AbstractKEGGurl</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Contains the URL construction and validation functionality for the KEGG API find operation based on the URL form that uses chemical / molecular attributes of compounds.&quot;&quot;&quot;</span>
     <span class="n">_valid_molecular_databases</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;compound&#39;</span><span class="p">,</span> <span class="s1">&#39;drug&#39;</span><span class="p">}</span>
 
@@ -474,7 +497,10 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">options</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">option_name</span><span class="si">}</span><span class="s1">&#39;</span></div>
 
 
-<div class="viewcode-block" id="AbstractConvKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.AbstractConvKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">AbstractConvKEGGurl</span><span class="p">(</span><span class="n">AbstractKEGGurl</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AbstractConvKEGGurl">
+<a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.AbstractConvKEGGurl">[docs]</a>
+<span class="k">class</span> <span class="nc">AbstractConvKEGGurl</span><span class="p">(</span><span class="n">AbstractKEGGurl</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract class containing data shared by the KEGG URL classes that validate and construct URLs for the conv KEGG</span>
 <span class="sd">    REST API operation.&quot;&quot;&quot;</span>
     <span class="n">_valid_outside_gene_databases</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ncbi-geneid&#39;</span><span class="p">,</span> <span class="s1">&#39;ncbi-proteinid&#39;</span><span class="p">,</span> <span class="s1">&#39;uniprot&#39;</span><span class="p">}</span>
@@ -507,7 +533,10 @@
         <span class="k">pass</span>  <span class="c1"># pragma: no cover</span></div>
 
 
-<div class="viewcode-block" id="DatabaseConvKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.DatabaseConvKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">DatabaseConvKEGGurl</span><span class="p">(</span><span class="n">AbstractConvKEGGurl</span><span class="p">):</span>
+
+<div class="viewcode-block" id="DatabaseConvKEGGurl">
+<a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.DatabaseConvKEGGurl">[docs]</a>
+<span class="k">class</span> <span class="nc">DatabaseConvKEGGurl</span><span class="p">(</span><span class="n">AbstractConvKEGGurl</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Contains the URL construction and validation functionality of the KEGG API conv operation based on the URL form that uses a KEGG database and an outside database.&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kegg_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">outside_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -555,7 +584,10 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">kegg_database</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">outside_database</span><span class="si">}</span><span class="s1">&#39;</span></div>
 
 
-<div class="viewcode-block" id="EntriesConvKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.EntriesConvKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">EntriesConvKEGGurl</span><span class="p">(</span><span class="n">AbstractConvKEGGurl</span><span class="p">):</span>
+
+<div class="viewcode-block" id="EntriesConvKEGGurl">
+<a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.EntriesConvKEGGurl">[docs]</a>
+<span class="k">class</span> <span class="nc">EntriesConvKEGGurl</span><span class="p">(</span><span class="n">AbstractConvKEGGurl</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Contains the URL construction and validation functionality for the KEGG API conv operation based on the URL form that uses a target database and entry IDs.&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -593,7 +625,10 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">target_database</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="s2">&quot;+&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">entry_ids</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span></div>
 
 
-<div class="viewcode-block" id="AbstractLinkKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.AbstractLinkKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">AbstractLinkKEGGurl</span><span class="p">(</span><span class="n">AbstractKEGGurl</span><span class="p">):</span>
+
+<div class="viewcode-block" id="AbstractLinkKEGGurl">
+<a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.AbstractLinkKEGGurl">[docs]</a>
+<span class="k">class</span> <span class="nc">AbstractLinkKEGGurl</span><span class="p">(</span><span class="n">AbstractKEGGurl</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract class containing the shared data for the link KEGG URLs.&quot;&quot;&quot;</span>
     <span class="n">_extra_databases</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;atc&#39;</span><span class="p">,</span> <span class="s1">&#39;jtc&#39;</span><span class="p">,</span> <span class="s1">&#39;ndc&#39;</span><span class="p">,</span> <span class="s1">&#39;yj&#39;</span><span class="p">,</span> <span class="s1">&#39;pubmed&#39;</span><span class="p">}</span>
 
@@ -613,7 +648,10 @@
         <span class="k">pass</span>  <span class="c1"># pragma: no cover</span></div>
 
 
-<div class="viewcode-block" id="DatabaseLinkKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.DatabaseLinkKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">DatabaseLinkKEGGurl</span><span class="p">(</span><span class="n">AbstractLinkKEGGurl</span><span class="p">):</span>
+
+<div class="viewcode-block" id="DatabaseLinkKEGGurl">
+<a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.DatabaseLinkKEGGurl">[docs]</a>
+<span class="k">class</span> <span class="nc">DatabaseLinkKEGGurl</span><span class="p">(</span><span class="n">AbstractLinkKEGGurl</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Contains the URL construction and validation functionality for the link KEGG REST API operation of the form that uses a target database and a source database.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">source_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -650,7 +688,10 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">target_database</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">source_database</span><span class="si">}</span><span class="s1">&#39;</span></div>
 
 
-<div class="viewcode-block" id="EntriesLinkKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.EntriesLinkKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">EntriesLinkKEGGurl</span><span class="p">(</span><span class="n">AbstractLinkKEGGurl</span><span class="p">):</span>
+
+<div class="viewcode-block" id="EntriesLinkKEGGurl">
+<a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.EntriesLinkKEGGurl">[docs]</a>
+<span class="k">class</span> <span class="nc">EntriesLinkKEGGurl</span><span class="p">(</span><span class="n">AbstractLinkKEGGurl</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Contains the URL construction and validation functionality for the link KEGG REST API operation of the form that uses a target database and entry IDs.&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -683,7 +724,10 @@
         <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">target_database</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="s2">&quot;+&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">entry_ids</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span></div>
 
 
-<div class="viewcode-block" id="DdiKEGGurl"><a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.DdiKEGGurl">[docs]</a><span class="k">class</span> <span class="nc">DdiKEGGurl</span><span class="p">(</span><span class="n">AbstractKEGGurl</span><span class="p">):</span>
+
+<div class="viewcode-block" id="DdiKEGGurl">
+<a class="viewcode-back" href="../../api.html#kegg_pull.kegg_url.DdiKEGGurl">[docs]</a>
+<span class="k">class</span> <span class="nc">DdiKEGGurl</span><span class="p">(</span><span class="n">AbstractKEGGurl</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Contains the URL construction and validation functionality for the ddi KEGG REST operation.&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">drug_entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -708,6 +752,7 @@
 <span class="sd">        :return: The constructed options.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;+&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">drug_entry_ids</span><span class="p">)</span></div>
+
 </pre></div>
 
            </div>

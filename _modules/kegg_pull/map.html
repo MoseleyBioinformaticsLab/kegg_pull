@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kegg_pull.map &mdash; kegg_pull 3.0.0 documentation</title>
+  <title>kegg_pull.map &mdash; kegg_pull 3.1.0 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=dd1205ac"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -32,7 +32,7 @@
             kegg_pull
           </a>
               <div class="version">
-                3.0.0
+                3.1.0
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -92,7 +92,9 @@
 <span class="n">KEGGmapping</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
 
 
-<div class="viewcode-block" id="database_link"><a class="viewcode-back" href="../../api.html#kegg_pull.map.database_link">[docs]</a><span class="k">def</span> <span class="nf">database_link</span><span class="p">(</span>
+<div class="viewcode-block" id="database_link">
+<a class="viewcode-back" href="../../api.html#kegg_pull.map.database_link">[docs]</a>
+<span class="k">def</span> <span class="nf">database_link</span><span class="p">(</span>
         <span class="n">source_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">deduplicate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">add_glycans</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">add_drugs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">kegg_rest</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGrest</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGmapping</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Converts the output of the KEGG &quot;link&quot; operation (of the form that maps the entry IDs of one database to the entry IDs of another) into a dictionary along with other helpful optional functionality.</span>
@@ -117,6 +119,7 @@
         <span class="n">mapping</span><span class="o">=</span><span class="n">mapping</span><span class="p">,</span> <span class="n">source_database</span><span class="o">=</span><span class="n">source_database</span><span class="p">,</span> <span class="n">target_database</span><span class="o">=</span><span class="n">target_database</span><span class="p">,</span>
         <span class="n">add_glycans</span><span class="o">=</span><span class="n">add_glycans</span><span class="p">,</span> <span class="n">add_drugs</span><span class="o">=</span><span class="n">add_drugs</span><span class="p">,</span> <span class="n">kegg_rest</span><span class="o">=</span><span class="n">kegg_rest</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">mapping</span></div>
+
 
 
 <span class="k">def</span> <span class="nf">_to_dict</span><span class="p">(</span><span class="n">kegg_rest</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGrest</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">KEGGurl</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">ku</span><span class="o">.</span><span class="n">AbstractKEGGurl</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGmapping</span><span class="p">:</span>
@@ -241,7 +244,9 @@
 
 
 <span class="c1"># noinspection PyShadowingNames</span>
-<div class="viewcode-block" id="database_conv"><a class="viewcode-back" href="../../api.html#kegg_pull.map.database_conv">[docs]</a><span class="k">def</span> <span class="nf">database_conv</span><span class="p">(</span>
+<div class="viewcode-block" id="database_conv">
+<a class="viewcode-back" href="../../api.html#kegg_pull.map.database_conv">[docs]</a>
+<span class="k">def</span> <span class="nf">database_conv</span><span class="p">(</span>
         <span class="n">kegg_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">outside_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">reverse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">kegg_rest</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGrest</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGmapping</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Converts the output of the KEGG &quot;conv&quot; operation (of the form that maps the entry IDs of one database to the entry IDs of another) into a dictionary.</span>
 
@@ -255,6 +260,7 @@
     <span class="k">return</span> <span class="n">_map_and_reverse</span><span class="p">(</span>
         <span class="n">reverse</span><span class="o">=</span><span class="n">reverse</span><span class="p">,</span> <span class="n">kegg_rest</span><span class="o">=</span><span class="n">kegg_rest</span><span class="p">,</span> <span class="n">KEGGurl</span><span class="o">=</span><span class="n">ku</span><span class="o">.</span><span class="n">DatabaseConvKEGGurl</span><span class="p">,</span> <span class="n">kegg_database</span><span class="o">=</span><span class="n">kegg_database</span><span class="p">,</span>
         <span class="n">outside_database</span><span class="o">=</span><span class="n">outside_database</span><span class="p">)</span></div>
+
 
 
 <span class="c1"># noinspection PyShadowingNames</span>
@@ -272,7 +278,9 @@
 
 
 <span class="c1"># noinspection PyShadowingNames</span>
-<div class="viewcode-block" id="entries_link"><a class="viewcode-back" href="../../api.html#kegg_pull.map.entries_link">[docs]</a><span class="k">def</span> <span class="nf">entries_link</span><span class="p">(</span>
+<div class="viewcode-block" id="entries_link">
+<a class="viewcode-back" href="../../api.html#kegg_pull.map.entries_link">[docs]</a>
+<span class="k">def</span> <span class="nf">entries_link</span><span class="p">(</span>
         <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">target_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">reverse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">kegg_rest</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGrest</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGmapping</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Converts the output of the KEGG &quot;link&quot; operation (of the form that maps specific provided entry IDs to the IDs of a target database) to a dictionary.</span>
@@ -288,8 +296,11 @@
         <span class="n">reverse</span><span class="o">=</span><span class="n">reverse</span><span class="p">,</span> <span class="n">kegg_rest</span><span class="o">=</span><span class="n">kegg_rest</span><span class="p">,</span> <span class="n">KEGGurl</span><span class="o">=</span><span class="n">ku</span><span class="o">.</span><span class="n">EntriesLinkKEGGurl</span><span class="p">,</span> <span class="n">target_database</span><span class="o">=</span><span class="n">target_database</span><span class="p">,</span> <span class="n">entry_ids</span><span class="o">=</span><span class="n">entry_ids</span><span class="p">)</span></div>
 
 
+
 <span class="c1"># noinspection PyShadowingNames</span>
-<div class="viewcode-block" id="entries_conv"><a class="viewcode-back" href="../../api.html#kegg_pull.map.entries_conv">[docs]</a><span class="k">def</span> <span class="nf">entries_conv</span><span class="p">(</span>
+<div class="viewcode-block" id="entries_conv">
+<a class="viewcode-back" href="../../api.html#kegg_pull.map.entries_conv">[docs]</a>
+<span class="k">def</span> <span class="nf">entries_conv</span><span class="p">(</span>
         <span class="n">entry_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">target_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">reverse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">kegg_rest</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGrest</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGmapping</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Converts the output of the KEGG &quot;conv&quot; operation (of the form that maps specific provided entry IDs to the IDs of a target database) to a dictionary.</span>
 
@@ -304,7 +315,10 @@
         <span class="n">reverse</span><span class="o">=</span><span class="n">reverse</span><span class="p">,</span> <span class="n">kegg_rest</span><span class="o">=</span><span class="n">kegg_rest</span><span class="p">,</span> <span class="n">KEGGurl</span><span class="o">=</span><span class="n">ku</span><span class="o">.</span><span class="n">EntriesConvKEGGurl</span><span class="p">,</span> <span class="n">target_database</span><span class="o">=</span><span class="n">target_database</span><span class="p">,</span> <span class="n">entry_ids</span><span class="o">=</span><span class="n">entry_ids</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="indirect_link"><a class="viewcode-back" href="../../api.html#kegg_pull.map.indirect_link">[docs]</a><span class="k">def</span> <span class="nf">indirect_link</span><span class="p">(</span>
+
+<div class="viewcode-block" id="indirect_link">
+<a class="viewcode-back" href="../../api.html#kegg_pull.map.indirect_link">[docs]</a>
+<span class="k">def</span> <span class="nf">indirect_link</span><span class="p">(</span>
         <span class="n">source_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">intermediate_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">target_database</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">deduplicate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">add_glycans</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">add_drugs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">kegg_rest</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGrest</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGmapping</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Creates a dictionary that maps the entry IDs of a source database to those of a target database using an intermediate database (&quot;link&quot; operation) e.g. ko-to-compound where the intermediate is reaction (connecting cross-references of ko-to-reaction and reaction-to-compound).</span>
@@ -345,7 +359,10 @@
     <span class="k">return</span> <span class="n">source_to_target</span></div>
 
 
-<div class="viewcode-block" id="combine_mappings"><a class="viewcode-back" href="../../api.html#kegg_pull.map.combine_mappings">[docs]</a><span class="k">def</span> <span class="nf">combine_mappings</span><span class="p">(</span><span class="n">mapping1</span><span class="p">:</span> <span class="n">KEGGmapping</span><span class="p">,</span> <span class="n">mapping2</span><span class="p">:</span> <span class="n">KEGGmapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGmapping</span><span class="p">:</span>
+
+<div class="viewcode-block" id="combine_mappings">
+<a class="viewcode-back" href="../../api.html#kegg_pull.map.combine_mappings">[docs]</a>
+<span class="k">def</span> <span class="nf">combine_mappings</span><span class="p">(</span><span class="n">mapping1</span><span class="p">:</span> <span class="n">KEGGmapping</span><span class="p">,</span> <span class="n">mapping2</span><span class="p">:</span> <span class="n">KEGGmapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGmapping</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Combines two mappings together. If a key in mapping 2 is already in mapping 1, their values are merged in the combined mapping e.g. X -&gt; {A,B} and X -&gt; {B,C} becomes X -&gt; {A,B,C}.</span>
 
 <span class="sd">    :param mapping1: The first mapping to combine.</span>
@@ -360,7 +377,10 @@
     <span class="k">return</span> <span class="n">combined</span></div>
 
 
-<div class="viewcode-block" id="reverse"><a class="viewcode-back" href="../../api.html#kegg_pull.map.reverse">[docs]</a><span class="k">def</span> <span class="nf">reverse</span><span class="p">(</span><span class="n">mapping</span><span class="p">:</span> <span class="n">KEGGmapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGmapping</span><span class="p">:</span>
+
+<div class="viewcode-block" id="reverse">
+<a class="viewcode-back" href="../../api.html#kegg_pull.map.reverse">[docs]</a>
+<span class="k">def</span> <span class="nf">reverse</span><span class="p">(</span><span class="n">mapping</span><span class="p">:</span> <span class="n">KEGGmapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGmapping</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Reverses the dictionary (mapping entry IDs of one database to IDs of related entries) turning keys into values and values into keys.</span>
 
 <span class="sd">    :param mapping: The dictionary (of entry IDs (strings) to sets of entry IDs) to reverse.</span>
@@ -371,6 +391,7 @@
         <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
             <span class="n">_add_to_dict</span><span class="p">(</span><span class="n">dictionary</span><span class="o">=</span><span class="n">reversed_mapping</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">{</span><span class="n">key</span><span class="p">})</span>
     <span class="k">return</span> <span class="n">reversed_mapping</span></div>
+
 
 
 <span class="n">_reverse</span> <span class="o">=</span> <span class="n">reverse</span>  <span class="c1"># So functions can have a &quot;reverse&quot; boolean parameter without overriding the module-level &quot;reverse&quot; function.</span>
@@ -391,7 +412,9 @@
 <span class="n">_validation_error_message</span> <span class="o">=</span> <span class="s1">&#39;The mapping must be a dictionary of entry IDs (strings) mapped to a set of entry IDs&#39;</span>
 
 
-<div class="viewcode-block" id="to_json_string"><a class="viewcode-back" href="../../api.html#kegg_pull.map.to_json_string">[docs]</a><span class="k">def</span> <span class="nf">to_json_string</span><span class="p">(</span><span class="n">mapping</span><span class="p">:</span> <span class="n">KEGGmapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="to_json_string">
+<a class="viewcode-back" href="../../api.html#kegg_pull.map.to_json_string">[docs]</a>
+<span class="k">def</span> <span class="nf">to_json_string</span><span class="p">(</span><span class="n">mapping</span><span class="p">:</span> <span class="n">KEGGmapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Converts a mapping of entry IDs (dictionary created with this map module) to a JSON string.</span>
 
 <span class="sd">    :param mapping: The dictionary to convert.</span>
@@ -406,7 +429,10 @@
     <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">mapping_to_convert</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="save_to_json"><a class="viewcode-back" href="../../api.html#kegg_pull.map.save_to_json">[docs]</a><span class="k">def</span> <span class="nf">save_to_json</span><span class="p">(</span><span class="n">mapping</span><span class="p">:</span> <span class="n">KEGGmapping</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+<div class="viewcode-block" id="save_to_json">
+<a class="viewcode-back" href="../../api.html#kegg_pull.map.save_to_json">[docs]</a>
+<span class="k">def</span> <span class="nf">save_to_json</span><span class="p">(</span><span class="n">mapping</span><span class="p">:</span> <span class="n">KEGGmapping</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Saves a mapping of entry IDs (dictionary created with this map module) to a JSON file, either in a</span>
 <span class="sd">    regular directory or ZIP archive.</span>
 
@@ -418,7 +444,10 @@
     <span class="n">u</span><span class="o">.</span><span class="n">save_output</span><span class="p">(</span><span class="n">output_target</span><span class="o">=</span><span class="n">file_path</span><span class="p">,</span> <span class="n">output_content</span><span class="o">=</span><span class="n">mapping_str</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="load_from_json"><a class="viewcode-back" href="../../api.html#kegg_pull.map.load_from_json">[docs]</a><span class="k">def</span> <span class="nf">load_from_json</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGmapping</span><span class="p">:</span>
+
+<div class="viewcode-block" id="load_from_json">
+<a class="viewcode-back" href="../../api.html#kegg_pull.map.load_from_json">[docs]</a>
+<span class="k">def</span> <span class="nf">load_from_json</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KEGGmapping</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Loads a mapping of entry IDs (dictionary created with this map module) to a JSON file, either in a</span>
 <span class="sd">    regular directory or ZIP archive.</span>
 
@@ -430,6 +459,7 @@
     <span class="k">for</span> <span class="n">entry_id</span><span class="p">,</span> <span class="n">entry_ids</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">mapping</span><span class="p">[</span><span class="n">entry_id</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">entry_ids</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">mapping</span></div>
+
 </pre></div>
 
            </div>
