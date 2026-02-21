@@ -37,7 +37,7 @@ def database_link(
         target_database=target_database)
     mapping = _add_glycans_or_drugs(
         mapping=mapping, source_database=source_database, target_database=target_database,
-        add_glycans=add_glycans, add_drugs=add_drugs, kegg_rest=kegg_rest)
+        add_glycans=add_glycans, add_drugs=add_drugs, kegg_rest=kegg_rest, source_op='link', target_op='link')
     return mapping
 
 
@@ -78,7 +78,7 @@ def _deduplicate_pathway_ids(mapping: KEGGmapping, deduplicate: bool, source_dat
     """ If requested, removes entry IDs corresponding to duplicate pathway map entries (different ID, same entry).
 
     :param mapping: The mapping to deduplicate.
-    :param deduplicate: Whether or not to deduplicate.
+    :param deduplicate: Whether to deduplicate.
     :param source_database: The name of the source database of the mapping to validate.
     :param target_database: The name of the target database of the mapping to validate.
     :raises ValueError: Raised if deduplicate is True but neither source_database nor target_database is "pathway".
@@ -123,8 +123,8 @@ def _process_mapping(
 
 
 def _add_glycans_or_drugs(
-        mapping: KEGGmapping, source_database: str, target_database: str, add_glycans: bool, add_drugs: bool,
-        kegg_rest: r.KEGGrest | None = None) -> KEGGmapping:
+        mapping: KEGGmapping, source_database: str, target_database: str, add_glycans: bool, add_drugs: bool, source_op: t.Literal['link', 'conv'],
+        target_op: t.Literal['link', 'conv'], kegg_rest: r.KEGGrest | None = None) -> KEGGmapping:
     """ If requested, adds the corresponding compound IDs of equivalent glycan and/or drug entries to a mapping (assuming mapping from "compound" to some target database).
 
     :param mapping: The mapping to add the IDs of compound-equivalents which cross-reference the target database.
@@ -132,6 +132,8 @@ def _add_glycans_or_drugs(
     :param target_database: The database with IDs to which compound IDs are mapped.
     :param add_glycans: Whether to add the corresponding compound IDs of KEGG glycan entries.
     :param add_drugs: Whether to add the corresponding compound IDs of KEGG drug entries.
+    :param source_op: The REST operation mapping the compound database to glycan/drug.
+    :param target_op: The REST operation mapping the glycan/drug database to the target database.
     :param kegg_rest: The KEGGrest object to perform the "link" operation(s). If None, one is created with the default parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
@@ -147,12 +149,12 @@ def _add_glycans_or_drugs(
         def add_glycans_or_drugs(mapping: KEGGmapping, target_database: str) -> KEGGmapping:
             if add_glycans:
                 glycan_to_database = indirect_link(
-                    source_database='compound', intermediate_database='glycan', target_database=target_database,
+                    source_database='compound', intermediate_database='glycan', target_database=target_database, source_op=source_op, target_op=target_op,
                     kegg_rest=kegg_rest)
                 mapping = combine_mappings(mapping1=mapping, mapping2=glycan_to_database)
             if add_drugs:
                 drug_to_database = indirect_link(
-                    source_database='compound', intermediate_database='drug', target_database=target_database,
+                    source_database='compound', intermediate_database='drug', target_database=target_database, source_op=source_op, target_op=target_op,
                     kegg_rest=kegg_rest)
                 mapping = combine_mappings(mapping1=mapping, mapping2=drug_to_database)
             return mapping
@@ -164,19 +166,28 @@ def _add_glycans_or_drugs(
 
 # noinspection PyShadowingNames
 def database_conv(
-        kegg_database: str, outside_database: str, reverse: bool = False, kegg_rest: r.KEGGrest | None = None) -> KEGGmapping:
-    """ Converts the output of the KEGG "conv" operation (of the form that maps the entry IDs of one database to the entry IDs of another) into a dictionary.
+        kegg_database: str, outside_database: str, reverse: bool = False, add_glycans: bool = False, add_drugs: bool = False,
+        kegg_rest: r.KEGGrest | None = None) -> KEGGmapping:
+    """ Converts the output of the KEGG "conv" operation (of the form that maps the entry IDs of a kegg database to the entry IDs of an outside database) into a dictionary.
 
     :param kegg_database: The name of the KEGG database with entry IDs mapped to the outside database.
     :param outside_database: The name of the outside database with entry IDs mapped from the KEGG database.
     :param reverse: Reverses the mapping with the target becoming the source and the source becoming the target. Equivalent to calling the reverse() function of this module.
+    :param add_glycans: Whether to add the corresponding compound IDs of equivalent glycan entries. Logs a warning if neither the source nor the target database are "compound".
+    :param add_drugs: Whether to add the corresponding compound IDs of equivalent drug entries. Logs a warning if neither the source nor the target database are "compound".
     :param kegg_rest: The KEGGrest object to perform the "conv" operation. If None, one is created with the default parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     """
-    return _map_and_reverse(
-        reverse=reverse, kegg_rest=kegg_rest, KEGGurl=ku.DatabaseConvKEGGurl, kegg_database=kegg_database,
+    mapping = _map_and_reverse(
+        reverse=True, kegg_rest=kegg_rest, KEGGurl=ku.DatabaseConvKEGGurl, kegg_database=kegg_database,
         outside_database=outside_database)
+    mapping = _add_glycans_or_drugs(
+        mapping=mapping, source_database=kegg_database, target_database=outside_database,
+        add_glycans=add_glycans, add_drugs=add_drugs, source_op='link', target_op='conv', kegg_rest=kegg_rest)
+    if reverse:
+        return _reverse(mapping)
+    return mapping
 
 
 # noinspection PyShadowingNames
@@ -228,8 +239,9 @@ def entries_conv(
 
 def indirect_link(
         source_database: str, intermediate_database: str, target_database: str, deduplicate: bool = False,
-        add_glycans: bool = False, add_drugs: bool = False, kegg_rest: r.KEGGrest | None = None) -> KEGGmapping:
-    """ Creates a dictionary that maps the entry IDs of a source database to those of a target database using an intermediate database ("link" operation) e.g. ko-to-compound where the intermediate is reaction (connecting cross-references of ko-to-reaction and reaction-to-compound).
+        add_glycans: bool = False, add_drugs: bool = False, source_op: t.Literal['link', 'conv'] = 'link', target_op: t.Literal['link', 'conv'] = 'link',
+        kegg_rest: r.KEGGrest | None = None) -> KEGGmapping:
+    """ Creates a dictionary that maps the entry IDs of a source database to those of a target database using an intermediate database e.g. ko-to-compound where the intermediate is reaction (connecting cross-references of ko-to-reaction and reaction-to-compound). The three databases are connected via a combination of either "link" or "conv" operations.
 
     :param source_database: The name of the database with entry IDs to map to the target database.
     :param intermediate_database: The name of the database with which two mappings are made i.e. source-to-intermediate and intermediate-to-target, both of which are merged to create source-to-target.
@@ -237,7 +249,9 @@ def indirect_link(
     :param deduplicate: Some mappings including "pathway" entry IDs result in half beginning with the normal "path:map" prefix but the other half with a different prefix. If True, removes the IDs corresponding to entries that are identical but with a different prefix.
     :param add_glycans: Whether to add the corresponding compound IDs of equivalent glycan entries. Logs a warning if neither the source nor the target database are "compound".
     :param add_drugs: Whether to add the corresponding compound IDs of equivalent drug entries. Logs a warning if neither the source nor the target database are "compound".
-    :param kegg_rest: The KEGGrest object to perform the "link" operations. If None, one is created with the default parameters.
+    :param source_op: The REST operation mapping the source database to the intermediate database.
+    :param target_op: The REST operation mapping the intermediate database to the target database.
+    :param kegg_rest: The KEGGrest object to perform the "link" or "conv" operations. If None, one is created with the default parameters.
     :return: The dictionary.
     :raises RuntimeError: Raised if the request to the KEGG REST API fails or times out.
     :raises ValueError: Raised if deduplicate is True but neither source_database nor target_database is "pathway".
@@ -246,13 +260,25 @@ def indirect_link(
         raise ValueError(
             f'The source, intermediate, and target database must all be unique. Databases specified: {source_database}, '
             f'{intermediate_database}, {target_database}.')
+    if source_op == 'link':
+        source_to_intermediate = _to_dict(
+            kegg_rest=kegg_rest, KEGGurl=ku.DatabaseLinkKEGGurl, source_database=source_database,
+            target_database=intermediate_database)
+    elif source_op == 'conv':
+        source_to_intermediate = _map_and_reverse(
+            reverse=True, kegg_rest=kegg_rest, KEGGurl=ku.DatabaseConvKEGGurl, kegg_database=source_database, outside_database=intermediate_database)
+    else:
+        raise ValueError('source_op must be one of "link" or "conv".')
+    if target_op == 'link':
+        intermediate_to_target = _to_dict(
+            kegg_rest=kegg_rest, KEGGurl=ku.DatabaseLinkKEGGurl, source_database=intermediate_database,
+            target_database=target_database)
+    elif target_op == 'conv':
+        intermediate_to_target = _map_and_reverse(
+            reverse=True, kegg_rest=kegg_rest, KEGGurl=ku.DatabaseConvKEGGurl, kegg_database=intermediate_database, outside_database=target_database)
+    else:
+        raise ValueError('target_op must be one of "link" or "conv".')
     source_to_target = KEGGmapping()
-    source_to_intermediate = _to_dict(
-        kegg_rest=kegg_rest, KEGGurl=ku.DatabaseLinkKEGGurl, source_database=source_database,
-        target_database=intermediate_database)
-    intermediate_to_target = _to_dict(
-        kegg_rest=kegg_rest, KEGGurl=ku.DatabaseLinkKEGGurl, source_database=intermediate_database,
-        target_database=target_database)
     for source_id, intermediate_ids in source_to_intermediate.items():
         for intermediate_id in intermediate_ids:
             if intermediate_id in intermediate_to_target.keys():
@@ -262,7 +288,7 @@ def indirect_link(
         mapping=source_to_target, deduplicate=deduplicate, source_database=source_database,
         target_database=target_database)
     source_to_target = _add_glycans_or_drugs(
-        mapping=source_to_target, source_database=source_database, target_database=target_database,
+        mapping=source_to_target, source_database=source_database, target_database=target_database, source_op=source_op, target_op=target_op,
         add_glycans=add_glycans, add_drugs=add_drugs, kegg_rest=kegg_rest)
     return source_to_target
 
