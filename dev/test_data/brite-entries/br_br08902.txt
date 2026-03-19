@@ -1,18 +1,21 @@
 +C	Br number
 !
 APathway and Brite
-B  Pathway maps
+B  Pathway
 C    br08901  KEGG pathway maps
-B  Brite files
+B  Brite
 C    br08902  BRITE hierarchy files
 C    br08904  BRITE table files
 C    br08906  BRITE binary relation files
+B  Network
+C    br08907  KEGG network variation maps
+B  Taxonomy
+C    br08908  Taxonomy files
 AGenes and Proteins
-B  Orthologs, modules and networks
+B  Orthologs and modules
 C    ko00001  KEGG Orthology (KO)
 C    ko00002  KEGG modules
 C    ko00003  KEGG reaction modules
-C    br08907  KEGG networks
 B  Protein families: metabolism
 C    ko01000  Enzymes
 C    ko01001  Protein kinases
@@ -60,7 +63,7 @@ C    ko04054  Pattern recognition receptors
 C    ko03310  Nuclear receptors
 C    ko04040  Ion channels
 C    ko04031  GTP-binding proteins
-C    ko04052  Cytokines and growth factors
+C    ko04052  Cytokines and neuropeptides
 C    ko04515  Cell adhesion molecules
 C    ko04090  CD molecules
 C    ko01504  Antimicrobial resistance genes
@@ -90,7 +93,6 @@ B  Reactions
 C    br08201  Enzymatic reactions
 C    br08202  IUBMB reaction hierarchy
 C    br08204  Reaction class
-C    br08203  Glycosyltransferase reactions
 ADrugs
 B  Drug classifications
 C    br08303  Anatomical Therapeutic Chemical (ATC) classification
@@ -100,7 +102,6 @@ C    br08313  Classification of Japanese OTC drugs
 C    br08312  Risk category of Japanese OTC drugs
 C    br08304  Traditional Chinese Medicine in Japan
 C    br08305  Crude drugs
-C    br08331  Animal drugs in Japan
 B  Drug information
 C    br08330  Drug groups
 C    br08332  Drug classes
@@ -117,8 +118,9 @@ C    br08411  ICD-11 International Classification of Diseases
 C    br08410  ICD-10 International Classification of Diseases
 C    br08420  ICD-O-3 International Classification of Diseases for Oncology
 AOrganisms and Viruses
-B  Taxonomy
+B  KEGG taxonomy
 C    br08601  KEGG organisms
+B  NCBI taxonomy
 C    br08610  KEGG organisms in the NCBI taxonomy
 C    br08611  KEGG organisms in taxonomic ranks
 C    br08612  KEGG organisms: animals
@@ -127,9 +129,9 @@ C    br08614  KEGG organisms: fungi
 C    br08615  KEGG organisms: protists
 C    br08620  KEGG viruses in the NCBI taxonomy
 C    br08621  KEGG viruses in taxonomic ranks
-B  Organism information
+B  Organism and virus information
 C    br08605  Plant pathogens
 !
 #
-#Last updated: July 10, 2023
+#Last updated: June 9, 2025
 #&raquo; Japanese version

@@ -53,8 +53,11 @@ test_map_and_reverse_data = [
 
 @pt.mark.parametrize('method,KEGGurl,kwargs', test_map_and_reverse_data)
 def test_map_and_reverse(mocker, method: str, KEGGurl: type, kwargs: dict, reverse: bool, kegg_rest):
-    expected_mapping = {'k': {'v1', 'v2'}}
-    to_dict_mock = mocker.patch('kegg_pull.map._to_dict', return_value=expected_mapping)
+    mock_mapping = {'k': {'v1', 'v2'}}
+    expected_mapping = mock_mapping
+    if method == 'database_conv':
+        mock_mapping = kmap.reverse(mock_mapping)
+    to_dict_mock = mocker.patch('kegg_pull.map._to_dict', return_value=mock_mapping)
     # noinspection PyUnresolvedReferences
     method: t.Callable = kmap.__getattribute__(method)
     actual_mapping: kmap.KEGGmapping = method(reverse=reverse, kegg_rest=kegg_rest, **kwargs)
@@ -230,7 +233,9 @@ test_indirect_link_exception_data = [
     ({'source_database': 'pathway', 'intermediate_database': 'reaction', 'target_database': 'reaction'},
      'The source, intermediate, and target database must all be unique. Databases specified: pathway, reaction, reaction.'),
     ({'source_database': 'reaction', 'intermediate_database': 'reaction', 'target_database': 'reaction'},
-     'The source, intermediate, and target database must all be unique. Databases specified: reaction, reaction, reaction.')]
+     'The source, intermediate, and target database must all be unique. Databases specified: reaction, reaction, reaction.'),
+    ({'source_database': 'pathway', 'intermediate_database': 'reaction', 'target_database': 'compound', 'target_op': 'invalid-op'},
+     'target_op must be one of "link" or "conv".')]
 
 
 @pt.mark.parametrize('kwargs,error_message', test_indirect_link_exception_data)
@@ -238,6 +243,21 @@ def test_indirect_link_exception(kwargs: dict, error_message: str):
     with pt.raises(ValueError) as error:
         kmap.indirect_link(**kwargs)
     u.assert_exception(expected_message=error_message, exception=error)
+
+
+def test_indirect_link_conv(mocker, kegg_rest):
+    compound_to_glycan = {'cpd1': {'gl1', 'gl3'}, 'cpd2': {'gl2'}, 'cpd3': {'gl3'}}
+    pubchem_to_glycan = {'pc1': {'gl1'}, 'pc3': {'gl1'}, 'pc2': {'gl2'}}
+    expected_call_args_list = [
+        {'kegg_rest': kegg_rest, 'KEGGurl': ku.DatabaseLinkKEGGurl, 'source_database': 'compound', 'target_database': 'glycan'},
+        {'kegg_rest': kegg_rest, 'KEGGurl': ku.DatabaseConvKEGGurl, 'kegg_database': 'glycan', 'outside_database': 'pubchem'}
+    ]
+    expected_mapping = {'cpd1': {'pc1', 'pc3'}, 'cpd2': {'pc2'}}
+    to_dict_mock = mocker.patch('kegg_pull.map._to_dict', side_effect=[compound_to_glycan, pubchem_to_glycan])
+    actual_mapping = kmap.indirect_link(
+        source_database='compound', intermediate_database='glycan', target_database='pubchem', target_op='conv', kegg_rest=kegg_rest)
+    u.assert_call_args(function_mock=to_dict_mock, expected_call_args_list=expected_call_args_list, do_kwargs=True)
+    assert actual_mapping == expected_mapping
 
 
 def test_combine_mappings():
