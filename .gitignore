@@ -8,3 +8,4 @@ docs/_build
 docs/notebook/.ipynb_checkpoints/
 docs/notebook/tutorial.ipynb
 dist/
+src/kegg_pull/_version.py

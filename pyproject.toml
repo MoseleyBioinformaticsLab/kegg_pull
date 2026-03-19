@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools", "wheel", "setuptools_scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kegg-pull"
+description = "Pulls any and all entries from any and all KEGG databases, pulls KEGG entry IDs, and wraps all the KEGG REST API operations in both Python API and the command line."
+readme = "README.rst"
+requires-python = ">=3.10"
+keywords = ["kegg", "rest", "sdk", "api", "cli"]
+license = {file = "LICENSE"}
+classifiers = [
+     'Environment :: Console',
+     'Intended Audience :: Developers',
+     'License :: OSI Approved :: BSD License',
+     'Operating System :: OS Independent',
+     'Programming Language :: Python :: 3.10',
+     'Topic :: Software Development :: Libraries :: Python Modules',
+     'Topic :: Scientific/Engineering :: Medical Science Apps',
+     'Topic :: Scientific/Engineering :: Chemistry',
+     'Topic :: Scientific/Engineering :: Bio-Informatics',
+     'Typing :: Typed'
+
+]
+dynamic = ["version", "dependencies"]
+
+[project.urls]
+"Homepage" = "https://github.com/MoseleyBioinformaticsLab/kegg_pull"
+"Documentation" = "https://moseleybioinformaticslab.github.io/kegg_pull/"
+"GitHub" = "https://github.com/MoseleyBioinformaticsLab/kegg_pull"
+"Issues" = "https://github.com/MoseleyBioinformaticsLab/kegg_pull/issues"
+
+[tool.setuptools.dynamic]
+dependencies = {file = "requirements.txt"}
+
+[tool.setuptools_scm]
+write_to = "src/kegg_pull/_version.py"
+
+[project.scripts]
+kegg_pull = "kegg_pull.__main__:main"

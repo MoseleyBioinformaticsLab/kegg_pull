@@ -1,28 +1,25 @@
-name: Build Documentation
+name: Publish Documentation
 
 on:
-  push:
-    branches:    
-      - main
+  workflow_call:
 
 jobs:
-  build:
-
+  publish-documentation:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v4
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
       with:
-        python-version: '3.11'
+        python-version: '3.x'
     - name: Upgrade pip, install package, install requirements, build docs
       run: |
         pip install --upgrade pip
-        pip install -r ./docs/requirements.txt
+        pip install .
+        if [ -f ./docs/requirements.txt ]; then pip install -r ./docs/requirements.txt; fi
+        pip install sphinx
         sphinx-build docs ./docs/_build/html/
     # Create an artifact of the html output.
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: DocumentationHTML
         path: docs/_build/html/
@@ -35,9 +32,8 @@ jobs:
         git config --global user.name "${GITHUB_ACTOR}"
         git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
         git clone "https://token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" --branch gh-pages --single-branch gh-pages
-        cd gh-pages/
-        git rm -r .
-        cp -r ../docs/_build/html/* .
+        cp -r docs/_build/html/* gh-pages/
+        cd gh-pages
         touch .nojekyll
         git add .
         git commit -m "Update documentation." -a || true
