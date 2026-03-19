@@ -55,13 +55,6 @@
     "children": null,
     "entry_id": "path:map00500"
   },
-  "path:map00520": {
-    "name": "00520  Amino sugar and nucleotide sugar metabolism",
-    "level": 3,
-    "parent": "Carbohydrate metabolism",
-    "children": null,
-    "entry_id": "path:map00520"
-  },
   "path:map00620": {
     "name": "00620  Pyruvate metabolism",
     "level": 3,
@@ -104,6 +97,13 @@
     "children": null,
     "entry_id": "path:map00562"
   },
+  "path:map00566": {
+    "name": "00566  Sulfoquinovose metabolism",
+    "level": 3,
+    "parent": "Carbohydrate metabolism",
+    "children": null,
+    "entry_id": "path:map00566"
+  },
   "Carbohydrate metabolism": {
     "name": "Carbohydrate metabolism",
     "level": 2,
@@ -117,8 +117,8 @@
       "path:map00052",
       "path:map00053",
       "path:map00500",
-      "path:map00520",
       "path:map00562",
+      "path:map00566",
       "path:map00620",
       "path:map00630",
       "path:map00640",
@@ -149,14 +149,14 @@
     "entry_id": "path:map00196"
   },
   "path:map00710": {
-    "name": "00710  Carbon fixation in photosynthetic organisms",
+    "name": "00710  Carbon fixation by Calvin cycle",
     "level": 3,
     "parent": "Energy metabolism",
     "children": null,
     "entry_id": "path:map00710"
   },
   "path:map00720": {
-    "name": "00720  Carbon fixation pathways in prokaryotes",
+    "name": "00720  Other carbon fixation pathways",
     "level": 3,
     "parent": "Energy metabolism",
     "children": null,
@@ -226,6 +226,13 @@
     "parent": "Lipid metabolism",
     "children": null,
     "entry_id": "path:map00073"
+  },
+  "path:map00074": {
+    "name": "00074  Mycolic acid biosynthesis",
+    "level": 3,
+    "parent": "Lipid metabolism",
+    "children": null,
+    "entry_id": "path:map00074"
   },
   "path:map00100": {
     "name": "00100  Steroid biosynthesis",
@@ -320,6 +327,7 @@
       "path:map00062",
       "path:map00071",
       "path:map00073",
+      "path:map00074",
       "path:map00100",
       "path:map00120",
       "path:map00121",
@@ -543,6 +551,20 @@
     ],
     "entry_id": null
   },
+  "path:map00520": {
+    "name": "00520  Amino sugar and nucleotide sugar metabolism",
+    "level": 3,
+    "parent": "Glycan biosynthesis and metabolism",
+    "children": null,
+    "entry_id": "path:map00520"
+  },
+  "path:map00541": {
+    "name": "00541  Biosynthesis of various nucleotide sugars",
+    "level": 3,
+    "parent": "Glycan biosynthesis and metabolism",
+    "children": null,
+    "entry_id": "path:map00541"
+  },
   "path:map00510": {
     "name": "00510  N-Glycan biosynthesis",
     "level": 3,
@@ -655,13 +677,6 @@
     "children": null,
     "entry_id": "path:map00542"
   },
-  "path:map00541": {
-    "name": "00541  O-Antigen nucleotide sugar biosynthesis",
-    "level": 3,
-    "parent": "Glycan biosynthesis and metabolism",
-    "children": null,
-    "entry_id": "path:map00541"
-  },
   "path:map00550": {
     "name": "00550  Peptidoglycan biosynthesis",
     "level": 3,
@@ -708,6 +723,7 @@
       "path:map00513",
       "path:map00514",
       "path:map00515",
+      "path:map00520",
       "path:map00531",
       "path:map00532",
       "path:map00533",
@@ -1203,6 +1219,13 @@
     "children": null,
     "entry_id": "path:map00254"
   },
+  "path:map00975": {
+    "name": "00975  Biosynthesis of various siderophores",
+    "level": 3,
+    "parent": "Biosynthesis of other secondary metabolites",
+    "children": null,
+    "entry_id": "path:map00975"
+  },
   "path:map00998": {
     "name": "00998  Biosynthesis of various antibiotics",
     "level": 3,
@@ -1256,6 +1279,7 @@
       "path:map00960",
       "path:map00965",
       "path:map00966",
+      "path:map00975",
       "path:map00996",
       "path:map00997",
       "path:map00998",
