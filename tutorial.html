@@ -1,21 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tutorial &mdash; kegg_pull 3.1.0 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>Tutorial &mdash; kegg_pull 3.2.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
   
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=dd1205ac"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=dcedd534"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -34,9 +34,6 @@
           <a href="index.html" class="icon icon-home">
             kegg_pull
           </a>
-              <div class="version">
-                3.1.0
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -134,7 +131,7 @@ which of the entry IDs succeeded, which failed, and which timed out. In
 this example, the entry ID succeeds.</p>
 <section id="pull">
 <h4><code class="docutils literal notranslate"><span class="pre">pull</span></code><a class="headerlink" href="#pull" title="Link to this heading"></a></h4>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kegg_pull.pull</span> <span class="k">as</span> <span class="nn">p</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">kegg_pull.pull</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">p</span>
 <span class="n">single_pull</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">SinglePull</span><span class="p">()</span>
 <span class="n">entry_ids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;br:br08902&#39;</span><span class="p">]</span>
 <span class="n">pull_result</span> <span class="o">=</span> <span class="n">single_pull</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="n">entry_ids</span><span class="o">=</span><span class="n">entry_ids</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s1">&#39;pull-entries/&#39;</span><span class="p">)</span>
@@ -167,7 +164,7 @@ automatically separated from one another and saved in individual files.</p>
 </div>
 <p>An exception is thrown if you attempt to provide more entry IDs to the
 <code class="docutils literal notranslate"><span class="pre">pull()</span></code> method than what is accepted by KEGG.</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">logging</span> <span class="k">as</span> <span class="nn">log</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">log</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="n">single_pull</span><span class="o">.</span><span class="n">pull</span><span class="p">(</span><span class="n">entry_ids</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;cpd:C00001&#39;</span><span class="p">,</span> <span class="s1">&#39;cpd:C00002&#39;</span><span class="p">,</span> <span class="s1">&#39;cpd:C00003&#39;</span><span class="p">,</span> <span class="s1">&#39;cpd:C00004&#39;</span><span class="p">,</span> <span class="s1">&#39;cpd:C00005&#39;</span><span class="p">,</span> <span class="s1">&#39;cpd:C00006&#39;</span><span class="p">,</span>
@@ -301,7 +298,7 @@ $$$$
 <h3>Entry IDs<a class="headerlink" href="#entry-ids" title="Link to this heading"></a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">entry_ids</span></code> module provides a number of different ways to pull a
 list of KEGG entry IDs.</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kegg_pull.entry_ids</span> <span class="k">as</span> <span class="nn">ei</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">kegg_pull.entry_ids</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ei</span>
 <span class="n">entry_ids</span> <span class="o">=</span> <span class="n">ei</span><span class="o">.</span><span class="n">from_database</span><span class="p">(</span><span class="s1">&#39;brite&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">entry_ids</span><span class="p">)</span>
 </pre></div>
@@ -316,7 +313,7 @@ list of KEGG entry IDs.</p>
 operation or “conv” operation into dictionaries usable in python code.</p>
 <section id="link-operation">
 <h4>“link” operation<a class="headerlink" href="#link-operation" title="Link to this heading"></a></h4>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kegg_pull.map</span> <span class="k">as</span> <span class="nn">kmap</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">kegg_pull.map</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">kmap</span>
 
 <span class="n">pathway_to_compound</span> <span class="o">=</span> <span class="n">kmap</span><span class="o">.</span><span class="n">entries_link</span><span class="p">(</span><span class="n">entry_ids</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;path:map00010&#39;</span><span class="p">,</span> <span class="s1">&#39;path:map00020&#39;</span><span class="p">],</span> <span class="n">target_database</span><span class="o">=</span><span class="s1">&#39;compound&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">pathway_to_compound</span><span class="p">)</span>
@@ -341,7 +338,7 @@ operation or “conv” operation into dictionaries usable in python code.</p>
 <h3>Pathway Organizer<a class="headerlink" href="#pathway-organizer" title="Link to this heading"></a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">pathway_organizer</span></code> module flattens a brite hierarchy into a
 mapping of the IDs of its nodes to information about those nodes.</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kegg_pull.pathway_organizer</span> <span class="k">as</span> <span class="nn">po</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">kegg_pull.pathway_organizer</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">po</span>
 <span class="n">pathway_org</span> <span class="o">=</span> <span class="n">po</span><span class="o">.</span><span class="n">PathwayOrganizer</span><span class="o">.</span><span class="n">load_from_kegg</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">pathway_org</span><span class="o">.</span><span class="n">hierarchy_nodes</span><span class="p">[</span><span class="s1">&#39;Metabolism&#39;</span><span class="p">])</span>
 </pre></div>
@@ -362,7 +359,7 @@ functionality will be preferred over using the lower-level <code class="docutils
 class. In fact, most of <code class="docutils literal notranslate"><span class="pre">kegg_pull</span></code>’s higher-level functionality
 relies on the <code class="docutils literal notranslate"><span class="pre">KEGGrest</span></code> class, but provies a more useful programming
 interface.</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">kegg_pull.rest</span> <span class="k">as</span> <span class="nn">r</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">kegg_pull.rest</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">r</span>
 <span class="n">kegg_rest</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGrest</span><span class="p">()</span>
 <span class="n">kegg_response</span> <span class="o">=</span> <span class="n">kegg_rest</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">database</span><span class="o">=</span><span class="s1">&#39;module&#39;</span><span class="p">)</span>
 </pre></div>
@@ -417,7 +414,7 @@ methods.</p>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">pull</span></code> subcommand creates a <code class="docutils literal notranslate"><span class="pre">pull-results.json</span></code>file. You can
 load it as a dictionary using the python json library.</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span> <span class="k">as</span> <span class="nn">j</span>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">j</span>
 
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;pull-results.json&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
     <span class="n">pull_results</span> <span class="o">=</span> <span class="n">j</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>

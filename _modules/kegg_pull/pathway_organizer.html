@@ -1,20 +1,20 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kegg_pull.pathway_organizer &mdash; kegg_pull 3.1.0 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>kegg_pull.pathway_organizer &mdash; kegg_pull 3.2.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
   
-        <script src="../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../_static/documentation_options.js?v=dd1205ac"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=dcedd534"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -31,9 +31,6 @@
           <a href="../../index.html" class="icon icon-home">
             kegg_pull
           </a>
-              <div class="version">
-                3.1.0
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -81,17 +78,17 @@
 <span class="sd">~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
 <span class="sd">|Functionality| for flattening a pathways Brite hierarchy (ID: &#39;br:br08901&#39;) into a collection of its nodes, mapping a node ID to information about it, enabling combinations with other KEGG data.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">logging</span> <span class="k">as</span> <span class="nn">log</span>
-<span class="kn">import</span> <span class="nn">typing</span> <span class="k">as</span> <span class="nn">t</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">rest</span> <span class="k">as</span> <span class="n">r</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">_utils</span> <span class="k">as</span> <span class="n">u</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">log</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">t</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">rest</span> <span class="k">as</span> <span class="n">r</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">_utils</span> <span class="k">as</span> <span class="n">u</span>
 
 
 <div class="viewcode-block" id="HierarchyNode">
 <a class="viewcode-back" href="../../api.html#kegg_pull.pathway_organizer.HierarchyNode">[docs]</a>
-<span class="k">class</span> <span class="nc">HierarchyNode</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">TypedDict</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">HierarchyNode</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">TypedDict</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A dictionary  with the following keys:&quot;&quot;&quot;</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The name of the node obtained directly from the Brite hierarchy.&quot;&quot;&quot;</span>
@@ -112,7 +109,7 @@
 
 <div class="viewcode-block" id="PathwayOrganizer">
 <a class="viewcode-back" href="../../api.html#kegg_pull.pathway_organizer.PathwayOrganizer">[docs]</a>
-<span class="k">class</span> <span class="nc">PathwayOrganizer</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">NonInstantiable</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PathwayOrganizer</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">NonInstantiable</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Contains methods for managing a mapping of node keys to node information, these nodes coming from a pathways Brite hierarchy.</span>
 <span class="sd">    An instantiated ``PathwayOrganizer`` object must be returned from either ``PathwayOrganizer.load_from_kegg`` or</span>
@@ -121,7 +118,7 @@
 
 <span class="sd">    :ivar dict[str, HierarchyNode] hierarchy_nodes: The mapping of node keys to node information managed by the PathwayOrganizer.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">PathwayOrganizer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hierarchy_nodes</span><span class="p">:</span> <span class="n">HierarchyNodes</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_filter_nodes</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -129,7 +126,7 @@
 <div class="viewcode-block" id="PathwayOrganizer.load_from_kegg">
 <a class="viewcode-back" href="../../api.html#kegg_pull.pathway_organizer.PathwayOrganizer.load_from_kegg">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">load_from_kegg</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_from_kegg</span><span class="p">(</span>
             <span class="n">top_level_nodes</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">filter_nodes</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
             <span class="n">kegg_rest</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGrest</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PathwayOrganizer</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Pulls the Brite hierarchy from the KEGG REST API and converts it to the ``hierarchy_nodes`` mapping.</span>
@@ -157,7 +154,7 @@
 
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_get_hierarchy</span><span class="p">(</span><span class="n">kegg_rest</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGrest</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_RawHierarchyNode</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_hierarchy</span><span class="p">(</span><span class="n">kegg_rest</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">KEGGrest</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">_RawHierarchyNode</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Pulls the Brite hierarchy (to be converted to hierarchy_nodes) from the KEGG REST API.</span>
 
 <span class="sd">        :return: The list of top level nodes that branch out into the rest of the hierarchy until reaching leaf nodes.</span>
@@ -168,7 +165,7 @@
         <span class="n">brite_hierarchy</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">text_body</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">brite_hierarchy</span><span class="p">[</span><span class="s1">&#39;children&#39;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_parse_hierarchy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">raw_hierarchy_nodes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_RawHierarchyNode</span><span class="p">],</span> <span class="n">parent_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_parse_hierarchy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">raw_hierarchy_nodes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">_RawHierarchyNode</span><span class="p">],</span> <span class="n">parent_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Recursively traverses the Brite hierarchy to create the hierarchy_nodes mapping.</span>
 
 <span class="sd">        :param level: The current level of recursion representing the level of the node in the hierarchy.</span>
@@ -199,7 +196,7 @@
                 <span class="n">nodes_added</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">node_key</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">nodes_added</span>
 
-    <span class="k">def</span> <span class="nf">_add_hierarchy_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">children</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">entry_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_add_hierarchy_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">children</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">entry_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Adds a Brite hierarchy node representation to the hierarchy_nodes property.</span>
 
 <span class="sd">        :param name: The name of the node obtained directly from the Brite hierarchy.</span>
@@ -215,7 +212,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">hierarchy_nodes</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">HierarchyNode</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="n">parent</span><span class="p">,</span> <span class="n">children</span><span class="o">=</span><span class="n">children</span><span class="p">,</span> <span class="n">entry_id</span><span class="o">=</span><span class="n">entry_id</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">key</span>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Converts the hierarchy nodes to a JSON string.</span>
 
 <span class="sd">        :return: The JSON string version of the hierarchy nodes.</span>
@@ -264,7 +261,7 @@
 <div class="viewcode-block" id="PathwayOrganizer.load_from_json">
 <a class="viewcode-back" href="../../api.html#kegg_pull.pathway_organizer.PathwayOrganizer.load_from_json">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">load_from_json</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PathwayOrganizer</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_from_json</span><span class="p">(</span><span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PathwayOrganizer</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Loads the ``hierarchy_nodes`` mapping that was cached in a JSON file using ``load_from_kegg`` followed by ``save_to_json``.</span>
 
 <span class="sd">        :param file_path: Path to the JSON file. If reading from a ZIP archive, the file path must be in the following format: /path/to/zip-archive.zip:/path/to/file (e.g. ./archive.zip:hierarchy-nodes.json).</span>
@@ -282,7 +279,7 @@
 
 <div class="viewcode-block" id="PathwayOrganizer.save_to_json">
 <a class="viewcode-back" href="../../api.html#kegg_pull.pathway_organizer.PathwayOrganizer.save_to_json">[docs]</a>
-    <span class="k">def</span> <span class="nf">save_to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_to_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Saves the ``hierarchy_nodes`` mapping to a JSON file to cache it.</span>
 
 <span class="sd">        :param file_path: The path to the JSON file to save the ``hierarchy_nodes`` mapping. If saving in a ZIP archive, the file path must be in the following format: /path/to/zip-archive.zip:/path/to/file (e.g. ./archive.zip:hierarchy-nodes.json).</span>
