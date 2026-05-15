@@ -13,13 +13,22 @@ Installation
 ------------
 Requires python 3.10 and above.
 
-Install on Linux, Mac OS X
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Using conda
+~~~~~~~~~~~
+
+.. parsed-literal::
+   conda install -c bioconda kegg_pull
+
+Using pip
+~~~~~~~~~
+
+**For Linux, Mac OS X:**
+
 .. parsed-literal::
    python3 -m pip install kegg-pull
 
-Install on Windows
-~~~~~~~~~~~~~~~~~~
+**For Windows:**
+
 .. parsed-literal::
    py -3 -m pip install kegg-pull
 
@@ -36,13 +45,18 @@ PyPi
 ~~~~
 See our PyPi page `here <https://pypi.org/project/kegg-pull/>`__.
 
+BioConda
+~~~~~~~~
+
+See our BioConda page `here <https://anaconda.org/channels/bioconda/packages/kegg_pull/overview>`__.
+
 Questions, Feature Requests, and Bug Reports
 --------------------------------------------
 Please submit any questions or feature requests you may have and report any potential bugs/errors you observe on `our GitHub issues page <https://github.com/MoseleyBioinformaticsLab/kegg_pull/issues>`__.
 
 Dependencies
 ------------
-Note, the ``pip`` command will install dependencies automatically.
+Note, the ``pip`` and ``conda`` commands will install dependencies automatically.
 
 .. parsed-literal::
    docopt
