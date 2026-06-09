@@ -11,6 +11,7 @@ on:
 jobs:
   run-tests:
     strategy:
+      fail-fast: false
       matrix:
         python-version: ["3.10", "3.11", "3.12"]
         os: [ ubuntu-latest, windows-latest, macOS-latest ]
@@ -37,4 +38,4 @@ jobs:
       if: ${{ failure() }}
       uses: mxschmitt/action-tmate@v3
       with:
-        limit-access-to-actor: true
+        limit-access-to-actor: false
