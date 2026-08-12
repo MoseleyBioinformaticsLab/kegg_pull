@@ -148,14 +148,14 @@ def reset_organism_set():
 @pt.mark.disable_mock_organism_set
 def test_organism_set(mocker, _):
     text_mock = """
-        T06555	psyt	Candidatus Prometheoarchaeum syntrophicum	Prokaryotes;Archaea;Lokiarchaeota;Prometheoarchaeum
-        T03835	agw	Archaeon GW2011_AR10	Prokaryotes;Archaea;unclassified Archaea
-        T03843	arg	Archaeon GW2011_AR20	Prokaryotes;Archaea;unclassified Archaea
+        T06555	psyt; Promethearchaeum syntrophicum
+        T03835	agw; Archaeon GW2011_AR10
+        T03843	arg; Archaeon GW2011_AR20
     """
     response_mock = mocker.MagicMock(status_code=200, text=text_mock)
     get_mock: mocker.MagicMock = mocker.patch('kegg_pull.kegg_url.rq.get', return_value=response_mock)
     actual_organism_set = ku.AbstractKEGGurl.organism_set
-    get_mock.assert_called_once_with(url=f'{ku.BASE_URL}/list/organism', timeout=60)
+    get_mock.assert_called_once_with(url=f'{ku.BASE_URL}/list/genome', timeout=60)
     expected_organism_set = {'agw', 'T03835', 'T06555', 'T03843', 'psyt', 'arg'}
     assert actual_organism_set == expected_organism_set
     get_mock.reset_mock()
@@ -168,7 +168,7 @@ def test_organism_set(mocker, _):
 @pt.mark.disable_mock_organism_set
 def test_organism_set_unsuccessful(mocker, timeout: bool, _):
     get_function_patch_path = 'kegg_pull.kegg_url.rq.get'
-    url = f'{ku.BASE_URL}/list/organism'
+    url = f'{ku.BASE_URL}/list/genome'
     error_message = 'The request to the KEGG web API {} while fetching the organism set using the URL: {}'
     if timeout:
         get_mock: mocker.MagicMock = mocker.patch(get_function_patch_path, side_effect=rq.exceptions.Timeout())

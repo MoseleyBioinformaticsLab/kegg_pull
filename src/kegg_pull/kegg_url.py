@@ -49,7 +49,7 @@ class AbstractKEGGurl(abc.ABC):
         :raises RuntimeError: Raised in the unlikely case that the request fails.
         """
         if AbstractKEGGurl._organism_set is None:
-            url = f'{BASE_URL}/list/organism'
+            url = f'{BASE_URL}/list/genome'
             error_message = 'The request to the KEGG web API {} while fetching the organism set using the URL: {}'
             try:
                 response = rq.get(url=url, timeout=60)
@@ -61,7 +61,8 @@ class AbstractKEGGurl(abc.ABC):
             organism_list = response.text.strip().split('\n')
             AbstractKEGGurl._organism_set = set[str]()
             for organism in organism_list:
-                [code, name, _, _] = organism.strip().split('\t')
+                [code, name] = organism.strip().split('\t')
+                name, _ = name.split(';')
                 AbstractKEGGurl._organism_set.add(code)
                 AbstractKEGGurl._organism_set.add(name)
         return AbstractKEGGurl._organism_set

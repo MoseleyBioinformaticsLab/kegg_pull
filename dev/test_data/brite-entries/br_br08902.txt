@@ -104,7 +104,6 @@ C    br08304  Traditional Chinese Medicine in Japan
 C    br08305  Crude drugs
 B  Drug information
 C    br08330  Drug groups
-C    br08332  Drug classes
 C    br08310  Target-based classification of drugs
 C    br08307  Antimicrobials
 C    br08327  Antimicrobials abbreviations
@@ -133,5 +132,5 @@ B  Organism and virus information
 C    br08605  Plant pathogens
 !
 #
-#Last updated: June 9, 2025
+#Last updated: August 1, 2026
 #&raquo; Japanese version
